@@ -1,0 +1,201 @@
+<script src="@{'/public/javascripts/jquery/jquery-ui-1.8.16.custom.min.js'}"></script>
+<script src="@{'/public/javascripts/jquery/jquery-1.6.4.min.js'}"></script>
+
+<style>
+	.thumb {
+	  height: 100px;
+	  border: 1px solid #000;
+	  margin: 10px 5px 0 0;
+	}
+
+	.botaoImagem {
+	  padding-left: 0.2cm;
+	  padding-right: 0.2cm;
+	}
+</style>
+
+<script language="javascript">
+	function carregarDadosDpPessoa(){
+		params = 'pessoa.idPessoa' + '=' + escape($('#condutordpPessoa').val());
+		PassAjaxResponseToFunction('@{Condutores.exibirDadosDpPessoa()}?' + params, 'carregouDadosDpPessoa', null, false, null);
+	}
+
+	function carregouDadosDpPessoa(response, param){
+		$('#divItem').html(response);
+		$("input[name='condutor.dtNascimento']").val($("input[name='dataNascimento']").val()); 
+		$("input[name='condutor.lotacao']").val($("input[name='lotacao']").val()); 
+		$("input[name='condutor.emailInstitucional']").val($("input[name='emailInstitucional']").val()); 
+	}
+</script>
+
+#{telefone}#{/telefone}
+#{include 'Condutores/menu.html' /}
+#{erros}#{/erros}
+
+#{form @Condutores.salvar(), id:'formCondutor', enctype: 'multipart/form-data'}
+	<div class="gt-content-box gt-form"> 
+	 	#{if condutor.id == 0}
+			<div id="divItem">#{include 'Condutores/exibirDadosDpPessoa.html' /}
+			</div>	
+
+        	<label for="condutor.dpPessoa.id">Servidor: </label>
+			#{selecao tipo:'pessoa',nome:'condutor.dpPessoa', value:condutor.dpPessoa, onchange:'carregarDadosDpPessoa()' /}
+		#{/if}
+		#{else}
+			<input type="hidden" name="condutor.dpPessoa.id" value="${condutor.dpPessoa.id}"/>
+		#{/else}
+       	
+ 		<div class="clearfix">
+			<div class="coluna margemDireitaG">
+		       	<label for="condutor.dtNascimento">Data de nascimento:</label>
+				<input type="text" readonly="readonly" name="condutor.dtNascimento" value="${condutor.dpPessoa.getDataNascimento()?.format('dd/MM/yyyy')}" />
+		       	<label for="condutor.numeroCNH" class="obrigatorio">N&uacute;mero da CNH:</label>
+				<input type="text" name="condutor.numeroCNH" value="${condutor.numeroCNH}" />
+		       	<label for="condutor.categoriaCNH" class="obrigatorio">Categoria CNH:</label>
+				#{select 'condutor.categoriaCNH',
+		        		  items:condutor.categoriaCNH.values(),
+		        		  value:condutor?.categoriaCNH}
+			    #{/select}
+		        <input type="hidden" id="condutor_id" name="condutor.id" value="${condutor.id}"/>
+		       	<label for="condutor.dataVencimentoCNH" class="obrigatorio">Data de Vencimento CNH:</label>
+		       	<input type="text" name="condutor.dataVencimentoCNH" class="datePicker" value="${condutor.dataVencimentoCNH?.format('dd/MM/yyyy')}" />
+			</div>
+			<div class="coluna margemDireitaG">
+		       	<label for="condutor.lotacao">Lota&ccedil;&atilde;o:</label>
+				<input type="text" name="condutor.lotacao" size="46" readonly="readonly"
+					   value="${condutor.dpPessoa.getLotacao() == null ? '' : condutor.dpPessoa.getLotacao().getDescricao()}" />
+		       	<label for="condutor.endereco">Endere&ccedil;o:</label>
+				<input type="text" size="46" name="condutor.endereco" value="${condutor.endereco}" />
+		       	<label for="condutor.emailPessoal">Email pessoal: </label>
+		       	<input type="text" name="condutor.emailPessoal" value="${condutor.emailPessoal}" />
+		       	<label for="condutor.emailInstitucional">Email institucional: </label>
+		       	<input type="text" readonly="readonly" name="condutor.emailInstitucional" value="${condutor.dpPessoa.getEmailPessoa()}" />
+	       	</div>
+			<div class="coluna">
+		       	<label for="condutor.telefoneInstitucional" class="obrigatorio">Telefone fixo institucional:</label>
+		       	<input type="text" class="telefone" name="condutor.telefoneInstitucional" value="${condutor.telefoneInstitucional}" />
+		       	<label for="condutor.celularInstitucional">Telefone celular institucional:</label>
+		       	<input type="text" class="celular" name="condutor.celularInstitucional" value="${condutor.celularInstitucional}" />
+		       	<label for="condutor.telefonePessoal">Telefone fixo pessoal: </label>
+		       	<input type="text" class="telefone" name="condutor.telefonePessoal" value="${condutor.telefonePessoal}" />
+		       	<label for="condutor.celularPessoal">Telefone celular pessoal: </label>
+		       	<input type="text" class="celular" name="condutor.celularPessoal" value="${condutor.celularPessoal}" />
+			</div>
+       	</div>
+
+        <input type="hidden" id="situacaoImagem" name="condutor.situacaoImagem" value="${condutor.situacaoImagem}"/>
+       	<label for="condutor.observacao">Observa&ccedil;&atilde;o: </label>
+		<textarea name="condutor.observacao" rows="4" cols="60">${condutor.observacao}</textarea>       
+
+   		<label>Anexar arquivo: </label>
+		<input type="file" name="condutor.arquivo" size="30" id="arquivo"/>
+		<img id="imgArquivo" class="thumb" src="@{getImagem(condutor.id)}" />
+		
+		<br>
+		
+		<input type="button" class="botaoImagem" ID="exibirImagem" value="&{'views.botoes.exibir'}">
+		<input type="button" class="botaoImagem" ID="excluirImagem" onClick="removerArquivo();" value="&{'views.botoes.excluir'}">
+		
+	</div>
+	
+	<span class="alerta menor">&{'views.erro.preenchimentoObrigatorio'}</span>
+	<div class="gt-table-buttons">
+		<input type="submit" value="&{'views.botoes.salvar'}" class="gt-btn-medium gt-btn-left" />
+		<input type="button" value="&{'views.botoes.cancelar'}" class="gt-btn-medium gt-btn-left" onclick="javascript:window.location = '@{Condutores.listar()}';" />
+	</div>
+
+	<script type="text/javascript">
+		$(document).ready(function() {
+			$('#imgArquivo').css('display','none');
+			
+			$('#exibirImagem').click(function() {
+				var url = '';
+				
+				if($('#imgArquivo').css('display') == 'block') {
+					if ($('#situacaoImagem').val() == "nobanco") {
+ 						url = "@{Condutores.exibirImagem(condutor.id)}";
+					}
+					else if ($('#situacaoImagem').val() == "imagemnova") {
+						url = $('#arquivo').val();
+					}
+
+					var newwin = window.open(url,'miniwin','toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=0,resizable=0,width=800,height=800,top=100,left=100');
+					//newwin.document.close();
+				}
+			});
+			
+			$('#arquivo').change(function(evt) {
+				var arquivo; 
+				
+				if($('#arquivo').val() != "") {
+		        	if ( $.browser.msie ) {
+			        	$('#imgArquivo').attr('src',this.value);
+		                $('#exibirImagem').attr('disabled',false);
+					}
+					else { //chrome, mozilla
+						  var f = evt.target.files[0];
+					      var reader = new FileReader();
+					      reader.onload = (function(theFile) {
+					       	return function(e) {
+						        	$('#imgArquivo').attr('src',e.target.result);
+						        };
+					      })(f);
+					      reader.readAsDataURL(f);
+ 						  $('#exibirImagem').attr('disabled',false);
+					}
+	
+					if ($('#imgArquivo').css('display') == 'none') {
+						$('#imgArquivo').css('display','block');
+						$('#excluirImagem').attr('disabled',false);
+						$('#situacaoImagem').val('imagemnova');
+					}
+				}
+			});
+
+			if ($('#imgArquivo').css('display') == 'none') {
+				$('#excluirImagem').attr('disabled',true);
+			}
+
+			else if($('#imgArquivo').css('display') == 'block') {
+				$('#excluirImagem').attr('disabled',false);
+			}
+ 		});
+
+		function removerArquivo() {
+ 			$('#imgArquivo').removeAttr('src');
+			$('#excluirImagem').attr('disabled',true);
+			$('#imgArquivo').css('display','none');
+
+			if ( $.browser.msie ) {
+				$("#arquivo").replaceWith($("#arquivo").clone(true));
+        	}
+			else { //chrome, mozilla
+				$('#arquivo').val("");
+			}
+			
+			$('#situacaoImagem').val('semimagem');
+ 		    $('#exibirImagem').attr('disabled',true);
+ 	 	 }
+
+		$(window).load(function() {
+			var exibirImgArquivo = #{jsAction @Condutores.exibirImgArquivo(':id') /}
+ 	  	    $.get(
+ 	  	    	   exibirImgArquivo({id: $("input[name='condutor.id']").val()}), 
+ 		           function(carregouImagem) {
+     					if (carregouImagem == "true") {   
+     						$('#imgArquivo').css('display','block');
+     						$('#excluirImagem').attr('disabled',false);
+     						$('#exibirImagem').attr('disabled',false);
+     						$('#situacaoImagem').val('nobanco');
+     					}
+     					else {
+     						$('#imgArquivo').css('display','none');
+         					$('#excluirImagem').attr('disabled',true);
+         					$('#exibirImagem').attr('disabled',true);
+     						$('#situacaoImagem').val('semimagem');
+     					}
+     			   }
+		  	);
+		});
+	</script>
+#{/form}				

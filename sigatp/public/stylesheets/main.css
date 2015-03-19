@@ -1,0 +1,103 @@
+<style type="text/css">
+{}
+:not(ul){
+ 	max-width: 100%;
+ } 
+h5 {
+	padding-left: 5% !important;
+}
+.gt-content-box input, 
+.gt-content-box .container, 
+.gt-content-box select, 
+.gt-content-box textarea/* ,
+.gt-form input, 
+.gt-form .container, 
+.gt-form textarea */ {
+	margin-bottom: 14px; 	
+}
+.gt-content-box select {
+/* o select é mais alto que o input, tem que ter uma margem menor para ficar equilibrado -- aparentemente, não sempre */	
+	/* margin-bottom: 12px; */
+	overflow: auto;
+} */
+.datePicker {
+	position: relative;
+	top: -3px; /* o datePicker costuma se apresentar um pouco deslocado para baixo */
+}
+.gt-content-box input[type="checkbox"]/* ,
+.gt-form input[type="checkbox"] */ {
+	float: left;
+	margin: 2px 12px 0 0;
+	clear: left;
+}
+.inline{
+	display: inline !important;
+}
+.invisivel {
+	display: none;
+}
+.margemInferior {
+	height: 12px;
+}
+.gt-form.clearfix > div:last-of-type,
+.gt-form.clearfix > div > div:last-of-type,
+.gt-form.clearfix > div > div > div:last-of-type  {
+	margin-right: 0 !important;
+}
+.indentado {
+	margin-left: 25px;
+}
+.obrigatorio:after {
+	content: " *";
+	color: #FF0000;
+	font-weight: 900;
+	font-style: normal;
+}
+.alerta {
+	color: red; 
+	font-weight: bolder; 
+}
+.menor {
+	font-size: 90%;
+}
+.valor_numerico {
+	width: 100px;
+	text-align: right;
+}
+.coluna {
+	display: inline;
+	float: left;
+	margin-right: 30px;
+}
+.margemDireitaG {
+	margin-right: 60px;
+}
+.margemDireitaP {
+	margin-right: 10px;
+}
+@media (max-width:1160px) {
+	.gt-cols-3 div,
+	.gt-cols-2 > .gt-content {
+	float: left !important;
+	}
+}
+
+@media (max-width:900px) {
+	.gt-right-col {
+		float: left !important;
+	}
+	.gt-bd {
+		padding: 12px 12px !important;
+	}
+}
+@media (max-width:400px) {
+	.gt-content-box > div {
+		min-width: 100% !important;
+		max-width: 100% !important;
+	}
+	.gt-bd {
+		padding: 5px 5px !important;
+	}
+}
+
+</style>

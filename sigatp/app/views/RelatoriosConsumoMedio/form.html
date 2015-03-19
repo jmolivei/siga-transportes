@@ -1,0 +1,90 @@
+<script src="@{'/public/javascripts/jquery/jquery-ui-1.8.16.custom.min.js'}"></script>
+<script src="@{'/public/javascripts/jquery/jquery-1.6.4.min.js'}"></script>
+
+#{calendario}#{/calendario}
+#{erros}#{/erros}
+
+<script type="text/javascript">
+	$(document).ready(function() {
+		$('#lstVeiculos').change(function() {
+			carregarCombosAbastecimento();
+		});
+
+		$('#lstAbastecimentoInicial').change(function() {
+			carregarComboAbastecimentoFinal();
+		});
+	});
+
+	function carregarCombosAbastecimento() {
+		$('#lstAbastecimentoInicial').find('option').remove();
+		$('#lstAbastecimentoFinal').find('option').remove();
+		var lstAbastecimento = #{jsAction @RelatoriosConsumoMedio.carregarComboAbastecimentoInicial(':idVeiculo') /}
+		$.get(
+				lstAbastecimento({idVeiculo: $('#lstVeiculos').val()}), 
+		        function(html) {
+			        var htmlarray = html.split("@");
+             	    $('#lstAbastecimentoInicial').html(htmlarray[0])
+	                $('#lstAbastecimentoFinal').html(htmlarray[1])
+ 	      	    }
+   	    );
+	}
+
+	function carregarComboAbastecimentoFinal() {
+		if ($('#lstAbastecimentoInicial').val() != null) {
+			var itemSelecionado = new Date($('#lstAbastecimentoInicial').val().replace(/(\d{2})-(\d{2})-(\d{4}) (\d{2}):(\d{2})/, "$2/$1/$3 $4:$5"));
+			var itemLista;
+			
+			$('#lstAbastecimentoFinal').find('option').remove();
+			$('#lstAbastecimentoInicial option').each(function() {
+				itemLista = new Date($(this).val().replace(/(\d{2})-(\d{2})-(\d{4}) (\d{2}):(\d{2})/, "$2/$1/$3 $4:$5"));
+				if(itemSelecionado < itemLista) {
+					$('#lstAbastecimentoFinal').append($("<option></option>").attr("value",$(this).val()).text($(this).text()));
+				}
+			});
+			document.getElementById('lstAbastecimentoFinal').selectedIndex = 0;
+		}
+	}
+</script>
+
+#{form @RelatoriosConsumoMedio.gerarRelatorio(), enctype:'multipart/form-data' }
+	<div class="gt-content-box gt-form"> 
+       	<div>
+   			<label for="veiculos" class="obrigatorio">Ve&iacute;culo:</label>
+   			<div id="veiculos">
+				#{select   	'relatorioConsumoMedio.veiculo.id', 
+							id: 'lstVeiculos',
+							items:veiculos,
+							labelProperty:'dadosParaExibicao', 
+							value:relatorioConsumoMedio.veiculo?.id}
+	   			#{/select}
+   			</div>
+		</div>	
+		<div>
+   			<label for="abastecimentoIniciais" class="obrigatorio">Abastecimento Inicial:</label>
+   			<div id="abastecimentoIniciais">
+				#{select   	'relatorioConsumoMedio.abastecimentoInicial.id', 
+							id: 'lstAbastecimentoInicial',
+							items: abastecimentosIniciais,
+							labelProperty:'dadosParaExibicao', 
+							value:relatorioConsumoMedio.abastecimentoInicial?.id}
+	   			#{/select}
+   			</div>
+   		</div>
+		<div>
+   			<label for="abastecimentosFinais" class="obrigatorio">Abastecimento Final:</label>
+   			<div id="abastecimentosFinais">
+				#{select   	'relatorioConsumoMedio.abastecimentoFinal.id', 
+							id: 'lstAbastecimentoFinal',
+							items: abastecimentosFinais,
+							labelProperty:'dadosParaExibicao', 
+							value:relatorioConsumoMedio.abastecimentoFinal?.id}
+	   			#{/select}
+   			</div>
+   		</div>
+	</div>
+
+	<span class="alerta menor">* Preenchimento obrigat&oacute;rio</span>
+	<div class="gt-table-buttons">
+		<input type="submit" value="&{'views.botoes.pesquisar'}" class="gt-btn-medium gt-btn-left" />
+	</div>
+#{/form}

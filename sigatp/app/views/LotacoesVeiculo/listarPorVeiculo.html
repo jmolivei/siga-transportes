@@ -1,0 +1,40 @@
+#{calendario /}
+#{extends 'main.html' /}
+
+#{set title:'SIGA::Transportes' /}
+
+<div class="gt-bd clearfix">
+	<div class="gt-content clearfix">
+		<h2>${veiculo.dadosParaExibicao}</h2>
+		<h3>Lota&ccedil;&otilde;es</h3>
+
+#{include 'Veiculos/menu.html' /}
+
+#{if lotacoesVeiculo.size()>0}
+		<div class="gt-content-box gt-for-table">     
+		 	<table id="htmlgrid" class="gt-table">
+		    	<tr style="font-weight: bold;">
+			   		<th>Lota&ccedil;&atilde;o</th>
+		    	    <th>Data e Hora Inicio</th>
+		    	    <th>Data e Hora Fim</th>
+				</tr>
+#{list lotacoesVeiculo, as:'lotacaoVeiculo'}				
+			   	<tr>
+		    		<td>${lotacaoVeiculo.lotacao.descricaoAmpliada}</td>
+		    	    <td>${lotacaoVeiculo.dataHoraInicio?.format('dd/MM/yyyy HH:mm')}</td>
+		    	    <td>${lotacaoVeiculo.dataHoraFim?.format('dd/MM/yyyy HH:mm')}</td>
+				</tr>
+#{/list} 				
+		     </table>   
+		</div>
+#{/if}
+#{else}
+<br/><h3>N&atilde;o existem lotações cadastrados para este ve&iacute;culo.</h3>
+#{/else}
+	</div>
+</div>
+
+
+
+
+

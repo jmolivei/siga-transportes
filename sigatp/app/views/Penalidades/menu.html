@@ -1,0 +1,12 @@
+<link rel="stylesheet" href="@{'/public/stylesheets/andamentos.css'}" type="text/css" media="screen"/>
+
+	   	<p class="gt-table-action-list">
+	   		#{if menuPenalidadesMostrarVoltar} 
+	   			<img src="/sigatp/public/images/filter-icon.png"/><a class="filtro_Voltar"
+				href="@{Penalidades.listar()}"></a><a href="@{Penalidades.listar()}">Voltar</a>&nbsp;&nbsp;&nbsp;
+			#{/if}
+	   		#{if menuPenalidadesMostrarTodas} 
+	   			<img src="/sigatp/public/images/filter-icon.png"/><a class="filtro_T"
+				href="@{Penalidades.listarTodas()}"></a><a href="@{Penalidades.listarTodas()}"><U>T</U>odas</a>&nbsp;&nbsp;&nbsp;
+			#{/if}
+		</p>

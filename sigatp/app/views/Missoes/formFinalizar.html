@@ -1,0 +1,267 @@
+<script src="@{'/public/javascripts/jquery/jquery-ui-1.8.16.custom.min.js'}"></script>
+#{erros}#{/erros}
+<br />
+<form id="formMissoes" method="get,post" onsubmit="return false;" enctype="multipart/form-data">
+		<input type="hidden" id="missaoId" name="missao.id" value="${missao.id}" />
+
+	<h3>Informa&ccedil;&otilde;es B&aacute;sicas</h3>
+	<div id ="infbasicas" class="gt-content-box gt-for-table">     
+	 	<table id="htmlgridInformacoesBasicas" class="gt-table" >
+	 		<tr>
+	        	<th width="14%">Estado:</span></th>
+	        	<td>${missao.estadoMissao}</td>
+	        </tr>
+	        <tr>
+	        	<th width="14%">Dist&acirc;ncia Percorrida:</th>
+	        	<td>
+	        		<input type="text" readonly="readonly" name="missao.distanciaPercorridaEmKm" value="${missao.distanciaPercorridaEmKm}" size="12" class="decimal" />
+	        	</td>
+	        </tr>
+	        <tr>
+	        	<th width="14%">Tempo:</th>
+	        	<td>
+	        		<input type="text" readonly="readonly" name="missao.tempoBruto" value="${missao.tempoBruto}" size="12" />
+	        	</td>
+	        </tr>
+	        <tr>
+	        	<th width="14%">Consumo (l):</th>
+	        	<td>
+	        		<input type="text" name="missao.consumoEmLitros" value="${missao.consumoEmLitros}" size="12" class="decimal" />
+	        	</td>
+	        </tr>
+		</table> 
+	</div>
+	<br>
+	<h3> Requisi&ccedil;&atilde;o(&otilde;es)</h3>
+	    
+		<div id ="gridRequisicoes" class="gt-content-box gt-for-table">  
+		 	<table id="htmlgridRequisicoes" class="gt-table" >
+		    	<thead>
+		    	<tr style="font-weight: bold;">
+		    		<th>Sa&iacute;da prevista</th>
+		    		<th>Retorno previsto</th>
+		    		<th>Dados da Requisi&ccedil;&atilde;o</th>
+		    		<th width="8%"></th>
+				</tr>
+				</thead>
+				<tbody id="tbody"> 
+				#{if missao.requisicoesTransporte && missao.requisicoesTransporte.size() > 0}
+				#{set i = 0 /}
+                #{list missao.requisicoesTransporte, as:'requisicaoTransporte'}
+                <tr id="row_${requisicaoTransporte.id}">
+			   	    <input type="hidden" name='requisicoesVsEstados[${i}].idRequisicaoTransporte' readonly="readonly" value="${requisicaoTransporte.id}" class="requisicoes" />
+			   	   	<td>${requisicaoTransporte.dataHoraSaidaPrevista?.format('dd/MM/yyyy HH:mm')}</td>
+		    		<td>
+		    		#{if requisicaoTransporte.dataHoraRetornoPrevisto != null}
+		    			${requisicaoTransporte.dataHoraRetornoPrevisto?.format('dd/MM/yyyy HH:mm')}
+		    		#{/if}
+		    		#{else}
+		    			N&atilde;o
+		    		#{/else}
+		    		</td>
+			   	    <td>
+			   	    	#{tp.tags.link requisicaoTransporte.descricaoCompleta,
+		    		  	 			   parteTextoLink: requisicaoTransporte.sequence,
+		    						   comando: @Requisicoes.buscarPelaSequence(requisicaoTransporte.sequence,true)}
+		    			#{/tp.tags.link}
+					</td>
+			   	    <td width="8%" >
+			   	    #{select "requisicoesVsEstados[${i}].estado",
+				    	items:estadoRequisicao.valuesComboAtendimentoMissao(),
+				    	labelProperty:'descricao',
+				    	value:requisicoesVsEstados[i].estado}
+					#{/select}
+			   	    
+			   	    </td>
+				</tr>
+				#{set i = i + 1 /}
+                #{/list}
+                #{/if}
+                </tbody>
+		     </table>
+		</div>
+	<br />
+	
+	<h3>Sa&iacute;da</h3>
+	<div id ="infSaida" class="gt-content-box gt-for-table">     
+	 	<table id="htmlgridSaida" class="gt-table" >
+		    <tr>
+        	<th  width="14%" class="obrigatorio">Data/Hora:</th>
+        	<td>${missao.dataHoraSaida?.format('dd/MM/yyyy HH:mm')}</td>
+        	<th width="14%" class="obrigatorio">Ve&iacute;culo:</th>
+			<td>${missao.veiculo.dadosParaExibicao}</td>
+			
+        	<th  width="14%" class="obrigatorio">Condutor:</th>
+			<td colspan="3">${missao.condutor.dadosParaExibicao}</td>
+	        </tr>
+	        <tr>
+        	<th width="14%">Od&ocirc;metro:</th>
+        	<td>
+        		<input id="odometroSaidaEmKm" type="text" name="missao.odometroSaidaEmKm" value="${missao.odometroSaidaEmKm}" size="12" class="decimal" />
+        	</td>
+        	<th width="14%" class="obrigatorio">Estepe:</th>
+				<td align="left" style="padding: 7px 10px;">
+					#{select 'missao.estepe',
+			         		  items:missao.estepe.values(),
+			         		  labelProperty:'resposta',
+			         		  value:missao?.estepe}
+				    #{/select}
+			</td>
+        	<th width="14%" class="obrigatorio">Avarias Aparentes:</th>
+				<td align="left" style="padding: 7px 10px;">
+					#{select 'missao.avariasAparentesSaida',
+			         		  items:missao.avariasAparentesSaida.values(),
+			         		  labelProperty:'resposta',
+			         		  value:missao?.avariasAparentesSaida}
+				    #{/select}
+			</td>
+			<th width="14%" class="obrigatorio">Limpeza:</th>
+				<td align="left" style="padding: 7px 10px;">
+					#{select 'missao.limpeza',
+			         		  items:missao.limpeza.values(),
+			         		  labelProperty:'resposta',
+			         		  value:missao?.limpeza}
+				    #{/select}
+			</td>	
+	        </tr>
+	        <tr>
+	        	<th width="14%" class="obrigatorio">N&iacute;vel Combust&iacute;vel:</th>
+					<td align="left" style="padding: 7px 10px;">
+						#{select 'missao.nivelCombustivelSaida',
+				         		  items:missao.nivelCombustivelSaida.values(),
+				         		  labelProperty:'descricao',
+				         		  value:missao?.nivelCombustivelSaida}
+					    #{/select}
+				</td>
+	        	<th width="14%" class="obrigatorio">Tri&acirc;ngulo:</th>
+					<td align="left" style="padding: 7px 10px;">
+						#{select 'missao.triangulos',
+				         		  items:missao.triangulos.values(),
+				         		  labelProperty:'resposta',
+				         		  value:missao?.triangulos}
+					    #{/select}
+				</td>
+	        	<th width="14%" class="obrigatorio">Extintor:</th>
+					<td align="left" style="padding: 7px 10px;">
+						#{select 'missao.extintor',
+				         		  items:missao.extintor.values(),
+				         		  labelProperty:'resposta',
+				         		  value:missao?.extintor}
+					    #{/select}
+				</td>
+				<th width="14%" class="obrigatorio">Ferramentas:</th>
+					<td align="left" style="padding: 7px 10px;">
+						#{select 'missao.ferramentas',
+				         		  items:missao.ferramentas.values(),
+				         		  labelProperty:'resposta',
+				         		  value:missao?.ferramentas}
+					    #{/select}
+				</td>	
+	        </tr>
+	        <tr>
+	        	<th width="14%" class="obrigatorio">Licen&ccedil;a:</th>
+					<td align="left" style="padding: 7px 10px;">
+						#{select 'missao.licenca',
+				         		  items:missao.licenca.values(),
+				         		  labelProperty:'descricao',
+				         		  value:missao?.licenca}
+					    #{/select}
+				</td>
+	        	<th width="14%" class="obrigatorio">Cart&atilde;o Seguro:</th>
+					<td align="left" style="padding: 7px 10px;">
+						#{select 'missao.cartaoSeguro',
+				         		  items:missao.cartaoSeguro.values(),
+				         		  labelProperty:'resposta',
+				         		  value:missao?.cartaoSeguro}
+					    #{/select}
+				</td>
+	        	<th width="14%" class="obrigatorio">Cart&atilde;o Abastecimento:</th>
+					<td align="left" style="padding: 7px 10px;">
+						#{select 'missao.cartaoAbastecimento',
+				         		  items:missao.cartaoAbastecimento.values(),
+				         		  labelProperty:'resposta',
+				         		  value:missao?.cartaoAbastecimento}
+					    #{/select}
+				</td>
+	        	<th width="14%" class="obrigatorio">Cart&atilde;o Sa&iacute;da:</th>
+					<td align="left" style="padding: 7px 10px;">
+						#{select 'missao.cartaoSaida',
+				         		  items:missao.cartaoSaida.values(),
+				         		  labelProperty:'resposta',
+				         		  value:missao?.cartaoSaida}
+					    #{/select}
+				</td>	
+	        </tr>
+		</table>
+	</div>
+	<br>
+	<h3> Retorno</h3>
+	<div id ="infRetorno" class="gt-content-box gt-for-table">     
+	 	<table id="htmlgridRetorno" class="gt-table" >
+		    <tr>
+	        	<th width="14%" class="obrigatorio">Data/Hora:</th>
+	        	<td>
+	        		<input type="text" id="inputdataHoraRetorno" name="missao.dataHoraRetorno" value="${missao.dataHoraRetorno?.format('dd/MM/yyyy HH:mm')}" size="12" class="dataHora" />
+	        	</td>
+	        	<th colspan ="6"/>
+	        </tr>
+	        <tr>
+	        	<th width="14%" class="obrigatorio">Od&ocirc;metro:</th>
+	        	<td>
+	        		<input type="text" name="missao.odometroRetornoEmKm" value="${missao.odometroRetornoEmKm}" size="12" class="decimal" />
+	        	</td>
+	        	<th width="14%" class="obrigatorio">Combustivel:</th>
+					<td align="left" style="padding: 7px 10px;">
+						#{select 'missao.nivelCombustivelRetorno',
+				         		  items:missao.nivelCombustivelRetorno.values(),
+				         		  labelProperty:'descricao',
+				         		  value:missao?.nivelCombustivelRetorno}
+					    #{/select}
+				</td>
+	        	<th width="14%" class="obrigatorio">Avarias Aparentes:</th>
+					<td align="left" style="padding: 7px 10px;">
+						#{select 'missao.avariasAparentesRetorno',
+				         		  items:missao.avariasAparentesRetorno.values(),
+				         		  labelProperty:'resposta',
+				         		  value:missao?.avariasAparentesRetorno}
+					    #{/select}
+				</td>
+				<th width="14%"></th>
+					<td></td>
+				<tr>
+		        	<th>Ocorrências: </th>
+		        	<td colspan="7"><textarea name="missao.ocorrencias" rows="7" cols="80">${missao?.ocorrencias}</textarea></td>
+		        </tr>
+		       	<tr>
+		        	<th>Itiner&acute;rio Completo:</th>
+		        	<td colspan="7"><textarea name="missao.itinerarioCompleto" rows="7" cols="80">${missao?.itinerarioCompleto}</textarea></td>
+		        </tr> 
+		</table> 
+	</div>
+	<br/><span style="color: red; font-weight: bolder; font-size: smaller;">&{'views.erro.preenchimentoObrigatorio'}</span>
+	
+	<script>
+		 function submitForm(acao) {
+	    // You can do things here such as validate the form
+	     // return false; if the form is not valid
+	        var formulario = document.getElementById("formMissoes");
+	        formulario.setAttribute("action",acao);
+			var x = 0;
+			var inputsRequisicoes = document.getElementsByName("requisicoesSelecionadas");
+			for (var i = 0; i < inputsRequisicoes.length; i++)
+			{
+				inputsRequisicoes[i].setAttribute("name", "missao.requisicoesTransporte[" + x + "].id");
+				i--;
+				x++;
+			}
+
+			formulario.submit();
+		}
+	</script>
+	
+	<div id="btnAcoes" class="gt-table-buttons">
+		<input type="button" id="btnFinalizar" value="&{'views.botoes.finalizar'}" onClick="submitForm('@{Missoes.finalizarMissao()}')" class="gt-btn-medium gt-btn-left" />
+		<input type="button" id="btnVoltar"  value="&{'views.botoes.voltar'}" onClick="javascript:location.href='@{Missoes.buscarPelaSequence(missao.sequence)}'" class="gt-btn-medium gt-btn-left" />
+	</div>
+
+</form>
