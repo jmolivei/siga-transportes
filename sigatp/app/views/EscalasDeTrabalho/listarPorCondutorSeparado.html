@@ -1,0 +1,46 @@
+#{calendario /}
+#{extends 'main.html' /}
+
+#{set title:'SIGA::Transportes' /}
+
+<div class="gt-bd clearfix">
+	<div class="gt-content clearfix">
+		<h2>${condutor.dadosParaExibicao} - Rela&ccedil;&atilde;o de Escalas de Trabalho</h2>
+
+#{include 'Condutores/menu.html' /}
+
+#{if escalas.size()>0}
+		<div class="gt-content-box gt-for-table">     
+		 	<table id="htmlgrid" class="gt-table">
+		    	<tr style="font-weight: bold;">
+		    	    <th>In&iacute;cio Vig&ecirc;ncia</th>
+			   		<th>Fim Vig&ecirc;ncia</th>
+			   		<th>Escala</th>
+			   		<th width="5"></th>
+			   		<th width="5"></th>
+				</tr>
+#{list escalas, as:'escala'}
+			   	<tr>
+		    	    <td>${escala.dataVigenciaInicio?.format("dd/MM/yyyy")}</td>
+		    	    <td>${escala.dataVigenciaFim?.format("dd/MM/yyyy")}</td>
+		    		<td>${escala.escalaParaExibicao}</td>
+		    		<td><a href="@{EscalasDeTrabalho.editar(escala.id)}">Editar</a></td>
+		    		<td><a href="@{EscalasDeTrabalho.excluir(escala.id)}" onclick="javascript:return confirm('Tem certeza de que deseja excluir esta escala?');">Excluir</a></td>
+				</tr>
+#{/list}
+		     </table>   
+		</div>
+#{/if}
+#{else}
+<br/><h3>N&atilde;o existem escalas cadastradas para este condutor.</h3>
+#{/else}
+<div class="gt-table-buttons">
+	<a href="@{EscalasDeTrabalho.incluir(condutor.id)}" class="gt-btn-medium gt-btn-left">&{'views.botoes.incluir'}</a>
+</div>
+	</div>
+</div>
+
+
+
+
+

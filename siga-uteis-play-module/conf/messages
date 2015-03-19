@@ -1,0 +1,5 @@
+# Default siga-uteis-play-module messages
+# You can specialize this file for each language.
+# For exemple, for french create a messages.fr file
+
+#siga-uteis-play-module.name=siga-uteis-play-module

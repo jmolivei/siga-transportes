@@ -1,0 +1,7 @@
+# Application dependencies
+
+require:
+    - play -> crud  
+    - play -> pdf 0.9
+    - siga-play-module -> siga-play-module 0.0.1 
+    - siga-uteis-play-module -> siga-uteis-play-module 0.0.3

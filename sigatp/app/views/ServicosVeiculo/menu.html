@@ -1,0 +1,90 @@
+<style type="text/css">
+
+  .filtro {	
+		background: url(atuais/filter-icon.png)	no-repeat;
+	}
+	.status_N, .status_P, .status_A, .status_E,
+	.filtro_N, .filtro_P, .filtro_A, .filtro_E,
+	.filtro_U, .filtro_B, .filtro_R, .filtro_C,
+    .filtro_I, .filtro_F,	.filtro_na_A, .filtro_T,
+    .filtro_Z {
+		/* No html, usar a letra correspondente ao nome do filtro/status, salvo indicação em contrário
+		   N = não atendida, P = programada, A = atendida, E = em atendimento,
+	     U = autorizada, B = aberta, R = rejeitada, C = cancelada,
+ 		   I = iniciada, F = finalizada,	na_A = autorizada (quando no filtro Não Autorizada/Autorizada, usar caracter 'A'),
+		   T = todas (usar caracter '+') */
+		border: 2px solid;
+		border-radius: 1em;
+		text-transform: uppercase;
+		padding: 0 .25em;
+		font:normal 70% verdana, arial, sans-serif;
+		font-weight: 900;
+		position:relative;
+	}
+	.status_N, .status_P, .status_A, .status_E {
+		margin-left: .2em;
+		top: -.2em;
+	}	
+	.filtro_N, .filtro_P, .filtro_A, .filtro_E, .filtro_U, .filtro_B, 
+	.filtro_R, .filtro_C, .filtro_I, .filtro_F, .filtro_T, .filtro_Z	{
+		top: .4em;
+		left: -.7em;
+	}	
+	.filtro_B, {
+		border-color: #00F;
+		color: #00F;
+	}
+	.status_N, .filtro_N, .filtro_R, .filtro_C {
+		border-color: #FF2000;
+		color: #FF2000;
+	}
+	.status_P, .filtro_P {
+		border-color: #33EE00;
+		color: #33EE00;
+	}
+	.status_A, .filtro_A, .filtro_U, .filtro_na_A, .filtro_F, .filtro_T, .filtro_Z {
+		border-color: #33EE00;
+		color: #33EE00;
+	}
+	.filtro_na_A {
+		top: .4em;
+		margin-left: -1.5em;
+	}	
+	.status_E, .filtro_E, .filtro_I {
+		border-color: #FC0;
+		color: #FC0;
+	}
+ .filtro_I {
+	 padding: 0 .38em;
+ }
+</style>
+	   	<p class="gt-table-action-list">
+	   		#{if menuServicosVeiculoMostrarTodos} 
+	   			<img src="/sigatp/public/images/filter-icon.png"/><a class="filtro_T"
+				href="@{ServicosVeiculo.listar()}">+</a><a href="@{ServicosVeiculo.listar()}"><U>T</U>odos</a>&nbsp;&nbsp;&nbsp;
+			#{/if}
+	   		#{if menuServicosVeiculoMostrarAgendados} 
+     			<img src="/sigatp/public/images/filter-icon.png"/><a class="filtro_A"
+				href="@{ServicosVeiculo.listarFiltrado(situacaoServico.AGENDADO)}">A</a>
+				<a href="@{ServicosVeiculo.listarFiltrado(situacaoServico.AGENDADO)}">
+				<U>A</U>gendados</a>&nbsp;&nbsp;&nbsp;
+			#{/if}
+	   		#{if menuServicosVeiculoMostrarIniciados} 
+	   		  	<img src="/sigatp/public/images/filter-icon.png"/><a class="filtro_I"
+				href="@{ServicosVeiculo.listarFiltrado(situacaoServico.INICIADO)}">I</a>
+				<a href="@{ServicosVeiculo.listarFiltrado(situacaoServico.INICIADO)}">
+				<U>I</U>niciados</a>&nbsp;&nbsp;&nbsp;
+			#{/if}
+	   		#{if menuServicosVeiculoMostrarRealizados} 
+	   		  	<img src="/sigatp/public/images/filter-icon.png"/><a class="filtro_Z"
+				href="@{ServicosVeiculo.listarFiltrado(situacaoServico.REALIZADO)}">Z</a>
+				<a href="@{ServicosVeiculo.listarFiltrado(situacaoServico.REALIZADO)}">
+				Reali<U>z</U>ados</a>&nbsp;&nbsp;&nbsp;
+			#{/if}
+	   		#{if menuServicosVeiculoMostrarCancelados} 
+	   		  	<img src="/sigatp/public/images/filter-icon.png"/><a class="filtro_C"
+				href="@{ServicosVeiculo.listarFiltrado(situacaoServico.CANCELADO)}">C</a>
+				<a href="@{ServicosVeiculo.listarFiltrado(situacaoServico.CANCELADO)}">
+				<U>C</U>ancelados</a>&nbsp;&nbsp;&nbsp;
+			#{/if}
+		</p>

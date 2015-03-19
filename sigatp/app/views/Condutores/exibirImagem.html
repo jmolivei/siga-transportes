@@ -1,0 +1,17 @@
+#{extends 'main.html' /}
+#{calendario}#{/calendario}
+#{set title:'SIGA-Transporte' /}
+
+<style>
+	 .imagem {
+	   height: 500px;
+	   border: 1px solid #000;
+	   margin: 10px 5px 0 0;
+	 }
+</style>
+
+<div class="gt-bd clearfix">
+	<div class="gt-content clearfix">
+		<img id="imgArquivo" class="imagem" src="@{getImagem(condutor.id)}" />
+	</div>
+</div>

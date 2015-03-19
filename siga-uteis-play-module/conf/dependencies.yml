@@ -1,0 +1,4 @@
+self: play -> siga-uteis-play-module 0.0.3
+
+require:
+    - play

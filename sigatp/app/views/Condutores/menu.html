@@ -1,0 +1,37 @@
+	   	<p class="gt-table-action-list">
+	   		#{if menuCondutoresIncluir} <a class="once"
+				href="@{Condutores.incluir()}"> <img
+				src="/sigatp/public/images/editaricon.png"
+				style="margin-right: 5px;">Dados Cadastrais</a>&nbsp;&nbsp;&nbsp;
+			#{/if}
+			#{if menuCondutoresEditar} <a class="once"
+				href="@{Condutores.editar(idCondutor)}"> <img
+				src="/sigatp/public/images/editaricon.png"
+				style="margin-right: 5px;">Dados Cadastrais</a>&nbsp;&nbsp;&nbsp;
+			#{/if}
+			#{if menuPlantoes} <a class="once"
+				href="@{Plantoes.listarPorCondutor(idCondutor)}"> <img
+				src="/sigatp/public/images/plantaoicon.png"
+				style="margin-right: 5px;">Plant&otilde;es</a>&nbsp;&nbsp;&nbsp;
+			#{/if}
+			#{if menuAfastamentos} <a class="once"
+				href="@{Afastamentos.listarPorCondutor(idCondutor)}"> <img
+				src="/sigatp/public/images/afastamentoicon.png"
+				style="margin-right: 5px;">Afastamentos</a>&nbsp;&nbsp;&nbsp;
+			#{/if}
+			#{if menuEscalasDeTrabalho} <a class="once"
+				href="@{EscalasDeTrabalho.listarPorCondutor(idCondutor)}"> <img
+				src="/sigatp/public/images/escalaicon.png"
+				style="margin-right: 5px;">Escalas de Trabalho</a>&nbsp;&nbsp;&nbsp;
+			#{/if}
+			#{if menuAgenda} <a class="once"
+				href="@{Agendas.listarPorCondutor(idCondutor)}"> <img
+				src="/sigatp/public/images/agendaicon.png"
+				style="margin-right: 5px;">Agenda</a>&nbsp;&nbsp;&nbsp;
+			#{/if}
+			#{if menuInfracoes} <a class="once"
+				href="@{AutosDeInfracao.listarPorCondutor(idCondutor)}"> <img
+				src="/sigatp/public/images/infracoesicon.png"
+				style="margin-right: 5px;">Infra&ccedil;&otilde;es</a>&nbsp;&nbsp;&nbsp;
+			#{/if}
+		</p>
