@@ -1,5 +1,5 @@
 # siga-transportes
-Módulo de Transportes
+Repositório do Módulo de Transportes integrado ao projeto-siga
 
 ## Dependências do Projeto
 * Módulos siga-cp,siga-play-modules instalados no repositório local. 
