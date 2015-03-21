@@ -1,5 +1,5 @@
 # siga-transportes
-Repositório do módulo de transportes. Este módulo é integrado aos módulos do repositório principal(Projeto-Siga) do Siga.
+Repositório do módulo de transportes. Este módulo é integrado aos módulos do repositório principal do projeto siga.
 
 ## Dependências do Projeto
 * Módulos siga-cp,siga-play-modules instalados no repositório local. 
