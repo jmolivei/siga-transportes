@@ -2,7 +2,7 @@
 Repositório do módulo de transportes. Este módulo é integrado aos módulos do repositório principal do projeto siga.
 
 ## Dependências do Projeto
-* Módulos siga-cp,siga-play-modules instalados no repositório local. 
+* Módulos siga-play-module e siga-uteis-play-module instalados no repositório local. 
 * [Git](https://windows.github.com/)
 * Maven ftp://mirror.reverse.net/pub/apache/maven/maven-3/3.2.3/binaries/apache-maven-3.2.3-bin.zip
 * [Java JDK 1.7](http://download.oracle.com/otn-pub/java/jdk/7u67-b01/jdk-7u67-windows-x64.exe)
@@ -26,11 +26,13 @@ mvn -version
 Ambos deverão mostrar a versão dos respectivos programas, caso mostre erro, algum desses passos foi configurado incorretamente.
 
 ## Deploy
-Para gerar o pacote para deploy do siga, é necessário entrar no diretório projeto-siga e executa a task package do maven.  
+Para gerar o pacote para deploy do siga-transportes, é necessário entrar no diretório siga-transportes e executa a task package do maven.  
 PS: (A primeira vez isso pode demorar bastante).
 ```
    mvn clean package
 ```
+
+PS: Será preciso ter o siga-play-module instalado no repositório local. Este módulo faz parte do repositório principal do projeto-siga. 
 
 ## Versionamento
 Nomenclatura de versionamento:
@@ -46,12 +48,12 @@ Todos os deploys em produção devem partir do ** branch master ** com sua respe
 Qualquer alteração em uma tag gerada previamente é denominada como **hotfix**.
 
 ## JBoss
-### Configuração
+### Configuração (As pastas referenciadas abaixo estão no repositório principal dp projeto-siga)
 * Deploy do drive oracle JDBC. Copiar o arquivo ***projeto-siga/configuracao/ojdbc6.jar*** para ***%JBOSS_HOME%/standalone/deployments/***
 * Substituir o arquivo ***%JBOSS_HOME%/standalone/configuracao/standalone.xml*** pelo arquivo ***projeto-siga/configuration/standalone.xml***.
 * Colocar o arquivo ***projeto-siga/configuracao/siga.properties*** em ***%JBOSS_HOME%/standalone/configuration/***
 
-## Play
+## Play (As pastas referenciadas abaixo estão no repositório principal dp projeto-siga)
 * JBoss -> Criar o módulo do Play! Framework, copiando a pasta ***projeto-siga/configuracao/Play/modulo/sigadoc*** em ***%JBOSS_HOME%/modules/***  
 * Maven -> Instalar a biblioteca no repositório local do maven executando o arquivo ***projeto-siga/configuracao/Play/maven/configure.bat***
 
