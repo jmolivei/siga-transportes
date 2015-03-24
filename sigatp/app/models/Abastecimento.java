@@ -44,7 +44,8 @@ import br.gov.jfrj.siga.dp.DpPessoa;
 public class Abastecimento extends GenericModel implements Comparable<Abastecimento> {
 	
 	@Id
-	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "hibernate_sequence_generator") @SequenceGenerator(name = "hibernate_sequence_generator", sequenceName="SIGATP.hibernate_sequence") 
+	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "hibernate_sequence_generator") 
+	@SequenceGenerator(name = "hibernate_sequence_generator", sequenceName="SIGATP.hibernate_sequence") 
 	public Long id;
 	
 	@Required
