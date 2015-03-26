@@ -1,1 +1,0 @@
-alter table SIGATP.RevInfo add motivolog varchar2(255 char);
