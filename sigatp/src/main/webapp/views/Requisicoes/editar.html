@@ -1,0 +1,14 @@
+#{calendario /}
+#{decimal /}
+#{extends 'main.html' /}
+
+#{set title:'SIGA-Transporte' /}
+
+#{set esconderBotoes = false /}
+
+<div class="gt-bd clearfix">
+	<div class="gt-content clearfix">
+		<h2>Editar Requisi&ccedil;&atilde;o ${requisicaoTransporte.sequence}</h2>
+		#{include 'Requisicoes/form.html' /}
+	</div>
+</div>

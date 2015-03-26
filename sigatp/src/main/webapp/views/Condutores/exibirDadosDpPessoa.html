@@ -1,0 +1,6 @@
+
+	#{if pessoa != null}
+		<input type="hidden" name="dataNascimento" id="pessoa.dataNascimento" value="${pessoa.getDataNascimento()?.format('dd/MM/yyyy')}" />
+		<input type="hidden" name="lotacao" id="pessoa.lotacao" value="${pessoa.getLotacao().getDescricao()}" />
+		<input type="hidden" name="emailInstitucional" id="pessoa.emailInstitucional" value="${pessoa.getEmailPessoa()}" />
+	#{/if}

@@ -1,0 +1,24 @@
+#{calendario /}
+#{extends 'main.html' /}
+
+#{set title:'SIGA::Transporte' /}
+
+#{set mostrarBotoesEditar = true /}
+
+#{set mostrarDadosProgramada = true /}
+
+#{if servico.situacaoServico.equals("INICIADO")}
+#{set mostrarDadosIniciada = true /} 
+#{/if}
+
+#{if servico.situacaoServico.equals("REALIZADO")}
+#{set mostrarDadosIniciada = true /} 
+#{set mostrarDadosFinalizada = true /} 
+#{/if}
+
+<div class="gt-bd clearfix">
+	<div class="gt-content clearfix">
+		<h2>Editar Servi&ccedil;os de Ve&iacute;culos: ${servico.sequence}</h2>
+		#{include 'ServicosVeiculo/form.html' /}
+	</div>
+</div>

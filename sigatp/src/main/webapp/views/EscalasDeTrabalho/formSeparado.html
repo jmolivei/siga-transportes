@@ -1,0 +1,136 @@
+#{calendario}#{/calendario}
+#{include 'Condutores/menu.html' /}
+#{erros}#{/erros}
+<form id="formEscalaDeTrabalho" method="get,post" onsubmit="return false;" enctype="multipart/form-data">
+		<div class="gt-content-box gt-for-table">     
+		 	<table id="htmlgrid" class="gt-table" >
+			 	<tr>
+		        	<th width="20%" class="obrigatorio">Data de In&iacute;cio da vig&ecirc;ncia:</th>
+		        	<td>
+		        		<input type="text" id="dataVigenciaInicio" name="escala.dataVigenciaInicio" value="${escala.dataVigenciaInicio?.format('dd/MM/yyyy')}" size="12" class="datePicker" />
+		        	</td>
+		        </tr>
+		        <tr>
+		        	<td colspan="2">
+	        
+		        	<h3> Dias de Trabalho</h3>
+		        	
+		        		    <script>
+
+
+			function inserirLinhaTabela()
+			{
+				var table = document.getElementById("tbody");
+				table.innerHTML = table.innerHTML + '<tr><td><input type="hidden" name="missao.requisicoesTransporte[3].id" readonly="readonly" value="812" class="requisicoes"/></td><td style="white-space: pre;">4 - FERNANDO, WALDECK - RUA DO ACRE - AEROPORTO GALEAO</td></tr>';
+			}
+
+			function apagaLinha(link) {
+		    	
+		    	if ($(link).attr('disabled')) {
+					return false;
+			    } 
+		    		
+				var html = "";
+				if(confirm('Tem certeza de que deseja excluir este dia?')) {
+					var trExcluir = link.parentNode.parentNode;
+					var tabela = trExcluir.parentNode;
+					tabela.removeChild(trExcluir);
+
+				}
+			}
+
+			 function submitForm(acao) {
+				    // You can do things here such as validate the form
+				     // return false; if the form is not valid
+				        var formulario = document.getElementById("formEscalasDeTrabalho");
+				        formulario.setAttribute("action",acao);
+						var x = 0;
+						var inputsRequisicoes = document.getElementsByName("diaEntradaNaoSelecionado");
+						for (var i = 0; i < inputsRequisicoes.length; i++)
+						{
+							inputsRequisicoes[i].setAttribute("name", "missao.requisicoesTransporte[" + x + "].id");
+							i--;
+							x++;
+						}
+
+						formulario.submit();
+					}
+
+			$(function() {
+				$( "#btn-Incluir-DiasDeTrabalho" )
+					.click(function() {
+						var divrow = document.getElementById("rowDiasDeTrabalho");
+						var html = '<tr>';
+						html = html + '<th width="20%" class="obrigatorio">Dia:</th>';
+						html = html + '<td>'; 
+						html = html + divrow.innerHTML;
+						html = html + '</td>';
+						html = html + '<td width="8%" ><a class="linkExcluir" name="linkExcluirSelecionados" style="display:inline" onclick="javascript:apagaLinha(this);" href="#">Excluir</a></td>';
+						html = html + '</tr>';
+							
+						$( "#htmlgridDiasDeTrabalho tbody" ).append(html);
+					});
+			});
+
+	    </script>
+	    
+				<div id ="gridDiasDeTrabalho" class="gt-content-box gt-for-table">
+
+			 	    <table id="htmlgridDiasDeTrabalho" class="gt-table" >
+			 	    	<tbody id="tbody"> 
+                        #{list escala.diasDeTrabalho, as:'diaDeTrabalho'}	
+					 	<tr>
+		    	    	<th width="20%" class="obrigatorio">Dia:</th>
+		    	    	<td>
+			     	   		#{select 'diaEntrada',
+			          		  items:diaSemana.values(),
+			          		  value:diaDeTrabalho.diaEntrada,
+			          		  class:'selecionado'}
+						    #{/select}
+						    <input type="text"  name="horaEntrada" class="selecionado" value="${diaDeTrabalho.horaEntrada?.format('HH:mm')}" size="8" class="hora" />
+				 			at&eacute;
+					 		#{select 'diaSaidaNaoSelecionado',
+		          			  items:diaSemana.values(),
+		          			  value:diaDeTrabalho.diaSaida,
+		          			  class:'selecionado'}
+						    #{/select}
+						    <input type="text" name="horaSaida" class="selecionado" value="${diaDeTrabalho.horaSaida?.format('HH:mm')}" size="8" class="hora" />
+						    <input type="hidden" name="id" class="selecionado" value="${diaDeTrabalho.id}"/>
+		        		</td>
+		        		<td width="8%" ><a class="linkExcluir" name="linkExcluirSelecionados" style="display:inline" onclick="javascript:apagaLinha(this);" href="#">Excluir</a></td>
+		        		</tr>
+		        	    #{/list}
+                	    </tbody>
+		        	</table>
+			    </div>
+			    	<div id ="btngridRequisicoes" class="gt-table-buttons">
+	     <input type="button" id="btn-Incluir-DiasDeTrabalho" value="&{'views.botoes.incluir'}"  class="gt-btn-medium gt-btn-left" />
+	</div>
+				    	    <div id ="rowDiasDeTrabalho" style="display:none">
+				    	    #{select 'diaEntrada',
+			          		  items:diaSemana.values(),
+			          		  value:models.DiaDaSemana.SEGUNDA,
+		          			  class:naoSelecionado}
+						    #{/select}
+						    <input type="text"  name="horaEntrada" class="naoSelecionado" value="11:00" size="8" class="hora" />
+				 			at&eacute;
+					 		#{select 'diaSaida',
+		          			  items:diaSemana.values(),
+		          			  value:models.DiaDaSemana.SEGUNDA,
+		          			  class:naoSelecionado}
+						    #{/select}
+						    <input type="text" name="horaSaida" class="naoSelecionado" value="11:00" size="8" class="hora" />
+						    <input type="hidden" name="id" class="naoSelecionado" value="${escala.id}"/>
+				    	    
+	   					    </div>
+			    </td>
+		        </tr>
+		    </table> 
+		    <input type="hidden" name="escala.condutor.id" value="${escala.condutor.id}"/>
+		</div>
+		<br/><span style="color: red; font-weight: bolder; font-size: smaller;">&{'views.erro.preenchimentoObrigatorio'}</span>
+		<div class="gt-table-buttons">
+			<input type="button" value="&{'views.botoes.salvar'}" onClick="submitForm('@{EscalasDeTrabalho.salvar()}')" class="gt-btn-medium gt-btn-left" />
+			<input type="button" value="&{'views.botoes.cancelar'}" class="gt-btn-medium gt-btn-left" onclick="javascript:window.location = '@{Condutores.listar()}';" />
+		</div>
+</form>

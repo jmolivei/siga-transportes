@@ -1,0 +1,20 @@
+#{calendario /}
+#{decimal /}
+#{extends 'main.html' /}
+
+#{set title:'SIGA-Transporte' /}
+
+#{set mostrarBotoesFinalizar = true /}
+
+#{set mostrarDadosProgramada = true /}
+
+#{set mostrarDadosIniciada = true /} 
+
+#{set mostrarDadosFinalizada = true /} 
+
+<div class="gt-bd clearfix">
+	<div class="gt-content clearfix">
+		<h2>Finalizar Missão: ${missao.sequence}</h2>
+		#{include 'Missoes/formFinalizar.html' /}
+	</div>
+</div>

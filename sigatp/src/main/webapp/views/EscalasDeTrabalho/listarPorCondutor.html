@@ -1,0 +1,42 @@
+#{calendario /}
+#{extends 'main.html' /}
+
+#{set title:'SIGA::Transportes' /}
+
+<div class="gt-bd clearfix">
+	<div class="gt-content clearfix">
+		<h2>${condutor.dadosParaExibicao}</h2>
+		<h3>Escalas de Trabalho</h3>
+#{include 'EscalasDeTrabalho/form.html' /}
+
+#{if escalas.size()>0}
+		<div class="gt-content-box gt-for-table">    
+		    <h3>&nbsp;&nbsp;Hist&oacute;rico das Escalas de Trabalho</h3> 
+		 	<table id="htmlgrid" class="gt-table">
+		    	<tr style="font-weight: bold;">
+		    	    <th>In&iacute;cio Vig&ecirc;ncia</th>
+			   		<th>Fim Vig&ecirc;ncia</th>
+			   		<th>Escala</th>
+			   		<th width="5"></th>
+			   		<th width="5"></th>
+				</tr>
+#{list escalas, as:'escala'}
+			   	<tr>
+		    	    <td>${escala.dataVigenciaInicio?.format("dd/MM/yyyy HH:mm")}</td>
+		    	    <td>${escala.dataVigenciaFim?.format("dd/MM/yyyy HH:mm")}</td>
+		    		<td>${escala.escalaParaExibicao}</td>
+				</tr>
+#{/list}
+		     </table>   
+		</div>
+#{/if}
+#{else}
+<br/><h3>N&atilde;o existem escalas cadastradas para este condutor.</h3>
+#{/else}
+	</div>
+</div>
+
+
+
+
+

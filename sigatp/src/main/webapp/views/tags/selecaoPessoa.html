@@ -1,0 +1,21 @@
+%{
+	String _nomeSelPessoaClean = _nomeSelPessoa.replaceAll("\\.","");
+}%
+#{if _disabled == "true"}
+	#{set 'selecaoPessoaDisabled'}
+		disabled="disabled" 
+	#{/set}
+#{/if}
+<span id="spanPessoa${_nomeSelPessoaClean}">#{selecao tipo:'pessoa',nome:_nomeSelPessoa,value:_valuePessoa,disabled:_disabled /}</span>
+<script language="javascript">
+select.onchange = function(){
+		document.getElementById('spanPessoa${_nomeSelPessoaClean}').style.display = 'none';
+		document.getElementById('spanLotacao${_nomeSelLotacaoClean}').style.display = 'inline';
+		document.getElementById('${_nomeSelPessoaClean}').value='';
+		document.getElementById('${_nomeSelPessoaClean}_sigla').value='';
+		document.getElementById('${_nomeSelPessoaClean}_descricao').value='';
+		document.getElementById('${_nomeSelPessoaClean}Span').innerHTML='';
+	}
+}
+select.onchange();
+</script>

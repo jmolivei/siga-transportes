@@ -1,0 +1,44 @@
+#{calendario /}
+#{decimal /}
+#{erros /}
+#{form @RelatoriosDiarios.salvar(), enctype:'multipart/form-data',id:'formRelatoriosDiarios' }
+	<input type="hidden" name="relatorioDiario.id" value="${relatorioDiario.id}" />
+	<div class="gt-content-box gt-form clearfix">
+		<div class="clearfix">
+			<div class="coluna margemDireitaG">	
+		 		<input type="hidden" name="relatorioDiario.veiculo.id" value="${relatorioDiario.veiculo.id}">
+		      	<label for="relatorioDiario.data" class= "obrigatorio">Data</label>
+	     		<input type="text" name="relatorioDiario.data" value="${relatorioDiario.data?.format('dd/MM/yyyy')}" size="12" class="datePicker" />
+		      	<label for="relatorioDiario.odometroEmKm" class= "obrigatorio">Odômetro</label>
+				<input type="text" name="relatorioDiario.odometroEmKm" value="${relatorioDiario.odometroEmKm}" style="width: 100px; text-align: right;" class="decimal"/></td>
+		      	<label for="relatorioDiario.nivelDeCombustivel" class= "obrigatorio">N&iacute;vel de Combust&iacute;vel</label>
+				#{select 'relatorioDiario.nivelDeCombustivel',
+		         		  items:relatorioDiario.nivelDeCombustivel.values(),
+		         		  labelProperty:'descricao',
+		         		  value:relatorioDiario.nivelDeCombustivel}
+				#{/select}
+			</div>
+			<div class="coluna">	
+		      	<label for="relatorioDiario.equipamentoObrigatorio" class= "obrigatorio">Equipamento Obrigat&oacute;rio</label>
+				#{select 'relatorioDiario.equipamentoObrigatorio',
+			    		  items:relatorioDiario.equipamentoObrigatorio.values(),
+			       		  labelProperty:'resposta',
+			       		  value:relatorioDiario?.equipamentoObrigatorio}
+			    #{/select}
+		      	<label for="relatorioDiario.cartoes" class= "obrigatorio">Cartões</label>
+				#{select 'relatorioDiario.cartoes',
+			    		  items:relatorioDiario.cartoes.values(),
+			       		  labelProperty:'resposta',
+			       		  value:relatorioDiario?.cartoes}
+			    #{/select}
+			</div>
+		</div>			  
+		<label for="relatorioDiario.observacao">Observação</label>
+		<textarea name="relatorioDiario.observacao" maxlength="255" rows="5" cols="100">${relatorioDiario.observacao}</textarea>
+	</div>
+	<span class="alerta menor">&{'views.erro.preenchimentoObrigatorio'}</span>
+	<div class="gt-table-buttons">
+		<input type="submit" value="&{'views.botoes.salvar'}" class="gt-btn-medium gt-btn-left" />
+		<input type="button" value="&{'views.botoes.cancelar'}" onClick="javascript:location.href='@{RelatoriosDiarios.listarPorVeiculo(relatorioDiario.veiculo.id)}'" class="gt-btn-medium gt-btn-left" />
+	</div>
+#{/form}

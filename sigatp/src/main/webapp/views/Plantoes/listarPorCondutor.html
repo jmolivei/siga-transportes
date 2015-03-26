@@ -1,0 +1,50 @@
+#{calendario /}
+#{extends 'main.html' /}
+
+#{set title:'SIGA::Transportes' /}
+
+<div class="gt-bd clearfix">
+	<div class="gt-content clearfix">
+		<h2>${condutor.dadosParaExibicao}</h2>
+		<h3>Plant&otilde;es</h3>
+
+#{include 'Condutores/menu.html' /}
+
+#{if plantoes.size()>0}
+		<div class="gt-content-box gt-for-table">     
+		 	<table id="htmlgrid" class="gt-table">
+		    	<thead>
+		    	<tr style="font-weight: bold;">
+		    	    <th>In&iacute;cio</th>
+			   		<th>Fim</th>
+			   		<th width="5"></th>
+			   		<th width="5"></th>
+				</tr>
+				</thead>
+				<tbody>
+#{list plantoes, as:'plantao'}				
+			   	<tr>
+		    	    <td>${plantao.dataHoraInicio?.format("dd/MM/yyyy HH:mm")}</td>
+		    	    <td>${plantao.dataHoraFim?.format("dd/MM/yyyy HH:mm")}</td>
+		    		<td><a href="@{Plantoes.editar(plantao.id)}">Editar</a></td>
+		    		<td><a href="@{Plantoes.excluir(plantao.id)}" onclick="javascript:return confirm('Tem certeza de que deseja excluir este plant\u00E3o?');">Excluir</a></td>
+				</tr>
+#{/list} 			
+			 </tbody>	
+		     </table>
+		     		   		    <div id="pagination"/>    
+		</div>
+#{/if}
+#{else}
+<br/><h3>N&atilde;o existem plant&otilde;es cadastrados para este condutor.</h3>
+#{/else}
+<div class="gt-table-buttons">
+	<a href="@{Plantoes.incluir(condutor.id)}" class="gt-btn-medium gt-btn-left">&{'views.botoes.incluir'}</a>
+</div>
+	</div>
+</div>
+
+
+
+
+

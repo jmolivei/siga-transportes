@@ -1,0 +1,11 @@
+#{calendario /}
+#{extends 'main.html' /}
+
+#{set title:'SIGA-Transporte' /}
+
+<div class="gt-bd clearfix">
+	<div class="gt-content clearfix">
+		<h2>Visualizar Servi&ccedil;o de Ve&iacute;culo: ${servico.sequence}</h2>
+		#{include 'ServicosVeiculo/consultaDados.html' /}
+	</div>
+</div>

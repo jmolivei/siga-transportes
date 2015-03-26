@@ -1,0 +1,42 @@
+#{extends 'main.html' /}
+#{set title:'SIGA-Transporte' /}
+
+<div class="gt-bd clearfix">
+	<div class="gt-content clearfix">
+		<h2>${veiculo.dadosParaExibicao}</h2>
+		<h3>Autos de Infra&ccedil;&atilde;o</h3>
+
+#{include 'Veiculos/menu.html' /}
+
+#{if autosDeInfracao.size() > 0}
+		<div class="gt-content-box gt-for-table">     
+		 	<table id="htmlgrid" class="gt-table" >
+		    	<thead>
+		    	<tr style="font-weight: bold;">
+			   		<th>Data e Hora</th>
+					<th>Condutor</th> 
+				    <th>Gravidade</th>
+					<th>Vencimento</th>
+					<th>Recurso?</th> 			   		
+				</tr>
+				</thead>
+				<tbody>
+	#{list items:autosDeInfracao, as:'autosDeInfracao'}
+			   	<tr>
+		    		<td>${autosDeInfracao.dataHora?.format('dd/MM/yyyy HH:mm')}</td>
+   	    			<td>${autosDeInfracao.condutor.dadosParaExibicao}</td>
+   					<td>${autosDeInfracao.gravidade.descricao}</td>
+   					<td>${autosDeInfracao.dataDeVencimento?.format('dd/MM/yyyy')}</td>		    		
+   					<td>${autosDeInfracao.numeroDoProcesso}</td>
+				</tr>
+	#{/list}
+	</tbody>
+		     </table>
+		    <div id="pagination"/>
+		</div>
+#{/if}
+#{else}
+		<br/><h3>N&atilde;o existem autos de infra&ccedil;&atilde;o cadastrados para este ve&iacute;culo.</h3>
+#{/else}
+	</div>
+</div>

@@ -1,0 +1,97 @@
+﻿<!DOCTYPE html>
+<style type="text/css">
+
+	.tituloPagina {
+	}
+	
+	table {
+	}
+	
+	tr td:first-child, tr td:last-child, tr th:first-child, tr th:last-child {
+		background-color: gray;
+	}
+	
+	th {
+		text-transform: uppercase;
+		font: 15px verdana, arial, sans-serif;
+		font-weight: bolder;
+		padding: 5px;
+	}
+	
+	td {
+		vertical-align: top;
+	}
+	
+	.diaDoMes {
+		display: block;
+		font: 16px verdana, arial, sans-serif;
+		font-weight: bold;
+		text-align: center;
+		padding: 2px;
+	}
+	
+	.dadosCondutor {
+		display: block;
+		font: 12px verdana, arial, sans-serif;
+		padding: 2px;
+		text-align: center;
+	}
+	
+	@media print
+	{    
+	    .naoImprimir, .naoImprimir *
+	    {
+	        display: none !important;
+	    }
+	}
+	
+</style>
+
+<div class="gt-bd clearfix">
+	<div class="gt-content clearfix">
+		<h2 class="tituloPagina">Plant&atilde;o Mensal - ${dadosParaTitulo}</h2>
+#{if plantoes.size() > 0}
+		<div class="gt-content-box gt-for-table">     
+		 	<table border="1" cellspacing="0" cellpadding="0">
+		    	<tr>
+		    	#{list diaDaSemana.values(), as:'dia'}
+		    	    <th width="14%">${dia.nomeAbreviado}</th>
+			   	#{/list}
+				</tr>
+				#{ set cont = 0 /}
+				#{list plantoes, as:'plantao'}
+					#{if cont == 0 && diaDaSemana.ordem != 0}
+						#{list items:0..(diaDaSemana.ordem - 1)}
+						<td>&nbsp;</td>
+						#{set cont = cont + 1 /}
+						#{/list}
+					#{/if}
+				   	<td>
+				   		<span class="diaDoMes">${plantao.dataHoraInicio.format('dd')}</span>
+				   		<span class="dadosCondutor">${plantao.condutor.dadosParaExibicao.split("-")[1]}</span>
+			   		</td>
+				   	#{set cont = cont + 1 /}
+				   	
+				   	#{if (cont) % 7 == 0 }
+				   		</tr><tr>
+			   		#{/if}
+				#{/list}
+				
+				#{ set cont = ((cont) % 7) + 1 /}
+				#{list items:cont..7}
+						<td>&nbsp;</td>
+						#{set cont = cont + 1 /}
+						#{/list}
+				</tr>
+		     </table>
+		</div>
+#{/if}
+#{else}
+<br/><h3>O plant&atilde;o mensal informado n&atilde;o existe.</h3>
+#{/else}
+<br />
+<input type="button" id="btnImprimir"  value="&{'views.botoes.imprimir'}" onClick="window.print();" class="naoImprimir" />
+<input type="button" id="btnVoltar"  value="&{'views.botoes.voltar'}" onClick="javascript:location.href='@{PlantoesMensais.listar}'" class="naoImprimir" />
+
+</div>
+</div>
