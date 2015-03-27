@@ -2,10 +2,9 @@ package controllers;
 
 import java.net.InetAddress;
 
-import models.RevInfo;
-
 import org.hibernate.envers.RevisionListener;
 
+import br.gov.jfrj.siga.tp.model.RevInfo;
 import play.mvc.With;
 
 @With(AutorizacaoGI.class)

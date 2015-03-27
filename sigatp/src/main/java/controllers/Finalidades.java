@@ -5,11 +5,11 @@ import java.util.List;
 import javax.persistence.EntityTransaction;
 import javax.persistence.PersistenceException;
 
-import models.FinalidadeRequisicao;
+import br.gov.jfrj.siga.tp.model.FinalidadeRequisicao;
+import br.gov.jfrj.siga.tp.util.MenuMontador;
 import play.data.validation.Validation;
 import play.mvc.Controller;
 import play.mvc.With;
-import uteis.MenuMontador;
 import controllers.AutorizacaoGI.RoleAdmin;
 import controllers.AutorizacaoGI.RoleAdminMissao;
 import controllers.AutorizacaoGI.RoleAdminMissaoComplexo;

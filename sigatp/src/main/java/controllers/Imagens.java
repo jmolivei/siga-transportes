@@ -5,7 +5,7 @@ import java.util.List;
 
 import javax.activation.MimetypesFileTypeMap;
 
-import models.Imagem;
+import br.gov.jfrj.siga.tp.model.Imagem;
 import play.data.Upload;
 import play.data.validation.Valid;
 import play.data.validation.Validation;

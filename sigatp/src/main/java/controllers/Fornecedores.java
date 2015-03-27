@@ -2,11 +2,11 @@ package controllers;
 
 import java.util.List;
 
+import br.gov.jfrj.siga.tp.model.Fornecedor;
+import br.gov.jfrj.siga.tp.model.Uf;
 import controllers.AutorizacaoGI.RoleAdmin;
 import controllers.AutorizacaoGI.RoleAdminFrota;
 import controllers.AutorizacaoGI.RoleAdminMissao;
-import models.Fornecedor;
-import models.Uf;
 import play.data.validation.Valid;
 import play.data.validation.Validation;
 import play.mvc.Before;

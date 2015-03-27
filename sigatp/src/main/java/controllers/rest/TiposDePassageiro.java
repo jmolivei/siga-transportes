@@ -1,10 +1,9 @@
 package controllers.rest;
 
-import models.TipoDePassageiro;
-
 import org.codehaus.jackson.map.ObjectMapper;
 import org.codehaus.jackson.map.ObjectWriter;
 
+import br.gov.jfrj.siga.tp.model.TipoDePassageiro;
 import play.mvc.Controller;
 
 public class TiposDePassageiro extends Controller {

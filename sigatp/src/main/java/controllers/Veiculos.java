@@ -3,20 +3,20 @@ package controllers;
 import java.util.Calendar;
 import java.util.List;
 
-import models.Grupo;
-import models.ItemMenu;
-import models.LotacaoVeiculo;
-import models.Veiculo;
 import play.data.validation.Validation;
 import play.mvc.Before;
 import play.mvc.Controller;
 import play.mvc.Scope.RenderArgs;
 import play.mvc.With;
-import uteis.Combo;
-import uteis.MenuMontador;
 import br.gov.jfrj.siga.dp.CpOrgaoUsuario;
 import br.gov.jfrj.siga.dp.DpLotacao;
 import br.gov.jfrj.siga.tp.model.CpRepository;
+import br.gov.jfrj.siga.tp.model.Grupo;
+import br.gov.jfrj.siga.tp.model.ItemMenu;
+import br.gov.jfrj.siga.tp.model.LotacaoVeiculo;
+import br.gov.jfrj.siga.tp.model.Veiculo;
+import br.gov.jfrj.siga.tp.util.Combo;
+import br.gov.jfrj.siga.tp.util.MenuMontador;
 import controllers.AutorizacaoGI.RoleAdmin;
 import controllers.AutorizacaoGI.RoleAdminFrota;
 

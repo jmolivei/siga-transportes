@@ -2,14 +2,14 @@ package controllers;
 
 import java.util.List;
 
-import models.ItemMenu;
-import models.RelatorioDiario;
-import models.Veiculo;
+import br.gov.jfrj.siga.tp.model.ItemMenu;
+import br.gov.jfrj.siga.tp.model.RelatorioDiario;
+import br.gov.jfrj.siga.tp.model.Veiculo;
+import br.gov.jfrj.siga.tp.util.MenuMontador;
 import play.data.validation.Valid;
 import play.data.validation.Validation;
 import play.mvc.Controller;
 import play.mvc.With;
-import uteis.MenuMontador;
 import controllers.AutorizacaoGI.RoleAdmin;
 import controllers.AutorizacaoGI.RoleAdminFrota;
 

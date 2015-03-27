@@ -2,15 +2,15 @@ package controllers;
 
 import java.util.List;
 
-import models.Avaria;
-import models.ItemMenu;
-import models.Missao;
-import models.Veiculo;
+import br.gov.jfrj.siga.tp.model.Avaria;
+import br.gov.jfrj.siga.tp.model.ItemMenu;
+import br.gov.jfrj.siga.tp.model.Missao;
+import br.gov.jfrj.siga.tp.model.Veiculo;
+import br.gov.jfrj.siga.tp.util.MenuMontador;
+import br.gov.jfrj.siga.tp.util.PerguntaSimNao;
 import play.data.validation.Validation;
 import play.mvc.Controller;
 import play.mvc.With;
-import uteis.MenuMontador;
-import uteis.PerguntaSimNao;
 import controllers.AutorizacaoGI.RoleAdmin;
 import controllers.AutorizacaoGI.RoleAdminFrota;
 

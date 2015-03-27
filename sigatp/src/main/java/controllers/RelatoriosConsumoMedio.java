@@ -11,16 +11,16 @@ import javax.persistence.Query;
 
 import org.apache.commons.lang.StringUtils;
 
-import models.Abastecimento;
-import models.EstadoMissao;
-import models.Missao;
-import models.RelatorioConsumoMedio;
-import models.Veiculo;
 import play.data.validation.Validation;
 import play.db.jpa.JPA;
 import play.mvc.Controller;
 import play.mvc.With;
 import br.gov.jfrj.siga.dp.CpOrgaoUsuario;
+import br.gov.jfrj.siga.tp.model.Abastecimento;
+import br.gov.jfrj.siga.tp.model.EstadoMissao;
+import br.gov.jfrj.siga.tp.model.Missao;
+import br.gov.jfrj.siga.tp.model.RelatorioConsumoMedio;
+import br.gov.jfrj.siga.tp.model.Veiculo;
 
 @With(AutorizacaoGI.class)
 public class RelatoriosConsumoMedio extends Controller {

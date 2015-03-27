@@ -11,8 +11,11 @@ import play.data.validation.Valid;
 import play.data.validation.Validation;
 import play.i18n.Messages;
 import play.mvc.*;
-import uteis.MenuMontador;
 import br.gov.jfrj.siga.dp.DpPessoa;
+import br.gov.jfrj.siga.tp.model.Andamento;
+import br.gov.jfrj.siga.tp.model.EstadoRequisicao;
+import br.gov.jfrj.siga.tp.model.RequisicaoTransporte;
+import br.gov.jfrj.siga.tp.util.MenuMontador;
 import models.*;
 
 @With(AutorizacaoGI.class)

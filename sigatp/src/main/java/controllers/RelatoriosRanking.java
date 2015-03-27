@@ -13,22 +13,22 @@ import java.util.Set;
 
 import javax.persistence.Query;
 
-import models.Condutor;
-import models.FinalidadeRequisicao;
-import models.Missao;
-import models.RelatorioRanking;
-import models.RelatorioRanking.RankingCondutorRequisicao;
-import models.RelatorioRanking.RankingFinalidadeRequisicao;
-import models.RelatorioRanking.RankingTipoPassageiroRequisicao;
-import models.RelatorioRanking.RankingVeiculoRequisicao;
-import models.RequisicaoTransporte;
-import models.TipoDePassageiro;
-import models.Veiculo;
 import play.data.validation.Validation;
 import play.db.jpa.JPA;
 import play.mvc.Controller;
 import play.mvc.With;
 import br.gov.jfrj.siga.dp.CpOrgaoUsuario;
+import br.gov.jfrj.siga.tp.model.Condutor;
+import br.gov.jfrj.siga.tp.model.FinalidadeRequisicao;
+import br.gov.jfrj.siga.tp.model.Missao;
+import br.gov.jfrj.siga.tp.model.RelatorioRanking;
+import br.gov.jfrj.siga.tp.model.RequisicaoTransporte;
+import br.gov.jfrj.siga.tp.model.TipoDePassageiro;
+import br.gov.jfrj.siga.tp.model.Veiculo;
+import br.gov.jfrj.siga.tp.model.RelatorioRanking.RankingCondutorRequisicao;
+import br.gov.jfrj.siga.tp.model.RelatorioRanking.RankingFinalidadeRequisicao;
+import br.gov.jfrj.siga.tp.model.RelatorioRanking.RankingTipoPassageiroRequisicao;
+import br.gov.jfrj.siga.tp.model.RelatorioRanking.RankingVeiculoRequisicao;
 
 import com.google.common.base.Predicate;
 import com.google.common.collect.Iterables;

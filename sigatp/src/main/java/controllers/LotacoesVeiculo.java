@@ -1,9 +1,11 @@
 package controllers;
 
-import uteis.MenuMontador;
-
 import java.util.*;
 
+import br.gov.jfrj.siga.tp.model.ItemMenu;
+import br.gov.jfrj.siga.tp.model.LotacaoVeiculo;
+import br.gov.jfrj.siga.tp.model.Veiculo;
+import br.gov.jfrj.siga.tp.util.MenuMontador;
 import play.mvc.Controller;
 import play.mvc.With;
 import models.*;

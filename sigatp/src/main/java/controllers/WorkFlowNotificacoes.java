@@ -9,17 +9,17 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import models.Andamento;
-import models.Condutor;
 import play.Logger;
 import play.Play;
 import play.jobs.Job;
 import play.jobs.On;
 import play.mvc.Router;
-import uteis.FormataCaminhoDoContextoUrl;
 import br.gov.jfrj.siga.base.Correio;
 import br.gov.jfrj.siga.base.SigaBaseProperties;
 import br.gov.jfrj.siga.dp.DpPessoa;
+import br.gov.jfrj.siga.tp.model.Andamento;
+import br.gov.jfrj.siga.tp.model.Condutor;
+import br.gov.jfrj.siga.tp.util.FormataCaminhoDoContextoUrl;
 
 //@Every("1mn")
 @On("cron.iniciow")

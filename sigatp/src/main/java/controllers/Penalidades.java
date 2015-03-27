@@ -4,10 +4,10 @@ import java.util.List;
 
 import javax.persistence.EntityTransaction;
 
+import br.gov.jfrj.siga.tp.model.FinalidadeRequisicao;
+import br.gov.jfrj.siga.tp.model.Penalidade;
 import controllers.AutorizacaoGI.RoleAdmin;
 import controllers.AutorizacaoGI.RoleAdminFrota;
-import models.FinalidadeRequisicao;
-import models.Penalidade;
 import play.data.validation.Valid;
 import play.data.validation.Validation;
 import play.mvc.Controller;

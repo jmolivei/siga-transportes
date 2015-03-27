@@ -1,8 +1,11 @@
 import org.junit.*;
 
+import br.gov.jfrj.siga.tp.model.UsuarioTeste;
+import br.gov.jfrj.siga.tp.validator.RenavamCheck;
+
 import java.util.*;
+
 import play.test.*;
-import validadores.RenavamCheck;
 import models.*;
 
 public class UpperCaseTest extends UnitTest {

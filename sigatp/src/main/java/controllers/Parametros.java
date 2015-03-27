@@ -2,7 +2,6 @@ package controllers;
 
 import java.util.List;
 
-import models.Parametro;
 import play.data.validation.Valid;
 import play.data.validation.Validation;
 import play.mvc.Controller;
@@ -11,6 +10,7 @@ import play.mvc.With;
 import br.gov.jfrj.siga.cp.CpComplexo;
 import br.gov.jfrj.siga.dp.CpOrgaoUsuario;
 import br.gov.jfrj.siga.tp.model.CpRepository;
+import br.gov.jfrj.siga.tp.model.Parametro;
 import controllers.AutorizacaoGI.RoleAdmin;
 
 @With(AutorizacaoGI.class)

@@ -2,15 +2,15 @@ package controllers;
 
 import java.util.List;
 
-import models.Afastamento;
-import models.Condutor;
-import models.ItemMenu;
-import models.Missao;
+import br.gov.jfrj.siga.tp.model.Afastamento;
+import br.gov.jfrj.siga.tp.model.Condutor;
+import br.gov.jfrj.siga.tp.model.ItemMenu;
+import br.gov.jfrj.siga.tp.model.Missao;
+import br.gov.jfrj.siga.tp.util.MenuMontador;
 import play.data.validation.Valid;
 import play.data.validation.Validation;
 import play.mvc.Controller;
 import play.mvc.With;
-import uteis.MenuMontador;
 import controllers.AutorizacaoGI.RoleAdmin;
 import controllers.AutorizacaoGI.RoleAdminMissao;
 import controllers.AutorizacaoGI.RoleAdminMissaoComplexo;

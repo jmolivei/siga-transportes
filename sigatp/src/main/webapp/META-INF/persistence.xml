@@ -42,6 +42,33 @@
 		<class>br.gov.jfrj.siga.dp.CpMarca</class>
 		<class>br.gov.jfrj.siga.dp.CpTipoMarca</class>
 
+		<class>br.gov.jfrj.siga.tp.model.Abastecimento</class>
+		<class>br.gov.jfrj.siga.tp.model.Afastamento</class>
+		<class>br.gov.jfrj.siga.tp.model.Andamento</class>
+		<class>br.gov.jfrj.siga.tp.model.AutoDeInfracao</class>
+		<class>br.gov.jfrj.siga.tp.model.Avaria</class>
+		<class>br.gov.jfrj.siga.tp.model.Condutor</class>
+		<class>br.gov.jfrj.siga.tp.model.ControleGabinete</class>
+		<class>br.gov.jfrj.siga.tp.model.Cor</class>
+		<class>br.gov.jfrj.siga.tp.model.DiaDeTrabalho</class>
+		<class>br.gov.jfrj.siga.tp.model.EscalaDeTrabalho</class>
+		<class>br.gov.jfrj.siga.tp.model.FinalidadeRequisicao</class>
+		<class>br.gov.jfrj.siga.tp.model.Fornecedor</class>
+		<class>br.gov.jfrj.siga.tp.model.Grupo</class>
+		<class>br.gov.jfrj.siga.tp.model.Imagem</class>
+		<class>br.gov.jfrj.siga.tp.model.LotacaoAtdRequisicao</class>
+		<class>br.gov.jfrj.siga.tp.model.LotacaoVeiculo</class>
+		<class>br.gov.jfrj.siga.tp.model.Missao</class>
+		<class>br.gov.jfrj.siga.tp.model.Parametro</class>
+		<class>br.gov.jfrj.siga.tp.model.Penalidade</class>
+		<class>br.gov.jfrj.siga.tp.model.Plantao</class>
+		<class>br.gov.jfrj.siga.tp.model.RelatorioDiario</class>
+		<class>br.gov.jfrj.siga.tp.model.RequisicaoTransporte</class>
+		<class>br.gov.jfrj.siga.tp.model.RevInfo</class>
+		<class>br.gov.jfrj.siga.tp.model.ServicoVeiculo</class>
+		<class>br.gov.jfrj.siga.tp.model.UsuarioTeste</class>
+		<class>br.gov.jfrj.siga.tp.model.Veiculo</class>
+
 		<properties>
 <!-- 			<property name="hibernate.current_session_context_class" value="thread" /> -->
 <!-- 			<property name="hibernate.query.substitutions" value="true 1, false 0" /> -->

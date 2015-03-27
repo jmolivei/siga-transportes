@@ -9,24 +9,25 @@ import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import models.Condutor;
-import models.EstadoMissao;
-import models.EstadoRequisicao;
-import models.EstadoServico;
-import models.Missao;
-import models.RequisicaoTransporte;
-import models.SelecaoDocumento;
-import models.ServicoVeiculo;
 import play.i18n.Messages;
+
 import org.apache.commons.lang.StringUtils;
 
 import play.mvc.Controller;
 import play.mvc.Router;
 import play.mvc.With;
-import uteis.CondutorFiltro;
-import uteis.FormataCaminhoDoContextoUrl;
 import br.gov.jfrj.siga.dp.DpLotacao;
 import br.gov.jfrj.siga.dp.DpPessoa;
+import br.gov.jfrj.siga.tp.model.Condutor;
+import br.gov.jfrj.siga.tp.model.EstadoMissao;
+import br.gov.jfrj.siga.tp.model.EstadoRequisicao;
+import br.gov.jfrj.siga.tp.model.EstadoServico;
+import br.gov.jfrj.siga.tp.model.Missao;
+import br.gov.jfrj.siga.tp.model.RequisicaoTransporte;
+import br.gov.jfrj.siga.tp.model.SelecaoDocumento;
+import br.gov.jfrj.siga.tp.model.ServicoVeiculo;
+import br.gov.jfrj.siga.tp.util.CondutorFiltro;
+import br.gov.jfrj.siga.tp.util.FormataCaminhoDoContextoUrl;
 
 import com.google.common.base.Predicate;
 import com.google.common.collect.Iterables;

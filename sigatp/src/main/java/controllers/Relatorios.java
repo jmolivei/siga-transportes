@@ -6,16 +6,16 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
-import models.Afastamento;
-import models.DiaDaSemana;
-import models.DiaDeTrabalho;
-import models.EscalaDeTrabalho;
-import models.Missao;
-import models.Plantao;
-import models.ServicoVeiculo;
 import play.data.binding.As;
 import play.mvc.Controller;
 import play.mvc.With;
+import br.gov.jfrj.siga.tp.model.Afastamento;
+import br.gov.jfrj.siga.tp.model.DiaDaSemana;
+import br.gov.jfrj.siga.tp.model.DiaDeTrabalho;
+import br.gov.jfrj.siga.tp.model.EscalaDeTrabalho;
+import br.gov.jfrj.siga.tp.model.Missao;
+import br.gov.jfrj.siga.tp.model.Plantao;
+import br.gov.jfrj.siga.tp.model.ServicoVeiculo;
 
 import com.google.common.base.Predicate;
 import com.google.common.collect.Iterables;

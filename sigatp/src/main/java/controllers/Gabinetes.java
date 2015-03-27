@@ -2,16 +2,16 @@ package controllers;
 
 import java.util.List;
 
-import models.Abastecimento;
-import models.Condutor;
-import models.Fornecedor;
-import models.ItemMenu;
-import models.Veiculo;
+import br.gov.jfrj.siga.tp.model.Abastecimento;
+import br.gov.jfrj.siga.tp.model.Condutor;
+import br.gov.jfrj.siga.tp.model.Fornecedor;
+import br.gov.jfrj.siga.tp.model.ItemMenu;
+import br.gov.jfrj.siga.tp.model.Veiculo;
+import br.gov.jfrj.siga.tp.util.MenuMontador;
 import play.data.validation.Valid;
 import play.data.validation.Validation;
 import play.mvc.Controller;
 import play.mvc.With;
-import uteis.MenuMontador;
 
 @With(AutorizacaoGI.class)
 public class Gabinetes extends Controller {

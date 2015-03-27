@@ -2,16 +2,16 @@ package controllers;
 
 import java.util.List;
 
-import models.AutoDeInfracao;
-import models.Condutor;
-import models.ItemMenu;
-import models.TipoDeNotificacao;
-import models.Veiculo;
+import br.gov.jfrj.siga.tp.model.AutoDeInfracao;
+import br.gov.jfrj.siga.tp.model.Condutor;
+import br.gov.jfrj.siga.tp.model.ItemMenu;
+import br.gov.jfrj.siga.tp.model.TipoDeNotificacao;
+import br.gov.jfrj.siga.tp.model.Veiculo;
+import br.gov.jfrj.siga.tp.util.MenuMontador;
 import play.data.validation.Valid;
 import play.data.validation.Validation;
 import play.mvc.Controller;
 import play.mvc.With;
-import uteis.MenuMontador;
 import controllers.AutorizacaoGI.RoleAdmin;
 import controllers.AutorizacaoGI.RoleAdminMissao;
 import controllers.AutorizacaoGI.RoleAdminMissaoComplexo;

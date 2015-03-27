@@ -6,11 +6,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import models.Andamento;
-import models.EstadoRequisicao;
-import models.FinalidadeRequisicao;
-import models.RequisicaoTransporte;
-
 import org.codehaus.jackson.JsonParseException;
 import org.codehaus.jackson.map.JsonMappingException;
 import org.codehaus.jackson.map.ObjectMapper;
@@ -22,9 +17,13 @@ import play.data.validation.Validation;
 import play.i18n.Messages;
 import play.mvc.Controller;
 import play.mvc.Http;
-import rest.RequisicaoTransporteRest;
 import br.gov.jfrj.siga.dp.DpPessoa;
+import br.gov.jfrj.siga.tp.model.Andamento;
 import br.gov.jfrj.siga.tp.model.CpRepository;
+import br.gov.jfrj.siga.tp.model.EstadoRequisicao;
+import br.gov.jfrj.siga.tp.model.FinalidadeRequisicao;
+import br.gov.jfrj.siga.tp.model.RequisicaoTransporte;
+import br.gov.jfrj.siga.tp.rest.RequisicaoTransporteRest;
 import controllers.AutorizacaoGI;
 
 public class Requisicoes extends Controller {
