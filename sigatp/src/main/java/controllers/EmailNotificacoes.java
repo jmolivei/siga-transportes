@@ -29,6 +29,7 @@ import br.gov.jfrj.siga.cp.CpConfiguracao;
 import br.gov.jfrj.siga.cp.CpServico;
 import br.gov.jfrj.siga.cp.CpSituacaoConfiguracao;
 import br.gov.jfrj.siga.dp.DpPessoa;
+import br.gov.jfrj.siga.tp.model.CpRepository;
 
 import com.google.common.base.Predicate;
 import com.google.common.collect.Iterables;
@@ -118,7 +119,7 @@ public class EmailNotificacoes extends Job<Object>  {
 		Set<DpPessoa> setAprovador = new HashSet<DpPessoa>();
 		List<DpPessoa> aprovadores = new ArrayList<DpPessoa>();
 		
-		configuracoes = CpConfiguracao.find("cpServico.idServico = ? and " +
+		configuracoes = CpRepository.find(CpConfiguracao.class, "cpServico.idServico = ? and " +
 			       							"cpSituacaoConfiguracao.idSitConfiguracao = ? and " +
 			       							"hisDtFim is null", servico.getIdServico(), stConfiguracao).fetch();
 	
@@ -126,7 +127,7 @@ public class EmailNotificacoes extends Job<Object>  {
 			if (cpConfiguracao.getDpPessoa() != null) {
 				setAprovador.add(cpConfiguracao.getDpPessoa());
 			} else if (cpConfiguracao.getLotacao() != null) {
-				aprovadores = DpPessoa.find("lotacao.idLotacao = ? and dataFimPessoa is null ",
+				aprovadores = DpPessoa.AR.find("lotacao.idLotacao = ? and dataFimPessoa is null ",
 						cpConfiguracao.getLotacao().getIdLotacao()).fetch();
 				setAprovador.addAll(aprovadores);
 			}
@@ -161,7 +162,7 @@ public class EmailNotificacoes extends Job<Object>  {
 		DpPessoa aprovador = new DpPessoa();
 		HashMap<DpPessoa, String> dadosAprovador = new HashMap<DpPessoa, String>();
 
-		CpServico servico = CpServico.find("siglaServico = ?", "SIGA-TP-APR").first();
+		CpServico servico = CpRepository.find(CpServico.class, "siglaServico = ?", "SIGA-TP-APR").first();
 		Long stConfiguracao = CpSituacaoConfiguracao.SITUACAO_PODE;
 		lstAprovadores = retornarAprovadores(servico, stConfiguracao);
 		DpPessoa[] arrayAprovador = lstAprovadores.toArray(new DpPessoa[lstAprovadores.size()]);

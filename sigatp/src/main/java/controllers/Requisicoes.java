@@ -20,6 +20,7 @@ import uteis.MenuMontador;
 import uteis.SigaTpException;
 import br.gov.jfrj.siga.cp.CpComplexo;
 import br.gov.jfrj.siga.dp.DpPessoa;
+import br.gov.jfrj.siga.tp.model.CpRepository;
 import controllers.AutorizacaoGI.RoleAdmin;
 import controllers.AutorizacaoGI.RoleAdminMissao;
 import controllers.AutorizacaoGI.RoleAdminMissaoComplexo;
@@ -44,7 +45,7 @@ public class Requisicoes extends Controller {
 		carregarRequisicoesUltimosSeteDiasPorEstados(estadosRequisicao);
 		RenderArgs.current().put("estadoRequisicao",EstadoRequisicao.ABERTA);
 		MenuMontador.instance().RecuperarMenuListarPAprovarRequisicoes(null);
-		List<CpComplexo> complexos = CpComplexo.find("orgaoUsuario", AutorizacaoGI.titular().getOrgaoUsuario()).fetch();
+		List<CpComplexo> complexos = CpRepository.find(CpComplexo.class, "orgaoUsuario", AutorizacaoGI.titular().getOrgaoUsuario()).fetch();
 		render(complexos);
 	}
 
@@ -391,7 +392,7 @@ public class Requisicoes extends Controller {
 	}
 
 	private static DpPessoa recuperaPessoa(Long idSolicitante) throws Exception {
-		DpPessoa dpPessoa = DpPessoa.findById(idSolicitante);
-		return 	DpPessoa.find("idPessoaIni = ? and dataFimPessoa = null",dpPessoa.getIdInicial()).first();
+		DpPessoa dpPessoa = DpPessoa.AR.findById(idSolicitante);
+		return 	DpPessoa.AR.find("idPessoaIni = ? and dataFimPessoa = null",dpPessoa.getIdInicial()).first();
 	}
 }

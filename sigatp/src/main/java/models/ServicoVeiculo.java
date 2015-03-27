@@ -32,6 +32,7 @@ import play.modules.br.jus.jfrj.siga.uteis.validadores.validarAnoData.ValidarAno
 import uteis.Reflexao;
 import br.gov.jfrj.siga.dp.CpOrgaoUsuario;
 import br.gov.jfrj.siga.dp.DpPessoa;
+import br.gov.jfrj.siga.tp.model.CpRepository;
 import br.jus.jfrj.siga.uteis.Sequence;
 import br.jus.jfrj.siga.uteis.SiglaDocumentoType;
 
@@ -180,7 +181,7 @@ public class ServicoVeiculo extends GenericModel implements Comparable<ServicoVe
 			throw new Exception(Messages.get("servicoVeiculo.sequence.exception", sequence));
 		}
 		
-		CpOrgaoUsuario cpOrgaoUsuario = CpOrgaoUsuario.find("acronimoOrgaoUsu",partesDoCodigo[0]).first();
+		CpOrgaoUsuario cpOrgaoUsuario = CpRepository.find(CpOrgaoUsuario.class, "acronimoOrgaoUsu",partesDoCodigo[0]).first();
 		Integer ano = new Integer(Integer.parseInt(partesDoCodigo[2]));
 		Long numero = new Long(Integer.parseInt(partesDoCodigo[3]));
 		

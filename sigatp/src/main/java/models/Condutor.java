@@ -43,6 +43,7 @@ import br.gov.jfrj.siga.cp.CpComplexo;
 import br.gov.jfrj.siga.dp.CpOrgaoUsuario;
 import br.gov.jfrj.siga.dp.DpLotacao;
 import br.gov.jfrj.siga.dp.DpPessoa;
+import br.gov.jfrj.siga.tp.model.CpRepository;
 import br.jus.jfrj.siga.uteis.UpperCase;
 
 @SuppressWarnings("serial")
@@ -130,7 +131,7 @@ public class Condutor extends GenericModel implements Comparable<Condutor> {
 			lotacoes.add(lotacaoAtdRequisicao.dpLotacao);
 		}
 		
-		List<DpPessoa> possiveisCondutores = DpPessoa.find("lotacao in (?)", lotacoes.toArray()).fetch();
+		List<DpPessoa> possiveisCondutores = DpPessoa.AR.find("lotacao in (?)", lotacoes.toArray()).fetch();
 		return possiveisCondutores;
 	}
 	

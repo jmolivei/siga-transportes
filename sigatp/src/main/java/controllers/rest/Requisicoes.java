@@ -24,6 +24,7 @@ import play.mvc.Controller;
 import play.mvc.Http;
 import rest.RequisicaoTransporteRest;
 import br.gov.jfrj.siga.dp.DpPessoa;
+import br.gov.jfrj.siga.tp.model.CpRepository;
 import controllers.AutorizacaoGI;
 
 public class Requisicoes extends Controller {
@@ -221,7 +222,7 @@ public class Requisicoes extends Controller {
 	}
 
 	private static DpPessoa recuperaPessoa(Long idSolicitante) throws Exception {
-		DpPessoa dpPessoa = DpPessoa.findById(idSolicitante);
-		return 	DpPessoa.find("idPessoaIni = ? and dataFimPessoa = null",dpPessoa.getIdInicial()).first();
+		DpPessoa dpPessoa = DpPessoa.AR.findById(idSolicitante);
+		return 	DpPessoa.AR.find("idPessoaIni = ? and dataFimPessoa = null",dpPessoa.getIdInicial()).first();
 	}
 }

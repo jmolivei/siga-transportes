@@ -22,9 +22,11 @@ import br.gov.jfrj.siga.cp.CpSituacaoConfiguracao;
 import br.gov.jfrj.siga.cp.CpTipoConfiguracao;
 import br.gov.jfrj.siga.cp.bl.Cp;
 import br.gov.jfrj.siga.dp.DpPessoa;
+import br.gov.jfrj.siga.tp.model.CpRepository;
 
 
 public class AutorizacaoGI extends SigaApplication {
+	
 	@Before(priority=50)
 	public static void addDefaultsAlways() throws Exception {
 		Logger.info("Configuracao : " + Play.id);
@@ -154,22 +156,22 @@ public class AutorizacaoGI extends SigaApplication {
 	
 	public static CpComplexo recuperarComplexoPadrao(DpPessoa dpPessoa) throws Exception {
 		long TIPO_CONFIG_COMPLEXO_PADRAO = 400;
-		CpTipoConfiguracao tpConf = CpTipoConfiguracao.findById(TIPO_CONFIG_COMPLEXO_PADRAO);
-		CpSituacaoConfiguracao cpSituacaoConfiguracaoPode = CpSituacaoConfiguracao.findById(1L); 
-		CpSituacaoConfiguracao cpSituacaoConfiguracaoPadrao = CpSituacaoConfiguracao.findById(5L); 
+		CpTipoConfiguracao tpConf = CpRepository.findById(CpTipoConfiguracao.class, TIPO_CONFIG_COMPLEXO_PADRAO);
+		CpSituacaoConfiguracao cpSituacaoConfiguracaoPode = CpRepository.findById(CpSituacaoConfiguracao.class, 1L); 
+		CpSituacaoConfiguracao cpSituacaoConfiguracaoPadrao = CpRepository.findById(CpSituacaoConfiguracao.class, 5L); 
 		List<CpConfiguracao> configuracoes = null;
 		CpComplexo cpComplexo = null;
 
 		// Recuperando Configuração Pode para uma lotação específica
 		Object[] parametros =  {dpPessoa.getLotacao().getIdLotacaoIni(), cpSituacaoConfiguracaoPode, dpPessoa.getOrgaoUsuario(),tpConf};
-		configuracoes = CpConfiguracao.find("((lotacao.idLotacaoIni = ? and cpSituacaoConfiguracao = ?) and orgaoUsuario = ?  and cpTipoConfiguracao = ? and hisIdcFim is null  )", parametros).fetch();
+		configuracoes = CpRepository.find(CpConfiguracao.class, "((lotacao.idLotacaoIni = ? and cpSituacaoConfiguracao = ?) and orgaoUsuario = ?  and cpTipoConfiguracao = ? and hisIdcFim is null  )", parametros).fetch();
 		if (configuracoes != null && configuracoes.size() > 0) {
 			cpComplexo = configuracoes.get(0).getComplexo();
 		} else {
 		
 		// Recuperando Configuração default para um Órgão específico
 		Object[] parametros1 =  {cpSituacaoConfiguracaoPadrao, dpPessoa.getOrgaoUsuario(),tpConf};
-		configuracoes = CpConfiguracao.find("((cpSituacaoConfiguracao = ?) and orgaoUsuario = ?  and cpTipoConfiguracao = ? and hisIdcFim is null  )", parametros1).fetch();
+		configuracoes = CpRepository.find(CpConfiguracao.class, "((cpSituacaoConfiguracao = ?) and orgaoUsuario = ?  and cpTipoConfiguracao = ? and hisIdcFim is null  )", parametros1).fetch();
 		if (configuracoes != null && configuracoes.size() > 0) {
 			cpComplexo = configuracoes.get(0).getComplexo();
 		}
@@ -191,18 +193,17 @@ public class AutorizacaoGI extends SigaApplication {
 	 */
 	protected static CpComplexo recuperarComplexoAdministrador() throws Exception {
 		String SERVICO_COMPLEXO_ADMINISTRADOR = "SIGA-TP-ADMMISSAOCOMPLEXO";
-		CpServico cpServico = CpServico.find("siglaServico",SERVICO_COMPLEXO_ADMINISTRADOR).first();
-		CpSituacaoConfiguracao cpSituacaoConfiguracaoPode = CpSituacaoConfiguracao.findById(1L); 
+		CpServico cpServico = CpRepository.find(CpServico.class, "siglaServico",SERVICO_COMPLEXO_ADMINISTRADOR).first();
+		CpSituacaoConfiguracao cpSituacaoConfiguracaoPode = CpRepository.findById(CpSituacaoConfiguracao.class, 1L); 
 		List<CpConfiguracao> configuracoes = null;
 		CpComplexo cpComplexo = null;
 
 		// and dtHistDtFim IS NOT NULL
 		Object[] parametros =  {AutorizacaoGI.titular().getIdPessoaIni(),cpSituacaoConfiguracaoPode, cpServico};
-		configuracoes = CpConfiguracao.find("(dpPessoa.idPessoaIni = ? and cpSituacaoConfiguracao = ? and cpServico = ? and hisIdcFim is null )", parametros).fetch();
+		configuracoes = CpRepository.find(CpConfiguracao.class, "(dpPessoa.idPessoaIni = ? and cpSituacaoConfiguracao = ? and cpServico = ? and hisIdcFim is null )", parametros).fetch();
 		if (configuracoes != null) {
 			cpComplexo = configuracoes.get(0).getComplexo();
 		}
-
 		return cpComplexo;
 	}   
 

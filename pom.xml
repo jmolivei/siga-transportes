@@ -21,6 +21,7 @@
 		<hibernate.version>4.2.0.Final</hibernate.version>
 		<version.jboss.bom.eap>6.2.0-redhat-1</version.jboss.bom.eap>
 		<spring.version>4.0.6.RELEASE</spring.version>
+		
 		<!-- Play properties -->
 		<play.version>1.3.x</play.version>
 		<play.plugin.version>1.0.0-beta6</play.plugin.version>
@@ -650,40 +651,13 @@
 	</dependencyManagement>
 
 	<!-- Essas dependencias serao importadas em todos os projetos -->
-	<dependencies>
-		<dependency>
-			<groupId>siga</groupId>
-			<artifactId>siga-cp</artifactId>
-			<version>${siga.version}</version>
-			<exclusions>
-				<exclusion>
-					<artifactId>bcmail-jdk14</artifactId>
-					<groupId>bouncycastle</groupId>
-				</exclusion>
-				<exclusion>
-					<artifactId>bcprov-jdk14</artifactId>
-					<groupId>bouncycastle</groupId>
-				</exclusion>
-			</exclusions>
-		</dependency>
-			
+	<dependencies>	
 		<dependency>
 			<groupId>org.hibernate</groupId>
 			<artifactId>hibernate-core</artifactId>
 			<scope>provided</scope>
 		</dependency>
 
-		<dependency>
-			<groupId>org.hibernate</groupId>
-			<artifactId>hibernate-validator</artifactId>
-			<scope>provided</scope>
-			<exclusions>
-				<exclusion>
-					<groupId>org.slf4j</groupId>
-					<artifactId>slf4j-api</artifactId>
-				</exclusion>
-			</exclusions>
-		</dependency>
 		<dependency>
 			<groupId>org.hibernate</groupId>
 			<artifactId>hibernate-search</artifactId>
@@ -751,11 +725,6 @@
 			<groupId>net.sf.oval</groupId>
 			<artifactId>oval</artifactId>
 			<version>1.84</version>
-		</dependency>
-		<dependency>
-			<groupId>com.google.code.maven-play-plugin.org.apache.commons</groupId>
-			<artifactId>commons-javaflow</artifactId>
-			<version>1590792</version>
 		</dependency>
 		<dependency>
 			<groupId>com.thoughtworks.xstream</groupId>
@@ -890,13 +859,6 @@
 		</dependency>
 
 		<dependency>
-			<groupId>com.google.code.maven-play-plugin.org.eclipse.jdt</groupId>
-			<artifactId>org.eclipse.jdt.core</artifactId>
-			<version>3.9.50.v20140317-1741</version>
-			<scope>provided</scope>
-		</dependency>
-
-		<dependency>
 			<groupId>net.sf.ehcache</groupId>
 			<artifactId>ehcache-core</artifactId>
 			<version>2.6.9</version>
@@ -909,13 +871,14 @@
 			<version>2.3</version>
 		</dependency>
 
-		<dependency>
+		<!--dependency>
 			<groupId>com.google.code.maven-play-plugin</groupId>
 			<artifactId>play-selenium-junit4</artifactId>
 			<version>${play.plugin.version}</version>
 			<scope>test</scope>
-		</dependency>
-		<!-- INICIO  DEPENDENCIAS DO POM-PLAY.XML-->
+		</dependency-->
+		
+		<!-- FIM  DEPENDENCIAS DO POM-PLAY.XML-->
 	</dependencies>
 
 </project>

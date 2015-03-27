@@ -48,6 +48,7 @@ import uteis.SigaTpException;
 import br.gov.jfrj.siga.cp.CpComplexo;
 import br.gov.jfrj.siga.dp.CpOrgaoUsuario;
 import br.gov.jfrj.siga.dp.DpPessoa;
+import br.gov.jfrj.siga.tp.model.CpRepository;
 import br.jus.jfrj.siga.uteis.Sequence;
 import br.jus.jfrj.siga.uteis.SiglaDocumentoType;
 
@@ -249,7 +250,7 @@ public class RequisicaoTransporte extends GenericModel implements Comparable<Req
 			throw new Exception(Messages.get("requisicaoTransporte.codigoRequisicao.exception", codigoRequisicao));
 		}
 
-		CpOrgaoUsuario cpOrgaoUsuario = CpOrgaoUsuario.find("acronimoOrgaoUsu",partesDoCodigo[0]).first();
+		CpOrgaoUsuario cpOrgaoUsuario = CpRepository.find(CpOrgaoUsuario.class, "acronimoOrgaoUsu",partesDoCodigo[0]).first();
 		Integer ano = new Integer(Integer.parseInt(partesDoCodigo[2]));
 		Long numero = new Long(Integer.parseInt(partesDoCodigo[3]));
 		String siglaDocumento = partesDoCodigo[4] + partesDoCodigo[1];

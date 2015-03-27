@@ -14,6 +14,7 @@ import br.gov.jfrj.siga.cp.CpServico;
 import br.gov.jfrj.siga.cp.CpSituacaoConfiguracao;
 import br.gov.jfrj.siga.cp.CpTipoConfiguracao;
 import br.gov.jfrj.siga.dp.CpOrgaoUsuario;
+import br.gov.jfrj.siga.tp.model.CpRepository;
 
 @With(AutorizacaoGI.class)
 public class ConfiguracoesGI extends Controller {
@@ -23,27 +24,27 @@ public class ConfiguracoesGI extends Controller {
 	}
 
 	public static void pesquisar(Long idOrgaoUsu) {
-		CpOrgaoUsuario cpOrgaoUsuario = CpOrgaoUsuario.findById(idOrgaoUsu);
-		List<CpOrgaoUsuario> cpOrgaoUsuarios = CpOrgaoUsuario.findAll();
+		CpOrgaoUsuario cpOrgaoUsuario = CpRepository.findById(CpOrgaoUsuario.class, idOrgaoUsu);
+		List<CpOrgaoUsuario> cpOrgaoUsuarios = CpRepository.findAll(CpOrgaoUsuario.class);
 		String SERVICO_COMPLEXO_ADMINISTRADOR = "SIGA-TP-ADMMISSAOCOMPLEXO";
-		CpServico cpServico = CpServico.find("siglaServico",SERVICO_COMPLEXO_ADMINISTRADOR).first();
+		CpServico cpServico = CpRepository.find(CpServico.class, "siglaServico",SERVICO_COMPLEXO_ADMINISTRADOR).first();
 		long TIPO_CONFIG_COMPLEXO_PADRAO = 400;
-		CpTipoConfiguracao tpConf = CpTipoConfiguracao.findById(TIPO_CONFIG_COMPLEXO_PADRAO);
-		CpSituacaoConfiguracao cpSituacaoConfiguracaoPode = CpSituacaoConfiguracao.findById(1L);
-		CpSituacaoConfiguracao cpSituacaoConfiguracaoPadrao = CpSituacaoConfiguracao.findById(5L);
+		CpTipoConfiguracao tpConf = CpRepository.findById(CpTipoConfiguracao.class, TIPO_CONFIG_COMPLEXO_PADRAO);
+		CpSituacaoConfiguracao cpSituacaoConfiguracaoPode = CpRepository.findById(CpSituacaoConfiguracao.class, 1L);
+		CpSituacaoConfiguracao cpSituacaoConfiguracaoPadrao = CpRepository.findById(CpSituacaoConfiguracao.class, 5L);
 		//	Object[] parametros =  {idOrgaoUsu,cpSituacaoConfiguracaoPode, cpServico};
 		//	List<CpConfiguracao> cpConfiguracoesCp =  CpConfiguracao.find("(dpPessoa in (select d from DpPessoa d where d.orgaoUsuario.idOrgaoUsu = ?) and cpSituacaoConfiguracao = ? and cpServico = ? and hisIdcFim is null )", parametros).fetch();
 		Object[] parametros =  {idOrgaoUsu, cpServico};
-		List<CpConfiguracao> cpConfiguracoesCp =  CpConfiguracao.find("(dpPessoa in (select d from DpPessoa d where d.orgaoUsuario.idOrgaoUsu = ?) and cpServico = ? and hisIdcFim is null )", parametros).fetch();
+		List<CpConfiguracao> cpConfiguracoesCp =  CpRepository.find(CpConfiguracao.class, "(dpPessoa in (select d from DpPessoa d where d.orgaoUsuario.idOrgaoUsu = ?) and cpServico = ? and hisIdcFim is null )", parametros).fetch();
 		// Recuperando Configuração Pode para uma lotação específica
 		//	Object[] parametros1 =  {cpSituacaoConfiguracaoPode, idOrgaoUsu,tpConf};
 		//	List<CpConfiguracao> cpConfiguracoesCl = CpConfiguracao.find("((lotacao is not null  and cpSituacaoConfiguracao = ?) and orgaoUsuario.idOrgaoUsu = ?  and cpTipoConfiguracao = ? and hisIdcFim is null  )", parametros1).fetch();
 		Object[] parametros1 =  {idOrgaoUsu,tpConf};
-		List<CpConfiguracao> cpConfiguracoesCl = CpConfiguracao.find("((lotacao is not null  ) and orgaoUsuario.idOrgaoUsu = ?  and cpTipoConfiguracao = ? and hisIdcFim is null  )", parametros1).fetch();
+		List<CpConfiguracao> cpConfiguracoesCl = CpRepository.find(CpConfiguracao.class, "((lotacao is not null  ) and orgaoUsuario.idOrgaoUsu = ?  and cpTipoConfiguracao = ? and hisIdcFim is null  )", parametros1).fetch();
 		// Recuperando Configuração default para um Órgão específico
 		Object[] parametros2 =  { idOrgaoUsu,tpConf};
 		//	List<CpConfiguracao> cpConfiguracoesCo = CpConfiguracao.find("((cpSituacaoConfiguracao = ?) and orgaoUsuario.idOrgaoUsu = ?  and cpTipoConfiguracao = ? and hisIdcFim is null  )", parametros2).fetch();
-		List<CpConfiguracao> cpConfiguracoesCo = CpConfiguracao.find("( lotacao is null and orgaoUsuario.idOrgaoUsu = ?  and cpTipoConfiguracao = ? and hisIdcFim is null  )", parametros2).fetch();		
+		List<CpConfiguracao> cpConfiguracoesCo = CpRepository.find(CpConfiguracao.class, "( lotacao is null and orgaoUsuario.idOrgaoUsu = ?  and cpTipoConfiguracao = ? and hisIdcFim is null  )", parametros2).fetch();		
 		List<CpConfiguracao> cpConfiguracoes = new ArrayList<CpConfiguracao>();
 		cpConfiguracoes.addAll(cpConfiguracoesCp);
 		cpConfiguracoes.addAll(cpConfiguracoesCl);
@@ -79,20 +80,20 @@ public class ConfiguracoesGI extends Controller {
 	}
 
 	private static void carregarDadosPerifericos(Long idOrgaoUsu) {
-		CpOrgaoUsuario cpOrgaoUsuario = CpOrgaoUsuario.findById(idOrgaoUsu);
+		CpOrgaoUsuario cpOrgaoUsuario = CpRepository.findById(CpOrgaoUsuario.class,idOrgaoUsu);
 		long TIPO_CONFIG_COMPLEXO_PADRAO = 400;
-		CpTipoConfiguracao tpConf1 = CpTipoConfiguracao.findById(TIPO_CONFIG_COMPLEXO_PADRAO);
+		CpTipoConfiguracao tpConf1 = CpRepository.findById(CpTipoConfiguracao.class,TIPO_CONFIG_COMPLEXO_PADRAO);
 		long TIPO_CONFIG_UTILIZAR_SERVICO = 200;
-		CpTipoConfiguracao tpConf2 = CpTipoConfiguracao.findById(TIPO_CONFIG_UTILIZAR_SERVICO);		
+		CpTipoConfiguracao tpConf2 = CpRepository.findById(CpTipoConfiguracao.class,TIPO_CONFIG_UTILIZAR_SERVICO);		
 
 
 		List<CpTipoConfiguracao> cpTiposConfiguracao = new ArrayList<CpTipoConfiguracao>();	
 		cpTiposConfiguracao.add(tpConf2);
 		cpTiposConfiguracao.add(tpConf1);
 
-		List<CpSituacaoConfiguracao> cpSituacoesConfiguracao = CpSituacaoConfiguracao.findAll();
+		List<CpSituacaoConfiguracao> cpSituacoesConfiguracao = CpRepository.findAll(CpSituacaoConfiguracao.class);
 
-		List<CpComplexo> cpComplexos = CpComplexo.find("orgaoUsuario = ?", cpOrgaoUsuario).fetch();
+		List<CpComplexo> cpComplexos = CpRepository.find(CpComplexo.class, "orgaoUsuario = ?", cpOrgaoUsuario).fetch();
 
 		renderArgs.put("cpOrgaoUsuario",cpOrgaoUsuario);
 		renderArgs.put("cpTiposConfiguracao",cpTiposConfiguracao);
@@ -101,7 +102,7 @@ public class ConfiguracoesGI extends Controller {
 	}
 
 	public static void editar(Long id) throws Exception{
-		CpConfiguracao cpConfiguracao = CpConfiguracao.findById(id);
+		CpConfiguracao cpConfiguracao = CpRepository.findById(CpConfiguracao.class,id);
 
 		if (cpConfiguracao.getOrgaoUsuario() != null ) {
 			carregarDadosPerifericos(cpConfiguracao.getOrgaoUsuario().getIdOrgaoUsu());
@@ -118,7 +119,7 @@ public class ConfiguracoesGI extends Controller {
 	}
 	
 	public static void excluir(Long id) throws Exception{
-		CpConfiguracao cpConfiguracao = CpConfiguracao.findById(id);
+		CpConfiguracao cpConfiguracao = CpRepository.findById(CpConfiguracao.class,id);
 
 		cpConfiguracao.delete();
 
@@ -140,7 +141,7 @@ public class ConfiguracoesGI extends Controller {
 		}
 		
 		CpConfiguracao cpConfiguracaoNova = new CpConfiguracao();
-		CpConfiguracao cpConfiguracaoAnterior = CpConfiguracao.findById(cpConfiguracao.getId());
+		CpConfiguracao cpConfiguracaoAnterior = CpRepository.findById(CpConfiguracao.class,cpConfiguracao.getId());
 		if (cpConfiguracaoAnterior != null) {
 			if (cpConfiguracaoAnterior.getConfiguracaoInicial() == null) {
 				cpConfiguracaoAnterior.setConfiguracaoInicial(cpConfiguracaoAnterior);
@@ -155,7 +156,7 @@ public class ConfiguracoesGI extends Controller {
 
 		if (cpConfiguracao.getCpTipoConfiguracao().getIdTpConfiguracao() == 200) {
 			String SERVICO_COMPLEXO_ADMINISTRADOR = "SIGA-TP-ADMMISSAOCOMPLEXO";
-			cpConfiguracaoNova.setCpServico((CpServico) CpServico.find("siglaServico",SERVICO_COMPLEXO_ADMINISTRADOR).first());
+			cpConfiguracaoNova.setCpServico((CpServico) CpRepository.find(CpServico.class, "siglaServico",SERVICO_COMPLEXO_ADMINISTRADOR).first());
 		}	
 
 		cpConfiguracaoNova.setCpSituacaoConfiguracao(cpConfiguracao.getCpSituacaoConfiguracao());

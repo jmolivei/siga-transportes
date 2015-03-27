@@ -7,13 +7,14 @@ import javax.persistence.EntityTransaction;
 import javax.persistence.PersistenceException;
 
 import models.Condutor;
-import models.ItemMenu;
 import models.Imagem;
+import models.ItemMenu;
 import play.data.validation.Validation;
 import play.mvc.Controller;
 import play.mvc.With;
 import uteis.MenuMontador;
 import br.gov.jfrj.siga.dp.DpPessoa;
+import br.gov.jfrj.siga.tp.model.CpRepository;
 import controllers.AutorizacaoGI.RoleAdmin;
 import controllers.AutorizacaoGI.RoleAdminMissao;
 import controllers.AutorizacaoGI.RoleAdminMissaoComplexo;
@@ -81,7 +82,7 @@ public class Condutores extends Controller {
 	}
 
 	private static DpPessoa recuperaPessoa(DpPessoa dpPessoa) throws Exception {
-		return 	DpPessoa.find("idPessoaIni = ? and dataFimPessoa = null",dpPessoa.getIdInicial()).first();
+		return 	DpPessoa.AR.find("idPessoaIni = ? and dataFimPessoa = null",dpPessoa.getIdInicial()).first();
 	}
 
 	@RoleAdmin

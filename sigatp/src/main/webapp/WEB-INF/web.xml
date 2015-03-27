@@ -3,27 +3,35 @@
 	xsi:schemaLocation="http://java.sun.com/xml/ns/j2ee http://java.sun.com/xml/ns/j2ee/web-app_2_4.xsd"
 	version="2.4">
 
-	<display-name>Play! (%APPLICATION_NAME%)</display-name>
+	<display-name>Siga Transportes</display-name>
 
 	<context-param>
-		<param-name>play.id</param-name>
-		<param-value>war</param-value>
+		<param-name>br.com.caelum.vraptor.provider</param-name>
+		<param-value>br.com.caelum.vraptor.ioc.guice.GuiceProvider</param-value>
 	</context-param>
 
-	<listener>
-		<listener-class>play.server.ServletWrapper</listener-class>
-	</listener>
+	<context-param>
+		<param-name>br.com.caelum.vraptor.encoding</param-name>
+		<param-value>UTF-8</param-value>
+	</context-param>
 
-	<servlet>
-		<servlet-name>play</servlet-name>
-		<servlet-class>play.server.ServletWrapper</servlet-class>
-	</servlet>
+	<context-param>
+		<param-name>br.com.caelum.vraptor.packages</param-name>
+		<param-value>br.gov.jfrj.siga.vraptor</param-value>
+	</context-param>
 
-	<servlet-mapping>
-		<servlet-name>play</servlet-name>
-		<url-pattern>/</url-pattern>
-	</servlet-mapping>
- 
+	<filter>
+		<filter-name>vraptor</filter-name>
+		<filter-class>br.com.caelum.vraptor.VRaptor</filter-class>
+	</filter>
+	
+	<filter-mapping>
+		<filter-name>vraptor</filter-name>
+		<url-pattern>/app/*</url-pattern>
+		<dispatcher>FORWARD</dispatcher>
+		<dispatcher>REQUEST</dispatcher>
+	</filter-mapping>
+
 	<security-constraint>
 		<web-resource-collection>
 			<web-resource-name>Páginas Restritas</web-resource-name>

@@ -16,6 +16,7 @@ import uteis.Combo;
 import uteis.MenuMontador;
 import br.gov.jfrj.siga.dp.CpOrgaoUsuario;
 import br.gov.jfrj.siga.dp.DpLotacao;
+import br.gov.jfrj.siga.tp.model.CpRepository;
 import controllers.AutorizacaoGI.RoleAdmin;
 import controllers.AutorizacaoGI.RoleAdminFrota;
 
@@ -41,7 +42,7 @@ public class Veiculos extends Controller {
        	renderArgs.put(Combo.Grupo.getDescricao(), grupos);
        	
        	CpOrgaoUsuario cpOrgaoUsuario = AutorizacaoGI.titular().getOrgaoUsuario();
-       	List<DpLotacao> dpLotacoes = DpLotacao.find("orgaoUsuario = ? and DATA_FIM_LOT is null order by NOME_LOTACAO", cpOrgaoUsuario).fetch();
+       	List<DpLotacao> dpLotacoes = DpLotacao.AR.find("orgaoUsuario = ? and DATA_FIM_LOT is null order by NOME_LOTACAO", cpOrgaoUsuario).fetch();
        	renderArgs.put("dpLotacoes", dpLotacoes);
 	}
 	

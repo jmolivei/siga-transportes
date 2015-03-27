@@ -2,15 +2,16 @@ package controllers;
 
 import java.util.List;
 
-import controllers.AutorizacaoGI.RoleAdmin;
-import br.gov.jfrj.siga.cp.CpComplexo;
-import br.gov.jfrj.siga.dp.CpOrgaoUsuario;
 import models.Parametro;
 import play.data.validation.Valid;
 import play.data.validation.Validation;
 import play.mvc.Controller;
 import play.mvc.Scope.RenderArgs;
 import play.mvc.With;
+import br.gov.jfrj.siga.cp.CpComplexo;
+import br.gov.jfrj.siga.dp.CpOrgaoUsuario;
+import br.gov.jfrj.siga.tp.model.CpRepository;
+import controllers.AutorizacaoGI.RoleAdmin;
 
 @With(AutorizacaoGI.class)
 public class Parametros extends Controller {
@@ -48,8 +49,8 @@ public class Parametros extends Controller {
 	}
 
 	private static void carregarDadosPerifericos() {
-		List<CpOrgaoUsuario> cpOrgaoUsuarios = CpOrgaoUsuario.findAll();
-		List<CpComplexo> cpComplexos = CpComplexo.findAll();
+		List<CpOrgaoUsuario> cpOrgaoUsuarios = CpRepository.findAll(CpOrgaoUsuario.class);
+		List<CpComplexo> cpComplexos = CpRepository.findAll(CpComplexo.class);
 		RenderArgs.current().put("cpOrgaoUsuarios", cpOrgaoUsuarios);
 		RenderArgs.current().put("cpComplexos", cpComplexos);
 	}

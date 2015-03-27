@@ -30,7 +30,6 @@ import play.data.binding.As;
 import play.data.validation.Required;
 import play.db.jpa.GenericModel;
 import play.db.jpa.JPA;
-import br.jus.jfrj.siga.uteis.Sequence;
 import play.i18n.Messages;
 import play.modules.br.jus.jfrj.siga.uteis.validadores.sequence.SequenceMethods;
 import play.modules.br.jus.jfrj.siga.uteis.validadores.upperCase.UpperCase;
@@ -41,6 +40,8 @@ import binders.DoubleBinder;
 import br.gov.jfrj.siga.cp.CpComplexo;
 import br.gov.jfrj.siga.dp.CpOrgaoUsuario;
 import br.gov.jfrj.siga.dp.DpPessoa;
+import br.gov.jfrj.siga.tp.model.CpRepository;
+import br.jus.jfrj.siga.uteis.Sequence;
 import br.jus.jfrj.siga.uteis.SiglaDocumentoType;
 
 @SuppressWarnings("serial")
@@ -253,7 +254,7 @@ public class Missao extends GenericModel implements Comparable<Missao>,SequenceM
 			throw new Exception(Messages.get("missao.buscar.sequence.exception", sequence));
 		}
 
-		CpOrgaoUsuario cpOrgaoUsuario = CpOrgaoUsuario.find("acronimoOrgaoUsu",partesDoCodigo[0]).first();
+		CpOrgaoUsuario cpOrgaoUsuario = CpRepository.find(CpOrgaoUsuario.class, "acronimoOrgaoUsu",partesDoCodigo[0]).first();
 		Integer ano = new Integer(Integer.parseInt(partesDoCodigo[2]));
 		Long numero = new Long(Integer.parseInt(partesDoCodigo[3]));
 		String siglaDocumento = partesDoCodigo[4] + partesDoCodigo[1];

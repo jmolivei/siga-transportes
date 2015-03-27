@@ -6,7 +6,7 @@
 
 		<dependencies>
 			<module name="sigadoc.rel" export="true" />
-			<module name="sigadoc.ws" export="true" />
+			
 			<module name="org.picketlink" />
 			<module name="asm.asm" />
 			<module name="com.google.guava"/>
