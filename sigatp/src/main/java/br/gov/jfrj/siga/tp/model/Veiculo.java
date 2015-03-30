@@ -16,7 +16,6 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.NoResultException;
 import javax.persistence.OneToMany;
-import javax.persistence.OrderBy;
 import javax.persistence.Query;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
@@ -24,8 +23,6 @@ import javax.persistence.Transient;
 
 import org.hibernate.envers.Audited;
 import org.hibernate.envers.RelationTargetAuditMode;
-
-import com.sun.xml.internal.bind.v2.TODO;
 
 import play.data.binding.As;
 import play.data.validation.CheckWith;

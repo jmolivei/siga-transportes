@@ -179,6 +179,18 @@
 			<artifactId>hibernate-envers</artifactId>
 			<version>4.2.15.Final</version>
 		</dependency>
+		
+		<dependency>
+			<groupId>org.apache.tomcat</groupId>
+			<artifactId>jsp-api</artifactId>
+			<scope>provided</scope>
+		</dependency>
+		
+		<dependency>
+			<groupId>jsptags</groupId>
+			<artifactId>pager-taglib</artifactId>
+		</dependency>
+		
 		<!-- DEV <scope>provided</scope> -->
 
 		<!-- Teste -->
