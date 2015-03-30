@@ -6,7 +6,7 @@
 	<display-name>Siga Transportes</display-name>
 
 	<welcome-file-list>
-		<welcome-file>views/main.jsp</welcome-file>
+		<welcome-file>/WEB-INF/index.jsp</welcome-file>
 	</welcome-file-list>
 
 	<context-param>
