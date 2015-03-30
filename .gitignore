@@ -37,3 +37,5 @@ siga-uteis-play-module/eclipse
 siga-uteis-play-module/tmp
 
 *.rej
+*.project
+sigatp/.project
