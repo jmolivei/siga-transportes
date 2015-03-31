@@ -1,8 +1,8 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 
-<%-- ${_cabecalho_pre_head.raw()} --%>
-<%-- ${moreHead?.raw()} --%>
+${_cabecalho_pre_head.raw()}
+${moreHead.raw()}
 <link rel="stylesheet" href="public/stylesheets/main.css" type="text/css" media="screen"/>
 <link rel="stylesheet" href="public/javascripts/simplepagination/css/simplePagination.css" type="text/css"/>	
 <script src="public/javascripts/jquery-1.6.4.min.js"></script>
@@ -10,21 +10,15 @@
 <script src="public/javascripts/simplepagination/js/jquery.simplePagination.js"></script>
 <script src="public/javascripts/main.js"></script>
 
-<%-- #{if _cabecalho_pre_menu != null} ${_cabecalho_pre_menu.raw()} --%>
-<%-- <c:if test="${_cabecalho_pre_menu != null}"> --%>
+<c:if test="${_cabecalho_pre_menu != null}">
 	${_cabecalho_pre_menu.raw()}
 	<li id="limenuRequisicoes"><a id="menuRequisicoes" class="" href="#">Requisi&ccedil;&otilde;es</a>
 		<ul>
 			<li id="limenuRequisicoesIncluir"><a id="menuRequisicoesIncluir" class="" href="@{Requisicoes.incluir}">Incluir</a></li>
 			
 			<c:choose>
-				<%-- #{if exibirMenuAdministrar || exibirMenuAdministrarMissao || exibirMenuAdministrarMissaoComplexo || exibirMenuAdministrarFrota || exibirMenuAprovador } --%>
-      			<%-- <c:when test="${exibirMenuAdministrar || exibirMenuAdministrarMissao || exibirMenuAdministrarMissaoComplexo || exibirMenuAdministrarFrota || exibirMenuAprovador }"> --%>
-      			<c:when test="${true}">
-      			
-					<%-- #{if exibirMenuAdministrar || exibirMenuAdministrarMissao || exibirMenuAprovador} --%>
-					<%-- <c:if test="${exibirMenuAdministrar || exibirMenuAdministrarMissao || exibirMenuAprovador}"> --%>
-					<c:if test="${true}">
+      			<c:when test="${exibirMenuAdministrar || exibirMenuAdministrarMissao || exibirMenuAdministrarMissaoComplexo || exibirMenuAdministrarFrota || exibirMenuAprovador }">
+					<c:if test="${exibirMenuAdministrar || exibirMenuAdministrarMissao || exibirMenuAprovador}">
 						<li id="limenuRequisicoesAprovar"><a id="menuRequisicoesAprovar" class="" href="@{Requisicoes.listarPAprovar}">Aprovar/Rejeitar</a></li>
 					</c:if>
 					<li id="limenuRequisicoesListar"><a id="menuRequisicoesListar" class="" href="@{Requisicoes.listarFiltrado(models.EstadoRequisicao.AUTORIZADA,models.EstadoRequisicao.NAOATENDIDA)}">Listar</a></li>
@@ -35,10 +29,7 @@
 			</c:choose>
 		</ul>
 	</li>
-	<%-- #{if exibirMenuGabinete || exibirMenuAdminGabinete} --%>
-	<%-- <c:if test="${exibirMenuGabinete || exibirMenuAdminGabinete}"> --%>
-	<c:if test="${true}">
-	
+	<c:if test="${exibirMenuGabinete || exibirMenuAdminGabinete}">
 		<li>
 			<a id="menuGabinetes" class="" href="#">Gabinetes</a>
 		  	<ul>
@@ -48,13 +39,10 @@
 			</ul>
 		</li>
 	</c:if>
-	<%-- #{if exibirMenuAdministrar || exibirMenuAdministrarMissao || exibirMenuAdministrarMissaoComplexo  || exibirMenuAgente} --%>  
-	<%-- <c:if test="${exibirMenuAdministrar || exibirMenuAdministrarMissao || exibirMenuAdministrarMissaoComplexo  || exibirMenuAgente}"> --%>
-	<c:if test="${true}">
+	<c:if test="${exibirMenuAdministrar || exibirMenuAdministrarMissao || exibirMenuAdministrarMissaoComplexo  || exibirMenuAgente}">
 	  <li><a id="menuMissoes" class="" href="#">Miss&otilde;es</a>
 	  	<ul>
 	  	<c:choose>
-		 	 <%-- #{if exibirMenuAdministrar || exibirMenuAdministrarMissao || exibirMenuAdministrarMissaoComplexo} --%>
 		 	 <c:when test="${exibirMenuAdministrar || exibirMenuAdministrarMissao || exibirMenuAdministrarMissaoComplexo}">
 				<li><a id="menuMissoesIncluir" class="" href="@{Missoes.incluir}">Incluir</a></li>
 				<li><a id="menuMissoesListar" class="" href="@{Missoes.listarFiltrado()}">Listar</a></li>
@@ -68,9 +56,7 @@
 	</c:if>
 	
 	<c:choose>
-		<%-- #{if exibirMenuAdministrar} --%>
-		<%-- <c:when test="${exibirMenuAdministrar}"> --%>
-		<c:when test="${true}">
+		<c:when test="${exibirMenuAdministrar}">
 			<li><a id="menuAdm" href="#">Administrar</a>  	
 				<ul>
 					<li><a id="menuAdmAbastecimentos" class="" href="@{Abastecimentos.listar}">Abastecimentos</a></li>
@@ -96,7 +82,6 @@
 				</ul>
 			</li> 
 		</c:when>
-		<%-- #{elseif exibirMenuAdministrarFrota} --%>
 		<c:when test="${exibirMenuAdministrarFrota}">
 			<li><a id="menuAdm" href="#">Administrar</a>  	
 				<ul>
@@ -115,7 +100,6 @@
 				</ul>
 			</li> 
 		</c:when>
-		<%-- #{elseif exibirMenuAdministrarMissao || exibirMenuAdministrarMissaoComplexo} --%>
 		<c:when test="${exibirMenuAdministrarMissao || exibirMenuAdministrarMissaoComplexo}">
 			<li><a id="menuAdm" href="#">Administrar</a>  	
 				<ul>
@@ -143,13 +127,12 @@
 	<li><a class="" href="#">Ajuda</a>
 		<ul>
 			<li><a class="" href="#" onclick="javascript:window.open('@{Application.exibirManualUsuario}');">Manual do Usu&aacute;rio</a></li>
-	    	<%-- #{if exibirMenuGabinete || exibirMenuAdminGabinete} --%>
 	    	<c:if test="${exibirMenuGabinete || exibirMenuAdminGabinete}">
 				<li><a class="" href="#" onclick="javascript:window.open('@{Application.exibirManualUsuarioDeGabinete}');">Manual do Usu&aacute;rio de Gabinete</a></li>
 	    	</c:if>
 		</ul>	
 	</li>
-<%-- </c:if> --%>
-<%-- ${_cabecalho_pos.raw()} --%>
+</c:if>
+${_cabecalho_pos.raw()}
 <%-- #{doLayout /} --%>
-<%-- ${_rodape.raw()} --%>
+${_rodape.raw()}
