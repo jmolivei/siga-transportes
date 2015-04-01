@@ -33,9 +33,8 @@ import br.gov.jfrj.siga.vraptor.SigaObjects;
 @Resource
 public class AutorizacaoGIController extends TpController implements Interceptor {
 
-	public AutorizacaoGIController(HttpServletRequest request, Result result,
-			CpDao dao, SigaObjects so, EntityManager em) {
-		super(request, result, dao, so, em);
+	public AutorizacaoGIController(HttpServletRequest request, Result result,SigaObjects so, EntityManager em) {
+		super(request, result, so, em);
 	}
 
 	private static final String EXIBIR_MENU_AGENTE = "exibirMenuAgente";
