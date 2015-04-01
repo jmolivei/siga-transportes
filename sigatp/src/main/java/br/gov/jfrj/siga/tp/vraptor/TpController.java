@@ -10,8 +10,7 @@ import br.gov.jfrj.siga.vraptor.SigaObjects;
 
 public class TpController extends SigaController {
 
-	public TpController(HttpServletRequest request, Result result, CpDao dao, SigaObjects so, EntityManager em) {
-		super(request, result, dao, so, em);
+	public TpController(HttpServletRequest request, Result result, SigaObjects so, EntityManager em) {
+		super(request, result, CpDao.getInstance(), so, em);
 	}
-
 }
