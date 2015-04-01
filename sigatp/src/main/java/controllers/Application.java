@@ -210,7 +210,7 @@ public class Application extends Controller {
 			}
 
 			else if (equals(true, AutorizacaoGI.ehAgente())) {
-				Long idCondutor = Condutor.recuperarLogado(AutorizacaoGI.titular(),AutorizacaoGI.titular().getOrgaoUsuario()).id;
+				Long idCondutor = Condutor.recuperarLogado(AutorizacaoGI.titular(),AutorizacaoGI.titular().getOrgaoUsuario()).getId();
 				EstadoMissao[] estados = {EstadoMissao.PROGRAMADA, EstadoMissao.INICIADA};
 				String query = "condutor.id = ? and cpOrgaoUsuario.idOrgaoUsu = ? and (estadoMissao = ? or estadoMissao = ?)";
 				List<ServicosVeiculo> missoes = Missao.find(query, idCondutor, idOrgaoUsu, estados[0], estados[1]).fetch();

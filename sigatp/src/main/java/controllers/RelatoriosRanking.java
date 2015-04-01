@@ -129,7 +129,7 @@ public class RelatoriosRanking extends Controller {
 
 			for (int i = 0; i < lista.size(); i++) {
 				condutor = new Condutor();
-				condutor.id = Long.parseLong(lista.get(i)[0].toString());
+				condutor.setId(Long.parseLong(lista.get(i)[0].toString()));
 
 				missao = new Missao();
 				missao.id = Long.parseLong(lista.get(i)[1].toString());
@@ -142,7 +142,7 @@ public class RelatoriosRanking extends Controller {
 				if (i < lista.size() - 1) {
 					idProximoCondutor = Long.parseLong(lista.get(i + 1)[0].toString());
 
-					if (!condutor.id.equals(idProximoCondutor)) {
+					if (!condutor.getId().equals(idProximoCondutor)) {
 						salvar = true;
 					}
 				} else {
@@ -151,7 +151,7 @@ public class RelatoriosRanking extends Controller {
 
 				if (salvar) {
 					itemRc = new RelatorioRanking().new RankingCondutorRequisicao();
-					itemRc.condutor = Condutor.findById(condutor.id);
+					itemRc.condutor = Condutor.AR.findById(condutor.getId());
 					itemRc.missoes = new ArrayList<Missao>(setMissao);
 					itemRc.requisicoes = new ArrayList<RequisicaoTransporte>(setRequisicao);
 					listaRankingCondutor.add(itemRc);

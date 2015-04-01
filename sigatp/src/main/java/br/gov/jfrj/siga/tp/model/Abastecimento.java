@@ -180,7 +180,7 @@ public class Abastecimento extends GenericModel implements Comparable<Abastecime
 	}
 
 	public static List<Abastecimento> listarAbastecimentosDoCondutor(Condutor condutor) {
-		List<Abastecimento> abastecimentos = Abastecimento.find("titular.idPessoaIni = ?", condutor.dpPessoa.getIdInicial()).fetch();
+		List<Abastecimento> abastecimentos = Abastecimento.find("titular.idPessoaIni = ?", condutor.getDpPessoa().getIdInicial()).fetch();
 		Collections.sort(abastecimentos, Collections.reverseOrder());
 		return abastecimentos;
 	}

@@ -26,8 +26,8 @@ public class AutosDeInfracao extends Controller {
 		render(autosDeInfracao, veiculo);
 	}
 	
-	public static void listarPorCondutor(Long idCondutor) {
-		Condutor condutor = Condutor.findById(idCondutor);
+	public static void listarPorCondutor(Long idCondutor) throws Exception {
+		Condutor condutor = Condutor.AR.findById(idCondutor);
 		List<AutoDeInfracao> autosDeInfracao = AutoDeInfracao.buscarAutosDeInfracaoPorCondutor(condutor);
 		MenuMontador.instance().RecuperarMenuCondutores(idCondutor, ItemMenu.INFRACOES);
 		render(autosDeInfracao, condutor);

@@ -272,12 +272,12 @@ public class Missao extends GenericModel implements Comparable<Missao>,SequenceM
 	}
 
 	public static List<Missao> buscarMissoesEmAbertoPorCondutor(Condutor condutor) {
-		return Missao.find("condutor.id = ? AND estadoMissao NOT IN (?,?) order by dataHoraSaida", condutor.id, EstadoMissao.CANCELADA, EstadoMissao.FINALIZADA).fetch(); 
+		return Missao.find("condutor.id = ? AND estadoMissao NOT IN (?,?) order by dataHoraSaida", condutor.getId(), EstadoMissao.CANCELADA, EstadoMissao.FINALIZADA).fetch(); 
 	}
 
 	public static List<Missao> buscarTodasAsMissoesPorCondutor(Condutor condutor) {
 		if (condutor == null) { return new ArrayList<Missao>(); };
-		return Missao.find("condutor.id = ? order by dataHoraSaida desc", condutor.id).fetch(); 
+		return Missao.find("condutor.id = ? order by dataHoraSaida desc", condutor.getId()).fetch(); 
 	}
 
 	public static List<Missao> buscarPorVeiculos(Long IdVeiculo, String dataHoraInicio){

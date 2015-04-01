@@ -82,7 +82,7 @@ public class WorkFlowNotificacoes extends Job<Object>  {
 		String mensagem; 
 				
 		if (pessoa.getClass().equals(Condutor.class)) {
-			sexo = ((Condutor)pessoa).dpPessoa.getSexo().toUpperCase();
+			sexo = ((Condutor)pessoa).getDpPessoa().getSexo().toUpperCase();
 			nome = ((Condutor)pessoa).getNome();
 			
 			if (titulo.contains("Missoes")) {

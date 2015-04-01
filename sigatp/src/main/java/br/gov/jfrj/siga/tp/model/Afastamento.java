@@ -136,7 +136,7 @@ public class Afastamento extends GenericModel  {
 				+ "or "
 					+ "(dataHoraInicio <= ? and (dataHoraFim = null or dataHoraFim >= ?)))", 
 					
-					condutor.id, 
+					condutor.getId(), 
 					dataHoraInicio, dataHoraInicio, 
 					dataHoraFim, dataHoraFim)
 				.fetch();

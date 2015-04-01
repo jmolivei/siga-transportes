@@ -274,7 +274,7 @@ public class PlantoesMensais extends Controller {
 	@RoleAdmin
 	@RoleAdminMissao
 	@RoleAdminMissaoComplexo
-	public static void salvar(List<Plantao> plantoes, String dadosParaTitulo, Mes mes, int ano, String hora){
+	public static void salvar(List<Plantao> plantoes, String dadosParaTitulo, Mes mes, int ano, String hora) throws Exception{
 		ordenarPelaDataHoraInicioDoPlantao(plantoes);
 		
 		boolean incluir = (plantoes.get(0).id == 0);
@@ -290,7 +290,7 @@ public class PlantoesMensais extends Controller {
 			if(incluir) {
 				plantao.referencia = dadosParaTitulo;
 			}
-			plantao.condutor = Condutor.findById(plantao.condutor.id);
+			plantao.condutor = Condutor.AR.findById(plantao.condutor.getId());
 			List<Afastamento> afastamentos = Afastamento.buscarPorCondutores(plantao.condutor, plantao.dataHoraInicio, plantao.dataHoraFim);
 			if(afastamentos != null && !afastamentos.isEmpty()) {
 				Validation.addError("plantao", "plantoesMensais.afastamentos.validation", plantao.condutor.getDadosParaExibicao(), formatoDataEHora.format(plantao.dataHoraInicio.getTime()), formatoDataEHora.format(plantao.dataHoraFim.getTime()));
@@ -323,9 +323,9 @@ public class PlantoesMensais extends Controller {
 		
 	}
 
-	private static Plantao montarPlantaoParaSalvar(Plantao plantao) {
+	private static Plantao montarPlantaoParaSalvar(Plantao plantao) throws Exception {
 		Plantao retorno = Plantao.findById(plantao.id);
-		retorno.condutor = Condutor.findById(plantao.condutor.id);
+		retorno.condutor = Condutor.AR.findById(plantao.condutor.getId());
 		return retorno;
 	}
 
