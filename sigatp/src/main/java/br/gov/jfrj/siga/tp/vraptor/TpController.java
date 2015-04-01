@@ -1,11 +1,13 @@
 package br.gov.jfrj.siga.tp.vraptor;
 
 import java.util.Date;
+
 import javax.persistence.EntityManager;
 import javax.servlet.http.HttpServletRequest;
+
 import org.hibernate.Session;
 import org.jboss.security.SecurityContextAssociation;
-import br.com.caelum.vraptor.Resource;
+
 import br.com.caelum.vraptor.Result;
 import br.gov.jfrj.siga.acesso.UsuarioAutenticado;
 import br.gov.jfrj.siga.base.AplicacaoException;
@@ -19,7 +21,6 @@ import br.gov.jfrj.siga.model.dao.HibernateUtil;
 import br.gov.jfrj.siga.vraptor.SigaController;
 import br.gov.jfrj.siga.vraptor.SigaObjects;
 
-@Resource
 public class TpController extends SigaController {
 
 	public TpController(HttpServletRequest request, Result result, SigaObjects so, EntityManager em) {
