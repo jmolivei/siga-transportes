@@ -195,7 +195,7 @@ public class EmailNotificacoes extends Job<Object>  {
 		String mensagem; 
 				
 		if (pessoa.getClass().equals(Condutor.class)) {
-			sexo = ((Condutor)pessoa).dpPessoa.getSexo().toUpperCase();
+			sexo = ((Condutor)pessoa).getDpPessoa().getSexo().toUpperCase();
 			nome = ((Condutor)pessoa).getNome();
 			
 			if (titulo.contains("Missoes")) {
@@ -311,7 +311,7 @@ public class EmailNotificacoes extends Job<Object>  {
 
 			if (!flagEmail.toUpperCase().equals("TRUE")) {
 				if (item.getClass().equals(Condutor.class)) {
-					email = ((Condutor)item).dpPessoa.getEmailPessoa();
+					email = ((Condutor)item).getDpPessoa().getEmailPessoa();
 				}
 				else if(item.getClass().equals(DpPessoa.class)) {
 					email = ((DpPessoa)item).getEmailPessoa();

@@ -115,7 +115,7 @@ public class Missoes extends Controller {
 	@RoleAdminMissaoComplexo
 	public static void listarPorCondutor(Condutor condutorEscalado) throws Exception {
 		
-		condutorEscalado = Condutor.findById(condutorEscalado.id);
+		condutorEscalado = Condutor.AR.findById(condutorEscalado.getId());
 
 		List<Missao> missoes = Missao.buscarTodasAsMissoesPorCondutor(condutorEscalado);
 
@@ -751,7 +751,7 @@ public class Missoes extends Controller {
 		boolean encontrouCondutor = false;
 		if (condutores != null && ! condutores.isEmpty()) {
 			for (Condutor condutor : condutores) {
-				if (condutor.id.equals(missao.condutor.id)) {
+				if (condutor.getId().equals(missao.condutor.getId())) {
 					encontrouCondutor = true;
 					break;
 				}
@@ -836,7 +836,7 @@ public class Missoes extends Controller {
 			}
 			
 			
-			if (! AutorizacaoGI.titular().equivale(missao.condutor.dpPessoa)) {
+			if (! AutorizacaoGI.titular().equivale(missao.condutor.getDpPessoa())) {
 				try {
 						throw new Exception(Messages.get("missoes.autorizacaoGI.semAcesso.exception"));
 					} catch (Exception e) {
@@ -971,7 +971,7 @@ public class Missoes extends Controller {
 		htmlSelectCondutores.append(">");
 		for (Condutor condutor : condutoresDisponiveis) {
 			htmlSelectCondutores.append("<option value='"
-					+ condutor.id + "'");
+					+ condutor.getId() + "'");
 			if(missao != null && condutor.equals(missao.condutor)) {
 				htmlSelectCondutores.append(opcaoSelecionada);
 			}
@@ -1036,7 +1036,7 @@ public class Missoes extends Controller {
 		String dataFormatadaInicioOracle = "to_date('" + dataInicio + "', 'DD/MM/YYYY HH24:mi')";
 		List<Missao> missoes = null; 
 		String qrl = 	"SELECT p FROM Missao p" +
-		" WHERE  p.condutor.id = " + escala.condutor.id +
+		" WHERE  p.condutor.id = " + escala.condutor.getId() +
 		" AND    p.estadoMissao NOT IN ('" + EstadoMissao.CANCELADA + "','" + EstadoMissao.FINALIZADA + "')" +
 		" AND   (p.dataHoraSaida >= " + dataFormatadaInicioOracle +
 		" AND    p.dataHoraSaida <= " + dataFormatadaFimOracle + "))"; 
@@ -1076,8 +1076,8 @@ public class Missoes extends Controller {
 		CategoriaCNH categoriaCondutor1 = null;
 		CategoriaCNH categoriaCondutor2 = null;
 		
-		if (missao.condutor.categoriaCNH.getDescricao().length() == 2 ) {			
-			switch (missao.condutor.categoriaCNH.getDescricao()) {
+		if (missao.condutor.getCategoriaCNH().getDescricao().length() == 2 ) {			
+			switch (missao.condutor.getCategoriaCNH().getDescricao()) {
 			case "AB":
 				categoriaCondutor1 = CategoriaCNH.A;
 				categoriaCondutor2 = CategoriaCNH.B;
@@ -1103,7 +1103,7 @@ public class Missoes extends Controller {
 				}
 			}						
 		}else {	
-			if (missao.condutor.categoriaCNH.compareTo(missao.veiculo.categoriaCNH)>= 0){
+			if (missao.condutor.getCategoriaCNH().compareTo(missao.veiculo.categoriaCNH)>= 0){
 				return ;
 			}			
 		}	

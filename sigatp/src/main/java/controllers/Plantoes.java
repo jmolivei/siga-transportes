@@ -23,8 +23,8 @@ import controllers.AutorizacaoGI.RoleAdminMissaoComplexo;
 @With(AutorizacaoGI.class)
 public class Plantoes extends Controller {
 	
-	public static void listarPorCondutor(Long idCondutor) {
-		Condutor condutor = Condutor.findById(idCondutor);
+	public static void listarPorCondutor(Long idCondutor) throws Exception {
+		Condutor condutor = Condutor.AR.findById(idCondutor);
 		List<Plantao> plantoes = Plantao.buscarTodosPorCondutor(condutor);
 		MenuMontador.instance().RecuperarMenuCondutores(idCondutor, ItemMenu.PLANTOES);
 		render(plantoes, condutor);
@@ -33,8 +33,8 @@ public class Plantoes extends Controller {
 	@RoleAdmin
 	@RoleAdminMissao
 	@RoleAdminMissaoComplexo
-	public static void incluir(Long idCondutor){
-		Condutor condutor = Condutor.findById(idCondutor);
+	public static void incluir(Long idCondutor) throws Exception{
+		Condutor condutor = Condutor.AR.findById(idCondutor);
 		Plantao plantao = new Plantao();
 		plantao.condutor = condutor;
 		render(plantao);
@@ -57,7 +57,7 @@ public class Plantoes extends Controller {
 	@RoleAdminMissaoComplexo
 	public static void salvar(@Valid Plantao plantao, 
 							  @As(lang={"*"}, value={"dd/MM/yyyy HH:mm"}) Calendar dataHoraInicioNova,
-							  @As(lang={"*"}, value={"dd/MM/yyyy HH:mm"}) Calendar dataHoraFimNova) throws ParseException{
+							  @As(lang={"*"}, value={"dd/MM/yyyy HH:mm"}) Calendar dataHoraFimNova) throws Exception{
 		String template = plantao.id > 0 ? "Plantoes/editar.html" : "Plantoes/incluir.html";
 		
 		if (!plantao.ordemDeDatasCorreta()){
@@ -66,7 +66,7 @@ public class Plantoes extends Controller {
 		}
 		
 		String listaAfastamento = "";
-		List<Afastamento> afastamentos = Afastamento.buscarPorCondutores(plantao.condutor.id, formatarData(plantao.dataHoraInicio),
+		List<Afastamento> afastamentos = Afastamento.buscarPorCondutores(plantao.condutor.getId(), formatarData(plantao.dataHoraInicio),
 													 formatarData(plantao.dataHoraFim));
 		
 		for (Afastamento item : afastamentos) {
@@ -84,7 +84,7 @@ public class Plantoes extends Controller {
 		}
 		else {
 			String listaPlantao = "";
-			List<Plantao> plantoes= Plantao.buscarPorCondutores(plantao.condutor.id, formatarData(plantao.dataHoraInicio),
+			List<Plantao> plantoes= Plantao.buscarPorCondutores(plantao.condutor.getId(), formatarData(plantao.dataHoraInicio),
 					 formatarData(plantao.dataHoraFim));
 
 			for (Plantao item : plantoes) {
@@ -124,7 +124,7 @@ public class Plantoes extends Controller {
 			}
 			else {
 				plantao.save();
-				listarPorCondutor(plantao.condutor.id);
+				listarPorCondutor(plantao.condutor.getId());
 			}
 		}	
 	}	
@@ -133,20 +133,20 @@ public class Plantoes extends Controller {
 		List<Missao> retorno = new ArrayList<Missao>();
 		
 		if (dataHoraInicioNova == null && dataHoraFimNova == null) {		
-			return Missao.retornarMissoes("condutor.id", plantao.condutor.id, plantao.condutor.cpOrgaoUsuario.getId(),
+			return Missao.retornarMissoes("condutor.id", plantao.condutor.getId(), plantao.condutor.getCpOrgaoUsuario().getId(),
 									plantao.dataHoraInicio,plantao.dataHoraFim);
 		}
 		
 		if (dataHoraInicioNova != null) {
 			if (dataHoraInicioNova.after(plantao.dataHoraInicio)) {
-				retorno.addAll(Missao.retornarMissoes("condutor.id", plantao.condutor.id, plantao.condutor.cpOrgaoUsuario.getId(),
+				retorno.addAll(Missao.retornarMissoes("condutor.id", plantao.condutor.getId(), plantao.condutor.getCpOrgaoUsuario().getId(),
 										   	   dataHoraInicioNova,plantao.dataHoraInicio));
 			}
 		}
 		
 		if (dataHoraFimNova != null) {
 			if (dataHoraFimNova.before(plantao.dataHoraFim)) {
-				retorno.addAll(Missao.retornarMissoes("condutor.id", plantao.condutor.id, plantao.condutor.cpOrgaoUsuario.getId(),
+				retorno.addAll(Missao.retornarMissoes("condutor.id", plantao.condutor.getId(), plantao.condutor.getCpOrgaoUsuario().getId(),
 											   plantao.dataHoraFim,dataHoraFimNova));
 			}
 		}
@@ -157,7 +157,7 @@ public class Plantoes extends Controller {
 	@RoleAdmin
 	@RoleAdminMissao
 	@RoleAdminMissaoComplexo
-	public static void excluir(Long id){
+	public static void excluir(Long id) throws Exception{
 		Plantao plantao = Plantao.findById(id);
 
 		List<Missao> missoes = retornarMissoesCondutorPlantao(plantao, null, null);
@@ -179,7 +179,7 @@ public class Plantoes extends Controller {
 		}		
 		else {
 			plantao.delete();
-			listarPorCondutor(plantao.condutor.id);
+			listarPorCondutor(plantao.condutor.getId());
 		}
 	}
 

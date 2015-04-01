@@ -34,9 +34,9 @@ public class EscalasDeTrabalho extends Controller {
 	@RoleAdmin
 	@RoleAdminMissao
 	@RoleAdminMissaoComplexo
-    public static void incluir(Long idCondutor) {
+    public static void incluir(Long idCondutor) throws Exception {
     	MenuMontador.instance().RecuperarMenuCondutores(idCondutor, ItemMenu.ESCALASDETRABALHO);
-    	Condutor condutor = Condutor.findById(idCondutor);
+    	Condutor condutor = Condutor.AR.findById(idCondutor);
     	
     	EscalaDeTrabalho escala = new EscalaDeTrabalho();
     	escala.condutor = condutor;
@@ -55,7 +55,7 @@ public class EscalasDeTrabalho extends Controller {
     public static void editar(Long id) {
     	EscalaDeTrabalho escala = EscalaDeTrabalho.findById(id);
     	
-    	MenuMontador.instance().RecuperarMenuCondutores(escala.condutor.id, ItemMenu.ESCALASDETRABALHO);
+    	MenuMontador.instance().RecuperarMenuCondutores(escala.condutor.getId(), ItemMenu.ESCALASDETRABALHO);
     	
     	DiaDaSemana diaSemana = DiaDaSemana.SEGUNDA;
     	
@@ -65,17 +65,17 @@ public class EscalasDeTrabalho extends Controller {
 	@RoleAdmin
 	@RoleAdminMissao
 	@RoleAdminMissaoComplexo
-	public static void excluir(Long id) {
+	public static void excluir(Long id) throws Exception {
     	EscalaDeTrabalho escala = EscalaDeTrabalho.findById(id);
-    	Long idCondutor = escala.condutor.id;
+    	Long idCondutor = escala.condutor.getId();
     	escala.delete();
     	
     	listarPorCondutor(idCondutor);
     }
         
-    public static void listarPorCondutor(Long idCondutor) {
+    public static void listarPorCondutor(Long idCondutor) throws Exception {
     	MenuMontador.instance().RecuperarMenuCondutores(idCondutor, ItemMenu.ESCALASDETRABALHO);
-        Condutor condutor = Condutor.findById(idCondutor);
+        Condutor condutor = Condutor.AR.findById(idCondutor);
         
         List<EscalaDeTrabalho> escalas = EscalaDeTrabalho.buscarTodosPorCondutor(condutor);
         
@@ -104,13 +104,13 @@ public class EscalasDeTrabalho extends Controller {
 	@RoleAdmin
 	@RoleAdminMissao
 	@RoleAdminMissaoComplexo
-    public static void finalizar(@Valid EscalaDeTrabalho escala) { 
+    public static void finalizar(@Valid EscalaDeTrabalho escala) throws Exception { 
 		escala.dataVigenciaFim = Calendar.getInstance();
     	escala.dataVigenciaFim.set(Calendar.HOUR_OF_DAY, 23);
     	escala.dataVigenciaFim.set(Calendar.MINUTE, 59);
     	escala.dataVigenciaFim.set(Calendar.SECOND, 59);
 		escala.save();
-		listarPorCondutor(escala.condutor.id);
+		listarPorCondutor(escala.condutor.getId());
 	}
     
 	@RoleAdmin
@@ -148,7 +148,7 @@ public class EscalasDeTrabalho extends Controller {
                 System.out.println(error.message());
                 System.out.println(error.getKey());
             } */
-        	MenuMontador.instance().RecuperarMenuCondutores(escala.condutor.id, ItemMenu.ESCALASDETRABALHO);
+        	MenuMontador.instance().RecuperarMenuCondutores(escala.condutor.getId(), ItemMenu.ESCALASDETRABALHO);
         	
             Condutor condutor = escala.condutor;
             

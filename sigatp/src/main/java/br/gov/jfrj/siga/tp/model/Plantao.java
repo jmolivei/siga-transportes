@@ -76,7 +76,7 @@ public class Plantao extends GenericModel implements Comparable<Plantao>  {
 	}
 	
 	public static List<Plantao> buscarTodosPorCondutor(Condutor condutor){
-		return Plantao.find("CONDUTOR_ID = ? ORDER BY DATAHORAINICIO DESC", condutor.id).fetch();
+		return Plantao.find("CONDUTOR_ID = ? ORDER BY DATAHORAINICIO DESC", condutor.getId()).fetch();
 	}
 	
 	

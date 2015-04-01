@@ -39,8 +39,8 @@ public class Condutores extends Controller {
 	@RoleAdminMissao
 	@RoleAdminMissaoComplexo
 	public static void excluir(Long id) throws Exception {
-		EntityTransaction tx = Condutor.em().getTransaction();
-		Condutor condutor = Condutor.findById(id);
+		EntityTransaction tx = Condutor.AR.em().getTransaction();
+		Condutor condutor = Condutor.AR.findById(id);
 
 		if (!tx.isActive()) {
 			tx.begin();
@@ -70,12 +70,12 @@ public class Condutores extends Controller {
 	@RoleAdminMissao
 	@RoleAdminMissaoComplexo
 	public static void editar(Long id) throws Exception {
-		Condutor condutor = Condutor.findById(id);
+		Condutor condutor = Condutor.AR.findById(id);
 
-		if (condutor.dpPessoa != null) {
-			condutor.dpPessoa = recuperaPessoa(condutor.dpPessoa);
+		if (condutor.getDpPessoa() != null) {
+			condutor.setDpPessoa(recuperaPessoa(condutor.getDpPessoa()));
 		} else {
-			condutor.dpPessoa = new DpPessoa();
+			condutor.setDpPessoa(new DpPessoa());
 		}
 		MenuMontador.instance().RecuperarMenuCondutores(id, ItemMenu.DADOSCADASTRAIS);
 		render(condutor);
@@ -100,34 +100,34 @@ public class Condutores extends Controller {
 	public static void salvar(Condutor condutor) throws Exception {
 		validation.valid(condutor);
 
-		if (condutor.arquivo != null) {
-			if (!Imagem.tamanhoImagemAceito(condutor.arquivo.blob.length)) {
+		if (condutor.getArquivo() != null) {
+			if (!Imagem.tamanhoImagemAceito(condutor.getArquivo().blob.length)) {
 				Validation.addError("imagem", "condutor.tamanhoImagemAceito.validation");
 			}
 
-			if (!condutor.arquivo.mime.startsWith("image")) { // && !condutor.arquivo.nomeArquivo.contains("pdf")) {
-				Validation.addError("imagem", "condutores.arquivoImagem.validation", condutor.arquivo.mime);
+			if (!condutor.getArquivo().mime.startsWith("image")) { // && !condutor.arquivo.nomeArquivo.contains("pdf")) {
+				Validation.addError("imagem", "condutores.arquivoImagem.validation", condutor.getArquivo().mime);
 			}
-			condutor.conteudoimagemblob = condutor.arquivo.blob;
+			condutor.setConteudoimagemblob(condutor.getArquivo().blob);
 		} else {
-			if (condutor.situacaoImagem.equals("semimagem")) {
-				condutor.conteudoimagemblob = null;
+			if (condutor.getSituacaoImagem().equals("semimagem")) {
+				condutor.setConteudoimagemblob(null);
 			}
 		}
 		
-		if (condutor.dpPessoa == null) {
+		if (condutor.getDpPessoa() == null) {
 			Validation.addError("dpPessoa", "condutor.dppessoa.validation");
 		}
 
-		condutor.cpOrgaoUsuario = AutorizacaoGI.titular().getOrgaoUsuario();
+		condutor.setCpOrgaoUsuario(AutorizacaoGI.titular().getOrgaoUsuario());
 
 		if (Validation.hasErrors()) {
-			if (condutor.dpPessoa != null) {
-				condutor.dpPessoa = recuperaPessoa(condutor.dpPessoa);
+			if (condutor.getDpPessoa() != null) {
+				condutor.setDpPessoa(recuperaPessoa(condutor.getDpPessoa()));
 			} else {
-				condutor.dpPessoa = new DpPessoa();
+				condutor.setDpPessoa(new DpPessoa());
 			}
-			renderTemplate((condutor.id == 0 ? Condutores.ACTION_INCLUIR : Condutores.ACTION_EDITAR), condutor);
+			renderTemplate((condutor.getId() == 0 ? Condutores.ACTION_INCLUIR : Condutores.ACTION_EDITAR), condutor);
 		}
 
 		condutor.save();
@@ -138,28 +138,28 @@ public class Condutores extends Controller {
 		render(recuperaPessoa(pessoa));
 	}
 
-	public static void getImagem(Long id) {
+	public static void getImagem(Long id) throws Exception {
 		if (id != null) {
 			// Pesquisar Imagem por id
 			// Imagem arq = Imagem.newInstance(file);
 			// renderBinary(new ByteArrayInputStream(arq.blob),
 			// arq.nomeArquivo);
-			Condutor condutor = Condutor.findById(id);
-			renderBinary(new ByteArrayInputStream(condutor.conteudoimagemblob),	condutor.conteudoimagemblob.length);
+			Condutor condutor = Condutor.AR.findById(id);
+			renderBinary(new ByteArrayInputStream(condutor.getConteudoimagemblob()), condutor.getConteudoimagemblob().length);
 		}
 	}
 
-	public static void exibirImgArquivo(Long id) {
-		Condutor condutor = Condutor.findById(id);
-		renderText(condutor.conteudoimagemblob != null ? true : false);
+	public static void exibirImgArquivo(Long id) throws Exception {
+		Condutor condutor = Condutor.AR.findById(id);
+		renderText(condutor.getConteudoimagemblob() != null ? true : false);
 	}
 
-	public static void exibirImagem(Long id) {
-		/*
+	public static void exibirImagem(Long id) throws Exception {
+		/*s
 		 * if (file != null) { Imagem arq = Imagem.newInstance(file);
 		 * renderTemplate("@exibirImagem", arq.blob); }
 		 */
-		Condutor condutor = Condutor.findById(id);
+		Condutor condutor = Condutor.AR.findById(id);
 		renderTemplate("@exibirImagem", condutor);
 	}
 }

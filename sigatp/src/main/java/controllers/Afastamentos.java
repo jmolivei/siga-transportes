@@ -18,8 +18,8 @@ import controllers.AutorizacaoGI.RoleAdminMissaoComplexo;
 @With(AutorizacaoGI.class)
 public class Afastamentos extends Controller {
 
-	public static void listarPorCondutor(Long idCondutor) {
-		Condutor condutor = Condutor.findById(idCondutor);
+	public static void listarPorCondutor(Long idCondutor) throws Exception {
+		Condutor condutor = Condutor.AR.findById(idCondutor);
 		List<Afastamento> afastamentos = Afastamento.buscarTodosPorCondutor(condutor);
 		MenuMontador.instance().RecuperarMenuCondutores(idCondutor, ItemMenu.AFASTAMENTOS);
 		render(afastamentos, condutor);
@@ -28,8 +28,8 @@ public class Afastamentos extends Controller {
 	@RoleAdmin
 	@RoleAdminMissao
 	@RoleAdminMissaoComplexo
-	public static void incluir(Long idCondutor) {
-		Condutor condutor = Condutor.findById(idCondutor);
+	public static void incluir(Long idCondutor) throws Exception {
+		Condutor condutor = Condutor.AR.findById(idCondutor);
 		Afastamento afastamento = new Afastamento();
 		afastamento.condutor = condutor;
 		render(afastamento);
@@ -62,8 +62,8 @@ public class Afastamentos extends Controller {
 			renderTemplate(template, afastamento, condutores);
 		} else {
 			List<Missao> missoes = Missao.retornarMissoes("condutor.id",
-					afastamento.condutor.id,
-					afastamento.condutor.cpOrgaoUsuario.getId(),
+					afastamento.condutor.getId(),
+					afastamento.condutor.getCpOrgaoUsuario().getId(),
 					afastamento.dataHoraInicio, afastamento.dataHoraFim);
 			String listaMissoes = "";
 			String delimitador = "";
@@ -79,7 +79,7 @@ public class Afastamentos extends Controller {
 				renderTemplate(template, afastamento);
 			} else {
 				afastamento.save();
-				listarPorCondutor(afastamento.condutor.id);
+				listarPorCondutor(afastamento.condutor.getId());
 			}
 		}
 	}
@@ -87,10 +87,10 @@ public class Afastamentos extends Controller {
 	@RoleAdmin
 	@RoleAdminMissao
 	@RoleAdminMissaoComplexo
-	public static void excluir(Long id) {
+	public static void excluir(Long id) throws Exception {
 		Afastamento afastamento = Afastamento.findById(id);
 		afastamento.delete();
-		listarPorCondutor(afastamento.condutor.id);
+		listarPorCondutor(afastamento.condutor.getId());
 	}
 
 }
