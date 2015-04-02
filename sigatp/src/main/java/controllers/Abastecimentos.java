@@ -3,17 +3,17 @@ package controllers;
 import java.util.ArrayList;
 import java.util.List;
 
+import play.data.validation.Valid;
+import play.data.validation.Validation;
+import play.i18n.Messages;
+import play.mvc.Controller;
+import play.mvc.With;
 import br.gov.jfrj.siga.tp.model.Abastecimento;
 import br.gov.jfrj.siga.tp.model.Condutor;
 import br.gov.jfrj.siga.tp.model.Fornecedor;
 import br.gov.jfrj.siga.tp.model.ItemMenu;
 import br.gov.jfrj.siga.tp.model.Veiculo;
 import br.gov.jfrj.siga.tp.util.MenuMontador;
-import play.data.validation.Valid;
-import play.data.validation.Validation;
-import play.i18n.Messages;
-import play.mvc.Controller;
-import play.mvc.With;
 import controllers.AutorizacaoGIAntigo.LogMotivo;
 import controllers.AutorizacaoGIAntigo.RoleAdmin;
 import controllers.AutorizacaoGIAntigo.RoleAdminFrota;
@@ -107,11 +107,11 @@ public class Abastecimentos extends Controller {
 	@RoleAdminFrota
 	@RoleGabinete
 	public static void salvar(@Valid Abastecimento abastecimento) throws Exception{
-		if(!abastecimento.id.equals(new Long(0))) { // somente na alteracao
+		if(!abastecimento.getId().equals(new Long(0))) { // somente na alteracao
 			verificarAcesso(abastecimento);
 		}
 		
-		if (abastecimento.odometroEmKm == 0) {
+		if (abastecimento.getOdometroEmKm() == 0) {
 			Validation.addError("odometroEmKm", "abastecimento.odometroEmKm.validation");
 		}
 		
@@ -120,15 +120,15 @@ public class Abastecimentos extends Controller {
 			List<Veiculo> veiculos = listarVeiculos();
 			List<Condutor> condutores = listarCondutores();
 			String template;
-			template = abastecimento.id > 0 ? "Abastecimentos/editar.html" : "Abastecimentos/incluir.html";
+			template = abastecimento.getId() > 0 ? "Abastecimentos/editar.html" : "Abastecimentos/incluir.html";
 			renderTemplate(template, abastecimento, fornecedores, veiculos, condutores);
 		}
 		else {
 			
-			abastecimento.titular = AutorizacaoGIAntigo.titular();
-			abastecimento.solicitante = AutorizacaoGIAntigo.cadastrante();
-			if(abastecimento.id.equals(new Long(0))) { // somente na inclusao
-				abastecimento.orgao = AutorizacaoGIAntigo.titular().getOrgaoUsuario();
+			abastecimento.setTitular(AutorizacaoGIAntigo.titular());
+			abastecimento.setSolicitante(AutorizacaoGIAntigo.cadastrante());
+			if(abastecimento.getId().equals(new Long(0))) { // somente na inclusao
+				abastecimento.setOrgao(AutorizacaoGIAntigo.titular().getOrgaoUsuario());
 			}
 			
 			abastecimento.save();
@@ -138,10 +138,11 @@ public class Abastecimentos extends Controller {
 	
 	private static void verificarAcesso(Abastecimento abastecimento) throws Exception {
 		if(AutorizacaoGIAntigo.ehAdminGabinete() || AutorizacaoGIAntigo.ehGabinete()) {
-			if(!(AutorizacaoGIAntigo.ehAdminGabinete() && AutorizacaoGIAntigo.titular().getLotacao().equivale(abastecimento.titular.getLotacao())) && !abastecimento.titular.equivale(AutorizacaoGIAntigo.titular())) {
+			if(!(AutorizacaoGIAntigo.ehAdminGabinete() && AutorizacaoGIAntigo.titular().getLotacao().equivale(abastecimento.getTitular().getLotacao())) && !abastecimento.getTitular().equivale(AutorizacaoGIAntigo.titular())) {
 				throw new Exception(Messages.get("abastecimentos.verificarAcesso.exception"));
 			}
-		} else if(!((AutorizacaoGIAntigo.ehAdministrador() || AutorizacaoGIAntigo.ehAdministradorFrota() ||  AutorizacaoGIAntigo.ehAdministradorMissao() || AutorizacaoGIAntigo.ehAdministradorMissaoPorComplexo())  && AutorizacaoGIAntigo.titular().getLotacao().equivale(abastecimento.titular.getLotacao())) && !abastecimento.titular.equivale(AutorizacaoGIAntigo.titular())) {
+		} else if(!((AutorizacaoGIAntigo.ehAdministrador() || AutorizacaoGIAntigo.ehAdministradorFrota() ||  AutorizacaoGIAntigo.ehAdministradorMissao() || AutorizacaoGIAntigo.ehAdministradorMissaoPorComplexo())  && AutorizacaoGIAntigo.titular().getLotacao().equivale(abastecimento.getTitular().getLotacao())) && !abastecimento.getTitular().equivale(AutorizacaoGIAntigo.titular())) {
+
 			throw new Exception(Messages.get("abastecimentos.verificarAcesso.exception"));
 		}
 

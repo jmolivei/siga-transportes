@@ -3,6 +3,7 @@ package br.gov.jfrj.siga.tp.interceptor;
 import br.com.caelum.vraptor.InterceptionException;
 import br.com.caelum.vraptor.Intercepts;
 import br.com.caelum.vraptor.core.InterceptorStack;
+import br.com.caelum.vraptor.core.Localization;
 import br.com.caelum.vraptor.interceptor.ExecuteMethodInterceptor;
 import br.com.caelum.vraptor.interceptor.Interceptor;
 import br.com.caelum.vraptor.ioc.RequestScoped;
@@ -22,9 +23,11 @@ import controllers.AutorizacaoGIAntigo.RoleGabinete;
 public class AutorizacaoAcessoInterceptor implements Interceptor {
 
 	private AutorizacaoGI dadosAutorizacao;
+	private Localization localization;
 
-	public AutorizacaoAcessoInterceptor(AutorizacaoGI dadosAutorizacao) {
+	public AutorizacaoAcessoInterceptor(AutorizacaoGI dadosAutorizacao, Localization localization) {
 		this.dadosAutorizacao = dadosAutorizacao;
+		this.localization = localization;
 	}
 	
 	@Override
@@ -54,9 +57,9 @@ public class AutorizacaoAcessoInterceptor implements Interceptor {
 					&& !dados.isAdmFrotaAnnotation() 
 					&& !dados.isAdmMissaoAnnotation()) {
 				try {
-					throw new Exception("admMissaoComplexoAnnotation.exception");
+//					throw new Exception("admMissaoComplexoAnnotation.exception");
 					// TODO Heidi Message Mudar!
-					// throw new Exception(Messages.get("admMissaoComplexoAnnotation.exception"));
+					 throw new Exception(localization.getMessage("admMissaoComplexoAnnotation.exception"));
 				} catch (Exception e) {
 					// tratarExcecoes(e);
 				}

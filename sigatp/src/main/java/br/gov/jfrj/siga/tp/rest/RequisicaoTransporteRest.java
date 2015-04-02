@@ -38,7 +38,7 @@ public class RequisicaoTransporteRest {
 	}
 	
 	public String getFinalidade() {
-		return requisicaoTransporte.tipoFinalidade.descricao;
+		return requisicaoTransporte.tipoFinalidade.getDescricao();
 	}
 
 	public static RequisicaoTransporteRest recuperar(Long id) {
