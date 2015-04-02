@@ -26,9 +26,8 @@ public class CondutorController extends TpController {
 
 	private static Logger logger = Logger.getLogger(CondutorController.class);
 
-	public CondutorController(HttpServletRequest request, Result result,
-			CpDao dao, SigaObjects so, EntityManager em) {
-		super(request, result, dao, so, em);
+	public CondutorController(HttpServletRequest request, Result result,SigaObjects so, EntityManager em) {
+		super(request, result, so, em);
 	}
 
 	@Path("/app/condutor/listar")
