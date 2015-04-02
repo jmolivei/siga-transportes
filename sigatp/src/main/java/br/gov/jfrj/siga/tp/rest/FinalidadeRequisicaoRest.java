@@ -17,11 +17,11 @@ public class FinalidadeRequisicaoRest {
 	}
 	
 	public Long getId() {
-		return finalidade.id;
+		return finalidade.getId();
 	}
 	
 	public String getDescricao() {
-		return finalidade.descricao;
+		return finalidade.getDescricao();
 	}
 	
 	@JsonIgnore

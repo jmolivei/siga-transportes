@@ -48,79 +48,215 @@ public class Abastecimento extends GenericModel implements Comparable<Abastecime
 	@Id
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "hibernate_sequence_generator") 
 	@SequenceGenerator(name = "hibernate_sequence_generator", sequenceName="SIGATP.hibernate_sequence") 
-	public Long id;
+	private Long id;
 	
 	@Required
 	@ValidarAnoData(descricaoCampo="Data/Hora")
 	@As(lang={"*"}, value={"dd/MM/yyyy HH:mm"})
-	public Calendar dataHora;
+	private Calendar dataHora;
 	
 	@Required
 	@ManyToOne
 	@NotNull
-	public Fornecedor fornecedor;
+	private Fornecedor fornecedor;
 	
 	@Required
 	@Enumerated(EnumType.STRING)
 	@NotNull
-	public TipoDeCombustivel tipoDeCombustivel;
+	private TipoDeCombustivel tipoDeCombustivel;
 	
 	@Required
 	@Min(value=1, message="abastecimento.quantidadeEmLitros.min")
 	@As(binder=DoubleBinder.class)
-	public double quantidadeEmLitros;
+	private double quantidadeEmLitros;
 	
 	@Required
 	@As(binder=PriceBinder.class)
-	public double precoPorLitro;
+	private double precoPorLitro;
 	
 	@Required
 	@As(binder=DoubleBinder.class)
-	public double valorTotalDaNotaFiscal;
+	private double valorTotalDaNotaFiscal;
 	
 	@Required
-	public String numeroDaNotaFiscal;
-	
-	@Required
-	@ManyToOne
-	@NotNull
-	public Veiculo veiculo;
+	private String numeroDaNotaFiscal;
 	
 	@Required
 	@ManyToOne
 	@NotNull
-	public Condutor condutor;	
+	private Veiculo veiculo;
+	
+	@Required
+	@ManyToOne
+	@NotNull
+	private Condutor condutor;	
 	
 	@Enumerated(EnumType.STRING)
-	public NivelDeCombustivel nivelDeCombustivel;
+	private NivelDeCombustivel nivelDeCombustivel;
 	
 	@Required
 	@As(binder=DoubleBinder.class)
-	public double odometroEmKm;
+	private double odometroEmKm;
 	
 	@Required
 	@As(binder=DoubleBinder.class)
-	public double distanciaPercorridaEmKm;
+	private double distanciaPercorridaEmKm;
 	
 	@Required
 	@As(binder=DoubleBinder.class)
-	public double consumoMedioEmKmPorLitro;
+	private double consumoMedioEmKmPorLitro;
 	
  	@Audited(targetAuditMode = RelationTargetAuditMode.NOT_AUDITED)
 	@ManyToOne
 	@JoinColumn(name = "ID_SOLICITANTE")
-	public DpPessoa solicitante;
+	private DpPessoa solicitante;
  	
  	@Audited(targetAuditMode = RelationTargetAuditMode.NOT_AUDITED)
 	@ManyToOne
 	@JoinColumn(name = "ID_TITULAR")
-	public DpPessoa titular; 	
+	private DpPessoa titular; 	
 	
  	@Audited(targetAuditMode = RelationTargetAuditMode.NOT_AUDITED)
 	@ManyToOne
 	@JoinColumn(name = "ID_ORGAO_USU")
-	public CpOrgaoUsuario orgao; 	
+	private CpOrgaoUsuario orgao;
 	
+	public Long getId() {
+		return id;
+	}
+
+	public void setId(Long id) {
+		this.id = id;
+	}
+
+	public Calendar getDataHora() {
+		return dataHora;
+	}
+
+	public void setDataHora(Calendar dataHora) {
+		this.dataHora = dataHora;
+	}
+
+	public Fornecedor getFornecedor() {
+		return fornecedor;
+	}
+
+	public void setFornecedor(Fornecedor fornecedor) {
+		this.fornecedor = fornecedor;
+	}
+
+	public TipoDeCombustivel getTipoDeCombustivel() {
+		return tipoDeCombustivel;
+	}
+
+	public void setTipoDeCombustivel(TipoDeCombustivel tipoDeCombustivel) {
+		this.tipoDeCombustivel = tipoDeCombustivel;
+	}
+
+	public double getQuantidadeEmLitros() {
+		return quantidadeEmLitros;
+	}
+
+	public void setQuantidadeEmLitros(double quantidadeEmLitros) {
+		this.quantidadeEmLitros = quantidadeEmLitros;
+	}
+
+	public double getPrecoPorLitro() {
+		return precoPorLitro;
+	}
+
+	public void setPrecoPorLitro(double precoPorLitro) {
+		this.precoPorLitro = precoPorLitro;
+	}
+
+	public double getValorTotalDaNotaFiscal() {
+		return valorTotalDaNotaFiscal;
+	}
+
+	public void setValorTotalDaNotaFiscal(double valorTotalDaNotaFiscal) {
+		this.valorTotalDaNotaFiscal = valorTotalDaNotaFiscal;
+	}
+
+	public String getNumeroDaNotaFiscal() {
+		return numeroDaNotaFiscal;
+	}
+
+	public void setNumeroDaNotaFiscal(String numeroDaNotaFiscal) {
+		this.numeroDaNotaFiscal = numeroDaNotaFiscal;
+	}
+
+	public Veiculo getVeiculo() {
+		return veiculo;
+	}
+
+	public void setVeiculo(Veiculo veiculo) {
+		this.veiculo = veiculo;
+	}
+
+	public Condutor getCondutor() {
+		return condutor;
+	}
+
+	public void setCondutor(Condutor condutor) {
+		this.condutor = condutor;
+	}
+
+	public NivelDeCombustivel getNivelDeCombustivel() {
+		return nivelDeCombustivel;
+	}
+
+	public void setNivelDeCombustivel(NivelDeCombustivel nivelDeCombustivel) {
+		this.nivelDeCombustivel = nivelDeCombustivel;
+	}
+
+	public double getOdometroEmKm() {
+		return odometroEmKm;
+	}
+
+	public void setOdometroEmKm(double odometroEmKm) {
+		this.odometroEmKm = odometroEmKm;
+	}
+
+	public double getDistanciaPercorridaEmKm() {
+		return distanciaPercorridaEmKm;
+	}
+
+	public void setDistanciaPercorridaEmKm(double distanciaPercorridaEmKm) {
+		this.distanciaPercorridaEmKm = distanciaPercorridaEmKm;
+	}
+
+	public double getConsumoMedioEmKmPorLitro() {
+		return consumoMedioEmKmPorLitro;
+	}
+
+	public void setConsumoMedioEmKmPorLitro(double consumoMedioEmKmPorLitro) {
+		this.consumoMedioEmKmPorLitro = consumoMedioEmKmPorLitro;
+	}
+
+	public DpPessoa getSolicitante() {
+		return solicitante;
+	}
+
+	public void setSolicitante(DpPessoa solicitante) {
+		this.solicitante = solicitante;
+	}
+
+	public DpPessoa getTitular() {
+		return titular;
+	}
+
+	public void setTitular(DpPessoa titular) {
+		this.titular = titular;
+	}
+
+	public CpOrgaoUsuario getOrgao() {
+		return orgao;
+	}
+
+	public void setOrgao(CpOrgaoUsuario orgao) {
+		this.orgao = orgao;
+	}
+
 	public static List<Abastecimento> listarTodos() {
 		List<Abastecimento> abastecimentos = Abastecimento.findAll();
 		Collections.sort(abastecimentos, Collections.reverseOrder());

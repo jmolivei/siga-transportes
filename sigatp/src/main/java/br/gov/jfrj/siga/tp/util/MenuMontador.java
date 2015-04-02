@@ -1,12 +1,11 @@
 package br.gov.jfrj.siga.tp.util;
 
+import play.mvc.Scope.RenderArgs;
 import br.gov.jfrj.siga.tp.model.EstadoMissao;
 import br.gov.jfrj.siga.tp.model.EstadoRequisicao;
 import br.gov.jfrj.siga.tp.model.EstadoServico;
 import br.gov.jfrj.siga.tp.model.ItemMenu;
-import controllers.AutorizacaoGIAntigo;
-import play.data.validation.Validation;
-import play.mvc.Scope.RenderArgs;
+import controllers.AutorizacaoGI;
 
 public class MenuMontador {
 
@@ -105,7 +104,7 @@ public class MenuMontador {
 	public RenderArgs  RecuperarMenuMissao(Long id, EstadoMissao estado) {
 		RenderArgs.current().put("idMissao", id);
 		RenderArgs.current().put("menuMissaoEditar", ((estado == EstadoMissao.PROGRAMADA) || (estado == EstadoMissao.INICIADA)));
-		if (AutorizacaoGIAntigo.ehAdministrador()) {
+		if (AutorizacaoGI.ehAdministrador()) {
 			RenderArgs.current().put("menuMissaoCancelar", (estado == EstadoMissao.PROGRAMADA));
 		} else {
 			RenderArgs.current().put("menuMissaoCancelar", false);

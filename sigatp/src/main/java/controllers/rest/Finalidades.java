@@ -3,8 +3,8 @@ package controllers.rest;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.codehaus.jackson.map.ObjectWriter;
 
-import br.gov.jfrj.siga.tp.rest.FinalidadeRequisicaoRest;
 import play.mvc.Controller;
+import br.gov.jfrj.siga.tp.rest.FinalidadeRequisicaoRest;
 
 public class Finalidades extends Controller {
 	

@@ -72,12 +72,12 @@ public class RelatoriosConsumoMedio extends Controller {
 		RelatorioConsumoMedio resultado = new RelatorioConsumoMedio();
 
 		Calendar dataInicial = Calendar.getInstance(); 
-		relatorio.abastecimentoInicial = Abastecimento.findById(relatorio.abastecimentoInicial.id);
-		dataInicial.setTime(relatorio.abastecimentoInicial.dataHora.getTime());
+		relatorio.abastecimentoInicial = Abastecimento.findById(relatorio.abastecimentoInicial.getId());
+		dataInicial.setTime(relatorio.abastecimentoInicial.getDataHora().getTime());
 		
 		Calendar dataFinal = Calendar.getInstance(); 
-		relatorio.abastecimentoFinal = Abastecimento.findById(relatorio.abastecimentoFinal.id);
-		dataFinal.setTime(relatorio.abastecimentoFinal.dataHora.getTime());
+		relatorio.abastecimentoFinal = Abastecimento.findById(relatorio.abastecimentoFinal.getId());
+		dataFinal.setTime(relatorio.abastecimentoFinal.getDataHora().getTime());
 		
 		String qrl = "SELECT m.id, m.consumoEmLitros, m.odometroSaidaEmKm, m.odometroRetornoEmKm " +
 					 "FROM  Missao m " + 
@@ -95,9 +95,9 @@ public class RelatoriosConsumoMedio extends Controller {
 		
 		lista = (List<Object[]>) qry.getResultList();
 		
-		double kmInicial = relatorio.abastecimentoInicial.odometroEmKm;
-		double kmFinal = relatorio.abastecimentoFinal.odometroEmKm;
-		double quantidadeEmLitros = relatorio.abastecimentoFinal.quantidadeEmLitros;
+		double kmInicial = relatorio.abastecimentoInicial.getOdometroEmKm();
+		double kmFinal = relatorio.abastecimentoFinal.getOdometroEmKm();
+		double quantidadeEmLitros = relatorio.abastecimentoFinal.getQuantidadeEmLitros();
 
 		for (int i = 0; i < lista.size(); i++) {
 			if ((Double.parseDouble(lista.get(i)[2].toString()) >= kmInicial) || 
@@ -109,10 +109,10 @@ public class RelatoriosConsumoMedio extends Controller {
 		}
 		
 		resultado.abastecimentoInicial = new Abastecimento();
-		resultado.abastecimentoInicial.dataHora = dataInicial;
+		resultado.abastecimentoInicial.setDataHora(dataInicial);
 
 		resultado.abastecimentoFinal = new Abastecimento();
-		resultado.abastecimentoFinal.dataHora = dataFinal;
+		resultado.abastecimentoFinal.setDataHora(dataFinal);
 		
 		resultado.veiculo = Veiculo.findById(relatorio.veiculo.id);
 		resultado.missoes = new ArrayList<Missao>(setMissao);
@@ -132,7 +132,7 @@ public class RelatoriosConsumoMedio extends Controller {
 		if (abastecimentosIniciais.size() > 0) {
 			for (Abastecimento abastecimento : abastecimentosIniciais) {
 				if (abastecimentosIniciais.size() > 1) {
-					if (abastecimento.dataHora.after(abastecimentosIniciais.get(1))) {
+					if (abastecimento.getDataHora().after(abastecimentosIniciais.get(1))) {
 						abastecimentosFinais.add(abastecimento);
 					}
 				}
@@ -158,14 +158,14 @@ public class RelatoriosConsumoMedio extends Controller {
 
 		if (lstAbastecimento.size() > 0) {
 			if (lstAbastecimento.size()==1) {
-				htmlSelectAbastecimentoInicial.append("<option value='"+ lstAbastecimento.get(0).id + "'");
+				htmlSelectAbastecimentoInicial.append("<option value='"+ lstAbastecimento.get(0).getId() + "'");
 				htmlSelectAbastecimentoInicial.append(">" + lstAbastecimento.get(0).getDadosParaExibicao());
 				htmlSelectAbastecimentoInicial.append("</option>");
 			}
 			else {
 				for (Abastecimento abastecimento : lstAbastecimento) {
 
-					htmlSelectAbastecimentoInicial.append("<option value='"+ abastecimento.id + "'");
+					htmlSelectAbastecimentoInicial.append("<option value='"+ abastecimento.getId() + "'");
 					
 					if (lstAbastecimento.indexOf(abastecimento) == 1) {
 						htmlSelectAbastecimentoInicial.append(" selected='selected'");
@@ -174,8 +174,8 @@ public class RelatoriosConsumoMedio extends Controller {
 					htmlSelectAbastecimentoInicial.append(">" + abastecimento.getDadosParaExibicao());
 					htmlSelectAbastecimentoInicial.append("</option>");
 
-					if (abastecimento.dataHora.after(lstAbastecimento.get(1).dataHora)) {
-						htmlSelectAbastecimentoFinal.append("<option value='"+ abastecimento.id + "'");
+					if (abastecimento.getDataHora().after(lstAbastecimento.get(1).getDataHora())) {
+						htmlSelectAbastecimentoFinal.append("<option value='"+ abastecimento.getId() + "'");
 
 						if (lstAbastecimento.indexOf(abastecimento) == 2) {
 							htmlSelectAbastecimentoFinal.append(" selected='selected'");

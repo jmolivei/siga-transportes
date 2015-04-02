@@ -270,11 +270,11 @@ public class RelatoriosRanking extends Controller {
 
 			for (int i = 0; i < lista.size(); i++) {
 				finalidade = new FinalidadeRequisicao();
-				finalidade.id = Long.parseLong(lista.get(i)[0].toString());
+				finalidade.setId(Long.parseLong(lista.get(i)[0].toString()));
 				totalFinalidade = Integer.parseInt(lista.get(i)[1].toString());
 
 				itemRf = new RelatorioRanking().new RankingFinalidadeRequisicao();
-				itemRf.finalidade = FinalidadeRequisicao.findById(finalidade.id);
+				itemRf.finalidade = FinalidadeRequisicao.AR.findById(finalidade.getId());
 				itemRf.totalFinalidade = totalFinalidade;
 				listaRankingFinalidade.add(itemRf);
 			}
