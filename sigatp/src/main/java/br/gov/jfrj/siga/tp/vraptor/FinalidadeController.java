@@ -5,14 +5,13 @@ import java.util.List;
 import javax.persistence.EntityManager;
 import javax.servlet.http.HttpServletRequest;
 
-import controllers.AutorizacaoGI;
-import controllers.AutorizacaoGI.RoleAdmin;
-import controllers.AutorizacaoGI.RoleAdminMissao;
-import controllers.AutorizacaoGI.RoleAdminMissaoComplexo;
 import play.data.validation.Validation;
 import br.com.caelum.vraptor.Path;
 import br.com.caelum.vraptor.Resource;
 import br.com.caelum.vraptor.Result;
+import br.com.caelum.vraptor.core.Localization;
+import br.gov.jfrj.siga.dp.dao.CpDao;
+import br.gov.jfrj.siga.tp.auth.AutorizacaoGI;
 import br.gov.jfrj.siga.tp.model.FinalidadeRequisicao;
 import br.gov.jfrj.siga.vraptor.SigaObjects;
 
@@ -20,13 +19,13 @@ import br.gov.jfrj.siga.vraptor.SigaObjects;
 @Resource
 public class FinalidadeController extends TpController {
 	
+	public FinalidadeController(HttpServletRequest request, Result result, Localization localization, SigaObjects so, AutorizacaoGI dadosAutorizacao, EntityManager em) throws Exception {
+		super(request, result, CpDao.getInstance(), localization, so, dadosAutorizacao, em);
+	}
+
 	private static final String ACTION = "action";
 	private static final String ACTION_EDITAR = "Editar";
 	private static final String ACTION_INCLUIR = "Incluir";
-
-	public FinalidadeController(HttpServletRequest request, Result result, SigaObjects so, EntityManager em) {
-		super(request, result, so, em);
-	}
 
 	@Path("/app/finalidade/listar")
 	public void listar(String mensagem) {
@@ -40,6 +39,10 @@ public class FinalidadeController extends TpController {
     	
     	result.include("finalidades", finalidades);
     }
+	
+	public void listar() {
+		listar(null);
+	}
 	
 	@Path("/app/finalidade/listarTodas")
 	public void listarTodas() {
@@ -70,5 +73,28 @@ public class FinalidadeController extends TpController {
     	result.include(ACTION, ACTION_EDITAR);
     	
     	return finalidade;
+    }
+	
+//	@RoleAdmin
+//	@RoleAdminMissao
+//	@RoleAdminMissaoComplexo
+	@Path("/app/finalidade/salvar/{finalidade}")
+	public void salvar(FinalidadeRequisicao finalidade) throws Exception {
+		if(!finalidade.getId().equals(new Long(0))) {
+			finalidade.checarProprietario(getTitular().getOrgaoUsuario());
+		}
+		
+    	//validation.valid(finalidade);
+    	
+    	finalidade.setCpOrgaoOrigem(getTitular().getOrgaoUsuario());
+		
+    	if(Validation.hasErrors()) {
+			result.include(ACTION, (finalidade.getId() == 0 ? ACTION_INCLUIR : ACTION_EDITAR));
+			result.include("finalidade", finalidade);
+			return;
+		}
+
+	 	finalidade.save();
+		listar();
     }
 }
