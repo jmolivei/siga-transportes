@@ -20,9 +20,13 @@ import play.data.validation.Unique;
 import play.i18n.Messages;
 import play.modules.br.jus.jfrj.siga.uteis.validadores.upperCase.UpperCase;
 import br.gov.jfrj.siga.dp.CpOrgaoUsuario;
+<<<<<<< HEAD
 import br.gov.jfrj.siga.model.ActiveRecord;
 import br.gov.jfrj.siga.model.Objeto;
 import controllers.AutorizacaoGI;
+=======
+import controllers.AutorizacaoGIAntigo;
+>>>>>>> origin/master-vraptor
 
 @SuppressWarnings("serial")
 @Entity
@@ -110,7 +114,7 @@ public class FinalidadeRequisicao extends Objeto {
 			try {
 				throw new Exception(Messages.get("finalidadeRequisicao.checarProprietario.exception"));
 			} catch (Exception e) {
-				AutorizacaoGI.tratarExcecoes(e);
+				AutorizacaoGIAntigo.tratarExcecoes(e);
 			}
 		}
 	}

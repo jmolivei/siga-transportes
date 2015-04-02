@@ -21,12 +21,12 @@ import br.gov.jfrj.siga.tp.model.RequisicaoTransporte;
 import br.gov.jfrj.siga.tp.model.TipoDePassageiro;
 import br.gov.jfrj.siga.tp.util.MenuMontador;
 import br.gov.jfrj.siga.tp.util.SigaTpException;
-import controllers.AutorizacaoGI.RoleAdmin;
-import controllers.AutorizacaoGI.RoleAdminMissao;
-import controllers.AutorizacaoGI.RoleAdminMissaoComplexo;
-import controllers.AutorizacaoGI.RoleAprovador;
+import controllers.AutorizacaoGIAntigo.RoleAdmin;
+import controllers.AutorizacaoGIAntigo.RoleAdminMissao;
+import controllers.AutorizacaoGIAntigo.RoleAdminMissaoComplexo;
+import controllers.AutorizacaoGIAntigo.RoleAprovador;
 
-@With(AutorizacaoGI.class)
+@With(AutorizacaoGIAntigo.class)
 public class Requisicoes extends Controller {
 
 	public static void listar() throws Exception {
@@ -45,7 +45,7 @@ public class Requisicoes extends Controller {
 		carregarRequisicoesUltimosSeteDiasPorEstados(estadosRequisicao);
 		RenderArgs.current().put("estadoRequisicao",EstadoRequisicao.ABERTA);
 		MenuMontador.instance().RecuperarMenuListarPAprovarRequisicoes(null);
-		List<CpComplexo> complexos = CpRepository.find(CpComplexo.class, "orgaoUsuario", AutorizacaoGI.titular().getOrgaoUsuario()).fetch();
+		List<CpComplexo> complexos = CpRepository.find(CpComplexo.class, "orgaoUsuario", AutorizacaoGIAntigo.titular().getOrgaoUsuario()).fetch();
 		render(complexos);
 	}
 
@@ -68,31 +68,31 @@ public class Requisicoes extends Controller {
 	private static void carregarRequisicoesUltimosSeteDiasPorEstados(EstadoRequisicao[] estadosRequisicao) throws Exception {
 		Calendar ultimos7dias = Calendar.getInstance();
 		ultimos7dias.add(Calendar.DATE, -7);
-		Object[] parametros = {ultimos7dias, ultimos7dias, AutorizacaoGI.titular().getOrgaoUsuario()};
+		Object[] parametros = {ultimos7dias, ultimos7dias, AutorizacaoGIAntigo.titular().getOrgaoUsuario()};
 		recuperarRequisicoes("((dataHoraRetornoPrevisto is null and dataHoraSaidaPrevista >= ?) or (dataHoraRetornoPrevisto >= ?)) and cpOrgaoUsuario = ? ", parametros, estadosRequisicao);
 	}
 
 	protected static void recuperarRequisicoes(String criterioBusca, Object[] parametros, EstadoRequisicao[] estadosRequisicao) throws Exception {
-		if (! AutorizacaoGI.ehAdministrador() && ! AutorizacaoGI.ehAdministradorMissao()  && ! AutorizacaoGI.ehAdministradorMissaoPorComplexo() && ! AutorizacaoGI.ehAprovador()) {
+		if (! AutorizacaoGIAntigo.ehAdministrador() && ! AutorizacaoGIAntigo.ehAdministradorMissao()  && ! AutorizacaoGIAntigo.ehAdministradorMissaoPorComplexo() && ! AutorizacaoGIAntigo.ehAprovador()) {
 			criterioBusca = criterioBusca + " and solicitante.idPessoaIni = ?";
 			Object [] parametrosFiltrado = new Object[parametros.length + 1];
 			for (int i = 0; i < parametros.length; i++) {
 				parametrosFiltrado[i] = parametros[i];
 			}
-			parametrosFiltrado[parametros.length] = AutorizacaoGI.titular().getIdInicial();
+			parametrosFiltrado[parametros.length] = AutorizacaoGIAntigo.titular().getIdInicial();
 			parametros = parametrosFiltrado;
 		} else {
 
-			if (AutorizacaoGI.ehAdministradorMissaoPorComplexo() || AutorizacaoGI.ehAprovador()) {
+			if (AutorizacaoGIAntigo.ehAdministradorMissaoPorComplexo() || AutorizacaoGIAntigo.ehAprovador()) {
 				criterioBusca = criterioBusca + " and cpComplexo = ?";
 				Object [] parametrosFiltrado = new Object[parametros.length + 1];
 				for (int i = 0; i < parametros.length; i++) {
 					parametrosFiltrado[i] = parametros[i];
 				}
-				if (AutorizacaoGI.ehAdministradorMissaoPorComplexo()) {
-					parametrosFiltrado[parametros.length] = AutorizacaoGI.getComplexoAdministrado();
+				if (AutorizacaoGIAntigo.ehAdministradorMissaoPorComplexo()) {
+					parametrosFiltrado[parametros.length] = AutorizacaoGIAntigo.getComplexoAdministrado();
 				} else {
-					parametrosFiltrado[parametros.length] = AutorizacaoGI.recuperarComplexoPadrao();
+					parametrosFiltrado[parametros.length] = AutorizacaoGIAntigo.recuperarComplexoPadrao();
 				}
 
 				parametros = parametrosFiltrado;   	
@@ -175,11 +175,11 @@ public class Requisicoes extends Controller {
 		redirecionarSeErroAoSalvar(requisicaoTransporte, checkRetorno, checkSemPassageiros);
 
 		DpPessoa dpPessoa = recuperaPessoa(requisicaoTransporte.idSolicitante);
-		checarSolicitante(dpPessoa.getIdInicial(),AutorizacaoGI.recuperarComplexoPadrao().getIdComplexo(),true);
+		checarSolicitante(dpPessoa.getIdInicial(),AutorizacaoGIAntigo.recuperarComplexoPadrao().getIdComplexo(),true);
 
-		requisicaoTransporte.cpOrgaoUsuario = AutorizacaoGI.titular().getOrgaoUsuario();
+		requisicaoTransporte.cpOrgaoUsuario = AutorizacaoGIAntigo.titular().getOrgaoUsuario();
 
-		requisicaoTransporte.cpComplexo = AutorizacaoGI.recuperarComplexoPadrao();
+		requisicaoTransporte.cpComplexo = AutorizacaoGIAntigo.recuperarComplexoPadrao();
 
 		requisicaoTransporte.setSequence(requisicaoTransporte.cpOrgaoUsuario);
 		boolean novaRequisicao = false;
@@ -198,7 +198,7 @@ public class Requisicoes extends Controller {
 			andamento.estadoRequisicao = EstadoRequisicao.ABERTA;
 			andamento.requisicaoTransporte = requisicaoTransporte;
 			//		andamento.responsavel = requisicaoTransporte.solicitante;
-			andamento.responsavel = AutorizacaoGI.cadastrante();
+			andamento.responsavel = AutorizacaoGIAntigo.cadastrante();
 			andamento.save();
 		}
 
@@ -220,7 +220,7 @@ public class Requisicoes extends Controller {
 	public static void salvarAndamentos(@Valid RequisicaoTransporte requisicaoTransporte, boolean checkRetorno, boolean checkSemPassageiros) throws Exception {
 		redirecionarSeErroAoSalvar(requisicaoTransporte, checkRetorno, checkSemPassageiros);
 		checarSolicitante(requisicaoTransporte.solicitante.getIdInicial(),requisicaoTransporte.cpComplexo.getIdComplexo(),true);
-		requisicaoTransporte.cpOrgaoUsuario = AutorizacaoGI.titular().getOrgaoUsuario();
+		requisicaoTransporte.cpOrgaoUsuario = AutorizacaoGIAntigo.titular().getOrgaoUsuario();
 		requisicaoTransporte.save();
 		requisicaoTransporte.refresh();
 		if (requisicaoTransporte.id == 0) {
@@ -229,7 +229,7 @@ public class Requisicoes extends Controller {
 			andamento.dataAndamento = Calendar.getInstance();
 			andamento.estadoRequisicao = EstadoRequisicao.ABERTA;
 			andamento.requisicaoTransporte = requisicaoTransporte;
-			andamento.responsavel = AutorizacaoGI.cadastrante();
+			andamento.responsavel = AutorizacaoGIAntigo.cadastrante();
 			andamento.save();
 		}
 
@@ -253,7 +253,7 @@ public class Requisicoes extends Controller {
 
 	public static void incluir(){
 		RequisicaoTransporte requisicaoTransporte = new RequisicaoTransporte();
-		DpPessoa dpPessoa = AutorizacaoGI.titular(); 
+		DpPessoa dpPessoa = AutorizacaoGIAntigo.titular(); 
 		requisicaoTransporte.solicitante=dpPessoa;
 		requisicaoTransporte.idSolicitante=dpPessoa.getId();
 
@@ -283,35 +283,35 @@ public class Requisicoes extends Controller {
 
 	private static void checarSolicitante(
 			Long idSolicitante, Long idComplexo, Boolean escrita) throws Exception {
-		if (! AutorizacaoGI.ehAdministrador() && ! AutorizacaoGI.ehAprovador() && ! AutorizacaoGI.ehAgente() && ! AutorizacaoGI.ehAdministradorMissao() && ! AutorizacaoGI.ehAdministradorMissaoPorComplexo()) {
-			if (! AutorizacaoGI.titular().getIdInicial().equals(idSolicitante)) {
+		if (! AutorizacaoGIAntigo.ehAdministrador() && ! AutorizacaoGIAntigo.ehAprovador() && ! AutorizacaoGIAntigo.ehAgente() && ! AutorizacaoGIAntigo.ehAdministradorMissao() && ! AutorizacaoGIAntigo.ehAdministradorMissaoPorComplexo()) {
+			if (! AutorizacaoGIAntigo.titular().getIdInicial().equals(idSolicitante)) {
 				try {
 					throw new Exception(Messages.get("requisicoes.checarSolicitante.exception"));
 				} catch (Exception e) {
-					AutorizacaoGI.tratarExcecoes(e);	
+					AutorizacaoGIAntigo.tratarExcecoes(e);	
 				}
 			}
-		} else if ( AutorizacaoGI.ehAgente()) {
-			if (! AutorizacaoGI.titular().getIdInicial().equals(idSolicitante) && escrita) {
+		} else if ( AutorizacaoGIAntigo.ehAgente()) {
+			if (! AutorizacaoGIAntigo.titular().getIdInicial().equals(idSolicitante) && escrita) {
 				try {
 					throw new Exception(Messages.get("requisicoes.checarSolicitante.exception"));
 				} catch (Exception e) {
-					AutorizacaoGI.tratarExcecoes(e);	
+					AutorizacaoGIAntigo.tratarExcecoes(e);	
 				}
 			}
-		} else if (AutorizacaoGI.ehAdministradorMissaoPorComplexo()) {
-			if (! AutorizacaoGI.getComplexoAdministrado().getIdComplexo().equals(idComplexo) && escrita) {
+		} else if (AutorizacaoGIAntigo.ehAdministradorMissaoPorComplexo()) {
+			if (! AutorizacaoGIAntigo.getComplexoAdministrado().getIdComplexo().equals(idComplexo) && escrita) {
 				try {
 					throw new Exception(Messages.get("requisicoes.checarSolicitante.exception"));
 				} catch (Exception e) {
-					AutorizacaoGI.tratarExcecoes(e);	
+					AutorizacaoGIAntigo.tratarExcecoes(e);	
 				}
-			} else if (AutorizacaoGI.ehAprovador()) {
-				if (! AutorizacaoGI.recuperarComplexoPadrao().getIdComplexo().equals(idComplexo) && escrita) {
+			} else if (AutorizacaoGIAntigo.ehAprovador()) {
+				if (! AutorizacaoGIAntigo.recuperarComplexoPadrao().getIdComplexo().equals(idComplexo) && escrita) {
 					try {
 						throw new Exception(Messages.get("requisicoes.checarSolicitante.exception"));
 					} catch (Exception e) {
-						AutorizacaoGI.tratarExcecoes(e);	
+						AutorizacaoGIAntigo.tratarExcecoes(e);	
 					}
 				}
 			}

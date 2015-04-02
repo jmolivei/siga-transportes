@@ -11,11 +11,11 @@ import play.data.validation.Valid;
 import play.data.validation.Validation;
 import play.mvc.Controller;
 import play.mvc.With;
-import controllers.AutorizacaoGI.RoleAdmin;
-import controllers.AutorizacaoGI.RoleAdminMissao;
-import controllers.AutorizacaoGI.RoleAdminMissaoComplexo;
+import controllers.AutorizacaoGIAntigo.RoleAdmin;
+import controllers.AutorizacaoGIAntigo.RoleAdminMissao;
+import controllers.AutorizacaoGIAntigo.RoleAdminMissaoComplexo;
 
-@With(AutorizacaoGI.class)
+@With(AutorizacaoGIAntigo.class)
 public class Afastamentos extends Controller {
 
 	public static void listarPorCondutor(Long idCondutor) throws Exception {
@@ -58,7 +58,7 @@ public class Afastamentos extends Controller {
 		template = afastamento.id > 0 ? "Afastamentos/editar.html" : "Afastamentos/incluir.html";
 		
 		if (Validation.hasErrors()) {
-			List<Condutor> condutores = Condutor.listarTodos(AutorizacaoGI.titular().getOrgaoUsuario());
+			List<Condutor> condutores = Condutor.listarTodos(AutorizacaoGIAntigo.titular().getOrgaoUsuario());
 			renderTemplate(template, afastamento, condutores);
 		} else {
 			List<Missao> missoes = Missao.retornarMissoes("condutor.id",

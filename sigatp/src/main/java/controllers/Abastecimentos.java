@@ -3,39 +3,39 @@ package controllers;
 import java.util.ArrayList;
 import java.util.List;
 
+import play.data.validation.Valid;
+import play.data.validation.Validation;
+import play.i18n.Messages;
+import play.mvc.Controller;
+import play.mvc.With;
 import br.gov.jfrj.siga.tp.model.Abastecimento;
 import br.gov.jfrj.siga.tp.model.Condutor;
 import br.gov.jfrj.siga.tp.model.Fornecedor;
 import br.gov.jfrj.siga.tp.model.ItemMenu;
 import br.gov.jfrj.siga.tp.model.Veiculo;
 import br.gov.jfrj.siga.tp.util.MenuMontador;
-import play.data.validation.Valid;
-import play.data.validation.Validation;
-import play.i18n.Messages;
-import play.mvc.Controller;
-import play.mvc.With;
-import controllers.AutorizacaoGI.LogMotivo;
-import controllers.AutorizacaoGI.RoleAdmin;
-import controllers.AutorizacaoGI.RoleAdminFrota;
-import controllers.AutorizacaoGI.RoleAdminGabinete;
-import controllers.AutorizacaoGI.RoleAdminMissao;
-import controllers.AutorizacaoGI.RoleAdminMissaoComplexo;
-import controllers.AutorizacaoGI.RoleGabinete;
+import controllers.AutorizacaoGIAntigo.LogMotivo;
+import controllers.AutorizacaoGIAntigo.RoleAdmin;
+import controllers.AutorizacaoGIAntigo.RoleAdminFrota;
+import controllers.AutorizacaoGIAntigo.RoleAdminGabinete;
+import controllers.AutorizacaoGIAntigo.RoleAdminMissao;
+import controllers.AutorizacaoGIAntigo.RoleAdminMissaoComplexo;
+import controllers.AutorizacaoGIAntigo.RoleGabinete;
 
-@With(AutorizacaoGI.class)
+@With(AutorizacaoGIAntigo.class)
 public class Abastecimentos extends Controller {
 
 	public static void listar() {
 		List<Abastecimento> abastecimentos = null;
-		if (AutorizacaoGI.ehGabinete()) {
-			Condutor condutor = Condutor.recuperarLogado(AutorizacaoGI.titular(), AutorizacaoGI.titular().getOrgaoUsuario());
+		if (AutorizacaoGIAntigo.ehGabinete()) {
+			Condutor condutor = Condutor.recuperarLogado(AutorizacaoGIAntigo.titular(), AutorizacaoGIAntigo.titular().getOrgaoUsuario());
 			abastecimentos = Abastecimento.listarAbastecimentosDoCondutor(condutor);
-		} else if (AutorizacaoGI.ehAdminGabinete()) {
-			abastecimentos = Abastecimento.listarParaAdminGabinete(AutorizacaoGI.titular());
-		} else  if (AutorizacaoGI.ehAgente()) { 
-			abastecimentos = Abastecimento.listarParaAgente(AutorizacaoGI.titular());
+		} else if (AutorizacaoGIAntigo.ehAdminGabinete()) {
+			abastecimentos = Abastecimento.listarParaAdminGabinete(AutorizacaoGIAntigo.titular());
+		} else  if (AutorizacaoGIAntigo.ehAgente()) { 
+			abastecimentos = Abastecimento.listarParaAgente(AutorizacaoGIAntigo.titular());
 		} else { //eh admin
-			abastecimentos = Abastecimento.listarTodos(AutorizacaoGI.titular());
+			abastecimentos = Abastecimento.listarTodos(AutorizacaoGIAntigo.titular());
 		}
 		render(abastecimentos);
 	}	
@@ -62,24 +62,24 @@ public class Abastecimentos extends Controller {
 	}
 
 	private static List<Veiculo> listarVeiculos() throws Exception {
-		if (! AutorizacaoGI.ehAdministrador()) {
-			return Veiculo.listarFiltradoPor(AutorizacaoGI.titular().getOrgaoUsuario(),AutorizacaoGI.titular().getLotacao());
+		if (! AutorizacaoGIAntigo.ehAdministrador()) {
+			return Veiculo.listarFiltradoPor(AutorizacaoGIAntigo.titular().getOrgaoUsuario(),AutorizacaoGIAntigo.titular().getLotacao());
 		} else {
-			return Veiculo.listarTodos(AutorizacaoGI.titular().getOrgaoUsuario());
+			return Veiculo.listarTodos(AutorizacaoGIAntigo.titular().getOrgaoUsuario());
 		}
 	}
 	
 	private static List<Condutor> listarCondutores() throws Exception {
-		if(AutorizacaoGI.ehGabinete()) {
+		if(AutorizacaoGIAntigo.ehGabinete()) {
 			List<Condutor> retorno = new ArrayList<Condutor>();
-			retorno.add(Condutor.recuperarLogado(AutorizacaoGI.titular(), AutorizacaoGI.titular().getOrgaoUsuario()));
+			retorno.add(Condutor.recuperarLogado(AutorizacaoGIAntigo.titular(), AutorizacaoGIAntigo.titular().getOrgaoUsuario()));
 			return retorno;
 		}
 		
-		if (! AutorizacaoGI.ehAdministrador()) {
-			return Condutor.listarFiltradoPor(AutorizacaoGI.titular().getOrgaoUsuario(),AutorizacaoGI.titular().getLotacao());
+		if (! AutorizacaoGIAntigo.ehAdministrador()) {
+			return Condutor.listarFiltradoPor(AutorizacaoGIAntigo.titular().getOrgaoUsuario(),AutorizacaoGIAntigo.titular().getLotacao());
 		} else {
-			return Condutor.listarTodos(AutorizacaoGI.titular().getOrgaoUsuario());
+			return Condutor.listarTodos(AutorizacaoGIAntigo.titular().getOrgaoUsuario());
 		}
 	}
 
@@ -125,10 +125,10 @@ public class Abastecimentos extends Controller {
 		}
 		else {
 			
-			abastecimento.setTitular(AutorizacaoGI.titular());
-			abastecimento.setSolicitante(AutorizacaoGI.cadastrante());
+			abastecimento.setTitular(AutorizacaoGIAntigo.titular());
+			abastecimento.setSolicitante(AutorizacaoGIAntigo.cadastrante());
 			if(abastecimento.getId().equals(new Long(0))) { // somente na inclusao
-				abastecimento.setOrgao(AutorizacaoGI.titular().getOrgaoUsuario());
+				abastecimento.setOrgao(AutorizacaoGIAntigo.titular().getOrgaoUsuario());
 			}
 			
 			abastecimento.save();
@@ -137,11 +137,12 @@ public class Abastecimentos extends Controller {
 	}
 	
 	private static void verificarAcesso(Abastecimento abastecimento) throws Exception {
-		if(AutorizacaoGI.ehAdminGabinete() || AutorizacaoGI.ehGabinete()) {
-			if(!(AutorizacaoGI.ehAdminGabinete() && AutorizacaoGI.titular().getLotacao().equivale(abastecimento.getTitular().getLotacao())) && !abastecimento.getTitular().equivale(AutorizacaoGI.titular())) {
+		if(AutorizacaoGIAntigo.ehAdminGabinete() || AutorizacaoGIAntigo.ehGabinete()) {
+			if(!(AutorizacaoGIAntigo.ehAdminGabinete() && AutorizacaoGIAntigo.titular().getLotacao().equivale(abastecimento.getTitular().getLotacao())) && !abastecimento.getTitular().equivale(AutorizacaoGIAntigo.titular())) {
 				throw new Exception(Messages.get("abastecimentos.verificarAcesso.exception"));
 			}
-		} else if(!((AutorizacaoGI.ehAdministrador() || AutorizacaoGI.ehAdministradorFrota() ||  AutorizacaoGI.ehAdministradorMissao() || AutorizacaoGI.ehAdministradorMissaoPorComplexo())  && AutorizacaoGI.titular().getLotacao().equivale(abastecimento.getTitular().getLotacao())) && !abastecimento.getTitular().equivale(AutorizacaoGI.titular())) {
+		} else if(!((AutorizacaoGIAntigo.ehAdministrador() || AutorizacaoGIAntigo.ehAdministradorFrota() ||  AutorizacaoGIAntigo.ehAdministradorMissao() || AutorizacaoGIAntigo.ehAdministradorMissaoPorComplexo())  && AutorizacaoGIAntigo.titular().getLotacao().equivale(abastecimento.getTitular().getLotacao())) && !abastecimento.getTitular().equivale(AutorizacaoGIAntigo.titular())) {
+
 			throw new Exception(Messages.get("abastecimentos.verificarAcesso.exception"));
 		}
 

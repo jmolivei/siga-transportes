@@ -17,14 +17,14 @@ import br.gov.jfrj.siga.tp.model.LotacaoVeiculo;
 import br.gov.jfrj.siga.tp.model.Veiculo;
 import br.gov.jfrj.siga.tp.util.Combo;
 import br.gov.jfrj.siga.tp.util.MenuMontador;
-import controllers.AutorizacaoGI.RoleAdmin;
-import controllers.AutorizacaoGI.RoleAdminFrota;
+import controllers.AutorizacaoGIAntigo.RoleAdmin;
+import controllers.AutorizacaoGIAntigo.RoleAdminFrota;
 
-@With(AutorizacaoGI.class)
+@With(AutorizacaoGIAntigo.class)
 public class Veiculos extends Controller {
 
 	public static void listar() throws Exception {
-	 	CpOrgaoUsuario cpOrgaoUsuario = AutorizacaoGI.titular().getOrgaoUsuario();
+	 	CpOrgaoUsuario cpOrgaoUsuario = AutorizacaoGIAntigo.titular().getOrgaoUsuario();
 	 	List<Veiculo> veiculos = Veiculo.listarTodos(cpOrgaoUsuario);
 		render(veiculos);
 	}
@@ -41,7 +41,7 @@ public class Veiculos extends Controller {
        	List<Grupo> grupos = Grupo.listarTodos();
        	renderArgs.put(Combo.Grupo.getDescricao(), grupos);
        	
-       	CpOrgaoUsuario cpOrgaoUsuario = AutorizacaoGI.titular().getOrgaoUsuario();
+       	CpOrgaoUsuario cpOrgaoUsuario = AutorizacaoGIAntigo.titular().getOrgaoUsuario();
        	List<DpLotacao> dpLotacoes = DpLotacao.AR.find("orgaoUsuario = ? and DATA_FIM_LOT is null order by NOME_LOTACAO", cpOrgaoUsuario).fetch();
        	renderArgs.put("dpLotacoes", dpLotacoes);
 	}
@@ -63,7 +63,7 @@ public class Veiculos extends Controller {
 		validation.valid(veiculo);
 		redirecionarSeErroAoSalvar(veiculo);
 		
-		veiculo.cpOrgaoUsuario = AutorizacaoGI.titular().getOrgaoUsuario();
+		veiculo.cpOrgaoUsuario = AutorizacaoGIAntigo.titular().getOrgaoUsuario();
 		veiculo.save();
 		
 		if(lotacaoDoVeiculoMudou(veiculo)) {

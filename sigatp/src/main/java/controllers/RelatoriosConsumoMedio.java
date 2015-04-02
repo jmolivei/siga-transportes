@@ -22,7 +22,7 @@ import br.gov.jfrj.siga.tp.model.Missao;
 import br.gov.jfrj.siga.tp.model.RelatorioConsumoMedio;
 import br.gov.jfrj.siga.tp.model.Veiculo;
 
-@With(AutorizacaoGI.class)
+@With(AutorizacaoGIAntigo.class)
 public class RelatoriosConsumoMedio extends Controller {
 	public static void consultar() throws Exception {
 		RelatorioConsumoMedio relatorioConsumoMedio = new RelatorioConsumoMedio();
@@ -68,7 +68,7 @@ public class RelatoriosConsumoMedio extends Controller {
 		List<Object[]> lista;
 		Set<Missao> setMissao = new HashSet<Missao>();
 		Missao missao = null;
-		CpOrgaoUsuario cpOrgaoUsuario = AutorizacaoGI.titular().getOrgaoUsuario();
+		CpOrgaoUsuario cpOrgaoUsuario = AutorizacaoGIAntigo.titular().getOrgaoUsuario();
 		RelatorioConsumoMedio resultado = new RelatorioConsumoMedio();
 
 		Calendar dataInicial = Calendar.getInstance(); 
@@ -123,7 +123,7 @@ public class RelatoriosConsumoMedio extends Controller {
 	}
 
 	private static void montarCombos() throws Exception {
-		List<Veiculo> veiculos = Veiculo.listarTodos(AutorizacaoGI.titular().getOrgaoUsuario());
+		List<Veiculo> veiculos = Veiculo.listarTodos(AutorizacaoGIAntigo.titular().getOrgaoUsuario());
 		List<Abastecimento> abastecimentosIniciais = new ArrayList<Abastecimento>();
 		List<Abastecimento> abastecimentosFinais = new ArrayList<Abastecimento>();
 		

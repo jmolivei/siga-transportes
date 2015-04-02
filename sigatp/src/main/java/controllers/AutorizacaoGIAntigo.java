@@ -25,7 +25,7 @@ import br.gov.jfrj.siga.dp.DpPessoa;
 import br.gov.jfrj.siga.tp.model.CpRepository;
 
 
-public class AutorizacaoGI extends SigaApplication {
+public class AutorizacaoGIAntigo extends SigaApplication {
 	
 	@Before(priority=50)
 	public static void addDefaultsAlways() throws Exception {
@@ -44,10 +44,10 @@ public class AutorizacaoGI extends SigaApplication {
 			// Incluindo Cadastrante e titulart novamente no cabecalho
 			String cabecalhoPreMenu = (String) RenderArgs.current().get("_cabecalho_pre_menu");
 			@SuppressWarnings("deprecation")
-			String nomeServidor = StringUtils.capitaliseAllWords(AutorizacaoGI.cadastrante().getNomePessoa().toLowerCase());
-			String siglaLotacaoServidor = AutorizacaoGI.cadastrante().getLotacao().getSigla();
+			String nomeServidor = StringUtils.capitaliseAllWords(AutorizacaoGIAntigo.cadastrante().getNomePessoa().toLowerCase());
+			String siglaLotacaoServidor = AutorizacaoGIAntigo.cadastrante().getLotacao().getSigla();
 			@SuppressWarnings("deprecation")
-			String nomeServidorASubstituir = StringUtils.capitaliseAllWords(AutorizacaoGI.titular().getNomePessoa().toLowerCase());
+			String nomeServidorASubstituir = StringUtils.capitaliseAllWords(AutorizacaoGIAntigo.titular().getNomePessoa().toLowerCase());
 			String cabecalhoaSerInserido = 
 					"<!-- utility box -->"
 						+ "<div class=\"gt-util-box\">"
@@ -151,7 +151,7 @@ public class AutorizacaoGI extends SigaApplication {
 	 * @throws Exception
 	 */
 	protected static CpComplexo recuperarComplexoPadrao() throws Exception {
-		return recuperarComplexoPadrao(AutorizacaoGI.titular());
+		return recuperarComplexoPadrao(AutorizacaoGIAntigo.titular());
 	}   
 	
 	public static CpComplexo recuperarComplexoPadrao(DpPessoa dpPessoa) throws Exception {
@@ -199,7 +199,7 @@ public class AutorizacaoGI extends SigaApplication {
 		CpComplexo cpComplexo = null;
 
 		// and dtHistDtFim IS NOT NULL
-		Object[] parametros =  {AutorizacaoGI.titular().getIdPessoaIni(),cpSituacaoConfiguracaoPode, cpServico};
+		Object[] parametros =  {AutorizacaoGIAntigo.titular().getIdPessoaIni(),cpSituacaoConfiguracaoPode, cpServico};
 		configuracoes = CpRepository.find(CpConfiguracao.class, "(dpPessoa.idPessoaIni = ? and cpSituacaoConfiguracao = ? and cpServico = ? and hisIdcFim is null )", parametros).fetch();
 		if (configuracoes != null) {
 			cpComplexo = configuracoes.get(0).getComplexo();

@@ -5,7 +5,7 @@ import java.util.Calendar;
 
 import play.mvc.*;
 
-@With(AutorizacaoGI.class)
+@With(AutorizacaoGIAntigo.class)
 public class Agendas extends Controller {
 	
 	public static Long NOVOVEICULO = null;

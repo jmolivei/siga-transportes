@@ -5,7 +5,7 @@ import br.gov.jfrj.siga.tp.model.EstadoMissao;
 import br.gov.jfrj.siga.tp.model.EstadoRequisicao;
 import br.gov.jfrj.siga.tp.model.EstadoServico;
 import br.gov.jfrj.siga.tp.model.ItemMenu;
-import controllers.AutorizacaoGI;
+import controllers.AutorizacaoGIAntigo;
 
 public class MenuMontador {
 
@@ -99,7 +99,7 @@ public class MenuMontador {
 	public void  recuperarMenuMissao(Long id, EstadoMissao estado) {
 		result.include("idMissao", id);
 		result.include("menuMissaoEditar", ((estado == EstadoMissao.PROGRAMADA) || (estado == EstadoMissao.INICIADA)));
-		if (AutorizacaoGI.ehAdministrador()) {
+		if (AutorizacaoGIAntigo.ehAdministrador()) {
 			result.include("menuMissaoCancelar", (estado == EstadoMissao.PROGRAMADA));
 		} else {
 			result.include("menuMissaoCancelar", false);

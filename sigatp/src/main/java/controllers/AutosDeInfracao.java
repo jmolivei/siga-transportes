@@ -12,11 +12,11 @@ import play.data.validation.Valid;
 import play.data.validation.Validation;
 import play.mvc.Controller;
 import play.mvc.With;
-import controllers.AutorizacaoGI.RoleAdmin;
-import controllers.AutorizacaoGI.RoleAdminMissao;
-import controllers.AutorizacaoGI.RoleAdminMissaoComplexo;
+import controllers.AutorizacaoGIAntigo.RoleAdmin;
+import controllers.AutorizacaoGIAntigo.RoleAdminMissao;
+import controllers.AutorizacaoGIAntigo.RoleAdminMissaoComplexo;
 
-@With(AutorizacaoGI.class)
+@With(AutorizacaoGIAntigo.class)
 public class AutosDeInfracao extends Controller {
 
 	public static void listarPorVeiculo(Long idVeiculo) {
@@ -42,8 +42,8 @@ public class AutosDeInfracao extends Controller {
 	@RoleAdminMissao
 	@RoleAdminMissaoComplexo
 	public static void incluir(String notificacao) throws Exception {
-    	List<Veiculo> veiculos = Veiculo.listarTodos(AutorizacaoGI.titular().getOrgaoUsuario());
-    	List<Condutor> condutores = Condutor.listarTodos(AutorizacaoGI.titular().getOrgaoUsuario());
+    	List<Veiculo> veiculos = Veiculo.listarTodos(AutorizacaoGIAntigo.titular().getOrgaoUsuario());
+    	List<Condutor> condutores = Condutor.listarTodos(AutorizacaoGIAntigo.titular().getOrgaoUsuario());
     	AutoDeInfracao autoDeInfracao = new AutoDeInfracao();
     	TipoDeNotificacao tipoNotificacao = TipoDeNotificacao.valueOf(notificacao);
 		render(autoDeInfracao, veiculos, condutores, tipoNotificacao);   
@@ -53,8 +53,8 @@ public class AutosDeInfracao extends Controller {
 	@RoleAdminMissao
 	@RoleAdminMissaoComplexo
 	public static void editar(Long id) throws Exception {
-		List<Veiculo> veiculos = Veiculo.listarTodos(AutorizacaoGI.titular().getOrgaoUsuario());
-    	List<Condutor> condutores = Condutor.listarTodos(AutorizacaoGI.titular().getOrgaoUsuario());
+		List<Veiculo> veiculos = Veiculo.listarTodos(AutorizacaoGIAntigo.titular().getOrgaoUsuario());
+    	List<Condutor> condutores = Condutor.listarTodos(AutorizacaoGIAntigo.titular().getOrgaoUsuario());
  		AutoDeInfracao autoDeInfracao = AutoDeInfracao.findById(id);
  		TipoDeNotificacao tipoNotificacao = autoDeInfracao.codigoDaAutuacao != null ? TipoDeNotificacao.AUTUACAO : TipoDeNotificacao.PENALIDADE;
 		render(autoDeInfracao, veiculos, condutores, tipoNotificacao);		
@@ -71,8 +71,8 @@ public class AutosDeInfracao extends Controller {
         }
         
 		if(Validation.hasErrors()){
-        	List<Veiculo> veiculos = Veiculo.listarTodos(AutorizacaoGI.titular().getOrgaoUsuario());
-        	List<Condutor> condutores = Condutor.listarTodos(AutorizacaoGI.titular().getOrgaoUsuario());
+        	List<Veiculo> veiculos = Veiculo.listarTodos(AutorizacaoGIAntigo.titular().getOrgaoUsuario());
+        	List<Condutor> condutores = Condutor.listarTodos(AutorizacaoGIAntigo.titular().getOrgaoUsuario());
         	String template = autoDeInfracao.id > 0 ? "AutosDeInfracao/editar.html" : "AutosDeInfracao/incluir.html";
             renderTemplate(template, autoDeInfracao, veiculos, condutores, tipoNotificacao);
         }

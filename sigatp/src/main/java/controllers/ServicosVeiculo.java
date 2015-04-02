@@ -23,10 +23,10 @@ import br.gov.jfrj.siga.tp.model.TiposDeServico;
 import br.gov.jfrj.siga.tp.model.Veiculo;
 import br.gov.jfrj.siga.tp.util.MenuMontador;
 import br.gov.jfrj.siga.tp.util.SigaTpException;
-import controllers.AutorizacaoGI.RoleAdmin;
-import controllers.AutorizacaoGI.RoleAdminFrota;
+import controllers.AutorizacaoGIAntigo.RoleAdmin;
+import controllers.AutorizacaoGIAntigo.RoleAdminFrota;
 
-@With(AutorizacaoGI.class)
+@With(AutorizacaoGIAntigo.class)
 public class ServicosVeiculo extends Controller {
 	@RoleAdmin
 	@RoleAdminFrota
@@ -51,8 +51,8 @@ public class ServicosVeiculo extends Controller {
 	@RoleAdmin
 	@RoleAdminFrota
 	public static void salvar(@Valid ServicoVeiculo servico, List<Avaria> avarias) throws Exception {
-		DpPessoa dpPessoa = AutorizacaoGI.cadastrante();
-		servico.cpOrgaoUsuario = AutorizacaoGI.titular().getOrgaoUsuario();
+		DpPessoa dpPessoa = AutorizacaoGIAntigo.cadastrante();
+		servico.cpOrgaoUsuario = AutorizacaoGIAntigo.titular().getOrgaoUsuario();
 		servico.setSequence(servico.cpOrgaoUsuario);
 		servico.executor = dpPessoa;
 		String template;
@@ -141,7 +141,7 @@ public class ServicosVeiculo extends Controller {
 	}
 	
 	public static void listar() {
-	 	CpOrgaoUsuario cpOrgaoUsuario = AutorizacaoGI.titular().getOrgaoUsuario();
+	 	CpOrgaoUsuario cpOrgaoUsuario = AutorizacaoGIAntigo.titular().getOrgaoUsuario();
 		List<ServicoVeiculo> servicos = ServicoVeiculo.find("cpOrgaoUsuario", cpOrgaoUsuario).fetch();
 	  	EstadoServico situacaoServico = EstadoServico.AGENDADO; 
 	  	MenuMontador.instance().RecuperarMenuServicosVeiculo(null);
@@ -154,7 +154,7 @@ public class ServicosVeiculo extends Controller {
 			estado = EstadoServico.AGENDADO;
 		}
 		
-		CpOrgaoUsuario cpOrgaoUsuario = AutorizacaoGI.titular().getOrgaoUsuario();
+		CpOrgaoUsuario cpOrgaoUsuario = AutorizacaoGIAntigo.titular().getOrgaoUsuario();
 	  	List<ServicoVeiculo> servicos = ServicoVeiculo.find("cpOrgaoUsuario=? and situacaoServico = ?", cpOrgaoUsuario, estado).fetch();
 	  	EstadoServico situacaoServico = EstadoServico.AGENDADO; 
 	  	MenuMontador.instance().RecuperarMenuServicosVeiculo(estado);	  	
@@ -215,15 +215,15 @@ public class ServicosVeiculo extends Controller {
 	
 	private static RequisicaoTransporte gravarRequisicao(ServicoVeiculo servico) throws Exception {
 		RequisicaoTransporte requisicaoTransporte = new RequisicaoTransporte();
-		requisicaoTransporte.cpOrgaoUsuario = AutorizacaoGI.titular().getOrgaoUsuario();
+		requisicaoTransporte.cpOrgaoUsuario = AutorizacaoGIAntigo.titular().getOrgaoUsuario();
 		requisicaoTransporte.setSequence(requisicaoTransporte.cpOrgaoUsuario);
-		requisicaoTransporte.solicitante = AutorizacaoGI.cadastrante();
+		requisicaoTransporte.solicitante = AutorizacaoGIAntigo.cadastrante();
 		requisicaoTransporte.dataHoraSaidaPrevista = servico.dataHoraInicioPrevisto;
 		requisicaoTransporte.dataHoraRetornoPrevisto = servico.dataHoraFimPrevisto;
 		requisicaoTransporte.finalidade = servico.descricao;
 		requisicaoTransporte.passageiros = "Requisicao para Servico";
 		requisicaoTransporte.itinerarios = "Requisicao para Servico";
-		requisicaoTransporte.cpComplexo = AutorizacaoGI.recuperarComplexoPadrao();
+		requisicaoTransporte.cpComplexo = AutorizacaoGIAntigo.recuperarComplexoPadrao();
 
 		if(requisicaoTransporte.id == 0) {
 			requisicaoTransporte.dataHora = Calendar.getInstance();
@@ -277,7 +277,7 @@ public class ServicosVeiculo extends Controller {
 	}
 	
 	private static void montarCombos(Long id) throws Exception {
-		List<Veiculo> veiculos = Veiculo.listarTodos(AutorizacaoGI.titular().getOrgaoUsuario());
+		List<Veiculo> veiculos = Veiculo.listarTodos(AutorizacaoGIAntigo.titular().getOrgaoUsuario());
 		List<TiposDeServico> tiposDeServico = new ArrayList<TiposDeServico> (Arrays.asList(TiposDeServico.values()));
 		List<EstadoServico> estadosServico = new ArrayList<EstadoServico>();
 		List<Avaria> avarias = new ArrayList<Avaria>();

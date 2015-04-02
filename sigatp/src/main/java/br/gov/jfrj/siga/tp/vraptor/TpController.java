@@ -1,156 +1,202 @@
 package br.gov.jfrj.siga.tp.vraptor;
 
+import java.text.MessageFormat;
 import java.util.Date;
+import java.util.List;
 
 import javax.persistence.EntityManager;
 import javax.servlet.http.HttpServletRequest;
 
-import org.hibernate.Session;
-import org.jboss.security.SecurityContextAssociation;
+import org.apache.commons.lang.StringUtils;
+import org.apache.log4j.Logger;
 
+import play.i18n.Messages;
 import br.com.caelum.vraptor.Result;
-import br.gov.jfrj.siga.acesso.UsuarioAutenticado;
-import br.gov.jfrj.siga.base.AplicacaoException;
-import br.gov.jfrj.siga.base.SigaHTTP;
-import br.gov.jfrj.siga.cp.CpIdentidade;
-import br.gov.jfrj.siga.cp.bl.Cp;
+import br.com.caelum.vraptor.core.Localization;
+import br.gov.jfrj.siga.cp.CpComplexo;
+import br.gov.jfrj.siga.cp.CpConfiguracao;
+import br.gov.jfrj.siga.cp.CpSituacaoConfiguracao;
+import br.gov.jfrj.siga.cp.CpTipoConfiguracao;
+import br.gov.jfrj.siga.dp.DpPessoa;
 import br.gov.jfrj.siga.dp.dao.CpDao;
 import br.gov.jfrj.siga.model.ContextoPersistencia;
-import br.gov.jfrj.siga.model.Usuario;
-import br.gov.jfrj.siga.model.dao.HibernateUtil;
+import br.gov.jfrj.siga.tp.auth.AutorizacaoGI;
+import br.gov.jfrj.siga.tp.auth.Autorizacoes;
+import br.gov.jfrj.siga.tp.model.CpRepository;
 import br.gov.jfrj.siga.vraptor.SigaController;
 import br.gov.jfrj.siga.vraptor.SigaObjects;
 
 public class TpController extends SigaController {
 
-	public TpController(HttpServletRequest request, Result result, SigaObjects so, EntityManager em) {
-		super(request, result, CpDao.getInstance(), so, em);
+	private static final Logger LOGGER = Logger.getLogger(TpController.class);
+	private AutorizacaoGI dadosAutorizacao;
+	protected Localization localization;
+
+	public TpController(HttpServletRequest request, Result result, CpDao dao, Localization localization, SigaObjects so, AutorizacaoGI dadosAutorizacao, EntityManager em) throws Exception {
+		super(request, result, dao, so, em);
+		this.dadosAutorizacao = dadosAutorizacao;
+		this.localization = localization;
+		this.preencherDadosPadrao();
 	}
-	
-	public void assertAcesso(String pathServico) throws AplicacaoException {
-		so.assertAcesso("TP:Modulo de Transportes;" + pathServico);
+	private void preencherDadosPadrao() throws Exception {
+		// this.preencherDadosCabecalho();
+		this.preencherDadosAutorizacoes();
+		this.result.include("currentTimeMillis", new Date().getTime());
 	}
 
-	protected static void prepararSessao() throws Exception {
-		//TODO  Heidi verificar se está correto
-		Session sessao = (Session)ContextoPersistencia.em();
-		CpDao.freeInstance();
-		HibernateUtil.setSessao(sessao);
-		CpDao.getInstance(sessao);
-		Cp.getInstance().getConf().limparCacheSeNecessario();
+	private void preencherDadosAutorizacoes() {
+		result.include(Autorizacoes.EXIBIR_MENU_ADMINISTRAR, dadosAutorizacao.ehAdministrador());
+		result.include(Autorizacoes.EXIBIR_MENU_ADMINISTRAR_FROTA, dadosAutorizacao.ehAdministradorFrota());
+		result.include(Autorizacoes.EXIBIR_MENU_ADMINISTRAR_MISSAO, dadosAutorizacao.ehAdministradorMissao());
+		result.include(Autorizacoes.EXIBIR_MENU_APROVADOR, dadosAutorizacao.ehAprovador());
+		result.include(Autorizacoes.EXIBIR_MENU_GABINETE, dadosAutorizacao.ehGabinete());
+		result.include(Autorizacoes.EXIBIR_MENU_ADMIN_GABINETE, dadosAutorizacao.ehAdminGabinete());
+		result.include(Autorizacoes.EXIBIR_MENU_AGENTE, dadosAutorizacao.ehAgente());
+		result.include(Autorizacoes.EXIBIR_MENU_ADMMISSAO_ADMINISTRAR_MISSAO_COMPLEXO, dadosAutorizacao.deveExibirMenuAdmissaoComplexo());
 	}
-	
-	protected void obterCabecalhoEUsuario(String backgroundColor) throws Exception {
-		SigaHTTP http = new SigaHTTP();
-		
+
+	private void preencherDadosCabecalho() {
 		try {
-			//TODO  Heidi verificar necessidade
-//			request = (request == null) ? Request.current() : request;
-//			
-//			getRequest().get
-//			// Obter cabecalho e rodape do Siga
-//			HashMap<String, String> atributos = new HashMap<String, String>();
-//			for (Http.Header h : request.headers.values())
-//	 			if (!h.name.equals("content-type"))
-//					atributos.put(h.name, h.value());
-			//params = (params == null) ? Params.current() : params;
-			
-			String popup = param("popup");
-			if (popup == null || (!popup.equals("true") && !popup.equals("false")))
-				popup = "false";
-
-			String url = getBaseSiga() + "/pagina_vazia.action?popup=" + popup;
-			String paginaVazia = http.get(url, null, getRequest().getSession().getId());
-			if (!paginaVazia.contains("/sigaidp")){
-				String[] pageText = paginaVazia.split("<!-- insert body -->");
-				String[] cabecalho = pageText[0].split("<!-- insert menu -->");
-
-				if (backgroundColor != null)
-					cabecalho[0] = cabecalho[0].replace("<html>","<html style=\"background-color: " + backgroundColor	+ " !important;\">");
-
-				String[] cabecalho_pre = cabecalho[0].split("</head>");
-
-				String cabecalhoPreHead = cabecalho_pre[0];
-				String cabecalhoPreMenu = "</head>" + cabecalho_pre[1];
-				String cabecalhoPos = cabecalho.length > 1 ? cabecalho[1] : null;
-				String rodape = pageText[1];
-
-				if (cabecalhoPos == null) {
-					cabecalhoPos = cabecalhoPreMenu;
-					cabecalhoPreMenu = null; 
-				}
-
-				result.include("_cabecalho_pre_head", cabecalhoPreHead);
-				result.include("_cabecalho_pre_menu", cabecalhoPreMenu);
-				result.include("_cabecalho_pos", cabecalhoPos);
-				result.include("_rodape", rodape);
+			obterCabecalhoEUsuario("rgb(235, 235, 232)");
+			// TODO Heidi renderArgs
+			// Incluindo Cadastrante e titulart novamente no cabecalho
+			// String cabecalhoPreMenu = (String) RenderArgs.current().get(
+			// "_cabecalho_pre_menu");
+			// TODO Heidi Mudarr!!!!!!!!
+			String cabecalhoPreMenu = "aaa";
+			@SuppressWarnings("deprecation")
+			String nomeServidor = StringUtils.capitaliseAllWords(getCadastrante().getNomePessoa().toLowerCase());
+			String siglaLotacaoServidor = getCadastrante().getLotacao().getSigla();
+			@SuppressWarnings("deprecation")
+			String nomeServidorASubstituir = StringUtils.capitaliseAllWords(getTitular().getNomePessoa().toLowerCase());
+			String cabecalhoaSerInserido = "<!-- utility box -->" + "<div class=\"gt-util-box\">" + "<div class=\"gt-util-box-inner\" style=\"padding-top: 10px; font-size: 100%;\">"
+					+ "<p style=\"text-align: right;\">" + "Ol&aacute;, <strong>" + nomeServidor + " - " + siglaLotacaoServidor + "</strong> " + "<span class=\"gt-util-separator\">|</span> "
+					+ "<a href=\"/siga/?GLO=true\">sair</a>" + "</p>";
+			if (!(nomeServidorASubstituir.equals(nomeServidor) || nomeServidorASubstituir.isEmpty())) {
+				cabecalhoaSerInserido = cabecalhoaSerInserido + "<p style=\"text-align: right; padding-top: 10px;\">" + "Substituindo: <strong>" + nomeServidorASubstituir + "</strong>"
+						+ "<span class=\"gt-util-separator\">|</span>" + "<a href=\"/siga/substituicao/finalizar.action\">finalizar</a>" + "</p>";
 			}
-	
-//			// TODO  Heidi verificar necessidade
-//			if (play.Play.mode.isDev()) {
-//				// Obter usuário logado
-//				Logger.info("Play executando em modo DEV ..");
-//				url = getBaseSiga().replace(":null", "");
-//				url = url + "/usuario_autenticado.action?popup=" + popup + atributos;
-//				String paginaAutenticada = SigaApplication.getUrl(url, atributos,null,null);
-//				String[] IDs = paginaAutenticada.split(";");
-//
-//				DpPessoa dpPessoa = JPA.em().find(DpPessoa.class, Long.parseLong(IDs[0]));
-//				result.include("cadastrante",dpPessoa);
-//
-//				if (IDs[1] != null && !IDs[1].equals("")) {
-//					DpLotacao dpLotacao = JPA.em().find(DpLotacao.class, Long.parseLong(IDs[1]));
-//					result.include("lotaCadastrante",dpLotacao);
-//				}
-//
-//				if (IDs[2] != null && !IDs[2].equals("")) {
-//					DpPessoa dpPessoaTitular = JPA.em().find(DpPessoa.class, Long.parseLong(IDs[2]));
-//					result.include("titular",dpPessoaTitular);
-//				}
-//
-//
-//				if (IDs[3] != null && !IDs[3].equals("")) {
-//					DpLotacao dpLotacaoTitular = JPA.em().find(DpLotacao.class, Long.parseLong(IDs[3]));
-//					result.include("lotaTitular", dpLotacaoTitular);
-//				}
-//
-//				if (IDs[4] != null && !IDs[4].equals("")) {
-//					CpIdentidade identidadeCadastrante = JPA.em().find(CpIdentidade.class, Long.parseLong(IDs[4]));
-//					result.include("identidadeCadastrante", identidadeCadastrante);
-//				}
-//
-////				renderArgs.put("currentTimeMillis", new Date().getTime());
-//				result.include("currentTimeMillis", new Date().getTime());
-//			} else {
-				
-			//	Logger.info("Play executando em modo PROD ..");	
-			
-			// Obter usuario logado
-			String user = SecurityContextAssociation.getPrincipal().getName();
-			Usuario usuario = new Usuario();
-			CpDao dao = CpDao.getInstance();
-			CpIdentidade id = dao.consultaIdentidadeCadastrante(user, true);
-			UsuarioAutenticado.carregarUsuario(id, usuario);
-			
-			result.include("cadastrante", usuario.getCadastrante());
-			result.include("lotaCadastrante", usuario.getLotaTitular());
-			result.include("titular", usuario.getTitular());
-			result.include("lotaTitular", usuario.getLotaTitular());
-			result.include("identidadeCadastrante", usuario.getIdentidadeCadastrante());
+			cabecalhoaSerInserido = cabecalhoaSerInserido + "</div>" + "</div>";
+			String novoCabecalho = cabecalhoPreMenu.replace("<!-- utility box -->", cabecalhoaSerInserido);
+			result.include("_cabecalho_pre_menu", novoCabecalho);
+			assertAcesso("");
+		} catch (Exception e) {
+			// tratarExcecoes(e);
+		}
+	}
 
-			result.include("currentTimeMillis", new Date().getTime());
+	private void obterCabecalhoEUsuario(String backgroundColor) throws Exception {
+		// TODO: conferir se esta OK
+//		SigaHTTP http = new SigaHTTP();
+//		
+//		try {
+//			String popup = param("popup");
+//			if (popup == null || (!popup.equals("true") && !popup.equals("false")))
+//				popup = "false";
+//
+//			String url = getBaseSiga() + "/pagina_vazia.action?popup=" + popup;
+//			String paginaVazia = http.get(url, null, getRequest().getSession().getId());
+//			if (!paginaVazia.contains("/sigaidp")) {
+//				String[] pageText = paginaVazia.split("<!-- insert body -->");
+//				String[] cabecalho = pageText[0].split("<!-- insert menu -->");
+//
+//				if (backgroundColor != null)
+//					cabecalho[0] = cabecalho[0].replace("<html>", "<html style=\"background-color: " + backgroundColor + " !important;\">");
+//
+//				String[] cabecalho_pre = cabecalho[0].split("</head>");
+//
+//				String cabecalhoPreHead = cabecalho_pre[0];
+//				String cabecalhoPreMenu = "</head>" + cabecalho_pre[1];
+//				String cabecalhoPos = cabecalho.length > 1 ? cabecalho[1] : null;
+//				String rodape = pageText[1];
+//
+//				if (cabecalhoPos == null) {
+//					cabecalhoPos = cabecalhoPreMenu;
+//					cabecalhoPreMenu = null;
+//				}
+//
+//				result.include("_cabecalho_pre_head", cabecalhoPreHead);
+//				result.include("_cabecalho_pre_menu", cabecalhoPreMenu);
+//				result.include("_cabecalho_pos", cabecalhoPos);
+//				result.include("_rodape", rodape);
+//			}
+//			
+//			String user = SecurityContextAssociation.getPrincipal().getName();
+//			Usuario usuario = new Usuario();
+//			CpDao dao = CpDao.getInstance();
+//			CpIdentidade id = dao.consultaIdentidadeCadastrante(user, true);
+			// TODO: verificar necessidade
+//			UsuarioAutenticado.carregarUsuario(id, usuario);
 
-		} catch (ArrayIndexOutOfBoundsException aioob) {
+//			result.include("cadastrante", getCadastrante());
+//			result.include("lotaCadastrante", getLotaCadastrante());
+//			result.include("titular", getTitular());
+//			result.include("lotaTitular", getLotaTitular());
+//			result.include("identidadeCadastrante", getIdentidadeCadastrante());
+//			 }
+
+//		} catch (ArrayIndexOutOfBoundsException aioob) {
 			// Edson: Quando as informações não puderam ser obtidas do Siga,
 			// manda para a página de login. Se não for esse o erro, joga
 			// exceção pra cima.
-			// TODO  Heidi Mudar!
-//			redirect("/siga/redirect.action?uri=" + getRequest().getRequestURI());
-		}
+			// TODO Heidi Mudar!
+			// redirect("/siga/redirect.action?uri=" + getRequest().getRequestURI());
+//		}
 	}
-	
-	String getBaseSiga() {
-		return "http://" + getRequest().getServerName() + ":" + getRequest().getServerPort() +"/siga";
+
+	/**
+	 * Recupera na configuração do GI o complexo padrão para usuário logado verificando Órgao e Lotação e o tipo de configurção "Utilizar Complexo"
+	 * 
+	 * @return
+	 * @throws Exception
+	 */
+	protected CpComplexo recuperarComplexoPadrao() throws Exception {
+		return recuperarComplexoPadrao(getTitular());
+	}
+
+	protected CpComplexo recuperarComplexoPadrao(DpPessoa dpPessoa) throws Exception {
+		long TIPO_CONFIG_COMPLEXO_PADRAO = 400;
+		CpTipoConfiguracao tpConf = CpRepository.findById(CpTipoConfiguracao.class, TIPO_CONFIG_COMPLEXO_PADRAO);
+		CpSituacaoConfiguracao cpSituacaoConfiguracaoPode = CpRepository.findById(CpSituacaoConfiguracao.class, 1L);
+		CpSituacaoConfiguracao cpSituacaoConfiguracaoPadrao = CpRepository.findById(CpSituacaoConfiguracao.class, 5L);
+		List<CpConfiguracao> configuracoes = null;
+		CpComplexo cpComplexo = null;
+
+		// Recuperando Configuração Pode para uma lotação específica
+		Object[] parametros = { dpPessoa.getLotacao().getIdLotacaoIni(), cpSituacaoConfiguracaoPode, dpPessoa.getOrgaoUsuario(), tpConf };
+		configuracoes = CpRepository.find(CpConfiguracao.class, "((lotacao.idLotacaoIni = ? and cpSituacaoConfiguracao = ?) and orgaoUsuario = ?  and cpTipoConfiguracao = ? and hisIdcFim is null  )",
+				parametros).fetch();
+		if (configuracoes != null && configuracoes.size() > 0) {
+			cpComplexo = configuracoes.get(0).getComplexo();
+		} else {
+			// Recuperando Configuração default para um Órgão específico
+			Object[] parametros1 = { cpSituacaoConfiguracaoPadrao, dpPessoa.getOrgaoUsuario(), tpConf };
+			configuracoes = CpRepository.find(CpConfiguracao.class, "((cpSituacaoConfiguracao = ?) and orgaoUsuario = ?  and cpTipoConfiguracao = ? and hisIdcFim is null  )", parametros1).fetch();
+			if (configuracoes != null && configuracoes.size() > 0) {
+				cpComplexo = configuracoes.get(0).getComplexo();
+			}
+		}
+		if (cpComplexo == null) {
+			throw new Exception(Messages.get("cpComplexo.null.exception"));
+		}
+		return cpComplexo;
+	}
+
+	// TODO: adicionar tratamento de excecao generico em algum lugar
+	public void tratarExcecoes(Exception e) {
+		EntityManager em = ContextoPersistencia.em();
+
+		if (getCadastrante() != null)
+			LOGGER.error(MessageFormat.format("Erro Siga-TP; Pessoa: {0}; Lotação: {1}", getCadastrante().getSigla(), getLotaTitular().getSigla()), e);
+
+		if (em != null && em.getTransaction() != null && em.getTransaction().isActive())
+			em.getTransaction().rollback();
+		e.printStackTrace();
+		LOGGER.error(e.getMessage(), e);
+	}
+
+	protected String getBaseSiga() {
+		return MessageFormat.format("http://{0}:{1}/siga", getRequest().getServerName(), String.valueOf(getRequest().getServerPort()));
 	}
 
 }

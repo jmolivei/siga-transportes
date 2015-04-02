@@ -16,11 +16,11 @@ import br.gov.jfrj.siga.cp.CpTipoConfiguracao;
 import br.gov.jfrj.siga.dp.CpOrgaoUsuario;
 import br.gov.jfrj.siga.tp.model.CpRepository;
 
-@With(AutorizacaoGI.class)
+@With(AutorizacaoGIAntigo.class)
 public class ConfiguracoesGI extends Controller {
 
 	public static void listar() {
-		pesquisar(AutorizacaoGI.titular().getOrgaoUsuario().getIdOrgaoUsu());
+		pesquisar(AutorizacaoGIAntigo.titular().getOrgaoUsuario().getIdOrgaoUsu());
 	}
 
 	public static void pesquisar(Long idOrgaoUsu) {
@@ -148,7 +148,7 @@ public class ConfiguracoesGI extends Controller {
 				cpConfiguracaoAnterior.save();
 			}
 			cpConfiguracaoAnterior.setHisDtFim(new Date());	
-			cpConfiguracaoAnterior.setHisIdcFim(AutorizacaoGI.idc());
+			cpConfiguracaoAnterior.setHisIdcFim(AutorizacaoGIAntigo.idc());
 			cpConfiguracaoAnterior.save();		
 
 			cpConfiguracaoNova.setConfiguracaoInicial(cpConfiguracaoAnterior.getConfiguracaoInicial());
@@ -166,7 +166,7 @@ public class ConfiguracoesGI extends Controller {
 		cpConfiguracaoNova.setLotacao(cpConfiguracao.getLotacao());	
 		cpConfiguracaoNova.setDpPessoa(cpConfiguracao.getDpPessoa());			
 		cpConfiguracaoNova.setHisDtIni(new Date());	
-		cpConfiguracaoNova.setHisIdcIni(AutorizacaoGI.idc());
+		cpConfiguracaoNova.setHisIdcIni(AutorizacaoGIAntigo.idc());
 		cpConfiguracaoNova.save();
 		if (cpConfiguracaoNova.getConfiguracaoInicial() == null) {
 			cpConfiguracaoNova.setConfiguracaoInicial(cpConfiguracaoNova);

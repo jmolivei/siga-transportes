@@ -10,7 +10,7 @@ import play.mvc.Controller;
 import play.mvc.With;
 import models.*;
 
-@With(AutorizacaoGI.class)
+@With(AutorizacaoGIAntigo.class)
 public class LotacoesVeiculo extends Controller {
 	
 	public static Long NOVOVEICULO = null;
