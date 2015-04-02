@@ -17,8 +17,8 @@ import controllers.AutorizacaoGIAntigo.RoleAdminFrota;
 @Resource
 public class TesteController extends TpController {
 
-	public TesteController(Localization localization, HttpServletRequest request, Result result, CpDao dao, SigaObjects so, AutorizacaoGI dadosAutorizacao, EntityManager em) throws Exception {
-		super(request, result, dao, so, dadosAutorizacao, em);
+	public TesteController(HttpServletRequest request, Result result, CpDao dao, Localization localization, SigaObjects so, AutorizacaoGI dadosAutorizacao, EntityManager em) throws Exception {
+		super(request, result, dao, localization, so, dadosAutorizacao, em);
 	}
 
 	@RoleAdmin
@@ -26,7 +26,7 @@ public class TesteController extends TpController {
 	@Get("/app/teste/")
 	public void testar() {
 		result
-			.use(Results.page())
-			.forwardTo("/");
+			.use(Results.http())
+			.body(localization.getMessage("veiculo.anoFabricacao.maxSize"));
 	}
 }

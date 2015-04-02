@@ -11,6 +11,7 @@ import org.apache.log4j.Logger;
 import br.com.caelum.vraptor.Path;
 import br.com.caelum.vraptor.Resource;
 import br.com.caelum.vraptor.Result;
+import br.com.caelum.vraptor.core.Localization;
 import br.gov.jfrj.siga.dp.DpPessoa;
 import br.gov.jfrj.siga.dp.dao.CpDao;
 import br.gov.jfrj.siga.tp.auth.AutorizacaoGI;
@@ -22,15 +23,13 @@ import controllers.AutorizacaoGIAntigo.RoleAdmin;
 import controllers.AutorizacaoGIAntigo.RoleAdminMissao;
 import controllers.AutorizacaoGIAntigo.RoleAdminMissaoComplexo;
 
-
-
 @Resource
 public class CondutorController extends TpController {
 
 	private static Logger logger = Logger.getLogger(CondutorController.class);
-
-	public CondutorController(HttpServletRequest request, Result result, CpDao dao, SigaObjects so, AutorizacaoGI dadosAutorizacao, EntityManager em) throws Exception {
-		super(request, result, dao, so, dadosAutorizacao, em);
+	
+	public CondutorController(HttpServletRequest request, Result result, CpDao dao, Localization localization, SigaObjects so, AutorizacaoGI dadosAutorizacao, EntityManager em) throws Exception {
+		super(request, result, dao, localization, so, dadosAutorizacao, em);
 	}
 
 	@Path("/app/condutor/listar")
