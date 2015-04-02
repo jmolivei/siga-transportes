@@ -54,7 +54,7 @@ public class Gabinetes extends Controller {
 			List<Fornecedor> fornecedores = Fornecedor.listarTodos();
 			List<Veiculo> veiculos = Veiculo.listarTodos(AutorizacaoGI.titular().getOrgaoUsuario());
 			String template;
-			template = abastecimento.id > 0 ? "Abastecimentos/editar.html" : "Abastecimentos/incluir.html";
+			template = abastecimento.getId() > 0 ? "Abastecimentos/editar.html" : "Abastecimentos/incluir.html";
 			renderTemplate(template, abastecimento, fornecedores, veiculos);
 		}
 		else{

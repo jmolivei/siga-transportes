@@ -5,11 +5,11 @@ import java.util.List;
 import javax.persistence.EntityTransaction;
 import javax.persistence.PersistenceException;
 
-import br.gov.jfrj.siga.tp.model.FinalidadeRequisicao;
-import br.gov.jfrj.siga.tp.util.MenuMontador;
 import play.data.validation.Validation;
 import play.mvc.Controller;
 import play.mvc.With;
+import br.gov.jfrj.siga.tp.model.FinalidadeRequisicao;
+import br.gov.jfrj.siga.tp.util.MenuMontador;
 import controllers.AutorizacaoGI.RoleAdmin;
 import controllers.AutorizacaoGI.RoleAdminMissao;
 import controllers.AutorizacaoGI.RoleAdminMissaoComplexo;
@@ -44,11 +44,11 @@ public class Finalidades extends Controller {
 	@RoleAdminMissao
 	@RoleAdminMissaoComplexo
     public static void excluir(Long id) throws Exception  { 
-        FinalidadeRequisicao finalidade = FinalidadeRequisicao.findById(id);
+        FinalidadeRequisicao finalidade = FinalidadeRequisicao.AR.findById(id);
 		
         finalidade.checarProprietario(AutorizacaoGI.titular().getOrgaoUsuario());
 		
-		EntityTransaction tx = FinalidadeRequisicao.em().getTransaction();  
+		EntityTransaction tx = FinalidadeRequisicao.AR.em().getTransaction();  
 		if (! tx.isActive()) {
 			tx.begin();
 		}
@@ -79,7 +79,7 @@ public class Finalidades extends Controller {
 	@RoleAdminMissao
 	@RoleAdminMissaoComplexo
 	public static void editar(Long id) throws Exception {
-    	FinalidadeRequisicao finalidade = FinalidadeRequisicao.findById(id);
+    	FinalidadeRequisicao finalidade = FinalidadeRequisicao.AR.findById(id);
     	
     	finalidade.checarProprietario(AutorizacaoGI.titular().getOrgaoUsuario());
     	
@@ -99,17 +99,17 @@ public class Finalidades extends Controller {
 	@RoleAdminMissao
 	@RoleAdminMissaoComplexo
 	public static void salvar(FinalidadeRequisicao finalidade) throws Exception {
-		if(!finalidade.id.equals(new Long(0))) {
+		if(!finalidade.getId().equals(new Long(0))) {
 			finalidade.checarProprietario(AutorizacaoGI.titular().getOrgaoUsuario());
 		}
 		
     	validation.valid(finalidade);
     	
-    	finalidade.cpOrgaoOrigem = AutorizacaoGI.titular().getOrgaoUsuario();
+    	finalidade.setCpOrgaoOrigem(AutorizacaoGI.titular().getOrgaoUsuario());
 		
     	if(Validation.hasErrors()) 
 		{
-			renderTemplate((finalidade.id == 0? Finalidades._ACTION_INCLUIR : Finalidades._ACTION_EDITAR), finalidade);
+			renderTemplate((finalidade.getId() == 0? Finalidades._ACTION_INCLUIR : Finalidades._ACTION_EDITAR), finalidade);
 			return;
 		}
 

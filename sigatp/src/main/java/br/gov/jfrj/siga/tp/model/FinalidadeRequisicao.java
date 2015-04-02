@@ -17,44 +17,70 @@ import org.hibernate.envers.RelationTargetAuditMode;
 
 import play.data.validation.Required;
 import play.data.validation.Unique;
-import play.db.jpa.GenericModel;
 import play.i18n.Messages;
 import play.modules.br.jus.jfrj.siga.uteis.validadores.upperCase.UpperCase;
 import br.gov.jfrj.siga.dp.CpOrgaoUsuario;
+import br.gov.jfrj.siga.model.ActiveRecord;
+import br.gov.jfrj.siga.model.Objeto;
 import controllers.AutorizacaoGI;
 
 @SuppressWarnings("serial")
 @Entity
 @Audited
 @Table(name="FinalidadeRequisicao", schema = "SIGATP")
-public class FinalidadeRequisicao extends GenericModel {
+public class FinalidadeRequisicao extends Objeto {
 	
 	private static final long _ID_DA_FINALIDADE_OUTRA = -1;
+	public static ActiveRecord<FinalidadeRequisicao> AR = new ActiveRecord<>(FinalidadeRequisicao.class);
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "hibernate_sequence_generator") 
 	@SequenceGenerator(name = "hibernate_sequence_generator", sequenceName="SIGATP.hibernate_sequence") 
-	public Long id;
+	private Long id;
 	
 	@Required
 	@Unique(message="finalidadeRequisicao.descricao.unique")
 	@Column(unique=true)
 	@UpperCase
- 	public String descricao;
+ 	private String descricao;
 	
 	@Audited(targetAuditMode = RelationTargetAuditMode.NOT_AUDITED)
 	@ManyToOne
 	@JoinColumn(name = "ID_ORGAO_ORI")
-	public CpOrgaoUsuario cpOrgaoOrigem;
+	private CpOrgaoUsuario cpOrgaoOrigem;
  	
  	public FinalidadeRequisicao() {
 		this.id = new Long(0);
 	}
  	
- 	public static FinalidadeRequisicao buscar(String descricaoBuscar) {
+ 	public Long getId() {
+		return id;
+	}
+
+	public void setId(Long id) {
+		this.id = id;
+	}
+
+	public String getDescricao() {
+		return descricao;
+	}
+
+	public void setDescricao(String descricao) {
+		this.descricao = descricao;
+	}
+
+	public CpOrgaoUsuario getCpOrgaoOrigem() {
+		return cpOrgaoOrigem;
+	}
+
+	public void setCpOrgaoOrigem(CpOrgaoUsuario cpOrgaoOrigem) {
+		this.cpOrgaoOrigem = cpOrgaoOrigem;
+	}
+
+	public static FinalidadeRequisicao buscar(String descricaoBuscar) {
  		FinalidadeRequisicao retorno = null;
  		try {
- 			retorno = FinalidadeRequisicao.find("descricao = ?", descricaoBuscar).first();
+ 			retorno = FinalidadeRequisicao.AR.find("descricao = ?", descricaoBuscar).first();
 		} catch (Exception e) {
 			return null;
 		}
@@ -64,7 +90,7 @@ public class FinalidadeRequisicao extends GenericModel {
  	public static FinalidadeRequisicao buscar(Long idBuscar) {
  		FinalidadeRequisicao retorno = null;
  		try {
- 			retorno = FinalidadeRequisicao.find("id = ?", idBuscar).first();
+ 			retorno = FinalidadeRequisicao.AR.find("id = ?", idBuscar).first();
 		} catch (Exception e) {
 			return null;
 		}
@@ -72,14 +98,13 @@ public class FinalidadeRequisicao extends GenericModel {
  	}
  	
 	public static List<FinalidadeRequisicao> listarTodos(CpOrgaoUsuario orgaoUsuario) {
-		return FinalidadeRequisicao.find("cpOrgaoOrigem = ? and id <> ?", orgaoUsuario, _ID_DA_FINALIDADE_OUTRA).fetch();
+		return FinalidadeRequisicao.AR.find("cpOrgaoOrigem = ? and id <> ?", orgaoUsuario, _ID_DA_FINALIDADE_OUTRA).fetch();
 	}
 
 	public static List<FinalidadeRequisicao> listarTodos() {
-		
-		return FinalidadeRequisicao.findAll();
+		return FinalidadeRequisicao.AR.findAll();
 	}
-
+	
 	public void checarProprietario(CpOrgaoUsuario orgaoUsuario) throws Exception {
 		if ((!this.cpOrgaoOrigem.equivale(orgaoUsuario)) || (this.id.equals(_ID_DA_FINALIDADE_OUTRA))) {
 			try {
@@ -96,6 +121,4 @@ public class FinalidadeRequisicao extends GenericModel {
 		}
 		return false;
 	}
-	
-
 }

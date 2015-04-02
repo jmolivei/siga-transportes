@@ -95,7 +95,7 @@ public class RelatoriosRankingTest extends UnitTest {
 			rankingFinalidade = RelatoriosRanking.retornarFinalidadesComMaisRequisicoes(relatorio);
 			
 			for (br.gov.jfrj.siga.tp.model.RelatorioRanking.RankingFinalidadeRequisicao item : rankingFinalidade ) {
-				linha = "Finalidade : " + item.finalidade.descricao + " ";
+				linha = "Finalidade : " + item.finalidade.getDescricao() + " ";
 				linha += "Total : " + item.totalFinalidade + " ";
 				System.out.println(linha);
 			}

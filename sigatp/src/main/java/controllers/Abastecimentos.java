@@ -107,11 +107,11 @@ public class Abastecimentos extends Controller {
 	@RoleAdminFrota
 	@RoleGabinete
 	public static void salvar(@Valid Abastecimento abastecimento) throws Exception{
-		if(!abastecimento.id.equals(new Long(0))) { // somente na alteracao
+		if(!abastecimento.getId().equals(new Long(0))) { // somente na alteracao
 			verificarAcesso(abastecimento);
 		}
 		
-		if (abastecimento.odometroEmKm == 0) {
+		if (abastecimento.getOdometroEmKm() == 0) {
 			Validation.addError("odometroEmKm", "abastecimento.odometroEmKm.validation");
 		}
 		
@@ -120,15 +120,15 @@ public class Abastecimentos extends Controller {
 			List<Veiculo> veiculos = listarVeiculos();
 			List<Condutor> condutores = listarCondutores();
 			String template;
-			template = abastecimento.id > 0 ? "Abastecimentos/editar.html" : "Abastecimentos/incluir.html";
+			template = abastecimento.getId() > 0 ? "Abastecimentos/editar.html" : "Abastecimentos/incluir.html";
 			renderTemplate(template, abastecimento, fornecedores, veiculos, condutores);
 		}
 		else {
 			
-			abastecimento.titular = AutorizacaoGI.titular();
-			abastecimento.solicitante = AutorizacaoGI.cadastrante();
-			if(abastecimento.id.equals(new Long(0))) { // somente na inclusao
-				abastecimento.orgao = AutorizacaoGI.titular().getOrgaoUsuario();
+			abastecimento.setTitular(AutorizacaoGI.titular());
+			abastecimento.setSolicitante(AutorizacaoGI.cadastrante());
+			if(abastecimento.getId().equals(new Long(0))) { // somente na inclusao
+				abastecimento.setOrgao(AutorizacaoGI.titular().getOrgaoUsuario());
 			}
 			
 			abastecimento.save();
@@ -138,10 +138,10 @@ public class Abastecimentos extends Controller {
 	
 	private static void verificarAcesso(Abastecimento abastecimento) throws Exception {
 		if(AutorizacaoGI.ehAdminGabinete() || AutorizacaoGI.ehGabinete()) {
-			if(!(AutorizacaoGI.ehAdminGabinete() && AutorizacaoGI.titular().getLotacao().equivale(abastecimento.titular.getLotacao())) && !abastecimento.titular.equivale(AutorizacaoGI.titular())) {
+			if(!(AutorizacaoGI.ehAdminGabinete() && AutorizacaoGI.titular().getLotacao().equivale(abastecimento.getTitular().getLotacao())) && !abastecimento.getTitular().equivale(AutorizacaoGI.titular())) {
 				throw new Exception(Messages.get("abastecimentos.verificarAcesso.exception"));
 			}
-		} else if(!((AutorizacaoGI.ehAdministrador() || AutorizacaoGI.ehAdministradorFrota() ||  AutorizacaoGI.ehAdministradorMissao() || AutorizacaoGI.ehAdministradorMissaoPorComplexo())  && AutorizacaoGI.titular().getLotacao().equivale(abastecimento.titular.getLotacao())) && !abastecimento.titular.equivale(AutorizacaoGI.titular())) {
+		} else if(!((AutorizacaoGI.ehAdministrador() || AutorizacaoGI.ehAdministradorFrota() ||  AutorizacaoGI.ehAdministradorMissao() || AutorizacaoGI.ehAdministradorMissaoPorComplexo())  && AutorizacaoGI.titular().getLotacao().equivale(abastecimento.getTitular().getLotacao())) && !abastecimento.getTitular().equivale(AutorizacaoGI.titular())) {
 			throw new Exception(Messages.get("abastecimentos.verificarAcesso.exception"));
 		}
 
