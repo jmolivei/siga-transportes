@@ -69,6 +69,7 @@ public class Condutor extends Objeto implements Comparable<Condutor> {
 	
 //	@As(lang={"*"}, value={"dd/MM/yyyy"})
 //	@ValidarAnoData(intervalo=5, descricaoCampo="Data de Vencimento da CNH")
+	
 	@Basic(optional = false)
 	private Calendar dataVencimentoCNH;
 
@@ -345,6 +346,10 @@ public class Condutor extends Objeto implements Comparable<Condutor> {
 	public static Condutor recuperarLogado(DpPessoa titular, CpOrgaoUsuario orgaoUsuario) {
 		return Condutor.AR.find("dpPessoa.idPessoaIni=? and cpOrgaoUsuario=?",
 				titular.getIdInicial(), orgaoUsuario).first(); 
+	}
+
+	public CategoriaCNH[] getCategorias() {
+		return CategoriaCNH.values();
 	}
 
 	public Long getId() {

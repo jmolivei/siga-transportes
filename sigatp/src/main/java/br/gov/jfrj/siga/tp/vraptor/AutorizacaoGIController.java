@@ -1,31 +1,9 @@
 package br.gov.jfrj.siga.tp.vraptor;
 
-import java.lang.annotation.ElementType;
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
-import java.lang.annotation.Target;
+
 
 //@Resource
-public class AutorizacaoGIController {
-
-//	private static final String EXIBIR_MENU_AGENTE = "exibirMenuAgente";
-//	private static final String EXIBIR_MENU_ADMIN_GABINETE = "exibirMenuAdminGabinete";
-//	private static final String EXIBIR_MENU_APROVADOR = "exibirMenuAprovador";
-//	private static final String EXIBIR_MENU_ADMINISTRAR_MISSAO = "exibirMenuAdministrarMissao";
-//	private static final String EXIBIR_MENU_ADMINISTRAR_FROTA = "exibirMenuAdministrarFrota";
-//	private static final String EXIBIR_MENU_ADMINISTRAR = "exibirMenuAdministrar";
-//	private static final String EXIBIR_MENU_GABINETE = "exibirMenuGabinete";
-//	
-//	private static final String AGN_AGENTE = "AGN:Agente";
-//	private static final String ADMGAB_ADMIN_GABINETE = "ADMGAB:AdminGabinete";
-//	private static final String APR_APROVADOR = "APR:Aprovador";
-//	private static final String ADMMISSAO_ADMINISTRAR_MISSAO = "ADMMISSAO:AdministrarMissao";
-//	private static final String ADMFROTA_ADMINISTRAR_FROTA = "ADMFROTA:AdministrarFrota";
-//	private static final String ADM_ADMINISTRAR = "ADM:Administrar";
-//	private static final String GAB_GABINETE = "GAB:Gabinete";
-//	
-//	private static final Logger LOGGER = Logger.getLogger(AutorizacaoGIController.class);
-
+public class AutorizacaoGIController  {
 
 	// @Path("app/main")
 //	public static void addDefaultsAlways() throws Exception {
@@ -414,48 +392,48 @@ public class AutorizacaoGIController {
 //		return new CpComplexo();
 //	}
 
-	@Target({ ElementType.METHOD, ElementType.TYPE })
-	@Retention(RetentionPolicy.RUNTIME)
-	public @interface RoleAdmin {
-	}
-
-	@Target({ ElementType.METHOD, ElementType.TYPE })
-	@Retention(RetentionPolicy.RUNTIME)
-	public @interface RoleAdminFrota {
-	}
-
-	@Target({ ElementType.METHOD, ElementType.TYPE })
-	@Retention(RetentionPolicy.RUNTIME)
-	public @interface RoleAdminMissao {
-	}
-
-	@Target({ ElementType.METHOD, ElementType.TYPE })
-	@Retention(RetentionPolicy.RUNTIME)
-	public @interface RoleAprovador {
-	}
-
-	@Target({ ElementType.METHOD, ElementType.TYPE })
-	@Retention(RetentionPolicy.RUNTIME)
-	public @interface RoleGabinete {
-	}
-
-	@Target({ ElementType.METHOD, ElementType.TYPE })
-	@Retention(RetentionPolicy.RUNTIME)
-	public @interface RoleAdminGabinete {
-	}
-
-	@Target({ ElementType.METHOD, ElementType.TYPE })
-	@Retention(RetentionPolicy.RUNTIME)
-	public @interface RoleAgente {
-	}
-
-	@Target({ ElementType.METHOD, ElementType.TYPE })
-	@Retention(RetentionPolicy.RUNTIME)
-	public @interface RoleAdminMissaoComplexo {
-	}
-
-	@Target({ ElementType.METHOD, ElementType.TYPE })
-	@Retention(RetentionPolicy.RUNTIME)
-	public @interface LogMotivo {
-	}
+//	@Target({ ElementType.METHOD, ElementType.TYPE })
+//	@Retention(RetentionPolicy.RUNTIME)
+//	public @interface RoleAdmin {
+//	}
+//
+//	@Target({ ElementType.METHOD, ElementType.TYPE })
+//	@Retention(RetentionPolicy.RUNTIME)
+//	public @interface RoleAdminFrota {
+//	}
+//
+//	@Target({ ElementType.METHOD, ElementType.TYPE })
+//	@Retention(RetentionPolicy.RUNTIME)
+//	public @interface RoleAdminMissao {
+//	}
+//
+//	@Target({ ElementType.METHOD, ElementType.TYPE })
+//	@Retention(RetentionPolicy.RUNTIME)
+//	public @interface RoleAprovador {
+//	}
+//
+//	@Target({ ElementType.METHOD, ElementType.TYPE })
+//	@Retention(RetentionPolicy.RUNTIME)
+//	public @interface RoleGabinete {
+//	}
+//
+//	@Target({ ElementType.METHOD, ElementType.TYPE })
+//	@Retention(RetentionPolicy.RUNTIME)
+//	public @interface RoleAdminGabinete {
+//	}
+//
+//	@Target({ ElementType.METHOD, ElementType.TYPE })
+//	@Retention(RetentionPolicy.RUNTIME)
+//	public @interface RoleAgente {
+//	}
+//
+//	@Target({ ElementType.METHOD, ElementType.TYPE })
+//	@Retention(RetentionPolicy.RUNTIME)
+//	public @interface RoleAdminMissaoComplexo {
+//	}
+//
+//	@Target({ ElementType.METHOD, ElementType.TYPE })
+//	@Retention(RetentionPolicy.RUNTIME)
+//	public @interface LogMotivo {
+//	}
 }

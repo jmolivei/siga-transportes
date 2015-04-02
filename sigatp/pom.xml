@@ -83,17 +83,9 @@
 			<scope>provided</scope>
 		</dependency>
 
-		<!-- dependency>
-			<groupId>org.seleniumhq.selenium</groupId>
-			<artifactId>selenium-server</artifactId>
-			<version>2.42.0</version>
-			<exclusions>
-				<exclusion>
-					<artifactId>xerces</artifactId>
-					<groupId>xercesImpl</groupId>
-				</exclusion>
-			</exclusions>
-		</dependency-->
+		<!-- dependency> <groupId>org.seleniumhq.selenium</groupId> <artifactId>selenium-server</artifactId> 
+			<version>2.42.0</version> <exclusions> <exclusion> <artifactId>xerces</artifactId> 
+			<groupId>xercesImpl</groupId> </exclusion> </exclusions> </dependency -->
 
 		<dependency>
 			<groupId>org.apache.ant</groupId>
@@ -179,18 +171,32 @@
 			<artifactId>hibernate-envers</artifactId>
 			<version>4.2.15.Final</version>
 		</dependency>
-		
+
 		<dependency>
 			<groupId>org.apache.tomcat</groupId>
 			<artifactId>jsp-api</artifactId>
 			<scope>provided</scope>
 		</dependency>
-		
+
 		<dependency>
 			<groupId>jsptags</groupId>
 			<artifactId>pager-taglib</artifactId>
 		</dependency>
-		
+
+		<!-- standard.jar -->
+		<dependency>
+			<groupId>taglibs</groupId>
+			<artifactId>standard</artifactId>
+			<version>1.1.2</version>
+		</dependency>
+
+		<!-- JSTL -->
+		<dependency>
+			<groupId>javax.servlet</groupId>
+			<artifactId>jstl</artifactId>
+			<version>1.1.2</version>
+		</dependency>
+
 		<!-- DEV <scope>provided</scope> -->
 
 		<!-- Teste -->

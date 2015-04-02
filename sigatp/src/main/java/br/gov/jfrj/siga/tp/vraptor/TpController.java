@@ -9,19 +9,16 @@ import javax.servlet.http.HttpServletRequest;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
-import org.jboss.security.SecurityContextAssociation;
 
 import play.i18n.Messages;
 import br.com.caelum.vraptor.Result;
 import br.gov.jfrj.siga.cp.CpComplexo;
 import br.gov.jfrj.siga.cp.CpConfiguracao;
-import br.gov.jfrj.siga.cp.CpIdentidade;
 import br.gov.jfrj.siga.cp.CpSituacaoConfiguracao;
 import br.gov.jfrj.siga.cp.CpTipoConfiguracao;
 import br.gov.jfrj.siga.dp.DpPessoa;
 import br.gov.jfrj.siga.dp.dao.CpDao;
 import br.gov.jfrj.siga.model.ContextoPersistencia;
-import br.gov.jfrj.siga.model.Usuario;
 import br.gov.jfrj.siga.tp.auth.AutorizacaoGI;
 import br.gov.jfrj.siga.tp.auth.Autorizacoes;
 import br.gov.jfrj.siga.tp.model.CpRepository;
@@ -38,7 +35,6 @@ public class TpController extends SigaController {
 		this.dadosAutorizacao = dadosAutorizacao;
 		this.preencherDadosPadrao();
 	}
-
 	private void preencherDadosPadrao() throws Exception {
 		// this.preencherDadosCabecalho();
 		this.preencherDadosAutorizacoes();
@@ -199,4 +195,5 @@ public class TpController extends SigaController {
 	protected String getBaseSiga() {
 		return MessageFormat.format("http://{0}:{1}/siga", getRequest().getServerName(), String.valueOf(getRequest().getServerPort()));
 	}
+
 }
