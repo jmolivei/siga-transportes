@@ -14,20 +14,20 @@ import play.data.validation.Validation;
 import play.i18n.Messages;
 import play.mvc.Controller;
 import play.mvc.With;
-import controllers.AutorizacaoGI.RoleAdminGabinete;
-import controllers.AutorizacaoGI.RoleGabinete;
+import controllers.AutorizacaoGIAntigo.RoleAdminGabinete;
+import controllers.AutorizacaoGIAntigo.RoleGabinete;
 
-@With(AutorizacaoGI.class)
+@With(AutorizacaoGIAntigo.class)
 public class ControlesGabinete extends Controller {
 
 	@RoleGabinete
 	@RoleAdminGabinete
 	public static void listar() {
 		List<ControleGabinete> controlesGabinete;
-		if(AutorizacaoGI.ehAdminGabinete()) {
+		if(AutorizacaoGIAntigo.ehAdminGabinete()) {
 			controlesGabinete = ControleGabinete.listarTodos();
 		} else {
-			controlesGabinete = ControleGabinete.listarPorCondutor(Condutor.recuperarLogado(AutorizacaoGI.titular(), AutorizacaoGI.titular().getOrgaoUsuario()));
+			controlesGabinete = ControleGabinete.listarPorCondutor(Condutor.recuperarLogado(AutorizacaoGIAntigo.titular(), AutorizacaoGIAntigo.titular().getOrgaoUsuario()));
 		}
 		
 		render(controlesGabinete);
@@ -54,16 +54,16 @@ public class ControlesGabinete extends Controller {
 	}
 
 	private static List<Veiculo> recuperarListaDeVeiculos() throws Exception {
-		return Veiculo.listarFiltradoPor(AutorizacaoGI.titular().getOrgaoUsuario(),AutorizacaoGI.titular().getLotacao());
+		return Veiculo.listarFiltradoPor(AutorizacaoGIAntigo.titular().getOrgaoUsuario(),AutorizacaoGIAntigo.titular().getLotacao());
 	}
 
 	private static List<Condutor> recuperarListaDeCondutores() throws Exception {
 		List<Condutor> condutores;
-		if(AutorizacaoGI.ehAdminGabinete()) {
-			condutores = Condutor.listarFiltradoPor(AutorizacaoGI.titular().getOrgaoUsuario(),AutorizacaoGI.titular().getLotacao());
+		if(AutorizacaoGIAntigo.ehAdminGabinete()) {
+			condutores = Condutor.listarFiltradoPor(AutorizacaoGIAntigo.titular().getOrgaoUsuario(),AutorizacaoGIAntigo.titular().getLotacao());
 		} else {
 			condutores = new ArrayList<Condutor>();
-			condutores.add(Condutor.recuperarLogado(AutorizacaoGI.titular(), AutorizacaoGI.titular().getOrgaoUsuario()));
+			condutores.add(Condutor.recuperarLogado(AutorizacaoGIAntigo.titular(), AutorizacaoGIAntigo.titular().getOrgaoUsuario()));
 		}
 		return condutores;
 	}
@@ -80,7 +80,7 @@ public class ControlesGabinete extends Controller {
 
 	private static void verificarAcesso(ControleGabinete controleGabinete)
 			throws Exception {
-		if(!(AutorizacaoGI.ehAdminGabinete() && AutorizacaoGI.titular().getLotacao().equivale(controleGabinete.titular.getLotacao())) && !controleGabinete.titular.equivale(AutorizacaoGI.titular())) {
+		if(!(AutorizacaoGIAntigo.ehAdminGabinete() && AutorizacaoGIAntigo.titular().getLotacao().equivale(controleGabinete.titular.getLotacao())) && !controleGabinete.titular.equivale(AutorizacaoGIAntigo.titular())) {
 			throw new Exception(Messages.get("controlesGabinete.verificarAcesso.exception"));
 		}
 	}
@@ -135,8 +135,8 @@ public class ControlesGabinete extends Controller {
 			}
 			
 			//if(controleGabinete.id.equals(new Long(0))) { // somente na inclusao
-				controleGabinete.solicitante = AutorizacaoGI.cadastrante();
-				controleGabinete.titular = AutorizacaoGI.titular();
+				controleGabinete.solicitante = AutorizacaoGIAntigo.cadastrante();
+				controleGabinete.titular = AutorizacaoGIAntigo.titular();
 			//}
 			
 			controleGabinete.save();

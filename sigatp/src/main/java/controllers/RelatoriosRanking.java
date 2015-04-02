@@ -34,7 +34,7 @@ import com.google.common.base.Predicate;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
 
-@With(AutorizacaoGI.class)
+@With(AutorizacaoGIAntigo.class)
 public class RelatoriosRanking extends Controller {
 	private static String[] gerarVetorNumeros() {
 		String vetor[] = new String[20];
@@ -103,7 +103,7 @@ public class RelatoriosRanking extends Controller {
 		Condutor condutor = null;
 		Missao missao = null;
 		RequisicaoTransporte requisicao = null;
-		CpOrgaoUsuario cpOrgaoUsuario = AutorizacaoGI.titular().getOrgaoUsuario();
+		CpOrgaoUsuario cpOrgaoUsuario = AutorizacaoGIAntigo.titular().getOrgaoUsuario();
 		
 		try {
 			relatorio.dataInicio.setTime(formatarDataHora(relatorio.dataInicio,	"00:00:00"));
@@ -178,7 +178,7 @@ public class RelatoriosRanking extends Controller {
 		Set<RequisicaoTransporte> setRequisicao = new HashSet<RequisicaoTransporte>();
 		Veiculo veiculo = null;
 		RequisicaoTransporte requisicao = null;
-	 	CpOrgaoUsuario cpOrgaoUsuario = AutorizacaoGI.titular().getOrgaoUsuario();
+	 	CpOrgaoUsuario cpOrgaoUsuario = AutorizacaoGIAntigo.titular().getOrgaoUsuario();
 	 	
 		try {
 			relatorio.dataInicio.setTime(formatarDataHora(relatorio.dataInicio, "00:00:00"));
@@ -246,7 +246,7 @@ public class RelatoriosRanking extends Controller {
 		List<RankingFinalidadeRequisicao> listaRankingFinalidade = new ArrayList<RankingFinalidadeRequisicao>();
 		FinalidadeRequisicao finalidade = null;
 		int totalFinalidade = 0;
-	 	CpOrgaoUsuario cpOrgaoUsuario = AutorizacaoGI.titular().getOrgaoUsuario();
+	 	CpOrgaoUsuario cpOrgaoUsuario = AutorizacaoGIAntigo.titular().getOrgaoUsuario();
 
 		try {
 			relatorio.dataInicio.setTime(formatarDataHora(relatorio.dataInicio,	"00:00:00"));
@@ -291,7 +291,7 @@ public class RelatoriosRanking extends Controller {
 		List<RequisicaoTransporte> lista;
 		List<RankingTipoPassageiroRequisicao> listaRankingTipoPassageiro = new ArrayList<RankingTipoPassageiroRequisicao>();
 		List<TipoDePassageiro> listaTipoDePassageiro = Arrays.asList(TipoDePassageiro.values());
-	 	CpOrgaoUsuario cpOrgaoUsuario = AutorizacaoGI.titular().getOrgaoUsuario();
+	 	CpOrgaoUsuario cpOrgaoUsuario = AutorizacaoGIAntigo.titular().getOrgaoUsuario();
 	 	
 		try {
 			relatorio.dataInicio.setTime(formatarDataHora(relatorio.dataInicio,	"00:00:00"));

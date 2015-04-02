@@ -3,7 +3,7 @@ package controllers;
 import play.data.validation.Validation;
 import play.mvc.*;
 
-@With(AutorizacaoGI.class)
+@With(AutorizacaoGIAntigo.class)
 public class Erros extends Controller {
 
     public static void testErroLink() {

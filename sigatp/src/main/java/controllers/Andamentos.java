@@ -3,10 +3,10 @@ package controllers;
 import java.util.Calendar;
 import java.util.List;
 
-import controllers.AutorizacaoGI.RoleAdmin;
-import controllers.AutorizacaoGI.RoleAdminFrota;
-import controllers.AutorizacaoGI.RoleAdminMissao;
-import controllers.AutorizacaoGI.RoleAprovador;
+import controllers.AutorizacaoGIAntigo.RoleAdmin;
+import controllers.AutorizacaoGIAntigo.RoleAdminFrota;
+import controllers.AutorizacaoGIAntigo.RoleAdminMissao;
+import controllers.AutorizacaoGIAntigo.RoleAprovador;
 import play.data.validation.Valid;
 import play.data.validation.Validation;
 import play.i18n.Messages;
@@ -18,7 +18,7 @@ import br.gov.jfrj.siga.tp.model.RequisicaoTransporte;
 import br.gov.jfrj.siga.tp.util.MenuMontador;
 import models.*;
 
-@With(AutorizacaoGI.class)
+@With(AutorizacaoGIAntigo.class)
 public class Andamentos extends Controller {
 
 	public static void listarPorRequisicao(Long idRequisicao, boolean popUp) {
@@ -45,7 +45,7 @@ public class Andamentos extends Controller {
 		}
 
 		if (andamento.estadoRequisicao == EstadoRequisicao.CANCELADA) {
-			if (andamento.requisicaoTransporte.cancelar(AutorizacaoGI.cadastrante(),"CANCELADA")) {
+			if (andamento.requisicaoTransporte.cancelar(AutorizacaoGIAntigo.cadastrante(),"CANCELADA")) {
 				Application.index();
 			}
 			else {
@@ -53,7 +53,7 @@ public class Andamentos extends Controller {
 				redirecionarSeErroAoSalvar(andamento);
 			}
 		} else {
-			DpPessoa dpPessoa = AutorizacaoGI.cadastrante();
+			DpPessoa dpPessoa = AutorizacaoGIAntigo.cadastrante();
 			andamento.responsavel = dpPessoa;
 			andamento.dataAndamento = Calendar.getInstance();
 			redirecionarSeErroAoSalvar(andamento);

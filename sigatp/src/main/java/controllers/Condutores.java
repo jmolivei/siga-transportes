@@ -15,22 +15,22 @@ import br.gov.jfrj.siga.tp.model.CpRepository;
 import br.gov.jfrj.siga.tp.model.Imagem;
 import br.gov.jfrj.siga.tp.model.ItemMenu;
 import br.gov.jfrj.siga.tp.util.MenuMontador;
-import controllers.AutorizacaoGI.RoleAdmin;
-import controllers.AutorizacaoGI.RoleAdminMissao;
-import controllers.AutorizacaoGI.RoleAdminMissaoComplexo;
+import controllers.AutorizacaoGIAntigo.RoleAdmin;
+import controllers.AutorizacaoGIAntigo.RoleAdminMissao;
+import controllers.AutorizacaoGIAntigo.RoleAdminMissaoComplexo;
 
-@With(AutorizacaoGI.class)
+@With(AutorizacaoGIAntigo.class)
 public class Condutores extends Controller {
 	private static final String ACTION_EDITAR = "@editar";
 	private static final String ACTION_INCLUIR = "@incluir";
 
 	public static void listar() throws Exception {
-		List<Condutor> condutores = Condutor.listarTodos(AutorizacaoGI.titular().getOrgaoUsuario());
+		List<Condutor> condutores = Condutor.listarTodos(AutorizacaoGIAntigo.titular().getOrgaoUsuario());
 		render(condutores);
 	}
 
 	public static void listarComMensagem(String mensagem) throws Exception {
-		List<Condutor> condutores = Condutor.listarTodos(AutorizacaoGI.titular().getOrgaoUsuario());
+		List<Condutor> condutores = Condutor.listarTodos(AutorizacaoGIAntigo.titular().getOrgaoUsuario());
 		Validation.addError("condutor", mensagem);
 		renderTemplate("@listar", condutores);
 	}
@@ -119,7 +119,7 @@ public class Condutores extends Controller {
 			Validation.addError("dpPessoa", "condutor.dppessoa.validation");
 		}
 
-		condutor.setCpOrgaoUsuario(AutorizacaoGI.titular().getOrgaoUsuario());
+		condutor.setCpOrgaoUsuario(AutorizacaoGIAntigo.titular().getOrgaoUsuario());
 
 		if (Validation.hasErrors()) {
 			if (condutor.getDpPessoa() != null) {

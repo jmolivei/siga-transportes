@@ -7,13 +7,13 @@ import org.hibernate.envers.RevisionListener;
 import br.gov.jfrj.siga.tp.model.RevInfo;
 import play.mvc.With;
 
-@With(AutorizacaoGI.class)
+@With(AutorizacaoGIAntigo.class)
 public class RevInfoListener implements RevisionListener {
 	@Override
 	public void newRevision(Object revisionEntity) {
 		RevInfo entity = (RevInfo) revisionEntity;
-		entity.setMatricula(AutorizacaoGI.cadastrante().getSiglaCompleta());
-		entity.setMotivoLog(AutorizacaoGI.getMotivoLog());
+		entity.setMatricula(AutorizacaoGIAntigo.cadastrante().getSiglaCompleta());
+		entity.setMotivoLog(AutorizacaoGIAntigo.getMotivoLog());
 		
 		try {
 			entity.setEnderecoIp(InetAddress.getLocalHost().getHostAddress());

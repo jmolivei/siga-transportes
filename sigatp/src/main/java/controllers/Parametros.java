@@ -11,9 +11,9 @@ import br.gov.jfrj.siga.cp.CpComplexo;
 import br.gov.jfrj.siga.dp.CpOrgaoUsuario;
 import br.gov.jfrj.siga.tp.model.CpRepository;
 import br.gov.jfrj.siga.tp.model.Parametro;
-import controllers.AutorizacaoGI.RoleAdmin;
+import controllers.AutorizacaoGIAntigo.RoleAdmin;
 
-@With(AutorizacaoGI.class)
+@With(AutorizacaoGIAntigo.class)
 public class Parametros extends Controller {
 	@SuppressWarnings("unused")
 	private static final String ACTION_LISTAR = "@listar";

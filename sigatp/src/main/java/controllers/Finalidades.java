@@ -10,13 +10,13 @@ import br.gov.jfrj.siga.tp.util.MenuMontador;
 import play.data.validation.Validation;
 import play.mvc.Controller;
 import play.mvc.With;
-import controllers.AutorizacaoGI.RoleAdmin;
-import controllers.AutorizacaoGI.RoleAdminMissao;
-import controllers.AutorizacaoGI.RoleAdminMissaoComplexo;
+import controllers.AutorizacaoGIAntigo.RoleAdmin;
+import controllers.AutorizacaoGIAntigo.RoleAdminMissao;
+import controllers.AutorizacaoGIAntigo.RoleAdminMissaoComplexo;
 
 
 
-@With(AutorizacaoGI.class)
+@With(AutorizacaoGIAntigo.class)
 public class Finalidades extends Controller {
 	private static final String _ACTION_LISTAR = "@listar";
 	private static final String _ACTION_EDITAR = "@editar";
@@ -24,7 +24,7 @@ public class Finalidades extends Controller {
 	
     public static void listar() throws Exception {
     	MenuMontador.instance().RecuperarMenuFinalidades(true);
-    	List<FinalidadeRequisicao> finalidades = FinalidadeRequisicao.listarTodos(AutorizacaoGI.titular().getOrgaoUsuario());
+    	List<FinalidadeRequisicao> finalidades = FinalidadeRequisicao.listarTodos(AutorizacaoGIAntigo.titular().getOrgaoUsuario());
    		render(finalidades);
     }
 
@@ -35,7 +35,7 @@ public class Finalidades extends Controller {
     }
 
     public static void listarComMensagem(String mensagem) throws Exception {
-    	List<FinalidadeRequisicao> finalidades = FinalidadeRequisicao.listarTodos(AutorizacaoGI.titular().getOrgaoUsuario());
+    	List<FinalidadeRequisicao> finalidades = FinalidadeRequisicao.listarTodos(AutorizacaoGIAntigo.titular().getOrgaoUsuario());
     	Validation.addError("finalidade", mensagem);
 		renderTemplate(_ACTION_LISTAR, finalidades);
     }
@@ -46,7 +46,7 @@ public class Finalidades extends Controller {
     public static void excluir(Long id) throws Exception  { 
         FinalidadeRequisicao finalidade = FinalidadeRequisicao.findById(id);
 		
-        finalidade.checarProprietario(AutorizacaoGI.titular().getOrgaoUsuario());
+        finalidade.checarProprietario(AutorizacaoGIAntigo.titular().getOrgaoUsuario());
 		
 		EntityTransaction tx = FinalidadeRequisicao.em().getTransaction();  
 		if (! tx.isActive()) {
@@ -81,7 +81,7 @@ public class Finalidades extends Controller {
 	public static void editar(Long id) throws Exception {
     	FinalidadeRequisicao finalidade = FinalidadeRequisicao.findById(id);
     	
-    	finalidade.checarProprietario(AutorizacaoGI.titular().getOrgaoUsuario());
+    	finalidade.checarProprietario(AutorizacaoGIAntigo.titular().getOrgaoUsuario());
     	
     	render(finalidade);
     }
@@ -100,12 +100,12 @@ public class Finalidades extends Controller {
 	@RoleAdminMissaoComplexo
 	public static void salvar(FinalidadeRequisicao finalidade) throws Exception {
 		if(!finalidade.id.equals(new Long(0))) {
-			finalidade.checarProprietario(AutorizacaoGI.titular().getOrgaoUsuario());
+			finalidade.checarProprietario(AutorizacaoGIAntigo.titular().getOrgaoUsuario());
 		}
 		
     	validation.valid(finalidade);
     	
-    	finalidade.cpOrgaoOrigem = AutorizacaoGI.titular().getOrgaoUsuario();
+    	finalidade.cpOrgaoOrigem = AutorizacaoGIAntigo.titular().getOrgaoUsuario();
 		
     	if(Validation.hasErrors()) 
 		{

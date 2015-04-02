@@ -24,7 +24,7 @@ import br.gov.jfrj.siga.tp.model.EstadoRequisicao;
 import br.gov.jfrj.siga.tp.model.FinalidadeRequisicao;
 import br.gov.jfrj.siga.tp.model.RequisicaoTransporte;
 import br.gov.jfrj.siga.tp.rest.RequisicaoTransporteRest;
-import controllers.AutorizacaoGI;
+import controllers.AutorizacaoGIAntigo;
 
 public class Requisicoes extends Controller {
 	
@@ -135,7 +135,7 @@ public class Requisicoes extends Controller {
 		
 		req.solicitante = dpPessoa;
 		req.cpOrgaoUsuario = dpPessoa.getOrgaoUsuario();
-		req.cpComplexo = AutorizacaoGI.recuperarComplexoPadrao(dpPessoa);
+		req.cpComplexo = AutorizacaoGIAntigo.recuperarComplexoPadrao(dpPessoa);
 		
 		checarSolicitante(req, dpPessoa, true);
 		

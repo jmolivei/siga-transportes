@@ -33,19 +33,19 @@ import com.google.common.base.Predicate;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
 
-@With(AutorizacaoGI.class)
+@With(AutorizacaoGIAntigo.class)
 public class Application extends Controller {
 
 	public static void index() throws Exception {
-		if (AutorizacaoGI.ehAdministrador() || AutorizacaoGI.ehAdministradorMissao() || AutorizacaoGI.ehAdministradorMissaoPorComplexo() ) {
+		if (AutorizacaoGIAntigo.ehAdministrador() || AutorizacaoGIAntigo.ehAdministradorMissao() || AutorizacaoGIAntigo.ehAdministradorMissaoPorComplexo() ) {
 			Requisicoes.listarFiltrado(EstadoRequisicao.AUTORIZADA,EstadoRequisicao.NAOATENDIDA);
 		}
 
-		if (AutorizacaoGI.ehAgente()) {
+		if (AutorizacaoGIAntigo.ehAgente()) {
 			Requisicoes.listarFiltrado(EstadoRequisicao.AUTORIZADA,EstadoRequisicao.NAOATENDIDA);
 		}
 
-		if (AutorizacaoGI.ehAprovador()) {
+		if (AutorizacaoGIAntigo.ehAprovador()) {
 			Requisicoes.listarPAprovar();
 		}
 
@@ -76,17 +76,17 @@ public class Application extends Controller {
 
 		if (partesDoCodigo[1].equals("TP")) {
 			if (partesDoCodigo[4].equals("M")) {
-				Missoes.recuperarPelaSigla(sigla,!AutorizacaoGI.ehAdministrador());
+				Missoes.recuperarPelaSigla(sigla,!AutorizacaoGIAntigo.ehAdministrador());
 			}
 
 			if (partesDoCodigo[4].equals("R")) {
-				RequisicaoTransporte req = Requisicoes.recuperarPelaSigla(sigla, !AutorizacaoGI.ehAdministrador());
+				RequisicaoTransporte req = Requisicoes.recuperarPelaSigla(sigla, !AutorizacaoGIAntigo.ehAdministrador());
 				Requisicoes.carregarTiposDeCarga(req);
 				Requisicoes.carregarFinalidades();
 			}
 
 			if (partesDoCodigo[4].equals("S")) {
-				ServicosVeiculo.recuperarPelaSigla(sigla, ! AutorizacaoGI.ehAdministrador());
+				ServicosVeiculo.recuperarPelaSigla(sigla, ! AutorizacaoGIAntigo.ehAdministrador());
 			}
 		}
 		render();
@@ -120,7 +120,7 @@ public class Application extends Controller {
 				retorno = m.group(1).toString();
 			}
 			else {		
-				retorno = AutorizacaoGI.cadastrante().getOrgaoUsuario().getAcronimoOrgaoUsu().replace("-","").toString();
+				retorno = AutorizacaoGIAntigo.cadastrante().getOrgaoUsuario().getAcronimoOrgaoUsu().replace("-","").toString();
 			}
 
 			retorno = retorno + "-" + m.group(2).toString();
@@ -192,11 +192,11 @@ public class Application extends Controller {
 	public static void gadget() {
 		try {
 			String titulo = "";
-			Long idOrgaoUsu = Long.valueOf(AutorizacaoGI.titular().getOrgaoUsuario().getIdOrgaoUsu());
+			Long idOrgaoUsu = Long.valueOf(AutorizacaoGIAntigo.titular().getOrgaoUsuario().getIdOrgaoUsu());
 			List<String[]> lista = new ArrayList<String[]>();
 			int total = 0;
 
-			if (equals(true, AutorizacaoGI.ehAdministrador(), AutorizacaoGI.ehAdministradorMissao(), AutorizacaoGI.ehAdministradorMissaoPorComplexo())) {
+			if (equals(true, AutorizacaoGIAntigo.ehAdministrador(), AutorizacaoGIAntigo.ehAdministradorMissao(), AutorizacaoGIAntigo.ehAdministradorMissaoPorComplexo())) {
 				EstadoRequisicao[] estados = {EstadoRequisicao.AUTORIZADA, EstadoRequisicao.NAOATENDIDA};
 				List<RequisicaoTransporte> requisicoes = RequisicaoTransporte.listar(estados);
 
@@ -209,8 +209,8 @@ public class Application extends Controller {
 				}
 			}
 
-			else if (equals(true, AutorizacaoGI.ehAgente())) {
-				Long idCondutor = Condutor.recuperarLogado(AutorizacaoGI.titular(),AutorizacaoGI.titular().getOrgaoUsuario()).getId();
+			else if (equals(true, AutorizacaoGIAntigo.ehAgente())) {
+				Long idCondutor = Condutor.recuperarLogado(AutorizacaoGIAntigo.titular(),AutorizacaoGIAntigo.titular().getOrgaoUsuario()).getId();
 				EstadoMissao[] estados = {EstadoMissao.PROGRAMADA, EstadoMissao.INICIADA};
 				String query = "condutor.id = ? and cpOrgaoUsuario.idOrgaoUsu = ? and (estadoMissao = ? or estadoMissao = ?)";
 				List<ServicosVeiculo> missoes = Missao.find(query, idCondutor, idOrgaoUsu, estados[0], estados[1]).fetch();
@@ -224,7 +224,7 @@ public class Application extends Controller {
 				}
 			}
 
-			else if (equals(true, AutorizacaoGI.ehAprovador())) {
+			else if (equals(true, AutorizacaoGIAntigo.ehAprovador())) {
 				EstadoRequisicao estado = EstadoRequisicao.ABERTA;
 				List<RequisicaoTransporte> requisicoes = RequisicaoTransporte.listar(estado);
 				if (requisicoes.size() > 0) {
@@ -232,7 +232,7 @@ public class Application extends Controller {
 				}
 			}
 
-			else if (equals(true, AutorizacaoGI.ehAdministradorFrota())) {
+			else if (equals(true, AutorizacaoGIAntigo.ehAdministradorFrota())) {
 				EstadoServico[] estados = {EstadoServico.AGENDADO, EstadoServico.INICIADO};
 				String query = "cpOrgaoUsuario.idOrgaoUsu=? and (situacaoServico = ? or situacaoServico = ?)"; 
 				List<ServicosVeiculo> servicos = ServicoVeiculo.find(query, idOrgaoUsu, estados[0],estados[1]).fetch();
@@ -247,7 +247,7 @@ public class Application extends Controller {
 			}
 
 			else {
-				List<RequisicaoTransporte> requisicoes = RequisicaoTransporte.listarParaAgendamento(AutorizacaoGI.titular().getOrgaoUsuario());
+				List<RequisicaoTransporte> requisicoes = RequisicaoTransporte.listarParaAgendamento(AutorizacaoGIAntigo.titular().getOrgaoUsuario());
 				total = totalizarItemLista(requisicoes, "");
 				if (requisicoes.size() > 0) {
 					lista.add(adicionarItemLista("requisicoes.listar", "", "", "Requisi&ccedil;&otilde;es", total));
@@ -309,11 +309,11 @@ public class Application extends Controller {
 							RequisicaoTransporte requisicao = ((RequisicaoTransporte) objeto);
 							if (descricao.equals("")) {
 								return (requisicao.dataHoraSaidaPrevista.after(ultimos7dias) && 
-										requisicao.cpOrgaoUsuario.getIdOrgaoUsu().equals(AutorizacaoGI.titular().getOrgaoUsuario().getIdOrgaoUsu()));
+										requisicao.cpOrgaoUsuario.getIdOrgaoUsu().equals(AutorizacaoGIAntigo.titular().getOrgaoUsuario().getIdOrgaoUsu()));
 							} else {
 								return (requisicao.ultimoEstado.getDescricao().equals(descricao) &&
 										requisicao.dataHoraSaidaPrevista.after(ultimos7dias) && 
-										requisicao.cpOrgaoUsuario.getIdOrgaoUsu().equals(AutorizacaoGI.titular().getOrgaoUsuario().getIdOrgaoUsu()));
+										requisicao.cpOrgaoUsuario.getIdOrgaoUsu().equals(AutorizacaoGIAntigo.titular().getOrgaoUsuario().getIdOrgaoUsu()));
 							}
 						}
 						if (objeto instanceof ServicoVeiculo) {

@@ -18,11 +18,11 @@ import play.data.validation.Validation;
 import play.db.jpa.JPA;
 import play.mvc.Controller;
 import play.mvc.With;
-import controllers.AutorizacaoGI.RoleAdmin;
-import controllers.AutorizacaoGI.RoleAdminMissao;
-import controllers.AutorizacaoGI.RoleAdminMissaoComplexo;
+import controllers.AutorizacaoGIAntigo.RoleAdmin;
+import controllers.AutorizacaoGIAntigo.RoleAdminMissao;
+import controllers.AutorizacaoGIAntigo.RoleAdminMissaoComplexo;
 
-@With(AutorizacaoGI.class)
+@With(AutorizacaoGIAntigo.class)
 public class EscalasDeTrabalho extends Controller {
 	
     public static void listar() {

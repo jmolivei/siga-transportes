@@ -11,10 +11,10 @@ import br.gov.jfrj.siga.tp.util.PerguntaSimNao;
 import play.data.validation.Validation;
 import play.mvc.Controller;
 import play.mvc.With;
-import controllers.AutorizacaoGI.RoleAdmin;
-import controllers.AutorizacaoGI.RoleAdminFrota;
+import controllers.AutorizacaoGIAntigo.RoleAdmin;
+import controllers.AutorizacaoGIAntigo.RoleAdminFrota;
 
-@With(AutorizacaoGI.class)
+@With(AutorizacaoGIAntigo.class)
 public class Avarias extends Controller {
 	private static final String ACTION_EDITAR = "@editar";
 
@@ -40,7 +40,7 @@ public class Avarias extends Controller {
 	public static void incluir(Long idVeiculo) throws Exception {
 		Avaria avaria = new Avaria();
 		boolean fixarVeiculo = false;
-		List<Veiculo> veiculos = Veiculo.listarTodos(AutorizacaoGI.titular().getOrgaoUsuario());
+		List<Veiculo> veiculos = Veiculo.listarTodos(AutorizacaoGIAntigo.titular().getOrgaoUsuario());
 		if (idVeiculo != null) {
 			avaria.veiculo = Veiculo.findById(idVeiculo);
 			fixarVeiculo = true;
@@ -57,7 +57,7 @@ public class Avarias extends Controller {
 		if (fixarVeiculo) {
 			veiculo = avaria.veiculo;
 		}
-		List<Veiculo> veiculos = Veiculo.listarTodos(AutorizacaoGI.titular().getOrgaoUsuario());
+		List<Veiculo> veiculos = Veiculo.listarTodos(AutorizacaoGIAntigo.titular().getOrgaoUsuario());
 		MenuMontador.instance().RecuperarMenuVeiculos(avaria.veiculo.id, ItemMenu.AVARIAS);
 		render(avaria, veiculos, veiculo, fixarVeiculo);
 	}
@@ -69,7 +69,7 @@ public class Avarias extends Controller {
 		if(Validation.hasErrors()) 
 		{
 			MenuMontador.instance().RecuperarMenuVeiculos(avaria.veiculo.id, ItemMenu.AVARIAS);
-			List<Veiculo> veiculos = Veiculo.listarTodos(AutorizacaoGI.titular().getOrgaoUsuario());
+			List<Veiculo> veiculos = Veiculo.listarTodos(AutorizacaoGIAntigo.titular().getOrgaoUsuario());
 			Veiculo veiculo = Veiculo.findById(avaria.veiculo.id);
 			renderTemplate(ACTION_EDITAR, avaria, veiculos, veiculo, fixarVeiculo);
 		}

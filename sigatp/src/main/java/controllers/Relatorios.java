@@ -21,7 +21,7 @@ import com.google.common.base.Predicate;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
 
-@With(AutorizacaoGI.class)
+@With(AutorizacaoGIAntigo.class)
 public class Relatorios extends Controller {
 	
 	private static final int HORA_FINAL_EXPEDIENTE = 19;
@@ -349,23 +349,23 @@ public class Relatorios extends Controller {
 				public boolean apply(T objeto) {
 					if (classe.equals(Plantao.class)) {
 						Plantao obj = (Plantao)objeto;
-						return obj.condutor.getCpOrgaoUsuario().getId().equals(AutorizacaoGI.titular().getOrgaoUsuario().getId());
+						return obj.condutor.getCpOrgaoUsuario().getId().equals(AutorizacaoGIAntigo.titular().getOrgaoUsuario().getId());
 					}
 					else if(classe.equals(Afastamento.class)) {
 						Afastamento obj = (Afastamento)objeto;
-						return obj.condutor.getCpOrgaoUsuario().getId().equals(AutorizacaoGI.titular().getOrgaoUsuario().getId());
+						return obj.condutor.getCpOrgaoUsuario().getId().equals(AutorizacaoGIAntigo.titular().getOrgaoUsuario().getId());
 					}
 					else if(classe.equals(EscalaDeTrabalho.class)) {
 						EscalaDeTrabalho obj = (EscalaDeTrabalho)objeto;
-						return obj.condutor.getCpOrgaoUsuario().getId().equals(AutorizacaoGI.titular().getOrgaoUsuario().getId());
+						return obj.condutor.getCpOrgaoUsuario().getId().equals(AutorizacaoGIAntigo.titular().getOrgaoUsuario().getId());
 					}
 					else if(classe.equals(ServicoVeiculo.class)) {
 						ServicoVeiculo obj = (ServicoVeiculo)objeto;
-						return obj.cpOrgaoUsuario.getId().equals(AutorizacaoGI.titular().getOrgaoUsuario().getId());					
+						return obj.cpOrgaoUsuario.getId().equals(AutorizacaoGIAntigo.titular().getOrgaoUsuario().getId());					
 					}
 					else if(classe.equals(Missao.class)) {
 						Missao obj = (Missao)objeto;
-						return obj.cpOrgaoUsuario.getId().equals(AutorizacaoGI.titular().getOrgaoUsuario().getId());					
+						return obj.cpOrgaoUsuario.getId().equals(AutorizacaoGIAntigo.titular().getOrgaoUsuario().getId());					
 					}
 					
 					return false;

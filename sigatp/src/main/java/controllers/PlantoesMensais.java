@@ -13,9 +13,9 @@ import br.gov.jfrj.siga.tp.model.Condutor;
 import br.gov.jfrj.siga.tp.model.DiaDaSemana;
 import br.gov.jfrj.siga.tp.model.Mes;
 import br.gov.jfrj.siga.tp.model.Plantao;
-import controllers.AutorizacaoGI.RoleAdmin;
-import controllers.AutorizacaoGI.RoleAdminMissao;
-import controllers.AutorizacaoGI.RoleAdminMissaoComplexo;
+import controllers.AutorizacaoGIAntigo.RoleAdmin;
+import controllers.AutorizacaoGIAntigo.RoleAdminMissao;
+import controllers.AutorizacaoGIAntigo.RoleAdminMissaoComplexo;
 import play.data.validation.Validation;
 import play.db.jpa.JPA;
 import play.i18n.Messages;
@@ -23,7 +23,7 @@ import play.mvc.Controller;
 import play.mvc.With;
 import play.mvc.Scope.RenderArgs;
 
-@With(AutorizacaoGI.class)
+@With(AutorizacaoGIAntigo.class)
 public class PlantoesMensais extends Controller {
 	
 	@SuppressWarnings("unused")
@@ -125,7 +125,7 @@ public class PlantoesMensais extends Controller {
 	}
 
 	private static void montarDadosParaListar() {		
-		List<String> referencias = Plantao.getReferencias(AutorizacaoGI.titular().getOrgaoUsuario().getIdOrgaoUsu());
+		List<String> referencias = Plantao.getReferencias(AutorizacaoGIAntigo.titular().getOrgaoUsuario().getIdOrgaoUsu());
 		RenderArgs.current().put("referencias", referencias);
 	}
 	
@@ -227,7 +227,7 @@ public class PlantoesMensais extends Controller {
 			String dadosParaTitulo, Mes mes, int ano, String hora) {
 		List<Condutor> condutores;
 		try {
-			condutores = Condutor.listarTodos(AutorizacaoGI.titular().getOrgaoUsuario());
+			condutores = Condutor.listarTodos(AutorizacaoGIAntigo.titular().getOrgaoUsuario());
 		} catch (Exception e) {
 			throw new RuntimeException(Messages.get("plantoesMensais.montarDadosParaForm.exception"));
 		}

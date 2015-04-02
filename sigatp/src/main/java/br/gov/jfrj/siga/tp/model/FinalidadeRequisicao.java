@@ -21,7 +21,7 @@ import play.db.jpa.GenericModel;
 import play.i18n.Messages;
 import play.modules.br.jus.jfrj.siga.uteis.validadores.upperCase.UpperCase;
 import br.gov.jfrj.siga.dp.CpOrgaoUsuario;
-import controllers.AutorizacaoGI;
+import controllers.AutorizacaoGIAntigo;
 
 @SuppressWarnings("serial")
 @Entity
@@ -85,7 +85,7 @@ public class FinalidadeRequisicao extends GenericModel {
 			try {
 				throw new Exception(Messages.get("finalidadeRequisicao.checarProprietario.exception"));
 			} catch (Exception e) {
-				AutorizacaoGI.tratarExcecoes(e);
+				AutorizacaoGIAntigo.tratarExcecoes(e);
 			}
 		}
 	}

@@ -32,12 +32,12 @@ import br.gov.jfrj.siga.tp.model.RequisicaoVsEstado;
 import br.gov.jfrj.siga.tp.model.Veiculo;
 import br.gov.jfrj.siga.tp.util.MenuMontador;
 import br.gov.jfrj.siga.tp.util.PerguntaSimNao;
-import controllers.AutorizacaoGI.RoleAdmin;
-import controllers.AutorizacaoGI.RoleAdminMissao;
-import controllers.AutorizacaoGI.RoleAdminMissaoComplexo;
-import controllers.AutorizacaoGI.RoleAgente;
+import controllers.AutorizacaoGIAntigo.RoleAdmin;
+import controllers.AutorizacaoGIAntigo.RoleAdminMissao;
+import controllers.AutorizacaoGIAntigo.RoleAdminMissaoComplexo;
+import controllers.AutorizacaoGIAntigo.RoleAgente;
 
-@With(AutorizacaoGI.class)
+@With(AutorizacaoGIAntigo.class)
 public class Missoes extends Controller {
 
 	@RoleAdmin
@@ -45,7 +45,7 @@ public class Missoes extends Controller {
 	@RoleAgente
 	@RoleAdminMissaoComplexo
 	public static void listar() throws Exception {
-		Object[] parametros = {AutorizacaoGI.titular().getOrgaoUsuario(),EstadoMissao.PROGRAMADA,EstadoMissao.INICIADA,EstadoMissao.FINALIZADA,EstadoMissao.CANCELADA };
+		Object[] parametros = {AutorizacaoGIAntigo.titular().getOrgaoUsuario(),EstadoMissao.PROGRAMADA,EstadoMissao.INICIADA,EstadoMissao.FINALIZADA,EstadoMissao.CANCELADA };
 
 		List<Missao> missoes = recuperarMissoes("cpOrgaoUsuario = ? and estadoMissao in (?,?,?,?)", parametros);
 		
@@ -61,8 +61,8 @@ public class Missoes extends Controller {
 	private static List<Missao> recuperarMissoes(String criterioBusca, Object[] parametros) throws Exception  {
 		// TODO Auto-generated method stub
 		
-		if (! AutorizacaoGI.ehAdministrador() && ! AutorizacaoGI.ehAdministradorMissao() && ! AutorizacaoGI.ehAdministradorMissaoPorComplexo() ) {
-			Condutor condutorLogado = Condutor.recuperarLogado(AutorizacaoGI.titular(),AutorizacaoGI.titular().getOrgaoUsuario());
+		if (! AutorizacaoGIAntigo.ehAdministrador() && ! AutorizacaoGIAntigo.ehAdministradorMissao() && ! AutorizacaoGIAntigo.ehAdministradorMissaoPorComplexo() ) {
+			Condutor condutorLogado = Condutor.recuperarLogado(AutorizacaoGIAntigo.titular(),AutorizacaoGIAntigo.titular().getOrgaoUsuario());
 			if (condutorLogado != null) 
 			{
 				criterioBusca = criterioBusca + " and condutor = ?";
@@ -74,14 +74,14 @@ public class Missoes extends Controller {
 				parametros = parametrosFiltrado; 
 			}
 
-		} else if (AutorizacaoGI.ehAdministradorMissaoPorComplexo()) {
+		} else if (AutorizacaoGIAntigo.ehAdministradorMissaoPorComplexo()) {
 			criterioBusca = criterioBusca + " and cpComplexo = ?";
 			Object [] parametrosFiltrado = new Object[parametros.length + 1];
 			for (int i = 0; i < parametros.length; i++) {
 				parametrosFiltrado[i] = parametros[i];
 			}
-			if (AutorizacaoGI.ehAdministradorMissaoPorComplexo()) {
-				parametrosFiltrado[parametros.length] = AutorizacaoGI.getComplexoAdministrado();
+			if (AutorizacaoGIAntigo.ehAdministradorMissaoPorComplexo()) {
+				parametrosFiltrado[parametros.length] = AutorizacaoGIAntigo.getComplexoAdministrado();
 			}
 
 			parametros = parametrosFiltrado;  
@@ -96,7 +96,7 @@ public class Missoes extends Controller {
 
 	@RoleAgente
 	public static void listarPorCondutorLogado() {
-		Condutor condutorLogado = Condutor.recuperarLogado(AutorizacaoGI.titular(),AutorizacaoGI.titular().getOrgaoUsuario());
+		Condutor condutorLogado = Condutor.recuperarLogado(AutorizacaoGIAntigo.titular(),AutorizacaoGIAntigo.titular().getOrgaoUsuario());
 
 		List<Missao> missoes = Missao.buscarTodasAsMissoesPorCondutor(condutorLogado);
 
@@ -146,7 +146,7 @@ public class Missoes extends Controller {
 		}
 
 		EstadoMissao estadoMissao = estado;
-		Object[] parametros = {AutorizacaoGI.titular().getOrgaoUsuario(),estadoMissao};
+		Object[] parametros = {AutorizacaoGIAntigo.titular().getOrgaoUsuario(),estadoMissao};
 		List<Missao> missoes = recuperarMissoes("cpOrgaoUsuario = ? and estadoMissao = ?", parametros);
 
 		MenuMontador.instance().RecuperarMenuMissoes(estado);
@@ -161,10 +161,10 @@ public class Missoes extends Controller {
 	@RoleAdminMissao
 	@RoleAdminMissaoComplexo
 	public static void salvar(@Valid Missao missao, List<RequisicaoTransporte> requisicoesTransporte_alt,List<RequisicaoTransporte> requisicoesTransporte_ant) throws Exception {
-		DpPessoa dpPessoa = AutorizacaoGI.cadastrante();
+		DpPessoa dpPessoa = AutorizacaoGIAntigo.cadastrante();
 		String template;
 
-		missao.cpOrgaoUsuario = AutorizacaoGI.titular().getOrgaoUsuario();
+		missao.cpOrgaoUsuario = AutorizacaoGIAntigo.titular().getOrgaoUsuario();
 		
 		if (missao.id > 0) {
 			template = "@editar";
@@ -310,7 +310,7 @@ public class Missoes extends Controller {
 					break;
 				}
 				if (novoAndamento) {
-					gravaAndamento(AutorizacaoGI.cadastrante(),"PROGRAMADA",missao,EstadoRequisicao.PROGRAMADA,requisicaoTransporte);
+					gravaAndamento(AutorizacaoGIAntigo.cadastrante(),"PROGRAMADA",missao,EstadoRequisicao.PROGRAMADA,requisicaoTransporte);
 					break;
 				}
 			}
@@ -371,11 +371,11 @@ public class Missoes extends Controller {
 		verificarOdometroSaidaZerado(missao);
 		verificarOdometroRetornoZerado(missao);
 		verificarOdometrosSaidaRetorno(missao);
-		DpPessoa dpPessoa = AutorizacaoGI.cadastrante();
+		DpPessoa dpPessoa = AutorizacaoGIAntigo.cadastrante();
 		renderArgs.put("requisicoesVsEstados", requisicoesVsEstados);
 		checarCategoriaCNHVeiculoCondutor(missao);
 		redirecionarSeErroAoSalvar(missao, "@finalizar");
-		missao.cpOrgaoUsuario = AutorizacaoGI.titular().getOrgaoUsuario();
+		missao.cpOrgaoUsuario = AutorizacaoGIAntigo.titular().getOrgaoUsuario();
 		missao.responsavel = dpPessoa;
 		missao.estadoMissao = EstadoMissao.FINALIZADA;
 		checarCondutorPeloUsuarioAutenticado(missao);
@@ -425,7 +425,7 @@ public class Missoes extends Controller {
 			String veiculosDisp) throws Exception {
 		verificarDisponibilidadeDeCondutor(missao);
 		verificarOdometroSaidaZerado(missao);
-		DpPessoa dpPessoa = AutorizacaoGI.cadastrante();
+		DpPessoa dpPessoa = AutorizacaoGIAntigo.cadastrante();
 
 		if (requisicoesTransporte_alt == null || requisicoesTransporte_alt.size() == 0) {
 			missao.requisicoesTransporte = requisicoesTransporte_alt;
@@ -442,7 +442,7 @@ public class Missoes extends Controller {
 			verificarDisponibilidadeDeVeiculo(missao);
 		}
 
-		missao.cpOrgaoUsuario = AutorizacaoGI.titular().getOrgaoUsuario();
+		missao.cpOrgaoUsuario = AutorizacaoGIAntigo.titular().getOrgaoUsuario();
 		missao.responsavel = dpPessoa;
 		missao.estadoMissao = EstadoMissao.INICIADA;
 
@@ -460,11 +460,11 @@ public class Missoes extends Controller {
 
 	protected static Missao recuperarComplexoPeloPerfil(Missao missao)
 			throws Exception {
-		if (AutorizacaoGI.ehAgente() || AutorizacaoGI.ehAdministradorMissaoPorComplexo()) {
+		if (AutorizacaoGIAntigo.ehAgente() || AutorizacaoGIAntigo.ehAdministradorMissaoPorComplexo()) {
 			RequisicaoTransporte req1 = RequisicaoTransporte.findById(missao.requisicoesTransporte.get(0).id);
 			missao.cpComplexo = req1.cpComplexo;
 		} else {
-			missao.cpComplexo = AutorizacaoGI.recuperarComplexoPadrao();
+			missao.cpComplexo = AutorizacaoGIAntigo.recuperarComplexoPadrao();
 		}
 		
 		return missao;
@@ -474,10 +474,10 @@ public class Missoes extends Controller {
 	@RoleAdminMissao
 	@RoleAdminMissaoComplexo
 	public static void iniciarMissaoRapido(@Valid Missao missao,List<RequisicaoTransporte> requisicoesTransporte_alt,List<RequisicaoTransporte> requisicoesTransporte_ant) throws Exception {
-		DpPessoa dpPessoa = AutorizacaoGI.cadastrante();
+		DpPessoa dpPessoa = AutorizacaoGIAntigo.cadastrante();
 		String template = "@inicioRapido";
 		
-		missao.cpOrgaoUsuario = AutorizacaoGI.titular().getOrgaoUsuario();
+		missao.cpOrgaoUsuario = AutorizacaoGIAntigo.titular().getOrgaoUsuario();
 		
 		missao.setSequence(missao.cpOrgaoUsuario);
 		
@@ -562,9 +562,9 @@ public class Missoes extends Controller {
 	public static void cancelarMissao(@Valid Missao missao) throws Exception {
 		verificarJustificativaPreenchida(missao);
 		
-		DpPessoa dpPessoa = AutorizacaoGI.cadastrante();
+		DpPessoa dpPessoa = AutorizacaoGIAntigo.cadastrante();
 		redirecionarSeErroAoCancelar(missao);
-		missao.cpOrgaoUsuario = AutorizacaoGI.titular().getOrgaoUsuario();
+		missao.cpOrgaoUsuario = AutorizacaoGIAntigo.titular().getOrgaoUsuario();
 		missao.responsavel = dpPessoa;
 		missao.estadoMissao = EstadoMissao.CANCELADA;
 		checarCondutorPeloUsuarioAutenticado(missao);
@@ -641,7 +641,7 @@ public class Missoes extends Controller {
 			if (missao.dataHoraSaida != null) {
 				String dataHoraSaidaStr = JavaExtensions.format(
 						missao.dataHoraSaida.getTime(), "dd/MM/yyyy HH:mm");
-				if (! AutorizacaoGI.ehAdministrador() && !AutorizacaoGI.ehAdministradorMissao() && !AutorizacaoGI.ehAdministradorMissaoPorComplexo()) {
+				if (! AutorizacaoGIAntigo.ehAdministrador() && !AutorizacaoGIAntigo.ehAdministradorMissao() && !AutorizacaoGIAntigo.ehAdministradorMissaoPorComplexo()) {
 					/* Fixa combos quando o perfil do usuário logado é agente */
 					List<Condutor> condutores = new ArrayList<Condutor>();
 					condutores.add(missao.condutor);
@@ -654,12 +654,12 @@ public class Missoes extends Controller {
 				} else {
 					renderArgs.put(
 							"condutores",
-							listarCondutoresDisponiveis(missao.id, AutorizacaoGI
+							listarCondutoresDisponiveis(missao.id, AutorizacaoGIAntigo
 									.titular().getOrgaoUsuario().getId(),
 									dataHoraSaidaStr,missao.inicioRapido));
 					renderArgs.put(
 							"veiculos",
-							listarVeiculosDisponiveis(missao.id, AutorizacaoGI
+							listarVeiculosDisponiveis(missao.id, AutorizacaoGIAntigo
 									.titular().getOrgaoUsuario().getId(),
 									dataHoraSaidaStr));
 					
@@ -746,7 +746,7 @@ public class Missoes extends Controller {
 		SimpleDateFormat formatar = new SimpleDateFormat("dd/MM/yyyy HH:mm");
 		String dataHoraSaidaStr = formatar.format(missao.dataHoraSaida.getTime());
 		List<Condutor> condutores = listarCondutoresDisponiveis(missao.id,
-				AutorizacaoGI.titular().getOrgaoUsuario().getId(),
+				AutorizacaoGIAntigo.titular().getOrgaoUsuario().getId(),
 				dataHoraSaidaStr, missao.inicioRapido);
 		boolean encontrouCondutor = false;
 		if (condutores != null && ! condutores.isEmpty()) {
@@ -775,7 +775,7 @@ public class Missoes extends Controller {
 		
 		if (veiculosDisp.equals("")) {
 			veiculos = listarVeiculosDisponiveis(missao.id,
-				AutorizacaoGI.titular().getOrgaoUsuario().getId(),
+				AutorizacaoGIAntigo.titular().getOrgaoUsuario().getId(),
 				dataHoraSaidaStr);
 		}
 		else {
@@ -830,17 +830,17 @@ public class Missoes extends Controller {
 	}
 
 	protected static void checarCondutorPeloUsuarioAutenticado(Missao missao) throws Exception {
-		if (AutorizacaoGI.ehAgente()) {
+		if (AutorizacaoGIAntigo.ehAgente()) {
 			if (missao.id == 0) {
 				throw new Exception(Messages.get("missoes.autorizacaoGI.ehAgente.exception"));
 			}
 			
 			
-			if (! AutorizacaoGI.titular().equivale(missao.condutor.getDpPessoa())) {
+			if (! AutorizacaoGIAntigo.titular().equivale(missao.condutor.getDpPessoa())) {
 				try {
 						throw new Exception(Messages.get("missoes.autorizacaoGI.semAcesso.exception"));
 					} catch (Exception e) {
-						AutorizacaoGI.tratarExcecoes(e);	
+						AutorizacaoGIAntigo.tratarExcecoes(e);	
 					}
 				}
 			}
@@ -891,7 +891,7 @@ public class Missoes extends Controller {
 	protected static void montarCombos() throws Exception {
 	 	Calendar ultimos7dias = Calendar.getInstance();
 	 	ultimos7dias.add(Calendar.DATE, -7);
-	 	CpOrgaoUsuario orgaoParametro = AutorizacaoGI.titular().getOrgaoUsuario();
+	 	CpOrgaoUsuario orgaoParametro = AutorizacaoGIAntigo.titular().getOrgaoUsuario();
 		Object[] parametros = { ultimos7dias,
 	 		orgaoParametro };
 		EstadoRequisicao[] estados = {EstadoRequisicao.AUTORIZADA, EstadoRequisicao.PROGRAMADA, EstadoRequisicao.EMATENDIMENTO, EstadoRequisicao.NAOATENDIDA, EstadoRequisicao.ATENDIDAPARCIALMENTE};
@@ -902,7 +902,7 @@ public class Missoes extends Controller {
 
 	@Before(priority = 200, only = { "listar", "listarFiltrado", "listarPorCondutor", "listarPorCondutorLogado" })
 	protected static void montarComboCondutor() throws Exception {
-	 	List<Condutor> condutores = (AutorizacaoGI.ehAdministradorMissaoPorComplexo() ? Condutor.listarEscaladosDoComplexo(true,AutorizacaoGI.recuperarComplexoAdministrador(),AutorizacaoGI.titular().getOrgaoUsuario()) : Condutor.listarEscalados(true,AutorizacaoGI.titular().getOrgaoUsuario())) ;
+	 	List<Condutor> condutores = (AutorizacaoGIAntigo.ehAdministradorMissaoPorComplexo() ? Condutor.listarEscaladosDoComplexo(true,AutorizacaoGIAntigo.recuperarComplexoAdministrador(),AutorizacaoGIAntigo.titular().getOrgaoUsuario()) : Condutor.listarEscalados(true,AutorizacaoGIAntigo.titular().getOrgaoUsuario())) ;
 	 	renderArgs.put("condutoresEscalados", condutores);
 	}
 
@@ -935,7 +935,7 @@ public class Missoes extends Controller {
 
 		if (veiculosDisp.equals("")) {
 			veiculosDisponiveis = listarVeiculosDisponiveis(idMissao,
-					AutorizacaoGI.titular().getOrgaoUsuario().getId(),
+					AutorizacaoGIAntigo.titular().getOrgaoUsuario().getId(),
 					dataSaida);
 		} else {
 			veiculosDisponiveis = listarVeiculosDisponiveis(veiculosDisp);
@@ -944,7 +944,7 @@ public class Missoes extends Controller {
 		StringBuffer htmlSelectVeiculos = new StringBuffer();
 		htmlSelectVeiculos.append("<select id='selveiculosdisponiveis' name='"
 				+ nomePropriedade.toString() + "' size='1' ");
-		if(AutorizacaoGI.ehAgente()) {
+		if(AutorizacaoGIAntigo.ehAgente()) {
 			htmlSelectVeiculos.append(selectDesabilitado);
 		}
 		htmlSelectVeiculos.append(">");
@@ -960,12 +960,12 @@ public class Missoes extends Controller {
 		htmlSelectVeiculos.append("</option>" + "</select>");
 
 		List<Condutor> condutoresDisponiveis = listarCondutoresDisponiveis(
-				idMissao, AutorizacaoGI.titular().getOrgaoUsuario().getId(),
+				idMissao, AutorizacaoGIAntigo.titular().getOrgaoUsuario().getId(),
 				dataSaida,inicioRapido);
 		StringBuffer htmlSelectCondutores = new StringBuffer();
 		htmlSelectCondutores.append("<select id='selcondutoresdisponiveis' name='"
 				+ nomePropriedade1.toString() + "' size='1' ");
-		if(AutorizacaoGI.ehAgente()) {
+		if(AutorizacaoGIAntigo.ehAgente()) {
 			htmlSelectCondutores.append(selectDesabilitado);
 		}
 		htmlSelectCondutores.append(">");
@@ -1053,19 +1053,19 @@ public class Missoes extends Controller {
 	
 	private static void checarComplexo(
 			 Long idComplexo) throws Exception {
-		if  (AutorizacaoGI.ehAdministradorMissaoPorComplexo()) {
-			if (! AutorizacaoGI.getComplexoAdministrado().getIdComplexo().equals(idComplexo)) {
+		if  (AutorizacaoGIAntigo.ehAdministradorMissaoPorComplexo()) {
+			if (! AutorizacaoGIAntigo.getComplexoAdministrado().getIdComplexo().equals(idComplexo)) {
 				try {
 					throw new Exception(Messages.get("missoes.autorizacaoGI.semAcesso.exception"));
 				} catch (Exception e) {
-					AutorizacaoGI.tratarExcecoes(e);	
+					AutorizacaoGIAntigo.tratarExcecoes(e);	
 				}
-			} else if (AutorizacaoGI.ehAprovador()) {
-				if (! AutorizacaoGI.recuperarComplexoPadrao().getIdComplexo().equals(idComplexo)) {
+			} else if (AutorizacaoGIAntigo.ehAprovador()) {
+				if (! AutorizacaoGIAntigo.recuperarComplexoPadrao().getIdComplexo().equals(idComplexo)) {
 					try {
 						throw new Exception(Messages.get("missoes.autorizacaoGI.semAcesso.exception"));
 					} catch (Exception e) {
-						AutorizacaoGI.tratarExcecoes(e);	
+						AutorizacaoGIAntigo.tratarExcecoes(e);	
 					}
 				}
 			}

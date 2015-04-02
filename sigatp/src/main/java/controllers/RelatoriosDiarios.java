@@ -10,10 +10,10 @@ import play.data.validation.Valid;
 import play.data.validation.Validation;
 import play.mvc.Controller;
 import play.mvc.With;
-import controllers.AutorizacaoGI.RoleAdmin;
-import controllers.AutorizacaoGI.RoleAdminFrota;
+import controllers.AutorizacaoGIAntigo.RoleAdmin;
+import controllers.AutorizacaoGIAntigo.RoleAdminFrota;
 
-@With(AutorizacaoGI.class)
+@With(AutorizacaoGIAntigo.class)
 public class RelatoriosDiarios extends Controller {
 	
 	public static void listarPorVeiculo(Long idVeiculo) {
@@ -43,7 +43,7 @@ public class RelatoriosDiarios extends Controller {
 	@RoleAdminFrota
 	public static void salvar(@Valid RelatorioDiario relatorioDiario) throws Exception{
 		if(Validation.hasErrors()){
-			List<Veiculo> veiculos = Veiculo.listarTodos(AutorizacaoGI.titular().getOrgaoUsuario());
+			List<Veiculo> veiculos = Veiculo.listarTodos(AutorizacaoGIAntigo.titular().getOrgaoUsuario());
 			String template;
 			template = relatorioDiario.id > 0 ? "@editar" : "@incluir";
 			renderTemplate(template, relatorioDiario,  veiculos);
