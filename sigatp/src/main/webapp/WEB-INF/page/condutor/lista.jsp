@@ -1,9 +1,10 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	buffer="64kb"%>
-<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
-<%@ taglib uri="http://localhost/jeetags" prefix="siga"%>
-<%@taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
+<%@ taglib prefix="siga" uri="http://localhost/jeetags" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 
 <siga:pagina titulo="Transportes">
 	<div class="gt-bd clearfix">
@@ -32,8 +33,8 @@
 									<td><c:if
 											test="${not empty item.telefonePessoal or not empty item.celularPessoal}">${item.telefonePessoal}<br />${item.celularPessoal}</c:if></td>
 									<td><c:if test="${not empty item.categoriaCNH.toString()}">
-		    						${item.categoriaCNH.toString()}
-		    						<br />
+		    								${item.categoriaCNH.toString()}
+		  									<br />
 											<c:if test="${item.vencimentoCNHExpirado}">
 												<span style="color: red; font-weight: bolder;"> <fmt:formatDate
 														pattern="dd/MM/yyyy"
@@ -41,18 +42,13 @@
 												</span>
 											</c:if>
 										</c:if></td>
-									<td><c:set var="editarUrl">
-											<c:url value="/app/condutor/editar">
-												<c:param name="id" value="${item.id}" />
-											</c:url>
-										</c:set> <a href="${editarUrl}">Editar</a></td>
-									<td><c:set var="urlExcluir">
-											<c:url value="/app/condutor/excluir">
-												<c:param name="id" value="${item.id}" />
-											</c:url>
-										</c:set> <a
-										onclick="javascript:return confirm('Tem certeza de que deseja excluir os dados deste condutor?');"
-										href="${urlExcluir}">Excluir</a></td>
+									<td>
+										<a href="${linkTo[CondutorController].edita[item.id]}">Editar</a>
+									</td>
+									<td>
+										<a href="${linkTo[CondutorController].exclui[item.id]}"
+										   onclick="javascript:return confirm('Tem certeza de que deseja excluir os dados deste condutor?');">Excluir</a>
+									</td>
 								</tr>
 							</c:forEach>
 						</table>
@@ -64,9 +60,8 @@
 				</c:otherwise>
 			</c:choose>
 			<div class="gt-table-buttons">
-				<c:url var="urlIncluir" value="/app/condutor/incluir" />
-				<a href="${urlIncluir}" id="botaoIncluirCondutor"
-					class="gt-btn-medium gt-btn-left">Incluir</a>
+				<a href="${linkTo[CondutorController].inclui}" id="botaoIncluirCondutor"
+					class="gt-btn-medium gt-btn-left"><fmt:message key="views.botoes.salvar"/></a>
 			</div>
 		</div>
 	</div>

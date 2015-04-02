@@ -1,5 +1,6 @@
 package br.gov.jfrj.siga.tp.vraptor;
 
+import java.io.ByteArrayInputStream;
 import java.util.List;
 
 import javax.persistence.EntityManager;
@@ -7,16 +8,18 @@ import javax.servlet.http.HttpServletRequest;
 
 import org.apache.log4j.Logger;
 
-import controllers.AutorizacaoGI.RoleAdmin;
-import controllers.AutorizacaoGI.RoleAdminMissao;
-import controllers.AutorizacaoGI.RoleAdminMissaoComplexo;
 import br.com.caelum.vraptor.Path;
 import br.com.caelum.vraptor.Resource;
 import br.com.caelum.vraptor.Result;
 import br.gov.jfrj.siga.dp.DpPessoa;
 import br.gov.jfrj.siga.dp.dao.CpDao;
+import br.gov.jfrj.siga.tp.model.CategoriaCNH;
 import br.gov.jfrj.siga.tp.model.Condutor;
+import br.gov.jfrj.siga.tp.model.ItemMenu;
 import br.gov.jfrj.siga.vraptor.SigaObjects;
+import controllers.AutorizacaoGI.RoleAdmin;
+import controllers.AutorizacaoGI.RoleAdminMissao;
+import controllers.AutorizacaoGI.RoleAdminMissaoComplexo;
 
 @Resource
 public class CondutorController extends TpController {
@@ -36,26 +39,32 @@ public class CondutorController extends TpController {
 	@RoleAdmin
 	@RoleAdminMissao
 	@RoleAdminMissaoComplexo
-	@Path("/app/condutor/editar")
+	@Path("/app/condutor/editar/{id}")
 	public void edita(Long id) {
 		try {
 			Condutor condutor = Condutor.AR.findById(id);
-			
+
 			if (condutor.getDpPessoa() != null) {
 				condutor.setDpPessoa(recuperaPessoa(condutor.getDpPessoa()));
 			} else {
 				condutor.setDpPessoa(new DpPessoa());
 			}
-//			MenuMontador.instance().RecuperarMenuCondutores(id, ItemMenu.DADOSCADASTRAIS);
+
 			result.include("condutor", condutor);
+			result.include("categoriaCNH", condutor.getCategoriaCNH().getDescricao());
+			result.include("listCategorias", CategoriaCNH.values());
+			result.include("imgArquivo", new ByteArrayInputStream(condutor.getConteudoimagemblob()));
 			
+			MenuMontador.instance(result).recuperarMenuCondutores(id, ItemMenu.DADOSCADASTRAIS);
+
 		} catch (Exception e) {
 			logger.error(e, e.getCause());
 		}
 	}
+	
 
 	@Path("/app/condutor/excluir")
-	public void exclui() {
+	public void exclui(Long id) {
 		System.out.println();
 	}
 
@@ -78,6 +87,17 @@ public class CondutorController extends TpController {
 			return null;
 		}
 	}
+	
+//	private void getImagem(Long id) {
+//	if (id != null) {
+//		// Pesquisar Imagem por id
+//		// Imagem arq = Imagem.newInstance(file);
+//		// renderBinary(new ByteArrayInputStream(arq.blob),
+//		// arq.nomeArquivo);
+//		Condutor condutor = Condutor.AR.findById(id);
+//		renderBinary(new ByteArrayInputStream(condutor.conteudoimagemblob),	condutor.conteudoimagemblob.length);
+//	}
+//}S
 
 	
 
