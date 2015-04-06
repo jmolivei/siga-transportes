@@ -45,12 +45,13 @@
 				     </table>
 				</div>
 			</c:when>
-	#{else}
-	<br/><h3>N&atilde;o existem escalas de trabalho cadastradas para este condutor.</h3>
-	#{/else}
-	<div class="gt-table-buttons">
-		<a href="@{EscalasDeTrabalho.incluir()}" class="gt-btn-medium gt-btn-left">&{'views.botoes.incluir'}</a>
-	</div>
+			<c:otherwise>
+				<br/>
+				<h3>N&atilde;o existem escalas de trabalho cadastradas para este condutor.</h3>
+			</c:otherwise>
+			<div class="gt-table-buttons">
+				<a href="${linkTo[EscalasDeTrabalho].editar[0]}" class="gt-btn-medium gt-btn-left"><fmt:message key="views.botoes.incluir" /></a>
+			</div>
 		</div>
 	</div>
 </siga:pagina>

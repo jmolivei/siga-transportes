@@ -28,7 +28,7 @@ import controllers.AutorizacaoGIAntigo;
 @Entity
 @Audited
 @Table(name="FinalidadeRequisicao", schema = "SIGATP")
-public class FinalidadeRequisicao extends Objeto {
+public class FinalidadeRequisicao extends TPObjeto {
 	
 	private static final long _ID_DA_FINALIDADE_OUTRA = -1;
 	public static ActiveRecord<FinalidadeRequisicao> AR = new ActiveRecord<>(FinalidadeRequisicao.class);
