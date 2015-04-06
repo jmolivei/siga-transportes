@@ -50,7 +50,6 @@ public class AutorizacaoGI {
 	}
 
 	public void incluir(String nomePermissao) {
-		this.statusPermissoes.put(nomePermissao, true);
 	}
 
 	public Boolean getStatusPermissao(String nomePermissao) {

@@ -45,20 +45,16 @@ public class AfastamentoController extends TpController {
 	@RoleAdmin
 	@RoleAdminMissao
 	@RoleAdminMissaoComplexo
-	@Path("/app/afastamento/incluir")
-	public void inclui(Long idCondutor) throws Exception {
-		Condutor condutor = Condutor.AR.findById(idCondutor);
-		Afastamento afastamento = new Afastamento();
-		afastamento.setCondutor(condutor);
-		result.include("afastamento", afastamento);
-	}
-
-	@RoleAdmin
-	@RoleAdminMissao
-	@RoleAdminMissaoComplexo
-	@Path("/app/afastamento/editar/{id}")
-	public void edita(Long id) throws Exception {
-		Afastamento afastamento = Afastamento.AR.findById(id);
+	@Path("/app/afastamento/editar/{idCondutor}/{id}")
+	public void edita(Long idCondutor, Long id) throws Exception {
+		Afastamento afastamento;
+		if (id == null || id == 0){
+			afastamento = new Afastamento();
+			Condutor condutor = Condutor.AR.findById(idCondutor);
+			afastamento.setCondutor(condutor);	
+		}else{
+			afastamento = Afastamento.AR.findById(id);
+		}
 		result.include("afastamento", afastamento);
 	}
 
@@ -80,11 +76,7 @@ public class AfastamentoController extends TpController {
 			
 			result.include("afastamento", afastamento);
 			result.include("condutores", condutores);			
-			if (afastamento.getId() == null){
-				result.redirectTo(this).edita(afastamento.getId());
-			}else{
-			result.redirectTo(this).inclui(afastamento.getId());
-			}
+			result.redirectTo(this).edita(afastamento.getCondutor().getId(), afastamento.getId());
 		} else {
 			afastamento.setCondutor(Condutor.AR.findById(afastamento.getCondutor().getId()));
 			List<Missao> missoes = Missao.retornarMissoes("condutor.id",
@@ -105,11 +97,7 @@ public class AfastamentoController extends TpController {
 				validator.add(new ValidationMessage(listaMissoes, "LinkErroCondutor"));
 				
 				result.include("afastamento", afastamento);
-				if (afastamento.getId() > 0){
-					result.redirectTo(this).edita(afastamento.getId());
-				}else{
-				result.redirectTo(this).inclui(afastamento.getId());
-				}
+				result.redirectTo(this).edita(afastamento.getCondutor().getId(), afastamento.getId());
 			} else {
 				afastamento.save();
 				result.redirectTo(this).lista(afastamento.getCondutor().getId());
@@ -120,10 +108,11 @@ public class AfastamentoController extends TpController {
 	@RoleAdmin
 	@RoleAdminMissao
 	@RoleAdminMissaoComplexo
+	@Path("/app/afastamento/excluir/{id}")
 	public void exclui(Long id) throws Exception {
 		Afastamento afastamento = Afastamento.AR.findById(id);
 		afastamento.delete();
-		lista(afastamento.getCondutor().getId());
+		result.redirectTo(this).lista(afastamento.getCondutor().getId());
 	}
 
 }
