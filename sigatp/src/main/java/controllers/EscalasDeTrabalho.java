@@ -39,12 +39,12 @@ public class EscalasDeTrabalho extends Controller {
     	Condutor condutor = Condutor.AR.findById(idCondutor);
     	
     	EscalaDeTrabalho escala = new EscalaDeTrabalho();
-    	escala.condutor = condutor;
+    	escala.setCondutor(condutor);
         
     	// resolver
     	DiaDaSemana diaSemana = DiaDaSemana.SEGUNDA;
     	DiaDeTrabalho diaTrabalho = new DiaDeTrabalho();
-    	escala.diasDeTrabalho.add(diaTrabalho);
+    	escala.getDiasDeTrabalho().add(diaTrabalho);
     	
     	render(escala, diaSemana);
     }
@@ -52,10 +52,10 @@ public class EscalasDeTrabalho extends Controller {
 	@RoleAdmin
 	@RoleAdminMissao   
 	@RoleAdminMissaoComplexo
-    public static void editar(Long id) {
-    	EscalaDeTrabalho escala = EscalaDeTrabalho.findById(id);
+    public static void editar(Long id) throws Exception {
+    	EscalaDeTrabalho escala = EscalaDeTrabalho.AR.findById(id);
     	
-    	MenuMontador.instance().RecuperarMenuCondutores(escala.condutor.getId(), ItemMenu.ESCALASDETRABALHO);
+    	MenuMontador.instance().RecuperarMenuCondutores(escala.getCondutor().getId(), ItemMenu.ESCALASDETRABALHO);
     	
     	DiaDaSemana diaSemana = DiaDaSemana.SEGUNDA;
     	
@@ -66,8 +66,8 @@ public class EscalasDeTrabalho extends Controller {
 	@RoleAdminMissao
 	@RoleAdminMissaoComplexo
 	public static void excluir(Long id) throws Exception {
-    	EscalaDeTrabalho escala = EscalaDeTrabalho.findById(id);
-    	Long idCondutor = escala.condutor.getId();
+    	EscalaDeTrabalho escala = EscalaDeTrabalho.AR.findById(id);
+    	Long idCondutor = escala.getCondutor().getId();
     	escala.delete();
     	
     	listarPorCondutor(idCondutor);
@@ -80,19 +80,19 @@ public class EscalasDeTrabalho extends Controller {
         List<EscalaDeTrabalho> escalas = EscalaDeTrabalho.buscarTodosPorCondutor(condutor);
         
         EscalaDeTrabalho escala = new EscalaDeTrabalho();
-        escala.condutor = condutor;
+        escala.setCondutor(condutor);;
     	DiaDaSemana diaSemana = DiaDaSemana.SEGUNDA;
-    	escala.dataVigenciaInicio = Calendar.getInstance();
+    	escala.setDataVigenciaInicio(Calendar.getInstance());
     	DiaDeTrabalho diaTrabalho = new DiaDeTrabalho();
-    	escala.diasDeTrabalho.add(diaTrabalho);
+    	escala.getDiasDeTrabalho().add(diaTrabalho);
        
         if (escalas.size() > 0 &&
-        	(escalas.get(0).dataVigenciaFim == null ||
-        	 escalas.get(0).dataVigenciaFim.after(Calendar.getInstance()))
+        	(escalas.get(0).getDataVigenciaFim() == null ||
+        	 escalas.get(0).getDataVigenciaFim().after(Calendar.getInstance()))
         	) {
         	 escala = escalas.get(0);
         } else {
-        	if (escalas.size() > 0 && ehMesmoDia(escalas.get(0).dataVigenciaFim,Calendar.getInstance())) {
+        	if (escalas.size() > 0 && ehMesmoDia(escalas.get(0).getDataVigenciaFim(),Calendar.getInstance())) {
         		escalas.add(0,escala);
         	}
         }
@@ -105,12 +105,12 @@ public class EscalasDeTrabalho extends Controller {
 	@RoleAdminMissao
 	@RoleAdminMissaoComplexo
     public static void finalizar(@Valid EscalaDeTrabalho escala) throws Exception { 
-		escala.dataVigenciaFim = Calendar.getInstance();
-    	escala.dataVigenciaFim.set(Calendar.HOUR_OF_DAY, 23);
-    	escala.dataVigenciaFim.set(Calendar.MINUTE, 59);
-    	escala.dataVigenciaFim.set(Calendar.SECOND, 59);
+		escala.setDataVigenciaFim(Calendar.getInstance());
+    	escala.getDataVigenciaFim().set(Calendar.HOUR_OF_DAY, 23);
+    	escala.getDataVigenciaFim().set(Calendar.MINUTE, 59);
+    	escala.getDataVigenciaFim().set(Calendar.SECOND, 59);
 		escala.save();
-		listarPorCondutor(escala.condutor.getId());
+		listarPorCondutor(escala.getCondutor().getId());
 	}
     
 	@RoleAdmin
@@ -121,22 +121,22 @@ public class EscalasDeTrabalho extends Controller {
         	String diaDaSemana = (String) params.get("novaEscala.diasDeTrabalho[0].diaEntrada", String.class);
         	if (diaDaSemana == null) {
         		Validation.addError("diasDeTrabalho", "escalasDeTrabalho.diaDaSemana.validation");
-        		novaEscala.diasDeTrabalho = null;
+        		novaEscala.setDiasDeTrabalho(null);
         	}	
         }
         
         EscalaDeTrabalho escalaAntiga = new EscalaDeTrabalho();
-        escalaAntiga.diasDeTrabalho = new ArrayList<DiaDeTrabalho>();
-        escalaAntiga.diasDeTrabalho.addAll(escala.diasDeTrabalho);
-        escalaAntiga.id = escala.id;
+        escalaAntiga.setDiasDeTrabalho(new ArrayList<DiaDeTrabalho>());
+        escalaAntiga.getDiasDeTrabalho().addAll(escala.getDiasDeTrabalho());
+        escalaAntiga.setId(escala.getId());
 
         if(! Validation.hasErrors()) {
-	        escala.diasDeTrabalho = new ArrayList<DiaDeTrabalho>();
-	        escala.diasDeTrabalho.addAll(novaEscala.diasDeTrabalho);
+	        escala.setDiasDeTrabalho(new ArrayList<DiaDeTrabalho>());
+	        escala.getDiasDeTrabalho().addAll(novaEscala.getDiasDeTrabalho());
         }
         
         if(! Validation.hasErrors()) {
-        	validarEscala(escala.diasDeTrabalho);
+        	validarEscala(escala.getDiasDeTrabalho());
         }
         
         if(! Validation.hasErrors()) {
@@ -148,15 +148,15 @@ public class EscalasDeTrabalho extends Controller {
                 System.out.println(error.message());
                 System.out.println(error.getKey());
             } */
-        	MenuMontador.instance().RecuperarMenuCondutores(escala.condutor.getId(), ItemMenu.ESCALASDETRABALHO);
+        	MenuMontador.instance().RecuperarMenuCondutores(escala.getCondutor().getId(), ItemMenu.ESCALASDETRABALHO);
         	
-            Condutor condutor = escala.condutor;
+            Condutor condutor = escala.getCondutor();
             
         	List<EscalaDeTrabalho> escalas = EscalaDeTrabalho.buscarTodosPorCondutor(condutor);
         	
         	for (EscalaDeTrabalho escalaDeTrabalho : escalas) {
-        		if (escala.id == escalaDeTrabalho.id) {
-        			escalaDeTrabalho.diasDeTrabalho = escalaAntiga.diasDeTrabalho;
+        		if (escala.getId() == escalaDeTrabalho.getId()) {
+        			escalaDeTrabalho.setDiasDeTrabalho(escalaAntiga.getDiasDeTrabalho());
         		}
 			}
         	
@@ -165,14 +165,14 @@ public class EscalasDeTrabalho extends Controller {
 	    	renderTemplate("@listarPorCondutor",escalas,condutor,escala,diaSemana);
         }
         
-        if (ehMesmoDia(escala.dataVigenciaInicio,Calendar.getInstance())) {
-        	if (escala.id > 0) { 
+        if (ehMesmoDia(escala.getDataVigenciaInicio(), Calendar.getInstance())) {
+        	if (escala.getId() > 0) { 
         	 	DiaDeTrabalho.delete("escalaDeTrabalho", escala);
         	} 
         	
         	escala.save();
     		
-    		for (DiaDeTrabalho diaDeTrabalho : escala.diasDeTrabalho) {
+    		for (DiaDeTrabalho diaDeTrabalho : escala.getDiasDeTrabalho()) {
                 DiaDeTrabalho diaDeTrabalhoNovo = new DiaDeTrabalho();
                 diaDeTrabalhoNovo.diaEntrada = diaDeTrabalho.diaEntrada;
                 diaDeTrabalhoNovo.diaSaida = diaDeTrabalho.diaSaida;
@@ -183,24 +183,24 @@ public class EscalasDeTrabalho extends Controller {
     		}
     		
         } else {
-        	escala.dataVigenciaFim = Calendar.getInstance();
-        	escala.dataVigenciaFim.add(Calendar.DATE,-1);
-        	escala.dataVigenciaFim.set(Calendar.HOUR_OF_DAY, 23);
-        	escala.dataVigenciaFim.set(Calendar.MINUTE, 59);
-        	escala.dataVigenciaFim.set(Calendar.SECOND, 59);
+        	escala.setDataVigenciaFim(Calendar.getInstance());
+        	escala.getDataVigenciaFim().add(Calendar.DATE,-1);
+        	escala.getDataVigenciaFim().set(Calendar.HOUR_OF_DAY, 23);
+        	escala.getDataVigenciaFim().set(Calendar.MINUTE, 59);
+        	escala.getDataVigenciaFim().set(Calendar.SECOND, 59);
            	escala.save();
             JPA.em().detach(escala);
 
             //EscalaDeTrabalho novaEscala = new EscalaDeTrabalho();
-        	novaEscala.condutor = escala.condutor;
-        	novaEscala.dataVigenciaInicio = Calendar.getInstance();
-        	novaEscala.dataVigenciaInicio.set(Calendar.HOUR_OF_DAY, 0);
-        	novaEscala.dataVigenciaInicio.set(Calendar.MINUTE, 0);
-        	novaEscala.dataVigenciaInicio.set(Calendar.SECOND, 0);
-        	novaEscala.diasDeTrabalho = escala.diasDeTrabalho;
+        	novaEscala.setCondutor(escala.getCondutor());
+        	novaEscala.setDataVigenciaInicio(Calendar.getInstance());
+        	novaEscala.getDataVigenciaInicio().set(Calendar.HOUR_OF_DAY, 0);
+        	novaEscala.getDataVigenciaInicio().set(Calendar.MINUTE, 0);
+        	novaEscala.getDataVigenciaInicio().set(Calendar.SECOND, 0);
+        	novaEscala.setDiasDeTrabalho(escala.getDiasDeTrabalho());
         	novaEscala.save();
         	
-    		for (DiaDeTrabalho diaDeTrabalho : novaEscala.diasDeTrabalho) {
+    		for (DiaDeTrabalho diaDeTrabalho : novaEscala.getDiasDeTrabalho()) {
                 DiaDeTrabalho diaDeTrabalhoNovo = new DiaDeTrabalho();
                 diaDeTrabalhoNovo.diaEntrada = diaDeTrabalho.diaEntrada;
                 diaDeTrabalhoNovo.diaSaida = diaDeTrabalho.diaSaida;

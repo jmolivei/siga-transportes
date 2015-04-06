@@ -134,9 +134,9 @@ public class Relatorios extends Controller {
 			SimpleDateFormat formatoData1 = new SimpleDateFormat("yyyy,M,d,H,m,s");
 			
 			Calendar dataHoraInicioTemp = Calendar.getInstance();
-			Calendar dataHoraFimTemp = recuperarDataEHora(escala.dataVigenciaInicio, HORA_FINAL_DIA, MINUTO_FINAL_DIA,SEGUNDO_FINAL_DIA);
+			Calendar dataHoraFimTemp = recuperarDataEHora(escala.getDataVigenciaInicio(), HORA_FINAL_DIA, MINUTO_FINAL_DIA,SEGUNDO_FINAL_DIA);
 			
-			for (DiaDeTrabalho dia: escala.diasDeTrabalho) {
+			for (DiaDeTrabalho dia: escala.getDiasDeTrabalho()) {
 				if (diaDePesquisa.equals(dia.diaEntrada)) {
 					dataHoraInicioTemp = recuperarDataEHora(dataHoraPesquisa,dia.horaEntrada.get(Calendar.HOUR_OF_DAY), dia.horaEntrada.get(Calendar.MINUTE),dia.horaEntrada.get(Calendar.SECOND));
 					if (diaDePesquisa.equals(dia.diaSaida)) {
@@ -146,7 +146,7 @@ public class Relatorios extends Controller {
 					}
 					
 					registros += delim;			
-					registros += "[ \'" + "Escalas" + "\', \'" + escala.condutor.getNome() + "\', new Date(" +	formatoData1.format(dataHoraInicioTemp.getTime()) + "), new Date(";
+					registros += "[ \'" + "Escalas" + "\', \'" + escala.getCondutor().getNome() + "\', new Date(" +	formatoData1.format(dataHoraInicioTemp.getTime()) + "), new Date(";
 					registros += formatoData1.format(dataHoraFimTemp.getTime()) + ") ]";
 					delim = ", ";
 				}
@@ -357,7 +357,7 @@ public class Relatorios extends Controller {
 					}
 					else if(classe.equals(EscalaDeTrabalho.class)) {
 						EscalaDeTrabalho obj = (EscalaDeTrabalho)objeto;
-						return obj.condutor.getCpOrgaoUsuario().getId().equals(AutorizacaoGIAntigo.titular().getOrgaoUsuario().getId());
+						return obj.getCondutor().getCpOrgaoUsuario().getId().equals(AutorizacaoGIAntigo.titular().getOrgaoUsuario().getId());
 					}
 					else if(classe.equals(ServicoVeiculo.class)) {
 						ServicoVeiculo obj = (ServicoVeiculo)objeto;

@@ -36,7 +36,6 @@ import br.gov.jfrj.siga.dp.CpOrgaoUsuario;
 import br.gov.jfrj.siga.dp.DpLotacao;
 import br.gov.jfrj.siga.dp.DpPessoa;
 import br.gov.jfrj.siga.model.ActiveRecord;
-import br.gov.jfrj.siga.model.Objeto;
 import br.gov.jfrj.siga.tp.util.PerguntaSimNao;
 import br.jus.jfrj.siga.uteis.UpperCase;
 
@@ -45,7 +44,7 @@ import br.jus.jfrj.siga.uteis.UpperCase;
 @Audited
 @Table(schema = "SIGATP")
 @SequenceGenerator(name = "hibernate_sequence_generator", sequenceName="SIGATP.hibernate_sequence")
-public class Condutor extends Objeto implements Comparable<Condutor> {
+public class Condutor extends TPObjeto implements Comparable<Condutor> {
 	
 	public static ActiveRecord<Condutor> AR = new ActiveRecord<>(Condutor.class);
 
@@ -291,7 +290,7 @@ public class Condutor extends Objeto implements Comparable<Condutor> {
 		hqlVigentes.append(dataFormatadaOracle);
 		hqlVigentes.append(")) ");
 		hqlVigentes.append("order by dataVigenciaInicio desc ");
-		List<EscalaDeTrabalho> escalasDeTrabalho = EscalaDeTrabalho.find(hqlVigentes.toString(),condutor).fetch();
+		List<EscalaDeTrabalho> escalasDeTrabalho = EscalaDeTrabalho.AR.find(hqlVigentes.toString(),condutor).fetch();
 		if (escalasDeTrabalho.size() == 0) {
 			return false;
 		} 
@@ -299,7 +298,7 @@ public class Condutor extends Objeto implements Comparable<Condutor> {
 		escalaVigente = escalasDeTrabalho.get(0);
 		
 		if (escalasDeTrabalho.size() > 1) {
-			throw new Exception(Messages.get("condutor.escalasDeTrabalho.exception", escalasDeTrabalho.get(0).condutor.id));
+			throw new Exception(Messages.get("condutor.escalasDeTrabalho.exception", escalasDeTrabalho.get(0).getCondutor().id));
 		}
 
 		return escalaVigente.estaEscaladoNesteDia(dataMissao);
@@ -487,4 +486,7 @@ public class Condutor extends Objeto implements Comparable<Condutor> {
 		this.conteudoimagemblob = conteudoimagemblob;
 	}
 	
+	public String formatDateDDMMYYYY(Calendar cal) {
+		return new SimpleDateFormat("dd/MM/yyyy").format(cal.getTime());
+	}
 }
