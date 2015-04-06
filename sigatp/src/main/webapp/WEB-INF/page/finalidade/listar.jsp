@@ -2,7 +2,9 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
 <%@ taglib uri="http://localhost/jeetags" prefix="siga" %>
 
-<fmt:message key="${erros}" />
+<c:if test="${erros}">
+	<fmt:message key="${erros}" />
+</c:if>
 
 <siga:pagina titulo="Transportes">
 	<div class="gt-bd clearfix">

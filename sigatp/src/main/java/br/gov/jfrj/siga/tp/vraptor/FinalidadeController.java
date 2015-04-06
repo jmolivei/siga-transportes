@@ -38,7 +38,7 @@ public class FinalidadeController extends TpController {
     	MenuMontador.instance(result).recuperarMenuFinalidades(true);
     	List<FinalidadeRequisicao> finalidades = FinalidadeRequisicao.listarTodos(getTitular().getOrgaoUsuario());
    		
-    	if(mensagem != null){
+    	if(null != mensagem){
     		Validation.addError("finalidade", mensagem);
     		result.include("erros", mensagem);
     	}
@@ -68,9 +68,8 @@ public class FinalidadeController extends TpController {
     	if(null != finalidade.getId() && finalidade.getId() > 0) {
     		finalidade.checarProprietario(getTitular().getOrgaoUsuario());
     		result.include(ACTION, ACTION_EDITAR);
-    	} else {
+    	} else
     		result.include(ACTION, ACTION_INCLUIR);
-    	}
     	
     	result.include("finalidade", finalidade);
     }
@@ -83,9 +82,8 @@ public class FinalidadeController extends TpController {
 		FinalidadeRequisicao finalidadeEncontrada = buscar(finalidade.getId());
 		finalidadeEncontrada.setDescricao(finalidade.getDescricao());
 		
-		if(null != finalidadeEncontrada.getId() && finalidadeEncontrada.getId() > 0) {
+		if(null != finalidadeEncontrada.getId() && finalidadeEncontrada.getId() > 0)
 			finalidadeEncontrada.checarProprietario(getTitular().getOrgaoUsuario());
-		}
 		
     	//validation.valid(finalidade);
     	
@@ -110,9 +108,8 @@ public class FinalidadeController extends TpController {
         finalidade.checarProprietario(getTitular().getOrgaoUsuario());
 		EntityTransaction tx = FinalidadeRequisicao.AR.em().getTransaction();  
 		
-		if (! tx.isActive()) {
+		if (! tx.isActive())
 			tx.begin();
-		}
 
 		try {
 		    finalidade.delete();    
@@ -120,11 +117,11 @@ public class FinalidadeController extends TpController {
 			
 		} catch(PersistenceException ex) {
 			tx.rollback();
-			if (ex.getCause().getCause().getMessage().contains("o de integridade")) {
+			if (ex.getCause().getCause().getMessage().contains("o de integridade"))
 				result.redirectTo(this).listar("finalidadeRequisicao.vinculada.requisicao");
-			} else {
+			else
 				result.redirectTo(this).listar(ex.getMessage());
-			}
+			
 		} catch(Exception ex) {
 			tx.rollback();
 			result.redirectTo(this).listar(ex.getMessage());
@@ -134,10 +131,8 @@ public class FinalidadeController extends TpController {
 	}
 	
 	private FinalidadeRequisicao buscar(final Long id) throws Exception {
-		
-		if(null != id && id > 0) {
+		if(null != id && id > 0)
 			return FinalidadeRequisicao.AR.findById(id);
-		}
 		
 		return new FinalidadeRequisicao();
 	}
