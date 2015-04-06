@@ -1,5 +1,6 @@
 package br.gov.jfrj.siga.tp.model;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Iterator;
@@ -15,38 +16,38 @@ import javax.persistence.NoResultException;
 import javax.persistence.Query;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
-import javax.validation.constraints.NotNull;
 
 import org.hibernate.envers.Audited;
 
 import play.data.binding.As;
-import play.data.validation.Required;
-import play.db.jpa.GenericModel;
 import play.db.jpa.JPA;
 import play.modules.br.jus.jfrj.siga.uteis.validadores.validarAnoData.ValidarAnoData;
+import br.gov.jfrj.siga.model.ActiveRecord;
 
 
 @SuppressWarnings("serial")
 @Entity
 @Audited
 @Table(schema = "SIGATP")
-public class Plantao extends GenericModel implements Comparable<Plantao>  {
+public class Plantao extends TPObjeto implements Comparable<Plantao> {
 	
+	public static ActiveRecord<Plantao> AR = new ActiveRecord<>(Plantao.class);
+
 	@Id
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "hibernate_sequence_generator") @SequenceGenerator(name = "hibernate_sequence_generator", sequenceName="SIGATP.hibernate_sequence") 
-	public long id;
+	public Long id;
 		
-	@Required
+//	@Required
 	@ManyToOne(cascade=CascadeType.ALL)
-	@NotNull
+//	@NotNull
 	public Condutor condutor;
 	
-	@Required
+//	@Required
 	@As(lang={"*"}, value={"dd/MM/yyyy HH:mm"})
 	@ValidarAnoData(descricaoCampo="Data/Hora Inicio")
 	public Calendar dataHoraInicio;
 	
-	@Required
+//	@Required
 	@As(lang={"*"}, value={"dd/MM/yyyy HH:mm"})
 	@ValidarAnoData(descricaoCampo="Data/Hora Fim")
 	public Calendar dataHoraFim;
@@ -76,12 +77,12 @@ public class Plantao extends GenericModel implements Comparable<Plantao>  {
 	}
 	
 	public static List<Plantao> buscarTodosPorCondutor(Condutor condutor){
-		return Plantao.find("CONDUTOR_ID = ? ORDER BY DATAHORAINICIO DESC", condutor.getId()).fetch();
+		return Plantao.AR.find("CONDUTOR_ID = ? ORDER BY DATAHORAINICIO DESC", condutor.getId()).fetch();
 	}
 	
 	
 	public static List<Plantao> buscarPorCondutor(Long IdCondutor, Calendar dataHoraInicio){
-		return Plantao.find("condutor.id = ? AND dataHoraInicio <= ? AND (dataHoraFim is null OR dataHoraFim >= ?) order by dataHoraInicio", IdCondutor, dataHoraInicio, dataHoraInicio).fetch(); 
+		return Plantao.AR.find("condutor.id = ? AND dataHoraInicio <= ? AND (dataHoraFim is null OR dataHoraFim >= ?) order by dataHoraInicio", IdCondutor, dataHoraInicio, dataHoraInicio).fetch(); 
 	}
 	
 	
@@ -204,8 +205,69 @@ WHERE p.timestamp = (SELECT MAX(ee.timestamp) FROM Entity ee WHERE ee.entityId =
 	public static List<Plantao> buscarTodosPorReferencia(String referencia) {
 		List<Plantao> retorno;
 		
-		retorno = Plantao.find("referencia", referencia).fetch();
+		retorno = Plantao.AR.find("referencia", referencia).fetch();
 		
 		return retorno;
+	}
+
+	public Long getId() {
+		return id;
+	}
+
+	public void setId(Long id) {
+		this.id = id;
+	}
+
+	public Calendar getDataHoraInicio() {
+		return dataHoraInicio;
+	}
+
+	public void setDataHoraInicio(Calendar dataHoraInicio) {
+		this.dataHoraInicio = dataHoraInicio;
+	}
+
+	public Calendar getDataHoraFim() {
+		return dataHoraFim;
+	}
+
+	public void setDataHoraFim(Calendar dataHoraFim) {
+		this.dataHoraFim = dataHoraFim;
+	}
+
+	public Condutor getCondutor() {
+		return condutor;
+	}
+
+	public void setCondutor(Condutor condutor) {
+		this.condutor = condutor;
+	}
+
+	public String getReferencia() {
+		return referencia;
+	}
+
+	public void setReferencia(String referencia) {
+		this.referencia = referencia;
+	}
+	
+	//TODO  HD ARRUMARRR!
+	public String getDataHoraInicioFormatada() {
+		return formatarData(getDataHoraInicio());
+	}
+	
+	public String getDataHoraFimFormatada() {
+		return formatarData(getDataHoraFim());
+	}
+	
+	private static String formatarData(Calendar data) {
+		return String.format("%02d",data.get(Calendar.DAY_OF_MONTH)) + "/" + String.format("%02d",data.get(Calendar.MONTH) + 1) + "/" + String.format("%04d",data.get(Calendar.YEAR));
+	}
+	
+	public String formatDateDDMMYYYY(Calendar cal) {
+		return new SimpleDateFormat("dd/MM/yyyy").format(cal.getTime());
+	}
+	
+	public String formatDateDDMMYYYYHHMM(Calendar cal) {
+		return new SimpleDateFormat("dd/MM/yyyy HH:MM").format(cal.getTime());
 	}
 }
