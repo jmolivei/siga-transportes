@@ -2,12 +2,14 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
 <%@ taglib uri="http://localhost/jeetags" prefix="siga" %>
 
-﻿${erros}
+<c:if test="${erros}">
+	<fmt:message key="${erros}" />
+</c:if>
 
 <siga:pagina titulo="Transportes">
 	<div class="gt-bd clearfix">
 		<div class="gt-content clearfix">
-			<h2>Finalidades</h2>
+			<h2><fmt:message key="finalidades" /></h2>
 			<%-- #{include 'Finalidades/menu.html' /} --%>
 			<c:choose>
 				<c:when test="${finalidades.size() > 0}">
@@ -31,7 +33,7 @@
 			</c:choose>
 		
 			<div class="gt-table-buttons">
-				<a href="${linkTo[FinalidadeController].incluir}" id="botaoIncluirFinalidade" class="gt-btn-medium gt-btn-left"><fmt:message key="views.botoes.incluir" /></a>
+				<a href="${linkTo[FinalidadeController].editar[0]}" id="botaoIncluirFinalidade" class="gt-btn-medium gt-btn-left"><fmt:message key="views.botoes.incluir" /></a>
 			</div>
 		</div>
 	</div>

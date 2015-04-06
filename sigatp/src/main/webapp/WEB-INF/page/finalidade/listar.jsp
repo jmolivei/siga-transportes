@@ -2,12 +2,14 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
 <%@ taglib uri="http://localhost/jeetags" prefix="siga" %>
 
-${erros}
+<c:if test="${erros}">
+	<fmt:message key="${erros}" />
+</c:if>
 
 <siga:pagina titulo="Transportes">
 	<div class="gt-bd clearfix">
 		<div class="gt-content clearfix">
-			<h2>Finalidades</h2>
+			<h2><fmt:message key="finalidades" /></h2>
 			<%-- #{include 'Finalidades/menu.html' /} --%>
 			<%-- #{if finalidades.size() > 0} --%>
 			<c:choose>
@@ -26,8 +28,8 @@ ${erros}
 								<c:forEach items="${finalidades}" var="item">
 							   		<tr>
 						    	    	<td>${item.descricao}</td>
-						    			<td><a href="@{Finalidades.editar(item.id)}">Editar</a></td>
-						    			<td><a onclick="javascript:return confirm('Tem certeza de que deseja excluir os dados desta finalidade?');" href="@{Finalidades.excluir(item.id)}">Excluir</a></td>
+						    			<td><a href="${linkTo[FinalidadeController].editar[item.id]}"><fmt:message key="views.botoes.editar" /></a></td>
+						    			<td><a href="${linkTo[FinalidadeController].excluir[item.id]}" onclick="javascript:return confirm('Tem certeza de que deseja excluir os dados desta finalidade?');"><fmt:message key="views.botoes.excluir" /></a></td>
 									</tr>
 								</c:forEach>
 							</tbody>
@@ -42,7 +44,7 @@ ${erros}
 			</c:choose>
 			
 			<div class="gt-table-buttons">
-				<a href="${linkTo[FinalidadeController].incluir}" id="botaoIncluirFinalidade" class="gt-btn-medium gt-btn-left"><fmt:message key="views.botoes.incluir" /></a>
+				<a href="${linkTo[FinalidadeController].editar[0]}" id="botaoIncluirFinalidade" class="gt-btn-medium gt-btn-left"><fmt:message key="views.botoes.incluir" /></a>
 			</div>
 		</div>
 	</div>

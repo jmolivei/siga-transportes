@@ -48,6 +48,7 @@ import br.jus.jfrj.siga.uteis.SiglaDocumentoType;
 //@Table(name = "VEICULO_2", schema="SIGAOR")
 @Audited
 @Table(schema = "SIGATP")
+public class Missao extends  TPObjeto implements Comparable<Missao>,SequenceMethods {
 	
 	public static ActiveRecord<Missao> AR = new ActiveRecord<>(Missao.class);
 	

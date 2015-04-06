@@ -3,8 +3,14 @@ package br.gov.jfrj.siga.tp.vraptor;
 import java.util.List;
 
 import javax.persistence.EntityManager;
+import javax.persistence.EntityTransaction;
+import javax.persistence.PersistenceException;
 import javax.servlet.http.HttpServletRequest;
 
+import controllers.AutorizacaoGIAntigo;
+import controllers.AutorizacaoGIAntigo.RoleAdmin;
+import controllers.AutorizacaoGIAntigo.RoleAdminMissao;
+import controllers.AutorizacaoGIAntigo.RoleAdminMissaoComplexo;
 import play.data.validation.Validation;
 import br.com.caelum.vraptor.Path;
 import br.com.caelum.vraptor.Resource;
@@ -24,15 +30,15 @@ public class FinalidadeController extends TpController {
 	}
 
 	private static final String ACTION = "action";
-	private static final String ACTION_EDITAR = "Editar";
-	private static final String ACTION_INCLUIR = "Incluir";
+	private static final String ACTION_EDITAR = "views.botoes.editar";
+	private static final String ACTION_INCLUIR = "views.botoes.incluir";
 
 	@Path("/app/finalidade/listar")
 	public void listar(String mensagem) {
     	MenuMontador.instance(result).recuperarMenuFinalidades(true);
     	List<FinalidadeRequisicao> finalidades = FinalidadeRequisicao.listarTodos(getTitular().getOrgaoUsuario());
    		
-    	if(mensagem != null){
+    	if(null != mensagem){
     		Validation.addError("finalidade", mensagem);
     		result.include("erros", mensagem);
     	}
@@ -41,7 +47,7 @@ public class FinalidadeController extends TpController {
     }
 	
 	public void listar() {
-		listar(null);
+		result.redirectTo(this).listar(null);
 	}
 	
 	@Path("/app/finalidade/listarTodas")
@@ -55,24 +61,17 @@ public class FinalidadeController extends TpController {
 //	@RoleAdmin
 //	@RoleAdminMissao
 //	@RoleAdminMissaoComplexo
-	@Path("/app/finalidade/incluir")
-	public FinalidadeRequisicao incluir() {
-    	FinalidadeRequisicao finalidade = new FinalidadeRequisicao();
-    	result.include(ACTION, ACTION_INCLUIR);
-
-     	return finalidade;
-    }
-	
-//	@RoleAdmin
-//	@RoleAdminMissao
-//	@RoleAdminMissaoComplexo
 	@Path("/app/finalidade/editar/{id}")
-	public FinalidadeRequisicao editar(Long id) throws Exception {
-    	FinalidadeRequisicao finalidade = FinalidadeRequisicao.AR.findById(id);
-    	finalidade.checarProprietario(getTitular().getOrgaoUsuario());
-    	result.include(ACTION, ACTION_EDITAR);
+	public void editar(Long id) throws Exception {
+    	FinalidadeRequisicao finalidade = buscar(id);
     	
-    	return finalidade;
+    	if(null != finalidade.getId() && finalidade.getId() > 0) {
+    		finalidade.checarProprietario(getTitular().getOrgaoUsuario());
+    		result.include(ACTION, ACTION_EDITAR);
+    	} else
+    		result.include(ACTION, ACTION_INCLUIR);
+    	
+    	result.include("finalidade", finalidade);
     }
 	
 //	@RoleAdmin
@@ -80,21 +79,61 @@ public class FinalidadeController extends TpController {
 //	@RoleAdminMissaoComplexo
 	@Path("/app/finalidade/salvar/{finalidade}")
 	public void salvar(FinalidadeRequisicao finalidade) throws Exception {
-		if(!finalidade.getId().equals(new Long(0))) {
-			finalidade.checarProprietario(getTitular().getOrgaoUsuario());
-		}
+		FinalidadeRequisicao finalidadeEncontrada = buscar(finalidade.getId());
+		finalidadeEncontrada.setDescricao(finalidade.getDescricao());
+		
+		if(null != finalidadeEncontrada.getId() && finalidadeEncontrada.getId() > 0)
+			finalidadeEncontrada.checarProprietario(getTitular().getOrgaoUsuario());
 		
     	//validation.valid(finalidade);
     	
-    	finalidade.setCpOrgaoOrigem(getTitular().getOrgaoUsuario());
+    	finalidadeEncontrada.setCpOrgaoOrigem(getTitular().getOrgaoUsuario());
 		
     	if(Validation.hasErrors()) {
-			result.include(ACTION, (finalidade.getId() == 0 ? ACTION_INCLUIR : ACTION_EDITAR));
-			result.include("finalidade", finalidade);
+    		result.include("finalidade", finalidadeEncontrada);
+			result.include(ACTION, (finalidadeEncontrada.getId() == 0 ? ACTION_INCLUIR : ACTION_EDITAR));
 			return;
 		}
 
-	 	finalidade.save();
-		listar();
+	 	finalidadeEncontrada.save();
+	 	listar();
     }
+	
+	//@RoleAdmin
+	//@RoleAdminMissao
+	//@RoleAdminMissaoComplexo
+	@Path("/app/finalidade/excluir/{id}")
+    public void excluir(Long id) throws Exception  { 
+        FinalidadeRequisicao finalidade = FinalidadeRequisicao.AR.findById(id);
+        finalidade.checarProprietario(getTitular().getOrgaoUsuario());
+		EntityTransaction tx = FinalidadeRequisicao.AR.em().getTransaction();  
+		
+		if (! tx.isActive())
+			tx.begin();
+
+		try {
+		    finalidade.delete();    
+			tx.commit();
+			
+		} catch(PersistenceException ex) {
+			tx.rollback();
+			if (ex.getCause().getCause().getMessage().contains("o de integridade"))
+				result.redirectTo(this).listar("finalidadeRequisicao.vinculada.requisicao");
+			else
+				result.redirectTo(this).listar(ex.getMessage());
+			
+		} catch(Exception ex) {
+			tx.rollback();
+			result.redirectTo(this).listar(ex.getMessage());
+		}
+
+		listar();
+	}
+	
+	private FinalidadeRequisicao buscar(final Long id) throws Exception {
+		if(null != id && id > 0)
+			return FinalidadeRequisicao.AR.findById(id);
+		
+		return new FinalidadeRequisicao();
+	}
 }
