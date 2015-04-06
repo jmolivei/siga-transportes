@@ -46,7 +46,7 @@ public class FinalidadeController extends TpController {
     	result.include("finalidades", finalidades);
     }
 	
-	private void listar() {
+	public void listar() {
 		result.redirectTo(this).listar(null);
 	}
 	
@@ -63,10 +63,9 @@ public class FinalidadeController extends TpController {
 //	@RoleAdminMissaoComplexo
 	@Path("/app/finalidade/editar/{id}")
 	public void editar(Long id) throws Exception {
-    	FinalidadeRequisicao finalidade = new FinalidadeRequisicao();
+    	FinalidadeRequisicao finalidade = buscar(id);
     	
-    	if(id > 0) {
-    		finalidade = FinalidadeRequisicao.AR.findById(id);
+    	if(null != finalidade.getId() && finalidade.getId() > 0) {
     		finalidade.checarProprietario(getTitular().getOrgaoUsuario());
     		result.include(ACTION, ACTION_EDITAR);
     	} else {
@@ -75,37 +74,34 @@ public class FinalidadeController extends TpController {
     	
     	result.include("finalidade", finalidade);
     }
-
-	@Path("/app/finalidade/incluir")
-	public void incluir() throws Exception {
-		result.redirectTo(this).editar(new Long(0));
-	}
 	
 //	@RoleAdmin
 //	@RoleAdminMissao
 //	@RoleAdminMissaoComplexo
-	@Path("/app/finalidade/salvar")
+	@Path("/app/finalidade/salvar/{finalidade}")
 	public void salvar(FinalidadeRequisicao finalidade) throws Exception {
+		FinalidadeRequisicao finalidadeEncontrada = buscar(finalidade.getId());
+		finalidadeEncontrada.setDescricao(finalidade.getDescricao());
 		
-		if(null != finalidade.getId() && !finalidade.getId().equals(new Long(0))) {
-			finalidade.checarProprietario(getTitular().getOrgaoUsuario());
+		if(null != finalidadeEncontrada.getId() && finalidadeEncontrada.getId() > 0) {
+			finalidadeEncontrada.checarProprietario(getTitular().getOrgaoUsuario());
 		}
 		
     	//validation.valid(finalidade);
     	
-    	finalidade.setCpOrgaoOrigem(getTitular().getOrgaoUsuario());
+    	finalidadeEncontrada.setCpOrgaoOrigem(getTitular().getOrgaoUsuario());
 		
     	if(Validation.hasErrors()) {
-    		result.include("finalidade", finalidade);
-			result.include(ACTION, (finalidade.getId() == 0 ? ACTION_INCLUIR : ACTION_EDITAR));
+    		result.include("finalidade", finalidadeEncontrada);
+			result.include(ACTION, (finalidadeEncontrada.getId() == 0 ? ACTION_INCLUIR : ACTION_EDITAR));
 			return;
 		}
 
-	 	finalidade.save();
+	 	finalidadeEncontrada.save();
 	 	listar();
     }
 	
-	//	@RoleAdmin
+	//@RoleAdmin
 	//@RoleAdminMissao
 	//@RoleAdminMissaoComplexo
 	@Path("/app/finalidade/excluir/{id}")
@@ -135,5 +131,14 @@ public class FinalidadeController extends TpController {
 		}
 
 		listar();
+	}
+	
+	private FinalidadeRequisicao buscar(final Long id) throws Exception {
+		
+		if(null != id && id > 0) {
+			return FinalidadeRequisicao.AR.findById(id);
+		}
+		
+		return new FinalidadeRequisicao();
 	}
 }
