@@ -177,25 +177,25 @@ public class Relatorios extends Controller {
 			registros += delim;
 			SimpleDateFormat formatoData = new SimpleDateFormat("yyyy,M,d,H,m,s");
 			
-			registros += "[ \'" + "Afastamentos" + "\', \'" + afastamento.condutor.getNome() + "\', new Date(" ;
+			registros += "[ \'" + "Afastamentos" + "\', \'" + afastamento.getCondutor().getNome() + "\', new Date(" ;
 			
-			if (afastamento.dataHoraInicio.get(Calendar.YEAR) == dataHoraPesquisa.get(Calendar.YEAR) &&
-					afastamento.dataHoraInicio.get(Calendar.MONTH) == dataHoraPesquisa.get(Calendar.MONTH) &&	
-					afastamento.dataHoraInicio.get(Calendar.DAY_OF_MONTH) == dataHoraPesquisa.get(Calendar.DAY_OF_MONTH) &&
-					afastamento.dataHoraInicio.after(dataHoraPesquisa)) {
-				registros += formatoData.format(afastamento.dataHoraInicio.getTime()) + "), new Date(";
+			if (afastamento.getDataHoraInicio().get(Calendar.YEAR) == dataHoraPesquisa.get(Calendar.YEAR) &&
+					afastamento.getDataHoraInicio().get(Calendar.MONTH) == dataHoraPesquisa.get(Calendar.MONTH) &&	
+					afastamento.getDataHoraInicio().get(Calendar.DAY_OF_MONTH) == dataHoraPesquisa.get(Calendar.DAY_OF_MONTH) &&
+					afastamento.getDataHoraInicio().after(dataHoraPesquisa)) {
+				registros += formatoData.format(afastamento.getDataHoraInicio().getTime()) + "), new Date(";
 			}
 			else {
 				Calendar dataHora = recuperarDataEHora(dataHoraPesquisa, HORA_INICIAL_DIA, MINUTO_INICIAL_DIA,SEGUNDO_INICIAL_DIA);
 				registros += formatoData.format(dataHora.getTime()) + "), new Date(";				
 			}
 			
-			if (afastamento.dataHoraFim != null){
-				if (afastamento.dataHoraFim.get(Calendar.YEAR) == dataHoraPesquisa.get(Calendar.YEAR) &&
-					afastamento.dataHoraFim.get(Calendar.MONTH) == dataHoraPesquisa.get(Calendar.MONTH) &&	
-					afastamento.dataHoraFim.get(Calendar.DAY_OF_MONTH) == dataHoraPesquisa.get(Calendar.DAY_OF_MONTH) &&
-					afastamento.dataHoraFim.after(dataHoraPesquisa)) {
-					registros += formatoData.format(afastamento.dataHoraFim.getTime()) + ") ]";
+			if (afastamento.getDataHoraFim() != null){
+				if (afastamento.getDataHoraFim().get(Calendar.YEAR) == dataHoraPesquisa.get(Calendar.YEAR) &&
+					afastamento.getDataHoraFim().get(Calendar.MONTH) == dataHoraPesquisa.get(Calendar.MONTH) &&	
+					afastamento.getDataHoraFim().get(Calendar.DAY_OF_MONTH) == dataHoraPesquisa.get(Calendar.DAY_OF_MONTH) &&
+					afastamento.getDataHoraFim().after(dataHoraPesquisa)) {
+					registros += formatoData.format(afastamento.getDataHoraFim().getTime()) + ") ]";
 					delim = ", ";
 					continue;
 				}	
@@ -340,7 +340,7 @@ public class Relatorios extends Controller {
 	}	
 	
 	public static void listarDadosDaMissao(Long id) throws Exception {
-		Missao missao = Missao.findById(id);
+		Missao missao = Missao.AR.findById(id);
 		render(missao);
 	}
 	
@@ -353,7 +353,7 @@ public class Relatorios extends Controller {
 					}
 					else if(classe.equals(Afastamento.class)) {
 						Afastamento obj = (Afastamento)objeto;
-						return obj.condutor.getCpOrgaoUsuario().getId().equals(AutorizacaoGIAntigo.titular().getOrgaoUsuario().getId());
+						return obj.getCondutor().getCpOrgaoUsuario().getId().equals(AutorizacaoGIAntigo.titular().getOrgaoUsuario().getId());
 					}
 					else if(classe.equals(EscalaDeTrabalho.class)) {
 						EscalaDeTrabalho obj = (EscalaDeTrabalho)objeto;

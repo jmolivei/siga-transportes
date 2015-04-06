@@ -12,8 +12,8 @@ import br.com.caelum.vraptor.interceptor.Interceptor;
 import br.com.caelum.vraptor.ioc.RequestScoped;
 import br.com.caelum.vraptor.resource.ResourceMethod;
 import br.com.caelum.vraptor.util.jpa.extra.ParameterLoaderInterceptor;
-import br.gov.jfrj.siga.dp.dao.CpDao;
 import br.gov.jfrj.siga.model.ContextoPersistencia;
+import br.gov.jfrj.siga.tp.model.TpDao;
 import br.gov.jfrj.siga.vraptor.ParameterOptionalLoaderInterceptor;
 
 @RequestScoped
@@ -26,8 +26,8 @@ public class ContextInterceptor implements Interceptor {
 	public ContextInterceptor(EntityManager em, Result result) {
 		ContextoPersistencia.setEntityManager(em);
 		resultByThread.set(result);
-		CpDao.freeInstance();
-		CpDao.getInstance((Session) em.getDelegate(), ((Session) em.getDelegate()).getSessionFactory().openStatelessSession());
+		TpDao.freeInstance();
+		TpDao.getInstance((Session) em.getDelegate(), ((Session) em.getDelegate()).getSessionFactory().openStatelessSession());
 	}
 
 	static public EntityManager em() {
@@ -40,15 +40,15 @@ public class ContextInterceptor implements Interceptor {
 
 	@Override
 	public boolean accepts(ResourceMethod method) {
-		return true;
+		return false;
 	}
 
 	@Override
 	public void intercept(InterceptorStack stack, ResourceMethod method, Object resourceInstance) throws InterceptionException {
-		try {
-			stack.next(method, resourceInstance);
-		} catch (Exception ex) {
-			ex.printStackTrace();
-		}
+//		try {
+//			stack.next(method, resourceInstance);
+//		} catch (Exception ex) {
+//			ex.printStackTrace();
+//		}
 	}
 }

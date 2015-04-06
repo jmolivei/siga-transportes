@@ -108,7 +108,7 @@ public class ServicosVeiculo extends Controller {
 			verificarDescricaoPreenchida(servico);
 			redirecionarSeErroAoSalvar(servico, template);
 
-			List<Missao> missoes = 	Missao.retornarMissoes("veiculo.id", servico.veiculo.id, servico.cpOrgaoUsuario.getId(),
+			List<Missao> missoes = 	Missao.retornarMissoes("veiculo.id", servico.veiculo.getId(), servico.cpOrgaoUsuario.getId(),
 									   servico.dataHoraInicio,servico.dataHoraFim);
 			String listaMissoes = "";
 			

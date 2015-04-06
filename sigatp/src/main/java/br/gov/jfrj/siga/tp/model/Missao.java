@@ -28,8 +28,6 @@ import org.hibernate.envers.RelationTargetAuditMode;
 
 import play.data.binding.As;
 import play.data.validation.Required;
-import play.db.jpa.GenericModel;
-import play.db.jpa.JPA;
 import play.i18n.Messages;
 import play.modules.br.jus.jfrj.siga.uteis.validadores.sequence.SequenceMethods;
 import play.modules.br.jus.jfrj.siga.uteis.validadores.upperCase.UpperCase;
@@ -37,6 +35,8 @@ import play.modules.br.jus.jfrj.siga.uteis.validadores.validarAnoData.ValidarAno
 import br.gov.jfrj.siga.cp.CpComplexo;
 import br.gov.jfrj.siga.dp.CpOrgaoUsuario;
 import br.gov.jfrj.siga.dp.DpPessoa;
+import br.gov.jfrj.siga.model.ActiveRecord;
+import br.gov.jfrj.siga.model.Objeto;
 import br.gov.jfrj.siga.tp.binder.DoubleBinder;
 import br.gov.jfrj.siga.tp.util.PerguntaSimNao;
 import br.gov.jfrj.siga.tp.util.Reflexao;
@@ -48,10 +48,12 @@ import br.jus.jfrj.siga.uteis.SiglaDocumentoType;
 //@Table(name = "VEICULO_2", schema="SIGAOR")
 @Audited
 @Table(schema = "SIGATP")
-public class Missao extends GenericModel implements Comparable<Missao>,SequenceMethods {
+	
+	public static ActiveRecord<Missao> AR = new ActiveRecord<>(Missao.class);
+	
 	@Id
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "hibernate_sequence_generator") @SequenceGenerator(name = "hibernate_sequence_generator", sequenceName="SIGATP.hibernate_sequence") 
-	public Long id;
+	private Long id;
 	
 	@Sequence(propertieOrgao="cpOrgaoUsuario",siglaDocumento=SiglaDocumentoType.MTP)
 	@Column(updatable = false)
@@ -228,7 +230,7 @@ public class Missao extends GenericModel implements Comparable<Missao>,SequenceM
 	qrl = qrl + " and m.cpOrgaoUsuario.id = t.cpOrgaoUsuario.id";
 	qrl = qrl + " and YEAR(m.dataHora) = YEAR(t.dataHora)";
 	qrl = qrl + ") order by m.numero desc";
-	Query qry = JPA.em().createQuery(qrl);
+	Query qry = AR.em().createQuery(qrl);
 	try {
 		Object obj = qry.getResultList().get(0);
 		this.numero = ((Missao) obj).numero + 1;
@@ -239,7 +241,7 @@ public class Missao extends GenericModel implements Comparable<Missao>,SequenceM
 }
 	
 	public static List<Missao> buscarEmAndamento() {
-		return Missao.find("trunc(dataHoraSaida) = trunc(sysdate)").fetch();
+		return Missao.AR.find("trunc(dataHoraSaida) = trunc(sysdate)").fetch();
 	}
 
 	public static Missao buscar(String sequence) throws Exception {
@@ -260,7 +262,7 @@ public class Missao extends GenericModel implements Comparable<Missao>,SequenceM
 		if (! Reflexao.recuperaAnotacaoField(missao).equals(siglaDocumento)) {
 			throw new Exception(Messages.get("missao.buscar.siglaDocumento.exception", sequence));
 		}
-	 	List<Missao> missoes =  Missao.find("cpOrgaoUsuario = ? and numero = ? and YEAR(dataHora) = ?" , cpOrgaoUsuario,numero,ano).fetch();
+	 	List<Missao> missoes =  Missao.AR.find("cpOrgaoUsuario = ? and numero = ? and YEAR(dataHora) = ?" , cpOrgaoUsuario,numero,ano).fetch();
 		if (missoes.size() > 1) throw new Exception(Messages.get("missao.buscar.codigoDuplicado.exception"));
 		if (missoes.size() == 0 ) throw new Exception(Messages.get("missao.buscar.codigoInvalido.exception"));
 	 	return missoes.get(0);
@@ -268,16 +270,16 @@ public class Missao extends GenericModel implements Comparable<Missao>,SequenceM
 
 	public static List<Missao> buscarPorCondutor(Long IdCondutor,
 			Calendar dataHoraInicio) {
-		return Missao.find("condutor.id = ? AND dataHoraSaida <= ? AND (dataHoraRetorno is null OR dataHoraRetorno >= ?) AND estadoMissao NOT IN (?,?) order by dataHoraSaida", IdCondutor, dataHoraInicio, dataHoraInicio,EstadoMissao.CANCELADA,EstadoMissao.FINALIZADA).fetch(); 
+		return Missao.AR.find("condutor.id = ? AND dataHoraSaida <= ? AND (dataHoraRetorno is null OR dataHoraRetorno >= ?) AND estadoMissao NOT IN (?,?) order by dataHoraSaida", IdCondutor, dataHoraInicio, dataHoraInicio,EstadoMissao.CANCELADA,EstadoMissao.FINALIZADA).fetch(); 
 	}
 
 	public static List<Missao> buscarMissoesEmAbertoPorCondutor(Condutor condutor) {
-		return Missao.find("condutor.id = ? AND estadoMissao NOT IN (?,?) order by dataHoraSaida", condutor.getId(), EstadoMissao.CANCELADA, EstadoMissao.FINALIZADA).fetch(); 
+		return Missao.AR.find("condutor.id = ? AND estadoMissao NOT IN (?,?) order by dataHoraSaida", condutor.getId(), EstadoMissao.CANCELADA, EstadoMissao.FINALIZADA).fetch(); 
 	}
 
 	public static List<Missao> buscarTodasAsMissoesPorCondutor(Condutor condutor) {
 		if (condutor == null) { return new ArrayList<Missao>(); };
-		return Missao.find("condutor.id = ? order by dataHoraSaida desc", condutor.getId()).fetch(); 
+		return Missao.AR.find("condutor.id = ? order by dataHoraSaida desc", condutor.getId()).fetch(); 
 	}
 
 	public static List<Missao> buscarPorVeiculos(Long IdVeiculo, String dataHoraInicio){
@@ -308,7 +310,7 @@ public class Missao extends GenericModel implements Comparable<Missao>,SequenceM
 						" AND trunc(dataHoraSaida) <= trunc(" + dataFormatadaOracle + ")" +  	
 						" AND (dataHoraRetorno IS NULL OR trunc(dataHoraRetorno) >= trunc(" + dataFormatadaOracle + "))";
 
-		Query qry = JPA.em().createQuery(qrl);
+		Query qry = AR.em().createQuery(qrl);
 		try {
 			missoes = (List<Missao>) qry.getResultList();
 		} catch(NoResultException ex) {
@@ -340,7 +342,15 @@ public class Missao extends GenericModel implements Comparable<Missao>,SequenceM
 		
 		qrl += " AND cpOrgaoUsuario.id = " + usuarioId;
 
-		Query qry = JPA.em().createQuery(qrl);
+		Query qry = AR.em().createQuery(qrl);
 		return (List<Missao>) qry.getResultList();
+	}
+	
+	public Long getId() {
+		return id;
+	}
+	
+	public void setId(Long id) {
+		this.id = id;
 	}
 }

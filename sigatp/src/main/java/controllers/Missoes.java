@@ -88,7 +88,7 @@ public class Missoes extends Controller {
 		}
 
 		
-		List<Missao> missoes = Missao.find(criterioBusca + " order by dataHoraSaida desc", parametros)
+		List<Missao> missoes = Missao.AR.find(criterioBusca + " order by dataHoraSaida desc", parametros)
 				.fetch();
 		
 		return missoes;
@@ -131,7 +131,7 @@ public class Missoes extends Controller {
 	protected static void validarListarParaCondutorEscalado(Condutor condutorEscalado) throws Exception {
 		/* Criada uma missão Fake somente passar o condutor */
 		Missao missao = new Missao();
-		missao.id = -1L;
+		missao.setId(-1L);
 		missao.condutor = condutorEscalado;		
 		checarCondutorPeloUsuarioAutenticado(missao);		
 	}
@@ -166,7 +166,7 @@ public class Missoes extends Controller {
 
 		missao.cpOrgaoUsuario = AutorizacaoGIAntigo.titular().getOrgaoUsuario();
 		
-		if (missao.id > 0) {
+		if (missao.getId() > 0) {
 			template = "@editar";
 		} else {
 			missao.setSequence(missao.cpOrgaoUsuario);
@@ -187,7 +187,7 @@ public class Missoes extends Controller {
 		validarRequisicoesDeServico(missao, template);
 		
 		boolean novaMissao = false;
-		if (missao.id == 0) {
+		if (missao.getId() == 0) {
 			novaMissao = true;
 			missao.dataHora = Calendar.getInstance();
 		}		
@@ -213,7 +213,7 @@ public class Missoes extends Controller {
 	/*
 	private static void checarAcesso(Missao missao)  throws Exception {
 			if (! AutorizacaoGI.ehAdministrador() && ! AutorizacaoGI.ehAdministradorMissao()) {
-				if (missao.id == 0) {
+				if (missao.getId() == 0) {
 					throw new Exception("Voce nao tem acesso para incluir Missao");
 				}
 				
@@ -290,7 +290,7 @@ public class Missoes extends Controller {
 			List<Andamento> andamentos = Andamento.find("requisicaoTransporte.id = ? order by id desc", requisicaoTransporte.id).fetch();
 			for (Andamento andamento : andamentos) {
 				if (andamento.missao != null &&
-				   andamento.missao.id.equals(missao.id) &&
+				   andamento.missao.getId().equals(missao.getId()) &&
 				   andamento.estadoRequisicao.equals(EstadoRequisicao.PROGRAMADA)) {
 					andamento.delete();
 				}	
@@ -305,7 +305,7 @@ public class Missoes extends Controller {
 			for (Andamento andamento : andamentos) {
 				Boolean novoAndamento = true;
 				if (andamento.missao != null &&
-				   andamento.missao.id.equals(missao.id)) {
+				   andamento.missao.getId().equals(missao.getId())) {
 					novoAndamento = false;	
 					break;
 				}
@@ -335,7 +335,7 @@ public class Missoes extends Controller {
 	@RoleAdminMissaoComplexo
 	@RoleAgente
 	public static void finalizar(Long id, String veiculosDisp) throws Exception {
-		Missao missao = Missao.findById(id);
+		Missao missao = Missao.AR.findById(id);
 		
 		montarDadosParaAMissao(missao);
 
@@ -533,7 +533,7 @@ public class Missoes extends Controller {
 	@RoleAdminMissao
 	@RoleAdminMissaoComplexo
 	public static void iniciar(Long id) throws Exception {
-		Missao missao = Missao.findById(id);
+		Missao missao = Missao.AR.findById(id);
 		montarDadosParaAMissao(missao);
 
 		// TODO ver a necessidade de ter o menu
@@ -547,7 +547,7 @@ public class Missoes extends Controller {
 	@RoleAdminMissao
 	@RoleAdminMissaoComplexo
 	public static void cancelar(Long id) throws Exception {
-		Missao missao = Missao.findById(id);
+		Missao missao = Missao.AR.findById(id);
 
 		// TODO ver a necessidade de ter o menu
 		// MenuMontador.instance().RecuperarMenuMissao(id, missao.estadoMissao);
@@ -654,12 +654,12 @@ public class Missoes extends Controller {
 				} else {
 					renderArgs.put(
 							"condutores",
-							listarCondutoresDisponiveis(missao.id, AutorizacaoGIAntigo
+							listarCondutoresDisponiveis(missao.getId(), AutorizacaoGIAntigo
 									.titular().getOrgaoUsuario().getId(),
 									dataHoraSaidaStr,missao.inicioRapido));
 					renderArgs.put(
 							"veiculos",
-							listarVeiculosDisponiveis(missao.id, AutorizacaoGIAntigo
+							listarVeiculosDisponiveis(missao.getId(), AutorizacaoGIAntigo
 									.titular().getOrgaoUsuario().getId(),
 									dataHoraSaidaStr));
 					
@@ -685,7 +685,7 @@ public class Missoes extends Controller {
 	public static void incluir() {
 		Missao missao = new Missao();
 		missao.inicioRapido = PerguntaSimNao.NAO;
-		MenuMontador.instance().RecuperarMenuMissao(missao.id,
+		MenuMontador.instance().RecuperarMenuMissao(missao.getId(),
 				missao.estadoMissao);
 		
 		render(missao);
@@ -745,7 +745,7 @@ public class Missoes extends Controller {
 		removerRequisicoesDoRenderArgs(missao.requisicoesTransporte);
 		SimpleDateFormat formatar = new SimpleDateFormat("dd/MM/yyyy HH:mm");
 		String dataHoraSaidaStr = formatar.format(missao.dataHoraSaida.getTime());
-		List<Condutor> condutores = listarCondutoresDisponiveis(missao.id,
+		List<Condutor> condutores = listarCondutoresDisponiveis(missao.getId(),
 				AutorizacaoGIAntigo.titular().getOrgaoUsuario().getId(),
 				dataHoraSaidaStr, missao.inicioRapido);
 		boolean encontrouCondutor = false;
@@ -767,14 +767,14 @@ public class Missoes extends Controller {
 		for (RequisicaoTransporte req : missao.requisicoesTransporte) {
 			if (req.servicoVeiculo != null) {	
 				req = RequisicaoTransporte.findById(req.id);
-				veiculosDisp += req.servicoVeiculo.veiculo.id + ", ";
+				veiculosDisp += req.servicoVeiculo.veiculo.getId() + ", ";
 			}
 		}
 		
 		List<Veiculo> veiculos = new ArrayList<Veiculo>();
 		
 		if (veiculosDisp.equals("")) {
-			veiculos = listarVeiculosDisponiveis(missao.id,
+			veiculos = listarVeiculosDisponiveis(missao.getId(),
 				AutorizacaoGIAntigo.titular().getOrgaoUsuario().getId(),
 				dataHoraSaidaStr);
 		}
@@ -785,7 +785,7 @@ public class Missoes extends Controller {
 		boolean encontrouVeiculo = false;
 		if (veiculos != null && ! veiculos.isEmpty()) {
 			for (Veiculo veiculo : veiculos) {
-				if (veiculo.id.equals(missao.veiculo.id)) {
+				if (veiculo.getId().equals(missao.veiculo.getId())) {
 					encontrouVeiculo = true;
 					break;
 				}
@@ -820,7 +820,7 @@ public class Missoes extends Controller {
 	@RoleAdminMissao
 	@RoleAdminMissaoComplexo
 	public static void editar(Long id, String veiculosDisp) throws Exception {
-		Missao missao = Missao.findById(id);
+		Missao missao = Missao.AR.findById(id);
 		montarDadosParaAMissao(missao);
 		checarCondutorPeloUsuarioAutenticado(missao);
 		checarComplexo(missao.cpComplexo.getIdComplexo());
@@ -831,7 +831,7 @@ public class Missoes extends Controller {
 
 	protected static void checarCondutorPeloUsuarioAutenticado(Missao missao) throws Exception {
 		if (AutorizacaoGIAntigo.ehAgente()) {
-			if (missao.id == 0) {
+			if (missao.getId() == 0) {
 				throw new Exception(Messages.get("missoes.autorizacaoGI.ehAgente.exception"));
 			}
 			
@@ -862,7 +862,7 @@ public class Missoes extends Controller {
 			throws Exception {
 		Missao missao = Missao.buscar(sequence);
 		montarDadosParaAMissao(missao);
-		MenuMontador.instance().RecuperarMenuMissao(missao.id,
+		MenuMontador.instance().RecuperarMenuMissao(missao.getId(),
 				missao.estadoMissao);
 		if (popUp != null) {
 			renderArgs.put("mostrarMenu", !popUp);
@@ -878,7 +878,7 @@ public class Missoes extends Controller {
 	@RoleAdminMissaoComplexo
 	@RoleAgente
 	public static void ler(Long id, String veiculosDisp) throws Exception {
-		Missao missao = Missao.findById(id);
+		Missao missao = Missao.AR.findById(id);
 		montarDadosParaAMissao(missao);
 		MenuMontador.instance().RecuperarMenuMissao(id, missao.estadoMissao);
 		checarCondutorPeloUsuarioAutenticado(missao);
@@ -910,7 +910,7 @@ public class Missoes extends Controller {
 	@RoleAdminMissao
 	@RoleAdminMissaoComplexo
 	public static void excluir(Long id) throws Exception {
-		Missao missao = Missao.findById(id);
+		Missao missao = Missao.AR.findById(id);
 		checarCondutorPeloUsuarioAutenticado(missao);
 		checarComplexo(missao.cpComplexo.getIdComplexo());
 		missao.delete();
@@ -927,7 +927,7 @@ public class Missoes extends Controller {
 			String nomePropriedade, String nomePropriedade1, Long idMissao,
 			String dataSaida, String veiculosDisp, PerguntaSimNao inicioRapido) throws Exception {
 
-		Missao missao = Missao.findById(idMissao);
+		Missao missao = Missao.AR.findById(idMissao);
 		String opcaoSelecionada = " selected = 'selected'";
 		String selectDesabilitado = " disabled = 'disabled'"; 
 		
@@ -950,7 +950,7 @@ public class Missoes extends Controller {
 		htmlSelectVeiculos.append(">");
 		for (Veiculo veiculo : veiculosDisponiveis) {
 			htmlSelectVeiculos.append("<option value='"
-					+ veiculo.id + "'");
+					+ veiculo.getId() + "'");
 			if(missao != null && veiculo.equals(missao.veiculo)) {
 				htmlSelectVeiculos.append(opcaoSelecionada);
 			}

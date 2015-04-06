@@ -132,8 +132,8 @@ public class RelatoriosRanking extends Controller {
 				condutor.setId(Long.parseLong(lista.get(i)[0].toString()));
 
 				missao = new Missao();
-				missao.id = Long.parseLong(lista.get(i)[1].toString());
-				setMissao.add((Missao) Missao.findById(missao.id));
+				missao.setId(Long.parseLong(lista.get(i)[1].toString()));
+				setMissao.add((Missao) Missao.AR.findById(missao.getId()));
 
 				requisicao = new RequisicaoTransporte();
 				requisicao.id = Long.parseLong(lista.get(i)[2].toString());
@@ -204,7 +204,7 @@ public class RelatoriosRanking extends Controller {
 
 			for (int i = 0; i < lista.size(); i++) {
 				veiculo = new Veiculo();
-				veiculo.id = Long.parseLong(lista.get(i)[0].toString());
+				veiculo.setId(Long.parseLong(lista.get(i)[0].toString()));
 
 				requisicao = new RequisicaoTransporte();
 				requisicao.id = Long.parseLong(lista.get(i)[1].toString());
@@ -213,7 +213,7 @@ public class RelatoriosRanking extends Controller {
 				if (i < lista.size() - 1) {
 					idProximoVeiculo = Long.parseLong(lista.get(i + 1)[0].toString());
 
-					if (!veiculo.id.equals(idProximoVeiculo)) {
+					if (!veiculo.getId().equals(idProximoVeiculo)) {
 						salvar = true;
 					}
 				} else {
@@ -222,7 +222,7 @@ public class RelatoriosRanking extends Controller {
 
 				if (salvar) {
 					itemRv = new RelatorioRanking().new RankingVeiculoRequisicao();
-					itemRv.veiculo = Veiculo.findById(veiculo.id);
+					itemRv.veiculo = Veiculo.findById(veiculo.getId());
 					itemRv.requisicoes = new ArrayList<RequisicaoTransporte>(setRequisicao);
 					listaRankingVeiculo.add(itemRv);
 					setRequisicao.clear();

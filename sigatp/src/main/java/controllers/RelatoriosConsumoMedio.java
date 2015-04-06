@@ -81,13 +81,13 @@ public class RelatoriosConsumoMedio extends Controller {
 		
 		String qrl = "SELECT m.id, m.consumoEmLitros, m.odometroSaidaEmKm, m.odometroRetornoEmKm " +
 					 "FROM  Missao m " + 
-					 "WHERE m.veiculo.id = ? " +
+					 "WHERE m.veiculo.getId() = ? " +
 					 "AND   m.dataHora BETWEEN ? AND ? " + 
 					 "AND   m.cpOrgaoUsuario.idOrgaoUsu = ? " + 
 					 "AND   m.estadoMissao = ? "; 
 
 		Query qry = JPA.em().createQuery(qrl);
-		qry.setParameter(1, relatorio.veiculo.id);
+		qry.setParameter(1, relatorio.veiculo.getId());
 		qry.setParameter(2, dataInicial);
 		qry.setParameter(3, dataFinal);
 		qry.setParameter(4, cpOrgaoUsuario.getIdOrgaoUsu());
@@ -103,8 +103,8 @@ public class RelatoriosConsumoMedio extends Controller {
 			if ((Double.parseDouble(lista.get(i)[2].toString()) >= kmInicial) || 
 				(Double.parseDouble(lista.get(i)[3].toString()) <= kmFinal)) {
 				missao = new Missao();
-				missao.id = Long.parseLong(lista.get(i)[0].toString());
-				setMissao.add((Missao) Missao.findById(missao.id));
+				missao.setId(Long.parseLong(lista.get(i)[0].toString()));
+				setMissao.add((Missao) Missao.AR.findById(missao.getId()));
 			}
 		}
 		
@@ -114,7 +114,7 @@ public class RelatoriosConsumoMedio extends Controller {
 		resultado.abastecimentoFinal = new Abastecimento();
 		resultado.abastecimentoFinal.setDataHora(dataFinal);
 		
-		resultado.veiculo = Veiculo.findById(relatorio.veiculo.id);
+		resultado.veiculo = Veiculo.findById(relatorio.veiculo.getId());
 		resultado.missoes = new ArrayList<Missao>(setMissao);
 		resultado.kmPercorridos =  Double.parseDouble(String.format("%.2f", kmFinal - kmInicial).replace(",","."));
 		resultado.consumoMedio = Double.parseDouble(String.format("%.2f", quantidadeEmLitros <= 0 ? 0 : (kmFinal - kmInicial) / quantidadeEmLitros).replace(",","."));
@@ -127,7 +127,7 @@ public class RelatoriosConsumoMedio extends Controller {
 		List<Abastecimento> abastecimentosIniciais = new ArrayList<Abastecimento>();
 		List<Abastecimento> abastecimentosFinais = new ArrayList<Abastecimento>();
 		
-		abastecimentosIniciais = montarCombosAbastecimento(veiculos.get(0).id);
+		abastecimentosIniciais = montarCombosAbastecimento(veiculos.get(0).getId());
 		
 		if (abastecimentosIniciais.size() > 0) {
 			for (Abastecimento abastecimento : abastecimentosIniciais) {

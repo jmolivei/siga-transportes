@@ -50,7 +50,7 @@ public class RelatoriosDiarios extends Controller {
 		}
 		else{
 			relatorioDiario.save();
-			listarPorVeiculo(relatorioDiario.veiculo.id);
+			listarPorVeiculo(relatorioDiario.veiculo.getId());
 		}	
 	}	
 	
@@ -59,7 +59,7 @@ public class RelatoriosDiarios extends Controller {
 	public static void excluir(Long id){
 		RelatorioDiario relatorioDiario = RelatorioDiario.findById(id);
 		relatorioDiario.delete();
-		listarPorVeiculo(relatorioDiario.veiculo.id);		
+		listarPorVeiculo(relatorioDiario.veiculo.getId());		
 	}
 
 
