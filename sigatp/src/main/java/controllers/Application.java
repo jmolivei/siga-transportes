@@ -213,7 +213,7 @@ public class Application extends Controller {
 				Long idCondutor = Condutor.recuperarLogado(AutorizacaoGIAntigo.titular(),AutorizacaoGIAntigo.titular().getOrgaoUsuario()).getId();
 				EstadoMissao[] estados = {EstadoMissao.PROGRAMADA, EstadoMissao.INICIADA};
 				String query = "condutor.id = ? and cpOrgaoUsuario.idOrgaoUsu = ? and (estadoMissao = ? or estadoMissao = ?)";
-				List<ServicosVeiculo> missoes = Missao.find(query, idCondutor, idOrgaoUsu, estados[0], estados[1]).fetch();
+				List<ServicosVeiculo> missoes = Missao.AR.find(query, idCondutor, idOrgaoUsu, estados[0], estados[1]).fetch();
 
 				for (EstadoMissao item : estados) {
 					titulo = "Miss&otilde;es " + (item.equals(EstadoMissao.PROGRAMADA) ? "programadas" : "iniciadas");

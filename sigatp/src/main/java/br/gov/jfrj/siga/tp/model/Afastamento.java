@@ -7,6 +7,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.NoResultException;
 import javax.persistence.Query;
@@ -16,53 +17,100 @@ import javax.validation.constraints.NotNull;
 
 import org.hibernate.envers.Audited;
 
-import play.data.binding.As;
-import play.data.validation.Required;
-import play.db.jpa.GenericModel;
-import play.db.jpa.JPA;
-import play.modules.br.jus.jfrj.siga.uteis.validadores.upperCase.UpperCase;
-import play.modules.br.jus.jfrj.siga.uteis.validadores.validarAnoData.ValidarAnoData;
+import br.gov.jfrj.siga.model.ActiveRecord;
 
 
 @SuppressWarnings("serial")
 @Entity
 @Audited
 @Table(schema = "SIGATP")
-public class Afastamento extends GenericModel  {
+public class Afastamento extends TPObjeto  {
+	
+	public static ActiveRecord<Afastamento> AR = new ActiveRecord<>(Afastamento.class);
 	
 	@Id
-	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "hibernate_sequence_generator") @SequenceGenerator(name = "hibernate_sequence_generator", sequenceName="SIGATP.hibernate_sequence") 
-	public long id;
+	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "hibernate_sequence_generator")
+	@SequenceGenerator(name = "hibernate_sequence_generator", sequenceName="SIGATP.hibernate_sequence")	 
+	private Long id;
 		
 	
-	@Required
+	//@Required
 	@ManyToOne
 	@NotNull
-	public Condutor condutor;
+	@JoinColumn(name = "CONDUTOR_ID")
+	private Condutor condutor;	
 	
-	
-	@Required
-	@UpperCase
+	//@Required
+	//@UpperCase
 	@NotNull
-	public String descricao;
+	private String descricao;
 	
-	
-	@Required
-	@As(lang={"*"}, value={"dd/MM/yyyy HH:mm"})
+	//@Required
+	//TODO Wlad @As(lang={"*"}, value={"dd/MM/yyyy HH:mm"})
 	@NotNull
-	@ValidarAnoData(descricaoCampo="Data/Hora Inicio")
-	public Calendar dataHoraInicio;
+	//@ValidarAnoData(descricaoCampo="Data/Hora Inicio")
+	private Calendar dataHoraInicio;
 	
 	
-	@Required
-	@As(lang={"*"}, value={"dd/MM/yyyy HH:mm"})
+	//@Required
+	//TODO Wlad @As(lang={"*"}, value={"dd/MM/yyyy HH:mm"})
 	@NotNull
-	@ValidarAnoData(descricaoCampo="Data/Hora Fim")
-	public Calendar dataHoraFim;
+	//@ValidarAnoData(descricaoCampo="Data/Hora Fim")
+	private Calendar dataHoraFim;	
+	
+	
+	public Long getId() {
+		return id;
+	}
+
+
+	public void setId(Long id) {
+		this.id = id;
+	}
+
+
+	public Condutor getCondutor() {
+		return condutor;
+	}
+
+
+	public void setCondutor(Condutor condutor) {
+		this.condutor = condutor;
+	}
+
+
+	public String getDescricao() {
+		return descricao;
+	}
+
+
+	public void setDescricao(String descricao) {
+		this.descricao = descricao;
+	}
+
+
+	public Calendar getDataHoraInicio() {
+		return dataHoraInicio;
+	}
+
+
+	public void setDataHoraInicio(Calendar dataHoraInicio) {
+		this.dataHoraInicio = dataHoraInicio;
+	}
+
+
+	public Calendar getDataHoraFim() {
+		return dataHoraFim;
+	}
+
+
+	public void setDataHoraFim(Calendar dataHoraFim) {
+		this.dataHoraFim = dataHoraFim;
+	}
 	
 	
 	public static List<Afastamento> buscarTodosPorCondutor(Condutor condutor){
-		return Afastamento.find("condutor", condutor).fetch();
+		return Afastamento.AR.find("condutor", condutor).fetch();
 	}
 	
 	
@@ -84,7 +132,7 @@ public class Afastamento extends GenericModel  {
 	@SuppressWarnings("unchecked")
 	private static List<Afastamento> retornarLista(String qrl) throws NoResultException {
 		List<Afastamento> afastamentos;
-		Query qry = JPA.em().createQuery(qrl);
+		Query qry = AR.em().createQuery(qrl);
 		try {
 			afastamentos = (List<Afastamento>) qry.getResultList();
 		} catch(NoResultException ex) {
@@ -129,7 +177,7 @@ public class Afastamento extends GenericModel  {
 	}
 
 	public static List<Afastamento> buscarPorCondutores(Condutor condutor, Calendar dataHoraInicio, Calendar dataHoraFim){
-		List<Afastamento> retorno = Afastamento.find(
+		List<Afastamento> retorno = Afastamento.AR.find(
 				"condutor.id = ? "
 				+ "and "
 					+ "((dataHoraInicio <= ? and (dataHoraFim = null or dataHoraFim >= ?)) "
@@ -147,5 +195,7 @@ public class Afastamento extends GenericModel  {
 	
 	public boolean ordemDeDatasCorreta(){
 		return this.dataHoraInicio.before(this.dataHoraFim);
-	}	
+	}
+
+	
 }

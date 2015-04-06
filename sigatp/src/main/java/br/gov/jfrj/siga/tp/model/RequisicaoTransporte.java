@@ -289,7 +289,7 @@ public class RequisicaoTransporte extends GenericModel implements Comparable<Req
 	}
 	
 	public EstadoRequisicao getUltimoEstadoNestaMissao(Long idMissao) throws Exception {
-		Missao missao = Missao.findById(idMissao);
+		Missao missao = Missao.AR.findById(idMissao);
 		Andamento andamento = Andamento.find("missao=? order by id desc",missao).first();
 		return andamento.estadoRequisicao;
 	}

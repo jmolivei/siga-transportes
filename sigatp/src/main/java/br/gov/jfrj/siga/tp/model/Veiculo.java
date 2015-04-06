@@ -49,7 +49,7 @@ import br.jus.jfrj.siga.uteis.UpperCase;
 public class Veiculo extends GenericModel implements Comparable<Veiculo> {
 	@Id
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "hibernate_sequence_generator") @SequenceGenerator(name = "hibernate_sequence_generator", sequenceName="SIGATP.hibernate_sequence") 
-	public Long id;
+	private Long id;
 	
 	@Required
 	@MaxSize(value=8,message="veiculo.placa.maxSize.")
@@ -371,7 +371,7 @@ public class Veiculo extends GenericModel implements Comparable<Veiculo> {
 	public static Boolean estaDisponivel(Missao m) throws Exception {
 		SimpleDateFormat formatar = new SimpleDateFormat("dd/MM/yyyy HH:mm");
 		String dataHoraSaidaStr = formatar.format(m.dataHoraSaida.getTime());
-		List<Veiculo> veiculos = listarDisponiveis(dataHoraSaidaStr, m.id,m.cpOrgaoUsuario.getId());
+		List<Veiculo> veiculos = listarDisponiveis(dataHoraSaidaStr, m.getId(), m.cpOrgaoUsuario.getId());
 		for (Veiculo veiculo : veiculos) {
 			if (veiculo.id.equals(m.veiculo.id)) {
 				return true;
@@ -419,5 +419,13 @@ public class Veiculo extends GenericModel implements Comparable<Veiculo> {
 	public DpLotacao getUltimaLotacao() {
 		
 		return this.getDpLotacaoVigente();
+	}
+	
+	public Long getId() {
+		return id;
+	}
+	
+	public void setId(Long id) {
+		this.id = id;
 	}
 }

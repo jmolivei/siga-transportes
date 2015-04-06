@@ -60,7 +60,7 @@ public class EmailNotificacoes extends Job<Object>  {
 
 		try {
 			Calendar calendar = Calendar.getInstance();
-			missoes = Missao.find("estadoMissao = ? and dataHoraSaida < ? " +
+			missoes = Missao.AR.find("estadoMissao = ? and dataHoraSaida < ? " +
 					"order by condutor", EstadoMissao.PROGRAMADA, calendar).fetch();
 			notificarMissoes(missoes, tituloEmail, tipoNotificacao);
 
@@ -77,7 +77,7 @@ public class EmailNotificacoes extends Job<Object>  {
 		try {
 			Calendar calendar = Calendar.getInstance();
 			calendar.add(Calendar.DAY_OF_YEAR, -7);
-			missoes = Missao.find("estadoMissao = ? and dataHoraSaida < ? " +
+			missoes = Missao.AR.find("estadoMissao = ? and dataHoraSaida < ? " +
 					"order by condutor", EstadoMissao.INICIADA, calendar).fetch();
 			notificarMissoes(missoes, tituloEmail, tipoNotificacao);
 
@@ -142,7 +142,7 @@ public class EmailNotificacoes extends Job<Object>  {
 		
 		for(Missao item : missoes) {
 			condutor = item.condutor;
-			String sequencia = item.getSequence() + " " + item.id + ",";
+			String sequencia = item.getSequence() + " " + item.getId() + ",";
 
 			if (dadosCondutor.containsKey(condutor)) {
 				dadosCondutor.put(condutor, dadosCondutor.get(condutor) + sequencia);

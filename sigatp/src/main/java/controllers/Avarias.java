@@ -44,7 +44,7 @@ public class Avarias extends Controller {
 		if (idVeiculo != null) {
 			avaria.veiculo = Veiculo.findById(idVeiculo);
 			fixarVeiculo = true;
-			MenuMontador.instance().RecuperarMenuVeiculos(avaria.veiculo.id, ItemMenu.AVARIAS);
+			MenuMontador.instance().RecuperarMenuVeiculos(avaria.veiculo.getId(), ItemMenu.AVARIAS);
 		}
     	render(avaria, veiculos, fixarVeiculo);
 	}
@@ -58,7 +58,7 @@ public class Avarias extends Controller {
 			veiculo = avaria.veiculo;
 		}
 		List<Veiculo> veiculos = Veiculo.listarTodos(AutorizacaoGIAntigo.titular().getOrgaoUsuario());
-		MenuMontador.instance().RecuperarMenuVeiculos(avaria.veiculo.id, ItemMenu.AVARIAS);
+		MenuMontador.instance().RecuperarMenuVeiculos(avaria.veiculo.getId(), ItemMenu.AVARIAS);
 		render(avaria, veiculos, veiculo, fixarVeiculo);
 	}
 	
@@ -68,14 +68,14 @@ public class Avarias extends Controller {
 		validation.valid(avaria);
 		if(Validation.hasErrors()) 
 		{
-			MenuMontador.instance().RecuperarMenuVeiculos(avaria.veiculo.id, ItemMenu.AVARIAS);
+			MenuMontador.instance().RecuperarMenuVeiculos(avaria.veiculo.getId(), ItemMenu.AVARIAS);
 			List<Veiculo> veiculos = Veiculo.listarTodos(AutorizacaoGIAntigo.titular().getOrgaoUsuario());
-			Veiculo veiculo = Veiculo.findById(avaria.veiculo.id);
+			Veiculo veiculo = Veiculo.findById(avaria.veiculo.getId());
 			renderTemplate(ACTION_EDITAR, avaria, veiculos, veiculo, fixarVeiculo);
 		}
 		
 		if (avaria.podeCircular.equals(PerguntaSimNao.NAO)) {
-			List<Missao> missoes = Missao.retornarMissoes("veiculo.id", avaria.veiculo.id, 
+			List<Missao> missoes = Missao.retornarMissoes("veiculo.getId()", avaria.veiculo.getId(), 
 					avaria.veiculo.cpOrgaoUsuario.getId(), avaria.dataDeRegistro, avaria.dataDeSolucao);
 			String listaMissoes = "";
 			String delimitador = "";
@@ -99,7 +99,7 @@ public class Avarias extends Controller {
 			avaria.save();
 
 			if (fixarVeiculo) {
-				listarPorVeiculo(avaria.veiculo.id);
+				listarPorVeiculo(avaria.veiculo.getId());
 			} else {
 				listar();
 			}
@@ -114,7 +114,7 @@ public class Avarias extends Controller {
 		Veiculo veiculo = avaria.veiculo;
 		avaria.delete();
 		if (fixarVeiculo) {
-			listarPorVeiculo(veiculo.id);
+			listarPorVeiculo(veiculo.getId());
 		} else {
 			listar();
 		}

@@ -47,8 +47,7 @@ import br.jus.jfrj.siga.uteis.UpperCase;
 @SequenceGenerator(name = "hibernate_sequence_generator", sequenceName="SIGATP.hibernate_sequence")
 public class Condutor extends Objeto implements Comparable<Condutor> {
 	
-	public static ActiveRecord<Condutor> AR = new ActiveRecord<>(
-			Condutor.class);
+	public static ActiveRecord<Condutor> AR = new ActiveRecord<>(Condutor.class);
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "hibernate_sequence_generator") 
@@ -309,7 +308,7 @@ public class Condutor extends Objeto implements Comparable<Condutor> {
 	public static Boolean estaDisponivel(Missao m) throws Exception {
 		SimpleDateFormat formatar = new SimpleDateFormat("dd/MM/yyyy HH:mm");
 		String dataHoraSaidaStr = formatar.format(m.dataHoraSaida.getTime());
-		List<Condutor> condutores = listarDisponiveis(dataHoraSaidaStr, m.id, m.cpOrgaoUsuario.getId(), m.inicioRapido);
+		List<Condutor> condutores = listarDisponiveis(dataHoraSaidaStr, m.getId(), m.cpOrgaoUsuario.getId(), m.inicioRapido);
 		
 		if(condutores.contains(m.condutor)) {
 			return true;

@@ -92,8 +92,8 @@ public class Veiculos extends Controller {
 		if(Validation.hasErrors()) 
 		{
 			montarCombos();
-			MenuMontador.instance().RecuperarMenuVeiculos(veiculo.id, ItemMenu.DADOSCADASTRAIS);
-			String template = veiculo.id > 0 ? "@editar" : "@incluir";
+			MenuMontador.instance().RecuperarMenuVeiculos(veiculo.getId(), ItemMenu.DADOSCADASTRAIS);
+			String template = veiculo.getId() > 0 ? "@editar" : "@incluir";
 			if(veiculoNaoTemLotacaoCadastrada(veiculo) || veiculo.lotacoes.isEmpty() || (!veiculo.lotacoes.get(0).lotacao.equivale(veiculo.lotacaoAtual))) {
 				RenderArgs.current().put("mostrarCampoOdometro", true);
 			}

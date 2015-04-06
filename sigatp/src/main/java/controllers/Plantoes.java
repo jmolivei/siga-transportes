@@ -70,7 +70,7 @@ public class Plantoes extends Controller {
 		
 		for (Afastamento item : afastamentos) {
 			listaAfastamento += listaAfastamento == "" ? "" : ",";
-			listaAfastamento += formatarData(item.dataHoraInicio) + " a " + formatarData(item.dataHoraFim);
+			listaAfastamento += formatarData(item.getDataHoraInicio()) + " a " + formatarData(item.getDataHoraFim());
 		}
 		
 		if (!listaAfastamento.equals("")) {

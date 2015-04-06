@@ -28,13 +28,18 @@
 					 <c:forEach items="${afastamentos}" var="afastamento">				
 					   	<tr>
 					   		<td>${afastamento.descricao}</td>
-				    	    <td><fmt:formatDate pattern="dd/MM/yyyy HH:mm" value="${afastamento.dataHoraInicio}" /></td>
-				    	    <td><fmt:formatDate pattern="dd/MM/yyyy HH:mm" value="${afastamento.dataHoraFim}" /></td>
-				    		<td><a href="@{Afastamentos.editar(afastamento.id)}">Editar</a></td>
-				    		<td><a href="@{Afastamentos.excluir(afastamento.id)}" onclick="javascript:return confirm('Tem certeza de que deseja excluir este afastamento?');">Excluir</a></td>
+				    	    <td><fmt:formatDate pattern="dd/MM/yyyy HH:mm" value="${afastamento.dataHoraInicio.time}" /></td>
+				    	    <td><fmt:formatDate pattern="dd/MM/yyyy HH:mm" value="${afastamento.dataHoraFim.time}" /></td>
+				    		<td><a href="${linkTo[AfastamentoController].edita[afastamento.id]}"><fmt:message key="views.botoes.editar"/></a></td>
+				    		<td>
+				    			<a href="${linkTo[AfastamentoController].exclui[afastamento.id]}" 
+				    				onclick="javascript:return confirm('Tem certeza de que deseja excluir este afastamento?');">
+				    				<fmt:message key="views.botoes.excluir"/></a>
+				    		</td>
 						</tr>
 					 </c:forEach> 				
 				     </table>   
+				     <div id="pagination"/>
 				</div>
 		</c:when>
 		<c:otherwise>
@@ -42,7 +47,8 @@
 		</c:otherwise>
 	</c:choose>
 	<div class="gt-table-buttons">
-		<a href="@{Afastamentos.incluir(condutor.id)}" class="gt-btn-medium gt-btn-left">&{'views.botoes.incluir'}</a>
+		<a href="${linkTo[AfastamentoController].inclui[condutor.id]}" id="botaoIncluirCondutor"
+					class="gt-btn-medium gt-btn-left"><fmt:message key="views.botoes.incluir"/></a>
 	</div>
 		</div>
 	</div>
