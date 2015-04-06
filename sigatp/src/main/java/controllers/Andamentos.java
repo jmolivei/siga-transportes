@@ -3,20 +3,22 @@ package controllers;
 import java.util.Calendar;
 import java.util.List;
 
-import controllers.AutorizacaoGIAntigo.RoleAdmin;
-import controllers.AutorizacaoGIAntigo.RoleAdminFrota;
-import controllers.AutorizacaoGIAntigo.RoleAdminMissao;
-import controllers.AutorizacaoGIAntigo.RoleAprovador;
 import play.data.validation.Valid;
 import play.data.validation.Validation;
 import play.i18n.Messages;
-import play.mvc.*;
+import play.mvc.Before;
+import play.mvc.Controller;
+import play.mvc.Http;
+import play.mvc.With;
 import br.gov.jfrj.siga.dp.DpPessoa;
+import br.gov.jfrj.siga.tp.auth.annotation.RoleAdmin;
+import br.gov.jfrj.siga.tp.auth.annotation.RoleAdminFrota;
+import br.gov.jfrj.siga.tp.auth.annotation.RoleAdminMissao;
+import br.gov.jfrj.siga.tp.auth.annotation.RoleAprovador;
 import br.gov.jfrj.siga.tp.model.Andamento;
 import br.gov.jfrj.siga.tp.model.EstadoRequisicao;
 import br.gov.jfrj.siga.tp.model.RequisicaoTransporte;
 import br.gov.jfrj.siga.tp.util.MenuMontador;
-import models.*;
 
 @With(AutorizacaoGIAntigo.class)
 public class Andamentos extends Controller {

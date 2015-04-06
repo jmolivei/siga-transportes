@@ -8,20 +8,20 @@ import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 
+import play.data.validation.Validation;
+import play.db.jpa.JPA;
+import play.i18n.Messages;
+import play.mvc.Controller;
+import play.mvc.Scope.RenderArgs;
+import play.mvc.With;
+import br.gov.jfrj.siga.tp.auth.annotation.RoleAdmin;
+import br.gov.jfrj.siga.tp.auth.annotation.RoleAdminMissao;
+import br.gov.jfrj.siga.tp.auth.annotation.RoleAdminMissaoComplexo;
 import br.gov.jfrj.siga.tp.model.Afastamento;
 import br.gov.jfrj.siga.tp.model.Condutor;
 import br.gov.jfrj.siga.tp.model.DiaDaSemana;
 import br.gov.jfrj.siga.tp.model.Mes;
 import br.gov.jfrj.siga.tp.model.Plantao;
-import controllers.AutorizacaoGIAntigo.RoleAdmin;
-import controllers.AutorizacaoGIAntigo.RoleAdminMissao;
-import controllers.AutorizacaoGIAntigo.RoleAdminMissaoComplexo;
-import play.data.validation.Validation;
-import play.db.jpa.JPA;
-import play.i18n.Messages;
-import play.mvc.Controller;
-import play.mvc.With;
-import play.mvc.Scope.RenderArgs;
 
 @With(AutorizacaoGIAntigo.class)
 public class PlantoesMensais extends Controller {

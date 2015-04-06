@@ -13,6 +13,10 @@ import play.mvc.Scope.RenderArgs;
 import play.mvc.With;
 import br.gov.jfrj.siga.cp.CpComplexo;
 import br.gov.jfrj.siga.dp.DpPessoa;
+import br.gov.jfrj.siga.tp.auth.annotation.RoleAdmin;
+import br.gov.jfrj.siga.tp.auth.annotation.RoleAdminMissao;
+import br.gov.jfrj.siga.tp.auth.annotation.RoleAdminMissaoComplexo;
+import br.gov.jfrj.siga.tp.auth.annotation.RoleAprovador;
 import br.gov.jfrj.siga.tp.model.Andamento;
 import br.gov.jfrj.siga.tp.model.CpRepository;
 import br.gov.jfrj.siga.tp.model.EstadoRequisicao;
@@ -21,10 +25,6 @@ import br.gov.jfrj.siga.tp.model.RequisicaoTransporte;
 import br.gov.jfrj.siga.tp.model.TipoDePassageiro;
 import br.gov.jfrj.siga.tp.util.MenuMontador;
 import br.gov.jfrj.siga.tp.util.SigaTpException;
-import controllers.AutorizacaoGIAntigo.RoleAdmin;
-import controllers.AutorizacaoGIAntigo.RoleAdminMissao;
-import controllers.AutorizacaoGIAntigo.RoleAdminMissaoComplexo;
-import controllers.AutorizacaoGIAntigo.RoleAprovador;
 
 @With(AutorizacaoGIAntigo.class)
 public class Requisicoes extends Controller {

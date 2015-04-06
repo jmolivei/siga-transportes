@@ -1,24 +1,23 @@
 package controllers;
 
-import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
+import play.data.binding.As;
+import play.data.validation.Valid;
+import play.data.validation.Validation;
+import play.mvc.Controller;
+import play.mvc.With;
+import br.gov.jfrj.siga.tp.auth.annotation.RoleAdmin;
+import br.gov.jfrj.siga.tp.auth.annotation.RoleAdminMissao;
+import br.gov.jfrj.siga.tp.auth.annotation.RoleAdminMissaoComplexo;
 import br.gov.jfrj.siga.tp.model.Afastamento;
 import br.gov.jfrj.siga.tp.model.Condutor;
 import br.gov.jfrj.siga.tp.model.ItemMenu;
 import br.gov.jfrj.siga.tp.model.Missao;
 import br.gov.jfrj.siga.tp.model.Plantao;
 import br.gov.jfrj.siga.tp.util.MenuMontador;
-import play.data.binding.As;
-import play.data.validation.Valid;
-import play.data.validation.Validation;
-import play.mvc.Controller;
-import play.mvc.With;
-import controllers.AutorizacaoGIAntigo.RoleAdmin;
-import controllers.AutorizacaoGIAntigo.RoleAdminMissao;
-import controllers.AutorizacaoGIAntigo.RoleAdminMissaoComplexo;
 
 @With(AutorizacaoGIAntigo.class)
 public class Plantoes extends Controller {

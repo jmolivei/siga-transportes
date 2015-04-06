@@ -2,16 +2,17 @@ package controllers;
 
 import java.util.List;
 
+import play.data.validation.Valid;
+import play.data.validation.Validation;
+import play.mvc.Controller;
+import play.mvc.With;
+import br.gov.jfrj.siga.tp.auth.annotation.RoleAdmin;
 import br.gov.jfrj.siga.tp.model.Abastecimento;
 import br.gov.jfrj.siga.tp.model.Condutor;
 import br.gov.jfrj.siga.tp.model.Fornecedor;
 import br.gov.jfrj.siga.tp.model.ItemMenu;
 import br.gov.jfrj.siga.tp.model.Veiculo;
 import br.gov.jfrj.siga.tp.util.MenuMontador;
-import play.data.validation.Valid;
-import play.data.validation.Validation;
-import play.mvc.Controller;
-import play.mvc.With;
 
 @With(AutorizacaoGIAntigo.class)
 public class Gabinetes extends Controller {
@@ -29,7 +30,7 @@ public class Gabinetes extends Controller {
 		render(abastecimentos, veiculo);
 	}
 
-	@AutorizacaoGIAntigo.RoleAdmin
+	@RoleAdmin
 	public static void incluir() throws Exception{
 		List<Fornecedor> fornecedores = Fornecedor.listarTodos();
 		List<Veiculo> veiculos = Veiculo.listarTodos(AutorizacaoGIAntigo.titular().getOrgaoUsuario());
@@ -38,7 +39,7 @@ public class Gabinetes extends Controller {
 		render(abastecimento, veiculos, condutores, fornecedores);
 	}
 
-	@AutorizacaoGIAntigo.RoleAdmin
+	@RoleAdmin
 	public static void editar(Long id) throws Exception{
 		List<Fornecedor> fornecedores = Fornecedor.listarTodos();
 		List<Veiculo> veiculos = Veiculo.listarTodos(AutorizacaoGIAntigo.titular().getOrgaoUsuario());
@@ -48,7 +49,7 @@ public class Gabinetes extends Controller {
 	}
 
 
-	@AutorizacaoGIAntigo.RoleAdmin
+	@RoleAdmin
 	public static void salvar(@Valid Abastecimento abastecimento) throws Exception{
 		if(Validation.hasErrors()){
 			List<Fornecedor> fornecedores = Fornecedor.listarTodos();
@@ -63,7 +64,7 @@ public class Gabinetes extends Controller {
 		}	
 	}		
 
-	@AutorizacaoGIAntigo.RoleAdmin
+	@RoleAdmin
 	public static void excluir(Long id){
 		Abastecimento abastecimento = Abastecimento.findById(id);
 		abastecimento.delete();

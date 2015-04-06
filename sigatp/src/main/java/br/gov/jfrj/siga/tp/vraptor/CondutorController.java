@@ -15,13 +15,13 @@ import br.com.caelum.vraptor.core.Localization;
 import br.gov.jfrj.siga.dp.DpPessoa;
 import br.gov.jfrj.siga.dp.dao.CpDao;
 import br.gov.jfrj.siga.tp.auth.AutorizacaoGI;
+import br.gov.jfrj.siga.tp.auth.annotation.RoleAdmin;
+import br.gov.jfrj.siga.tp.auth.annotation.RoleAdminMissao;
+import br.gov.jfrj.siga.tp.auth.annotation.RoleAdminMissaoComplexo;
 import br.gov.jfrj.siga.tp.model.CategoriaCNH;
 import br.gov.jfrj.siga.tp.model.Condutor;
 import br.gov.jfrj.siga.tp.model.ItemMenu;
 import br.gov.jfrj.siga.vraptor.SigaObjects;
-import controllers.AutorizacaoGIAntigo.RoleAdmin;
-import controllers.AutorizacaoGIAntigo.RoleAdminMissao;
-import controllers.AutorizacaoGIAntigo.RoleAdminMissaoComplexo;
 
 @Resource
 public class CondutorController extends TpController {

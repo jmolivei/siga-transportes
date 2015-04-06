@@ -12,6 +12,8 @@ import play.mvc.Controller;
 import play.mvc.With;
 import br.gov.jfrj.siga.dp.CpOrgaoUsuario;
 import br.gov.jfrj.siga.dp.DpPessoa;
+import br.gov.jfrj.siga.tp.auth.annotation.RoleAdmin;
+import br.gov.jfrj.siga.tp.auth.annotation.RoleAdminFrota;
 import br.gov.jfrj.siga.tp.model.Andamento;
 import br.gov.jfrj.siga.tp.model.Avaria;
 import br.gov.jfrj.siga.tp.model.EstadoRequisicao;
@@ -23,8 +25,6 @@ import br.gov.jfrj.siga.tp.model.TiposDeServico;
 import br.gov.jfrj.siga.tp.model.Veiculo;
 import br.gov.jfrj.siga.tp.util.MenuMontador;
 import br.gov.jfrj.siga.tp.util.SigaTpException;
-import controllers.AutorizacaoGIAntigo.RoleAdmin;
-import controllers.AutorizacaoGIAntigo.RoleAdminFrota;
 
 @With(AutorizacaoGIAntigo.class)
 public class ServicosVeiculo extends Controller {

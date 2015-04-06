@@ -10,15 +10,14 @@ import play.mvc.Scope.RenderArgs;
 import play.mvc.With;
 import br.gov.jfrj.siga.dp.CpOrgaoUsuario;
 import br.gov.jfrj.siga.dp.DpLotacao;
-import br.gov.jfrj.siga.tp.model.CpRepository;
+import br.gov.jfrj.siga.tp.auth.annotation.RoleAdmin;
+import br.gov.jfrj.siga.tp.auth.annotation.RoleAdminFrota;
 import br.gov.jfrj.siga.tp.model.Grupo;
 import br.gov.jfrj.siga.tp.model.ItemMenu;
 import br.gov.jfrj.siga.tp.model.LotacaoVeiculo;
 import br.gov.jfrj.siga.tp.model.Veiculo;
 import br.gov.jfrj.siga.tp.util.Combo;
 import br.gov.jfrj.siga.tp.util.MenuMontador;
-import controllers.AutorizacaoGIAntigo.RoleAdmin;
-import controllers.AutorizacaoGIAntigo.RoleAdminFrota;
 
 @With(AutorizacaoGIAntigo.class)
 public class Veiculos extends Controller {

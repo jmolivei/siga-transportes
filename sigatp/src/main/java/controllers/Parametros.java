@@ -9,9 +9,9 @@ import play.mvc.Scope.RenderArgs;
 import play.mvc.With;
 import br.gov.jfrj.siga.cp.CpComplexo;
 import br.gov.jfrj.siga.dp.CpOrgaoUsuario;
+import br.gov.jfrj.siga.tp.auth.annotation.RoleAdmin;
 import br.gov.jfrj.siga.tp.model.CpRepository;
 import br.gov.jfrj.siga.tp.model.Parametro;
-import controllers.AutorizacaoGIAntigo.RoleAdmin;
 
 @With(AutorizacaoGIAntigo.class)
 public class Parametros extends Controller {

@@ -20,6 +20,10 @@ import play.mvc.With;
 import play.templates.JavaExtensions;
 import br.gov.jfrj.siga.dp.CpOrgaoUsuario;
 import br.gov.jfrj.siga.dp.DpPessoa;
+import br.gov.jfrj.siga.tp.auth.annotation.RoleAdmin;
+import br.gov.jfrj.siga.tp.auth.annotation.RoleAdminMissao;
+import br.gov.jfrj.siga.tp.auth.annotation.RoleAdminMissaoComplexo;
+import br.gov.jfrj.siga.tp.auth.annotation.RoleAgente;
 import br.gov.jfrj.siga.tp.model.Andamento;
 import br.gov.jfrj.siga.tp.model.CategoriaCNH;
 import br.gov.jfrj.siga.tp.model.Condutor;
@@ -32,10 +36,6 @@ import br.gov.jfrj.siga.tp.model.RequisicaoVsEstado;
 import br.gov.jfrj.siga.tp.model.Veiculo;
 import br.gov.jfrj.siga.tp.util.MenuMontador;
 import br.gov.jfrj.siga.tp.util.PerguntaSimNao;
-import controllers.AutorizacaoGIAntigo.RoleAdmin;
-import controllers.AutorizacaoGIAntigo.RoleAdminMissao;
-import controllers.AutorizacaoGIAntigo.RoleAdminMissaoComplexo;
-import controllers.AutorizacaoGIAntigo.RoleAgente;
 
 @With(AutorizacaoGIAntigo.class)
 public class Missoes extends Controller {

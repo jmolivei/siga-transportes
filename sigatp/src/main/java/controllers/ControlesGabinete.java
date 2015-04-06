@@ -4,18 +4,18 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
-import br.gov.jfrj.siga.tp.model.Condutor;
-import br.gov.jfrj.siga.tp.model.ControleGabinete;
-import br.gov.jfrj.siga.tp.model.ItemMenu;
-import br.gov.jfrj.siga.tp.model.Veiculo;
-import br.gov.jfrj.siga.tp.util.MenuMontador;
 import play.data.validation.Valid;
 import play.data.validation.Validation;
 import play.i18n.Messages;
 import play.mvc.Controller;
 import play.mvc.With;
-import controllers.AutorizacaoGIAntigo.RoleAdminGabinete;
-import controllers.AutorizacaoGIAntigo.RoleGabinete;
+import br.gov.jfrj.siga.tp.auth.annotation.RoleAdminGabinete;
+import br.gov.jfrj.siga.tp.auth.annotation.RoleGabinete;
+import br.gov.jfrj.siga.tp.model.Condutor;
+import br.gov.jfrj.siga.tp.model.ControleGabinete;
+import br.gov.jfrj.siga.tp.model.ItemMenu;
+import br.gov.jfrj.siga.tp.model.Veiculo;
+import br.gov.jfrj.siga.tp.util.MenuMontador;
 
 @With(AutorizacaoGIAntigo.class)
 public class ControlesGabinete extends Controller {

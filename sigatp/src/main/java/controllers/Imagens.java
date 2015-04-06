@@ -5,15 +5,15 @@ import java.util.List;
 
 import javax.activation.MimetypesFileTypeMap;
 
-import br.gov.jfrj.siga.tp.model.Imagem;
 import play.data.Upload;
 import play.data.validation.Valid;
 import play.data.validation.Validation;
 import play.mvc.Controller;
 import play.mvc.With;
-import controllers.AutorizacaoGIAntigo.RoleAdmin;
-import controllers.AutorizacaoGIAntigo.RoleAdminFrota;
-import controllers.AutorizacaoGIAntigo.RoleAdminMissao;
+import br.gov.jfrj.siga.tp.auth.annotation.RoleAdmin;
+import br.gov.jfrj.siga.tp.auth.annotation.RoleAdminFrota;
+import br.gov.jfrj.siga.tp.auth.annotation.RoleAdminMissao;
+import br.gov.jfrj.siga.tp.model.Imagem;
 
 @With(AutorizacaoGIAntigo.class)
 public class Imagens extends Controller {

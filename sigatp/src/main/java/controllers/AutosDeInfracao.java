@@ -2,19 +2,19 @@ package controllers;
 
 import java.util.List;
 
+import play.data.validation.Valid;
+import play.data.validation.Validation;
+import play.mvc.Controller;
+import play.mvc.With;
+import br.gov.jfrj.siga.tp.auth.annotation.RoleAdmin;
+import br.gov.jfrj.siga.tp.auth.annotation.RoleAdminMissao;
+import br.gov.jfrj.siga.tp.auth.annotation.RoleAdminMissaoComplexo;
 import br.gov.jfrj.siga.tp.model.AutoDeInfracao;
 import br.gov.jfrj.siga.tp.model.Condutor;
 import br.gov.jfrj.siga.tp.model.ItemMenu;
 import br.gov.jfrj.siga.tp.model.TipoDeNotificacao;
 import br.gov.jfrj.siga.tp.model.Veiculo;
 import br.gov.jfrj.siga.tp.util.MenuMontador;
-import play.data.validation.Valid;
-import play.data.validation.Validation;
-import play.mvc.Controller;
-import play.mvc.With;
-import controllers.AutorizacaoGIAntigo.RoleAdmin;
-import controllers.AutorizacaoGIAntigo.RoleAdminMissao;
-import controllers.AutorizacaoGIAntigo.RoleAdminMissaoComplexo;
 
 @With(AutorizacaoGIAntigo.class)
 public class AutosDeInfracao extends Controller {

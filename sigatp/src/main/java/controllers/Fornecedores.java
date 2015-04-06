@@ -2,16 +2,18 @@ package controllers;
 
 import java.util.List;
 
-import br.gov.jfrj.siga.tp.model.Fornecedor;
-import br.gov.jfrj.siga.tp.model.Uf;
-import controllers.AutorizacaoGIAntigo.RoleAdmin;
-import controllers.AutorizacaoGIAntigo.RoleAdminFrota;
-import controllers.AutorizacaoGIAntigo.RoleAdminMissao;
 import play.data.validation.Valid;
 import play.data.validation.Validation;
 import play.mvc.Before;
 import play.mvc.Controller;
 import play.mvc.With;
+import br.gov.jfrj.siga.tp.auth.annotation.RoleAdmin;
+import br.gov.jfrj.siga.tp.auth.annotation.RoleAdminFrota;
+import br.gov.jfrj.siga.tp.auth.annotation.RoleAdminGabinete;
+import br.gov.jfrj.siga.tp.auth.annotation.RoleAdminMissao;
+import br.gov.jfrj.siga.tp.auth.annotation.RoleGabinete;
+import br.gov.jfrj.siga.tp.model.Fornecedor;
+import br.gov.jfrj.siga.tp.model.Uf;
 
 @With(AutorizacaoGIAntigo.class)
 public class Fornecedores extends Controller {
@@ -24,8 +26,8 @@ public class Fornecedores extends Controller {
 	@RoleAdmin
 	@RoleAdminFrota
 	@RoleAdminMissao	
-	@AutorizacaoGIAntigo.RoleAdminGabinete
-	@AutorizacaoGIAntigo.RoleGabinete
+	@RoleAdminGabinete
+	@RoleGabinete
 	public static void incluir() {
 		Fornecedor fornecedor = new Fornecedor();
 		render(fornecedor);
@@ -34,8 +36,8 @@ public class Fornecedores extends Controller {
 	@RoleAdmin
 	@RoleAdminFrota
 	@RoleAdminMissao
-	@AutorizacaoGIAntigo.RoleAdminGabinete
-	@AutorizacaoGIAntigo.RoleGabinete
+	@RoleAdminGabinete
+	@RoleGabinete
 	public static void editar(Long id) {
 		Fornecedor fornecedor = Fornecedor.findById(id);
 		render(fornecedor);
@@ -44,8 +46,8 @@ public class Fornecedores extends Controller {
 	@RoleAdmin
 	@RoleAdminFrota
 	@RoleAdminMissao
-	@AutorizacaoGIAntigo.RoleAdminGabinete
-	@AutorizacaoGIAntigo.RoleGabinete
+	@RoleAdminGabinete
+	@RoleGabinete
 	public static void salvar(@Valid Fornecedor fornecedor) {
 		if (Validation.hasErrors()) {
 			String template = fornecedor.id > 0 ? "Fornecedores/editar.html"

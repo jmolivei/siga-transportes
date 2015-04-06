@@ -1,9 +1,5 @@
 package controllers;
 
-import java.lang.annotation.ElementType;
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
-import java.lang.annotation.Target;
 import java.util.List;
 
 import org.apache.commons.lang.StringUtils;
@@ -22,6 +18,15 @@ import br.gov.jfrj.siga.cp.CpSituacaoConfiguracao;
 import br.gov.jfrj.siga.cp.CpTipoConfiguracao;
 import br.gov.jfrj.siga.cp.bl.Cp;
 import br.gov.jfrj.siga.dp.DpPessoa;
+import br.gov.jfrj.siga.tp.auth.annotation.LogMotivo;
+import br.gov.jfrj.siga.tp.auth.annotation.RoleAdmin;
+import br.gov.jfrj.siga.tp.auth.annotation.RoleAdminFrota;
+import br.gov.jfrj.siga.tp.auth.annotation.RoleAdminGabinete;
+import br.gov.jfrj.siga.tp.auth.annotation.RoleAdminMissao;
+import br.gov.jfrj.siga.tp.auth.annotation.RoleAdminMissaoComplexo;
+import br.gov.jfrj.siga.tp.auth.annotation.RoleAgente;
+import br.gov.jfrj.siga.tp.auth.annotation.RoleAprovador;
+import br.gov.jfrj.siga.tp.auth.annotation.RoleGabinete;
 import br.gov.jfrj.siga.tp.model.CpRepository;
 
 
@@ -435,42 +440,4 @@ public class AutorizacaoGIAntigo extends SigaApplication {
 		// TODO Auto-generated method stub
 		return (CpComplexo) renderArgs.get("cpComplexoAdministrador");
 	}
-
-	@Target({ElementType.METHOD, ElementType.TYPE})
-	@Retention(RetentionPolicy.RUNTIME)
-	public @interface RoleAdmin {}
-
-	@Target({ElementType.METHOD, ElementType.TYPE})
-	@Retention(RetentionPolicy.RUNTIME)
-	public @interface RoleAdminFrota {}
-
-	@Target({ElementType.METHOD, ElementType.TYPE})
-	@Retention(RetentionPolicy.RUNTIME)
-	public @interface RoleAdminMissao {}
-
-	@Target({ElementType.METHOD, ElementType.TYPE})
-	@Retention(RetentionPolicy.RUNTIME)
-	public @interface RoleAprovador {}
-
-	@Target({ElementType.METHOD, ElementType.TYPE})
-	@Retention(RetentionPolicy.RUNTIME)
-	public @interface RoleGabinete {}
-
-	@Target({ElementType.METHOD, ElementType.TYPE})
-	@Retention(RetentionPolicy.RUNTIME)
-	public @interface RoleAdminGabinete {}
-
-	@Target({ElementType.METHOD, ElementType.TYPE})
-	@Retention(RetentionPolicy.RUNTIME)
-	public @interface RoleAgente {}
-	
-	@Target({ElementType.METHOD, ElementType.TYPE})
-	@Retention(RetentionPolicy.RUNTIME)
-	public @interface RoleAdminMissaoComplexo {}
-	
-	@Target({ElementType.METHOD, ElementType.TYPE})
-	@Retention(RetentionPolicy.RUNTIME)
-	public @interface LogMotivo {}
-
-
 }

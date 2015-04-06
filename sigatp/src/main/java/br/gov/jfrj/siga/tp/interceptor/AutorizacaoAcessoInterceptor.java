@@ -9,14 +9,14 @@ import br.com.caelum.vraptor.interceptor.Interceptor;
 import br.com.caelum.vraptor.ioc.RequestScoped;
 import br.com.caelum.vraptor.resource.ResourceMethod;
 import br.gov.jfrj.siga.tp.auth.AutorizacaoGI;
-import controllers.AutorizacaoGIAntigo.RoleAdmin;
-import controllers.AutorizacaoGIAntigo.RoleAdminFrota;
-import controllers.AutorizacaoGIAntigo.RoleAdminGabinete;
-import controllers.AutorizacaoGIAntigo.RoleAdminMissao;
-import controllers.AutorizacaoGIAntigo.RoleAdminMissaoComplexo;
-import controllers.AutorizacaoGIAntigo.RoleAgente;
-import controllers.AutorizacaoGIAntigo.RoleAprovador;
-import controllers.AutorizacaoGIAntigo.RoleGabinete;
+import br.gov.jfrj.siga.tp.auth.annotation.RoleAdmin;
+import br.gov.jfrj.siga.tp.auth.annotation.RoleAdminFrota;
+import br.gov.jfrj.siga.tp.auth.annotation.RoleAdminGabinete;
+import br.gov.jfrj.siga.tp.auth.annotation.RoleAdminMissao;
+import br.gov.jfrj.siga.tp.auth.annotation.RoleAdminMissaoComplexo;
+import br.gov.jfrj.siga.tp.auth.annotation.RoleAgente;
+import br.gov.jfrj.siga.tp.auth.annotation.RoleAprovador;
+import br.gov.jfrj.siga.tp.auth.annotation.RoleGabinete;
 
 @RequestScoped
 @Intercepts(after = { PreencherDadosAutorizacaoInterceptor.class }, before = ExecuteMethodInterceptor.class)
