@@ -2,12 +2,12 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
 <%@ taglib uri="http://localhost/jeetags" prefix="siga" %>
 
-﻿${erros}
+<fmt:message key="${erros}" />
 
 <siga:pagina titulo="Transportes">
 	<div class="gt-bd clearfix">
 		<div class="gt-content clearfix">
-			<h2>Finalidades</h2>
+			<h2><fmt:message key="finalidades" /></h2>
 			<%-- #{include 'Finalidades/menu.html' /} --%>
 			<c:choose>
 				<c:when test="${finalidades.size() > 0}">

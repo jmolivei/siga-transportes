@@ -58,6 +58,7 @@
 				<!-- <li><a id="menuAdmCompras" class="" href="@{Application.emdesenvolvimento}">Compras de Materiais</a></li> -->
 				<li><a id="menuAdmCondutores" class="" href="@{Condutores.listar}">Condutores</a></li>
 				<li><a id="menuAdmFinalidades" class="" href="@{Finalidades.listar}">Finalidades</a></li>
+				<%-- <li><a id="menuAdmFinalidades" class="" href="${linkTo[FinalidadeController].listar}"><fmt:message key="finalidades" /></a></li> --%>
 				<li><a id="menuAdmFornecedores" class="" href="@{Fornecedores.listar}">Fornecedores</a></li>
 				<li><a id="menuAdmPenalidades" class="" href="@{penalidades.listar}">Penalidades</a></li>		
 				<li><a id="menuAdmPlantoes" class="" href="@{PlantoesMensais.listar}">Plant&otilde;es mensais</a></li>
