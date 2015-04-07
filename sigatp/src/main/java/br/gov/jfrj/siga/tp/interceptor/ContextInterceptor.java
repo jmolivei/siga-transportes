@@ -34,15 +34,10 @@ public class ContextInterceptor implements Interceptor {
 
 	@Override
 	public boolean accepts(ResourceMethod method) {
-		return Boolean.TRUE;
+		return Boolean.FALSE;
 	}
 
 	@Override
 	public void intercept(InterceptorStack stack, ResourceMethod method, Object resourceInstance) throws InterceptionException {
-		try {
-			stack.next(method, resourceInstance);
-		} catch (Exception ex) {
-			throw new InterceptionException(ex);
-		}
 	}
 }

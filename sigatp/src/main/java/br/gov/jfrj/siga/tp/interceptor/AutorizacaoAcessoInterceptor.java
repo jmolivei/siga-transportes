@@ -3,7 +3,6 @@ package br.gov.jfrj.siga.tp.interceptor;
 import br.com.caelum.vraptor.InterceptionException;
 import br.com.caelum.vraptor.Intercepts;
 import br.com.caelum.vraptor.core.InterceptorStack;
-import br.com.caelum.vraptor.interceptor.ExecuteMethodInterceptor;
 import br.com.caelum.vraptor.interceptor.Interceptor;
 import br.com.caelum.vraptor.ioc.RequestScoped;
 import br.com.caelum.vraptor.resource.ResourceMethod;
@@ -25,7 +24,7 @@ import br.gov.jfrj.siga.tp.auth.annotation.RoleGabinete;
  *
  */
 @RequestScoped
-@Intercepts(after = { PreencherDadosAutorizacaoInterceptor.class }, before = ExecuteMethodInterceptor.class)
+@Intercepts(after = { PreencherDadosAutorizacaoInterceptor.class }, before = MotivoLogInterceptor.class)
 public class AutorizacaoAcessoInterceptor implements Interceptor {
 
 	private AutorizacaoGI autorizacaoGI;

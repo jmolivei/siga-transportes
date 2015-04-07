@@ -7,8 +7,8 @@ import br.com.caelum.vraptor.interceptor.InstantiateInterceptor;
 import br.com.caelum.vraptor.interceptor.Interceptor;
 import br.com.caelum.vraptor.ioc.RequestScoped;
 import br.com.caelum.vraptor.resource.ResourceMethod;
-import br.gov.jfrj.siga.tp.auth.Autorizacoes;
 import br.gov.jfrj.siga.tp.auth.AutorizacaoGI;
+import br.gov.jfrj.siga.tp.auth.Autorizacoes;
 
 /**
  * Inteceptor responsavel por preencher as permissoes disponiveis para o usuario.
