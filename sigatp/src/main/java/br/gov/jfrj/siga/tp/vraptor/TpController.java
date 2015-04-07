@@ -11,6 +11,7 @@ import org.apache.log4j.Logger;
 
 import play.i18n.Messages;
 import br.com.caelum.vraptor.Result;
+import br.com.caelum.vraptor.Validator;
 import br.com.caelum.vraptor.core.Localization;
 import br.gov.jfrj.siga.cp.CpComplexo;
 import br.gov.jfrj.siga.cp.CpConfiguracao;
@@ -28,11 +29,14 @@ import br.gov.jfrj.siga.vraptor.SigaObjects;
 public class TpController extends SigaController {
 
 	private static final Logger LOGGER = Logger.getLogger(TpController.class);
-	private AutorizacaoGI dadosAutorizacao;
+	
+	protected Validator validator;
 	protected Localization localization;
+	private AutorizacaoGI dadosAutorizacao;
 
-	public TpController(HttpServletRequest request, Result result, CpDao dao, Localization localization, SigaObjects so, AutorizacaoGI dadosAutorizacao, EntityManager em) throws Exception {
+	public TpController(HttpServletRequest request, Result result, CpDao dao, Localization localization, Validator validator, SigaObjects so, AutorizacaoGI dadosAutorizacao, EntityManager em) throws Exception {
 		super(request, result, dao, so, em);
+		this.validator = validator;
 		this.dadosAutorizacao = dadosAutorizacao;
 		this.localization = localization;
 		this.preencherDadosPadrao();

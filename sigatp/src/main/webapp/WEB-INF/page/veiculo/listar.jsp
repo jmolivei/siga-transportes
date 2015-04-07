@@ -1,17 +1,15 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
 <%@ taglib uri="http://localhost/jeetags" prefix="siga" %>
-
-<c:if test="${erros}">
-	<fmt:message key="${erros}" />
-</c:if>
-
+<%@ taglib prefix="sigatp" tagdir="/WEB-INF/tags/" %>
 
 <siga:pagina titulo="Transportes">
 	<div class="gt-bd clearfix">
 		<div class="gt-content clearfix">
 			<h2>Rela&ccedil;&atilde;o de Veiculos</h2>
 			
+			<sigatp:erros></sigatp:erros>
+
 			<c:if test="${veiculos.size() > 0}">
 				<div class="gt-content-box gt-for-table">     
 				 	<table id="htmlgrid" class="gt-table" >

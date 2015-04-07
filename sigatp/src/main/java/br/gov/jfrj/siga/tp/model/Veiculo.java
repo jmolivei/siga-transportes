@@ -20,6 +20,7 @@ import javax.persistence.Query;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.persistence.Transient;
+import javax.validation.constraints.NotNull;
 
 import org.hibernate.envers.Audited;
 import org.hibernate.envers.RelationTargetAuditMode;
@@ -63,6 +64,7 @@ public class Veiculo extends Objeto implements Comparable<Veiculo> {
 	@UpperCase
 	private String placa;
 
+	@NotNull(message = "{teste.usando.bean.validation}")
 	@ManyToOne
 	private Grupo grupo;
 

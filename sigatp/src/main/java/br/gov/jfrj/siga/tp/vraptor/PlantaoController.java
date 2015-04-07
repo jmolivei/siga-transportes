@@ -11,6 +11,7 @@ import play.mvc.With;
 import br.com.caelum.vraptor.Path;
 import br.com.caelum.vraptor.Resource;
 import br.com.caelum.vraptor.Result;
+import br.com.caelum.vraptor.Validator;
 import br.com.caelum.vraptor.core.Localization;
 import br.gov.jfrj.siga.dp.dao.CpDao;
 import br.gov.jfrj.siga.tp.auth.AutorizacaoGI;
@@ -20,7 +21,6 @@ import br.gov.jfrj.siga.tp.auth.annotation.RoleAdminMissaoComplexo;
 import br.gov.jfrj.siga.tp.model.Condutor;
 import br.gov.jfrj.siga.tp.model.Missao;
 import br.gov.jfrj.siga.tp.model.Plantao;
-import br.gov.jfrj.siga.tp.model.TpDao;
 import br.gov.jfrj.siga.vraptor.SigaObjects;
 import controllers.AutorizacaoGIAntigo;
 
@@ -28,10 +28,8 @@ import controllers.AutorizacaoGIAntigo;
 @With(AutorizacaoGIAntigo.class)
 public class PlantaoController extends TpController {
 
-	public PlantaoController(HttpServletRequest request, Result result,
-			CpDao dao, Localization localization, SigaObjects so,
-			AutorizacaoGI dadosAutorizacao, EntityManager em) throws Exception {
-		super(request, result, TpDao.getInstance(), localization, so, dadosAutorizacao, em);
+	public PlantaoController(HttpServletRequest request, Result result, CpDao dao, Localization localization, Validator validator, SigaObjects so, AutorizacaoGI dadosAutorizacao, EntityManager em) throws Exception {
+		super(request, result, dao, localization, validator, so, dadosAutorizacao, em);
 	}
 
 	// TODO HD arrumar esta budega

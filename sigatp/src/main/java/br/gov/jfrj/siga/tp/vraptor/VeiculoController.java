@@ -5,6 +5,7 @@ import java.util.List;
 
 import javax.persistence.EntityManager;
 import javax.servlet.http.HttpServletRequest;
+import javax.validation.Valid;
 
 import play.data.validation.Validation;
 import play.mvc.Before;
@@ -12,7 +13,10 @@ import play.mvc.Scope.RenderArgs;
 import br.com.caelum.vraptor.Path;
 import br.com.caelum.vraptor.Resource;
 import br.com.caelum.vraptor.Result;
+import br.com.caelum.vraptor.Validator;
 import br.com.caelum.vraptor.core.Localization;
+import br.com.caelum.vraptor.validator.I18nMessage;
+import br.com.caelum.vraptor.view.Results;
 import br.gov.jfrj.siga.dp.CpOrgaoUsuario;
 import br.gov.jfrj.siga.dp.DpLotacao;
 import br.gov.jfrj.siga.tp.auth.AutorizacaoGI;
@@ -32,14 +36,17 @@ import br.gov.jfrj.siga.vraptor.SigaObjects;
 @Path("/app/veiculos/")
 public class VeiculoController extends TpController {
 
-	public VeiculoController(HttpServletRequest request, Result result, Localization localization, SigaObjects so, AutorizacaoGI dadosAutorizacao, EntityManager em) throws Exception {
-		super(request, result, TpDao.getInstance(), localization, so, dadosAutorizacao, em);
+	public VeiculoController(HttpServletRequest request, Result result, Localization localization, Validator validator, SigaObjects so, AutorizacaoGI dadosAutorizacao, EntityManager em) throws Exception {
+		super(request, result, TpDao.getInstance(), localization, validator, so, dadosAutorizacao, em);
 	}
 
 	@Path("/listar")
-	public void listar() throws Exception {
+	public void listar(@Valid Veiculo veiculo) throws Exception {
+		validator.add(new I18nMessage("validacao.teste", "validacao.teste"));
+		
 		CpOrgaoUsuario cpOrgaoUsuario = getTitular().getOrgaoUsuario();
 		result.include("veiculos", Veiculo.listarTodos(cpOrgaoUsuario));
+		validator.onErrorUse(Results.page()).of(VeiculoController.class).listar(null);
 	}
 
 	@RoleAdmin
@@ -73,7 +80,7 @@ public class VeiculoController extends TpController {
 			LotacaoVeiculo novalotacao = new LotacaoVeiculo(null, veiculo, veiculo.getLotacaoAtual(), Calendar.getInstance(), null, veiculo.getOdometroEmKmAtual());
 			novalotacao.save();
 		}
-		listar();
+		listar(null);
 	}
 
 	@RoleAdmin
@@ -105,7 +112,7 @@ public class VeiculoController extends TpController {
 	public void excluir(Long id) throws Exception {
 		Veiculo veiculo = Veiculo.AR.findById(id);
 		veiculo.delete();
-		listar();
+		listar(null);
 	}
 
 	// public void buscarPeloId(Long Id) throws Exception {
