@@ -24,40 +24,82 @@ import org.hibernate.envers.Audited;
 
 import play.data.binding.As;
 import play.data.validation.Required;
-import play.db.jpa.GenericModel;
 import play.db.jpa.JPA;
+import br.gov.jfrj.siga.model.ActiveRecord;
 
 @Entity
 @Audited
 @Table(schema = "SIGATP")
-public class EscalaDeTrabalho extends GenericModel {
+public class EscalaDeTrabalho extends TpModel {
+
+	private static final long serialVersionUID = 1L;
+	public static ActiveRecord<EscalaDeTrabalho> AR = new ActiveRecord<>(EscalaDeTrabalho.class);
 	
 	@Id
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "hibernate_sequence_generator") @SequenceGenerator(name = "hibernate_sequence_generator", sequenceName="SIGATP.hibernate_sequence") 
-	public long id;
+	private long id;
 		
 	@Required
 	@As(lang={"*"}, value={"dd/MM/yyyy"})
-	public Calendar dataVigenciaInicio;
+	private Calendar dataVigenciaInicio;
 	
-	public Calendar dataVigenciaFim;
+	private Calendar dataVigenciaFim;
 	
 	@Required
 	@ManyToOne
 	@NotNull
-	public Condutor condutor;
+	private Condutor condutor;
 	
  	@Required(message = "Inclua ao menos um dia de trabalho na escala")
  	@NotNull
 	@OneToMany(mappedBy="escalaDeTrabalho")
-	public List<DiaDeTrabalho> diasDeTrabalho;
+ 	private List<DiaDeTrabalho> diasDeTrabalho;
 	
+	public long getId() {
+		return id;
+	}
+
+	public void setId(long id) {
+		this.id = id;
+	}
+
+	public Calendar getDataVigenciaInicio() {
+		return dataVigenciaInicio;
+	}
+
+	public void setDataVigenciaInicio(Calendar dataVigenciaInicio) {
+		this.dataVigenciaInicio = dataVigenciaInicio;
+	}
+
+	public Calendar getDataVigenciaFim() {
+		return dataVigenciaFim;
+	}
+
+	public void setDataVigenciaFim(Calendar dataVigenciaFim) {
+		this.dataVigenciaFim = dataVigenciaFim;
+	}
+
+	public Condutor getCondutor() {
+		return condutor;
+	}
+
+	public void setCondutor(Condutor condutor) {
+		this.condutor = condutor;
+	}
+
+	public List<DiaDeTrabalho> getDiasDeTrabalho() {
+		return diasDeTrabalho;
+	}
+
+	public void setDiasDeTrabalho(List<DiaDeTrabalho> diasDeTrabalho) {
+		this.diasDeTrabalho = diasDeTrabalho;
+	}
+
 	public EscalaDeTrabalho() {
 		this.id = new Long(0);
 		diasDeTrabalho = new ArrayList<DiaDeTrabalho>();
 	}
 	
-
 	public void iniciarVigencia() {
 		this.dataVigenciaInicio = Calendar.getInstance();
 	}
@@ -67,7 +109,7 @@ public class EscalaDeTrabalho extends GenericModel {
 	}
 
 	public static List<EscalaDeTrabalho> buscarTodosPorCondutor(Condutor condutor){
-		return EscalaDeTrabalho.find("condutor = ? ORDER BY dataVigenciaInicio DESC", condutor).fetch();
+		return EscalaDeTrabalho.AR.find("condutor = ? ORDER BY dataVigenciaInicio DESC", condutor).fetch();
 	}
 
 	public static List<EscalaDeTrabalho> buscarTodasVigentes() {
@@ -75,7 +117,7 @@ public class EscalaDeTrabalho extends GenericModel {
 		hqlVigentes.append("dataVigenciaInicio < current_date ");
 		hqlVigentes.append("and ((dataVigenciaFim is null) or (dataVigenciaFim > current_date)) ");
 		hqlVigentes.append("order by dataVigenciaInicio ");
-		List<EscalaDeTrabalho> retorno = EscalaDeTrabalho.find(hqlVigentes.toString()).fetch();
+		List<EscalaDeTrabalho> retorno = EscalaDeTrabalho.AR.find(hqlVigentes.toString()).fetch();
 		return retorno;
 	}
 	
@@ -141,8 +183,4 @@ public class EscalaDeTrabalho extends GenericModel {
 		}
 		return escalas; 
 	}
-
-
-
-
 }

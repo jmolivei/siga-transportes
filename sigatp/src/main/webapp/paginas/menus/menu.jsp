@@ -1,5 +1,6 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
 <link rel="stylesheet" href="${pageContext.request.contextPath}/public/stylesheets/main.css" type="text/css" media="screen"/>
 <link rel="stylesheet" href="${pageContext.request.contextPath}/public/javascripts/simplepagination/css/simplePagination.css" type="text/css"/>	
 <script src="${pageContext.request.contextPath}/public/javascripts/jquery-1.6.4.min.js"></script>
@@ -65,8 +66,8 @@
 				<li><a id="menuAdmInfracoes" class="" href="@{AutosDeInfracao.listar}">Autos de Infra&ccedil;&atilde;o</a></li>
 				<!-- <li><a id="menuAdmCompras" class="" href="@{Application.emdesenvolvimento}">Compras de Materiais</a></li> -->
 				<li><a id="menuAdmCondutores" class="" href="@{Condutores.listar}">Condutores</a></li>
-				<li><a id="menuAdmFinalidades" class="" href="@{Finalidades.listar}">Finalidades</a></li>
-				<%-- <li><a id="menuAdmFinalidades" class="" href="${linkTo[FinalidadeController].listar}"><fmt:message key="finalidades" /></a></li> --%>
+				<li><a id="menuAdmFinalidades" class="" href="${linkTo[FinalidadeController].listar}"><fmt:message key="finalidades" /></a></li>
+
 				<li><a id="menuAdmFornecedores" class="" href="@{Fornecedores.listar}">Fornecedores</a></li>
 				<li><a id="menuAdmPenalidades" class="" href="@{penalidades.listar}">Penalidades</a></li>		
 				<li><a id="menuAdmPlantoes" class="" href="@{PlantoesMensais.listar}">Plant&otilde;es mensais</a></li>

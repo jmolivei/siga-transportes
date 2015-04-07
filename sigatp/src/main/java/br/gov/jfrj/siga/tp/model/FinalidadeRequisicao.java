@@ -21,14 +21,13 @@ import play.i18n.Messages;
 import play.modules.br.jus.jfrj.siga.uteis.validadores.upperCase.UpperCase;
 import br.gov.jfrj.siga.dp.CpOrgaoUsuario;
 import br.gov.jfrj.siga.model.ActiveRecord;
-import br.gov.jfrj.siga.model.Objeto;
 import controllers.AutorizacaoGIAntigo;
 
 @SuppressWarnings("serial")
 @Entity
 @Audited
 @Table(name="FinalidadeRequisicao", schema = "SIGATP")
-public class FinalidadeRequisicao extends Objeto {
+public class FinalidadeRequisicao extends TpModel {
 	
 	private static final long _ID_DA_FINALIDADE_OUTRA = -1;
 	public static ActiveRecord<FinalidadeRequisicao> AR = new ActiveRecord<>(FinalidadeRequisicao.class);

@@ -324,7 +324,7 @@ public class PlantoesMensais extends Controller {
 	}
 
 	private static Plantao montarPlantaoParaSalvar(Plantao plantao) throws Exception {
-		Plantao retorno = Plantao.findById(plantao.id);
+		Plantao retorno = Plantao.AR.findById(plantao.id);
 		retorno.condutor = Condutor.AR.findById(plantao.condutor.getId());
 		return retorno;
 	}
@@ -339,7 +339,7 @@ public class PlantoesMensais extends Controller {
 		// que nao deram erro sao invalidos e precisam ser zerados
 		for (Iterator<Plantao> iterator = plantoes.iterator(); iterator.hasNext();) {
 			Plantao plantao = (Plantao) iterator.next();
-			plantao.id = 0;
+			plantao.id = 0L;
 		}
 	}
 	

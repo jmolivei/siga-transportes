@@ -42,8 +42,8 @@ public class Plantoes extends Controller {
 	@RoleAdmin
 	@RoleAdminMissao
 	@RoleAdminMissaoComplexo
-	public static void editar(Long id){
-		Plantao plantao = Plantao.findById(id);
+	public static void editar(Long id) throws Exception{
+		Plantao plantao = Plantao.AR.findById(id);
 		render(plantao);
 	}
 	
@@ -157,7 +157,7 @@ public class Plantoes extends Controller {
 	@RoleAdminMissao
 	@RoleAdminMissaoComplexo
 	public static void excluir(Long id) throws Exception{
-		Plantao plantao = Plantao.findById(id);
+		Plantao plantao = Plantao.AR.findById(id);
 
 		List<Missao> missoes = retornarMissoesCondutorPlantao(plantao, null, null);
 		String listaMissoes = "";

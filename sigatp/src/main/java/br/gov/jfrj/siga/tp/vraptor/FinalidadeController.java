@@ -12,9 +12,9 @@ import br.com.caelum.vraptor.Path;
 import br.com.caelum.vraptor.Resource;
 import br.com.caelum.vraptor.Result;
 import br.com.caelum.vraptor.core.Localization;
-import br.gov.jfrj.siga.dp.dao.CpDao;
 import br.gov.jfrj.siga.tp.auth.AutorizacaoGI;
 import br.gov.jfrj.siga.tp.model.FinalidadeRequisicao;
+import br.gov.jfrj.siga.tp.model.TpDao;
 import br.gov.jfrj.siga.vraptor.SigaObjects;
 
 //@With(AutorizacaoGI.class)
@@ -22,7 +22,7 @@ import br.gov.jfrj.siga.vraptor.SigaObjects;
 public class FinalidadeController extends TpController {
 	
 	public FinalidadeController(HttpServletRequest request, Result result, Localization localization, SigaObjects so, AutorizacaoGI dadosAutorizacao, EntityManager em) throws Exception {
-		super(request, result, CpDao.getInstance(), localization, so, dadosAutorizacao, em);
+		super(request, result, TpDao.getInstance(), localization, so, dadosAutorizacao, em);
 	}
 
 	private static final String ACTION = "action";
@@ -58,7 +58,7 @@ public class FinalidadeController extends TpController {
 //	@RoleAdminMissao
 //	@RoleAdminMissaoComplexo
 	@Path("/app/finalidade/editar/{id}")
-	public void editar(Long id) throws Exception {
+	public void editar(final Long id) throws Exception {
     	FinalidadeRequisicao finalidade = buscar(id);
     	
     	if(null != finalidade.getId() && finalidade.getId() > 0) {
@@ -74,7 +74,7 @@ public class FinalidadeController extends TpController {
 //	@RoleAdminMissao
 //	@RoleAdminMissaoComplexo
 	@Path("/app/finalidade/salvar/{finalidade}")
-	public void salvar(FinalidadeRequisicao finalidade) throws Exception {
+	public void salvar(final FinalidadeRequisicao finalidade) throws Exception {
 		FinalidadeRequisicao finalidadeEncontrada = buscar(finalidade.getId());
 		finalidadeEncontrada.setDescricao(finalidade.getDescricao());
 		
@@ -99,7 +99,7 @@ public class FinalidadeController extends TpController {
 	//@RoleAdminMissao
 	//@RoleAdminMissaoComplexo
 	@Path("/app/finalidade/excluir/{id}")
-    public void excluir(Long id) throws Exception  { 
+    public void excluir(final Long id) throws Exception  { 
         FinalidadeRequisicao finalidade = FinalidadeRequisicao.AR.findById(id);
         finalidade.checarProprietario(getTitular().getOrgaoUsuario());
 		EntityTransaction tx = FinalidadeRequisicao.AR.em().getTransaction();  
