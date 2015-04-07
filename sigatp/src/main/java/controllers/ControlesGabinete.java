@@ -24,43 +24,43 @@ public class ControlesGabinete extends Controller {
 	@RoleAdminGabinete
 	public static void listar() {
 		List<ControleGabinete> controlesGabinete;
-		if(AutorizacaoGIAntigo.ehAdminGabinete()) {
+		if (AutorizacaoGIAntigo.ehAdminGabinete()) {
 			controlesGabinete = ControleGabinete.listarTodos();
 		} else {
 			controlesGabinete = ControleGabinete.listarPorCondutor(Condutor.recuperarLogado(AutorizacaoGIAntigo.titular(), AutorizacaoGIAntigo.titular().getOrgaoUsuario()));
 		}
-		
-		render(controlesGabinete);
-	}	
 
-	//Verificar se o MenuMontador é realmente utilizado
+		render(controlesGabinete);
+	}
+
+	// Verificar se o MenuMontador é realmente utilizado
 	@RoleGabinete
 	@RoleAdminGabinete
-	public static void listarPorVeiculo(Long idVeiculo) {
-		Veiculo veiculo = Veiculo.findById(idVeiculo);
+	public static void listarPorVeiculo(Long idVeiculo) throws Exception {
+		Veiculo veiculo = Veiculo.AR.findById(idVeiculo);
 		List<ControleGabinete> controleaGabinete = ControleGabinete.buscarTodosPorVeiculo(veiculo);
-		MenuMontador.instance().RecuperarMenuVeiculos(idVeiculo, ItemMenu.DADOSCADASTRAIS);
+		MenuMontador.instance().recuperarMenuVeiculos(idVeiculo, ItemMenu.DADOSCADASTRAIS);
 		render(controleaGabinete, veiculo);
 	}
 
 	@RoleGabinete
 	@RoleAdminGabinete
-	public static void incluir() throws Exception{
+	public static void incluir() throws Exception {
 		List<Veiculo> veiculos = recuperarListaDeVeiculos();
 		List<Condutor> condutores = recuperarListaDeCondutores();
-		
+
 		ControleGabinete controleGabinete = new ControleGabinete();
 		render(controleGabinete, veiculos, condutores);
 	}
 
 	private static List<Veiculo> recuperarListaDeVeiculos() throws Exception {
-		return Veiculo.listarFiltradoPor(AutorizacaoGIAntigo.titular().getOrgaoUsuario(),AutorizacaoGIAntigo.titular().getLotacao());
+		return Veiculo.listarFiltradoPor(AutorizacaoGIAntigo.titular().getOrgaoUsuario(), AutorizacaoGIAntigo.titular().getLotacao());
 	}
 
 	private static List<Condutor> recuperarListaDeCondutores() throws Exception {
 		List<Condutor> condutores;
-		if(AutorizacaoGIAntigo.ehAdminGabinete()) {
-			condutores = Condutor.listarFiltradoPor(AutorizacaoGIAntigo.titular().getOrgaoUsuario(),AutorizacaoGIAntigo.titular().getLotacao());
+		if (AutorizacaoGIAntigo.ehAdminGabinete()) {
+			condutores = Condutor.listarFiltradoPor(AutorizacaoGIAntigo.titular().getOrgaoUsuario(), AutorizacaoGIAntigo.titular().getLotacao());
 		} else {
 			condutores = new ArrayList<Condutor>();
 			condutores.add(Condutor.recuperarLogado(AutorizacaoGIAntigo.titular(), AutorizacaoGIAntigo.titular().getOrgaoUsuario()));
@@ -70,7 +70,7 @@ public class ControlesGabinete extends Controller {
 
 	@RoleGabinete
 	@RoleAdminGabinete
-	public static void editar(Long id) throws Exception{
+	public static void editar(Long id) throws Exception {
 		ControleGabinete controleGabinete = ControleGabinete.findById(id);
 		verificarAcesso(controleGabinete);
 		List<Veiculo> veiculos = recuperarListaDeVeiculos();
@@ -78,22 +78,21 @@ public class ControlesGabinete extends Controller {
 		render(controleGabinete, veiculos, condutores);
 	}
 
-	private static void verificarAcesso(ControleGabinete controleGabinete)
-			throws Exception {
-		if(!(AutorizacaoGIAntigo.ehAdminGabinete() && AutorizacaoGIAntigo.titular().getLotacao().equivale(controleGabinete.titular.getLotacao())) && !controleGabinete.titular.equivale(AutorizacaoGIAntigo.titular())) {
+	private static void verificarAcesso(ControleGabinete controleGabinete) throws Exception {
+		if (!(AutorizacaoGIAntigo.ehAdminGabinete() && AutorizacaoGIAntigo.titular().getLotacao().equivale(controleGabinete.titular.getLotacao()))
+				&& !controleGabinete.titular.equivale(AutorizacaoGIAntigo.titular())) {
 			throw new Exception(Messages.get("controlesGabinete.verificarAcesso.exception"));
 		}
 	}
-	
+
 	private static void verificarOdometrosSaidaRetorno(ControleGabinete controleGabinete) {
 		if (controleGabinete.odometroEmKmSaida > controleGabinete.odometroEmKmRetorno) {
-			Validation.addError("odometroEmKmRetorno",
-							"controlesGabinete.odometroEmKmRetorno.validation");
+			Validation.addError("odometroEmKmRetorno", "controlesGabinete.odometroEmKmRetorno.validation");
 		}
 	}
-	
+
 	private static void verificarDatasInicialFinal(ControleGabinete controleGabinete) throws Exception {
-		if(controleGabinete.dataHoraSaida == null || controleGabinete.dataHoraRetorno == null) {
+		if (controleGabinete.dataHoraSaida == null || controleGabinete.dataHoraRetorno == null) {
 			Validation.addError("dataHoraSaida", "controlesGabinete.dataHoraSaida.validation");
 			return;
 		}
@@ -104,7 +103,6 @@ public class ControlesGabinete extends Controller {
 		}
 	}
 
-
 	private static void verificarOdometroRetornoControleAnterior(ControleGabinete controleGabinete) {
 		double ultimoOdometroDesteVeiculo = ControleGabinete.buscarUltimoOdometroPorVeiculo(controleGabinete.veiculo, controleGabinete);
 		if (controleGabinete.odometroEmKmSaida < ultimoOdometroDesteVeiculo) {
@@ -114,39 +112,38 @@ public class ControlesGabinete extends Controller {
 
 	@RoleGabinete
 	@RoleAdminGabinete
-	public static void salvar(@Valid ControleGabinete controleGabinete) throws Exception{
-		if(!controleGabinete.id.equals(new Long(0))) { // somente na alteracao
+	public static void salvar(@Valid ControleGabinete controleGabinete) throws Exception {
+		if (!controleGabinete.id.equals(new Long(0))) { // somente na alteracao
 			verificarAcesso(controleGabinete);
 		}
 		verificarOdometroRetornoControleAnterior(controleGabinete);
 		verificarOdometrosSaidaRetorno(controleGabinete);
 		verificarDatasInicialFinal(controleGabinete);
-		
-		if(Validation.hasErrors()){
+
+		if (Validation.hasErrors()) {
 			List<Veiculo> veiculos = recuperarListaDeVeiculos();
 			List<Condutor> condutores = recuperarListaDeCondutores();
 			String template;
 			template = controleGabinete.id > 0 ? "ControlesGabinete/editar.html" : "ControlesGabinete/incluir.html";
 			renderTemplate(template, controleGabinete, veiculos, condutores);
-		}
-		else{
-			if(controleGabinete.id == 0) {
+		} else {
+			if (controleGabinete.id == 0) {
 				controleGabinete.dataHora = Calendar.getInstance();
 			}
-			
-			//if(controleGabinete.id.equals(new Long(0))) { // somente na inclusao
-				controleGabinete.solicitante = AutorizacaoGIAntigo.cadastrante();
-				controleGabinete.titular = AutorizacaoGIAntigo.titular();
-			//}
-			
+
+			// if(controleGabinete.id.equals(new Long(0))) { // somente na inclusao
+			controleGabinete.solicitante = AutorizacaoGIAntigo.cadastrante();
+			controleGabinete.titular = AutorizacaoGIAntigo.titular();
+			// }
+
 			controleGabinete.save();
 			listar();
-		}	
-	}		
+		}
+	}
 
 	@RoleGabinete
 	@RoleAdminGabinete
-	public static void excluir(Long id) throws Exception{
+	public static void excluir(Long id) throws Exception {
 		ControleGabinete controleGabinete = ControleGabinete.findById(id);
 		verificarAcesso(controleGabinete);
 		controleGabinete.delete();

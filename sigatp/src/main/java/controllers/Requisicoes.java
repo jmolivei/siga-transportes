@@ -32,7 +32,7 @@ public class Requisicoes extends Controller {
 	public static void listar() throws Exception {
 		carregarRequisicoesUltimosSeteDiasPorEstados(null);
 		RenderArgs.current().put("estadoRequisicao",EstadoRequisicao.PROGRAMADA);
-		MenuMontador.instance().RecuperarMenuListarRequisicoes(null);
+		MenuMontador.instance().recuperarMenuListarRequisicoes(null);
 		render();
 	}
 
@@ -44,7 +44,7 @@ public class Requisicoes extends Controller {
 		EstadoRequisicao estadosRequisicao[] = {EstadoRequisicao.ABERTA,EstadoRequisicao.AUTORIZADA,EstadoRequisicao.REJEITADA};
 		carregarRequisicoesUltimosSeteDiasPorEstados(estadosRequisicao);
 		RenderArgs.current().put("estadoRequisicao",EstadoRequisicao.ABERTA);
-		MenuMontador.instance().RecuperarMenuListarPAprovarRequisicoes(null);
+		MenuMontador.instance().recuperarMenuListarPAprovarRequisicoes(null);
 		List<CpComplexo> complexos = CpRepository.find(CpComplexo.class, "orgaoUsuario", AutorizacaoGIAntigo.titular().getOrgaoUsuario()).fetch();
 		render(complexos);
 	}
@@ -133,7 +133,7 @@ public class Requisicoes extends Controller {
 		if (estadoRequisicaoP == null) { estadoRequisicaoP = estadoRequisicao; }
 		EstadoRequisicao estadosRequisicao[] = {estadoRequisicao,estadoRequisicaoP};
 		carregarRequisicoesUltimosSeteDiasPorEstados(estadosRequisicao);
-		MenuMontador.instance().RecuperarMenuListarRequisicoes(estadoRequisicao, estadoRequisicaoP);
+		MenuMontador.instance().recuperarMenuListarRequisicoes(estadoRequisicao, estadoRequisicaoP);
 		renderTemplate("@listar",estadoRequisicao);
 	}
 
@@ -144,7 +144,7 @@ public class Requisicoes extends Controller {
 	public static void listarPAprovarFiltrado(EstadoRequisicao estadoRequisicao) throws Exception {
 		EstadoRequisicao estadosRequisicao[] = {estadoRequisicao};
 		carregarRequisicoesUltimosSeteDiasPorEstados(estadosRequisicao);
-		MenuMontador.instance().RecuperarMenuListarPAprovarRequisicoes(estadoRequisicao);
+		MenuMontador.instance().recuperarMenuListarPAprovarRequisicoes(estadoRequisicao);
 		renderTemplate("@listarPAprovar",estadoRequisicao);
 	}
 	
@@ -239,7 +239,7 @@ public class Requisicoes extends Controller {
 	private static void redirecionarSeErroAoSalvar(RequisicaoTransporte requisicaoTransporte, boolean checkRetorno, boolean checkSemPassageiros) {
 		if(Validation.hasErrors()) 
 		{
-			MenuMontador.instance().RecuperarMenuRequisicoes(requisicaoTransporte.id, false, false);
+			MenuMontador.instance().recuperarMenuRequisicoes(requisicaoTransporte.id, false, false);
 			String template = requisicaoTransporte.id > 0 ? "@editar" : "@incluir";
 			carregarTiposDeCarga(requisicaoTransporte);
 			carregarFinalidades();
@@ -322,7 +322,7 @@ public class Requisicoes extends Controller {
 		RequisicaoTransporte requisicaoTransporte = RequisicaoTransporte.findById(id);
 		checarSolicitante(requisicaoTransporte.solicitante.getIdInicial(), requisicaoTransporte.cpComplexo.getIdComplexo(),false);
 		requisicaoTransporte.idSolicitante=requisicaoTransporte.solicitante.getId();
-		MenuMontador.instance().RecuperarMenuRequisicoes(id, false, false);
+		MenuMontador.instance().recuperarMenuRequisicoes(id, false, false);
 		carregarTiposDeCarga(requisicaoTransporte);
 		carregarFinalidades();
 
@@ -352,11 +352,11 @@ public class Requisicoes extends Controller {
 	protected static RequisicaoTransporte recuperarPelaSigla(String sequence, boolean popUp) throws Exception {
 		RequisicaoTransporte requisicaoTransporte = RequisicaoTransporte.buscar(sequence);
 		checarSolicitante(requisicaoTransporte.solicitante.getIdInicial(),requisicaoTransporte.cpComplexo.getIdComplexo(),false);
-		MenuMontador.instance().RecuperarMenuRequisicoes(requisicaoTransporte.id, popUp, false);
+		MenuMontador.instance().recuperarMenuRequisicoes(requisicaoTransporte.id, popUp, false);
 		requisicaoTransporte.idSolicitante=requisicaoTransporte.solicitante.getId();
 
 		if(!popUp) {
-			MenuMontador.instance().RecuperarMenuRequisicoes(requisicaoTransporte.id, popUp, false);			
+			MenuMontador.instance().recuperarMenuRequisicoes(requisicaoTransporte.id, popUp, false);			
 		}
 
 		renderArgs.put("requisicaoTransporte", requisicaoTransporte);
@@ -378,7 +378,7 @@ public class Requisicoes extends Controller {
 		catch (SigaTpException ex) {
 			Validation.addError("requisicaoTransporte", ex.getMessage().toString());
 			if(Validation.hasErrors()) {
-				MenuMontador.instance().RecuperarMenuRequisicoes(requisicaoTransporte.id, true, false);
+				MenuMontador.instance().recuperarMenuRequisicoes(requisicaoTransporte.id, true, false);
 				carregarTiposDeCarga(requisicaoTransporte);
 				carregarFinalidades();
 				renderTemplate("@ler", requisicaoTransporte);

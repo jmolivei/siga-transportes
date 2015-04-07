@@ -68,7 +68,7 @@ public class RelatoriosRankingTest extends UnitTest {
 			rankingVeiculo = RelatoriosRanking.retornarVeiculosQueAtenderamMaisRequisicoes(relatorio);
 			
 			for (br.gov.jfrj.siga.tp.model.RelatorioRanking.RankingVeiculoRequisicao item : rankingVeiculo ) {
-				linha = "Veiculo : " + item.veiculo.placa + " ";
+				linha = "Veiculo : " + item.veiculo.getPlaca() + " ";
 				linha += "Requisicoes : ";
 				
 				for (RequisicaoTransporte requisicao : item.requisicoes) {

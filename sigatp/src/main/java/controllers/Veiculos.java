@@ -23,117 +23,116 @@ import br.gov.jfrj.siga.tp.util.MenuMontador;
 public class Veiculos extends Controller {
 
 	public static void listar() throws Exception {
-	 	CpOrgaoUsuario cpOrgaoUsuario = AutorizacaoGIAntigo.titular().getOrgaoUsuario();
-	 	List<Veiculo> veiculos = Veiculo.listarTodos(cpOrgaoUsuario);
+		CpOrgaoUsuario cpOrgaoUsuario = AutorizacaoGIAntigo.titular().getOrgaoUsuario();
+		List<Veiculo> veiculos = Veiculo.listarTodos(cpOrgaoUsuario);
 		render(veiculos);
 	}
-	
-	public static void listarAvarias(Long idVeiculo) {
+
+	public static void listarAvarias(Long idVeiculo) throws Exception {
 		Avarias.montarListaDeAvariasPorVeiculo(idVeiculo);
 		render("@Avarias.listarPorVeiculo");
 	}
-	
-	@Before(priority=200,only={"incluir","editar", "salvar"})
+
+	@Before(priority = 200, only = { "incluir", "editar", "salvar" })
 	protected static void montarCombos() throws Exception {
-       	renderArgs = Combo.montar(renderArgs,Combo.Cor,Combo.Fornecedor);
-       	
-       	List<Grupo> grupos = Grupo.listarTodos();
-       	renderArgs.put(Combo.Grupo.getDescricao(), grupos);
-       	
-       	CpOrgaoUsuario cpOrgaoUsuario = AutorizacaoGIAntigo.titular().getOrgaoUsuario();
-       	List<DpLotacao> dpLotacoes = DpLotacao.AR.find("orgaoUsuario = ? and DATA_FIM_LOT is null order by NOME_LOTACAO", cpOrgaoUsuario).fetch();
-       	renderArgs.put("dpLotacoes", dpLotacoes);
+		// TODO: comentei
+//		renderArgs = Combo.montar(renderArgs, Combo.Cor, Combo.Fornecedor);
+
+		List<Grupo> grupos = Grupo.listarTodos();
+		renderArgs.put(Combo.Grupo.getDescricao(), grupos);
+
+		CpOrgaoUsuario cpOrgaoUsuario = AutorizacaoGIAntigo.titular().getOrgaoUsuario();
+		List<DpLotacao> dpLotacoes = DpLotacao.AR.find("orgaoUsuario = ? and DATA_FIM_LOT is null order by NOME_LOTACAO", cpOrgaoUsuario).fetch();
+		renderArgs.put("dpLotacoes", dpLotacoes);
 	}
-	
+
 	@RoleAdmin
 	@RoleAdminFrota
 	public static void salvar(Veiculo veiculo) throws Exception {
-		
-		if(veiculoNaoTemLotacaoCadastrada(veiculo) || lotacaoDoVeiculoMudou(veiculo)) {
+
+		if (veiculoNaoTemLotacaoCadastrada(veiculo) || lotacaoDoVeiculoMudou(veiculo)) {
 			Double odometroAnterior = veiculo.getUltimoOdometroDeLotacao();
-			if(odometroAnterior > veiculo.odometroEmKmAtual) {
+			if (odometroAnterior > veiculo.getOdometroEmKmAtual()) {
 				Validation.addError("odometroEmKmAtual", "veiculo.odometroEmKmAtual.maiorAnterior.validation");
 			}
-			if(veiculo.odometroEmKmAtual.equals(new Double(0))) {
+			if (veiculo.getOdometroEmKmAtual().equals(new Double(0))) {
 				Validation.addError("odometroEmKmAtual", "veiculo.odometroEmKmAtual.zero.validation");
 			}
 		}
 
 		validation.valid(veiculo);
 		redirecionarSeErroAoSalvar(veiculo);
-		
-		veiculo.cpOrgaoUsuario = AutorizacaoGIAntigo.titular().getOrgaoUsuario();
+
+		veiculo.setCpOrgaoUsuario(AutorizacaoGIAntigo.titular().getOrgaoUsuario());
 		veiculo.save();
-		
-		if(lotacaoDoVeiculoMudou(veiculo)) {
+
+		if (lotacaoDoVeiculoMudou(veiculo)) {
 			LotacaoVeiculo.atualizarDataFimLotacaoAnterior(veiculo);
 		}
-		
-		if(veiculoNaoTemLotacaoCadastrada(veiculo) || lotacaoDoVeiculoMudou(veiculo)) {
-			LotacaoVeiculo novalotacao = new LotacaoVeiculo(null, veiculo, veiculo.lotacaoAtual, Calendar.getInstance(), null, veiculo.odometroEmKmAtual);
-			novalotacao.save();	
+
+		if (veiculoNaoTemLotacaoCadastrada(veiculo) || lotacaoDoVeiculoMudou(veiculo)) {
+			LotacaoVeiculo novalotacao = new LotacaoVeiculo(null, veiculo, veiculo.getLotacaoAtual(), Calendar.getInstance(), null, veiculo.getOdometroEmKmAtual());
+			novalotacao.save();
 		}
-		
+
 		listar();
 	}
 
 	private static boolean veiculoNaoTemLotacaoCadastrada(Veiculo veiculo) {
-		return veiculo.lotacoes == null;
+		return veiculo.getLotacoes() == null;
 	}
 
 	private static boolean lotacaoDoVeiculoMudou(Veiculo veiculo) {
-		if(veiculo.lotacoes == null) {
+		if (veiculo.getLotacoes() == null) {
 			return true;
 		}
-		return (veiculo.lotacoes.size() > 0) && (!veiculo.lotacoes.get(0).lotacao.equivale(veiculo.lotacaoAtual));
+		return (veiculo.getLotacoes().size() > 0) && (!veiculo.getLotacoes().get(0).getLotacao().equivale(veiculo.getLotacaoAtual()));
 	}
-	
+
 	private static void redirecionarSeErroAoSalvar(Veiculo veiculo) throws Exception {
-		if(Validation.hasErrors()) 
-		{
+		if (Validation.hasErrors()) {
 			montarCombos();
-			MenuMontador.instance().RecuperarMenuVeiculos(veiculo.getId(), ItemMenu.DADOSCADASTRAIS);
+			MenuMontador.instance().recuperarMenuVeiculos(veiculo.getId(), ItemMenu.DADOSCADASTRAIS);
 			String template = veiculo.getId() > 0 ? "@editar" : "@incluir";
-			if(veiculoNaoTemLotacaoCadastrada(veiculo) || veiculo.lotacoes.isEmpty() || (!veiculo.lotacoes.get(0).lotacao.equivale(veiculo.lotacaoAtual))) {
+			if (veiculoNaoTemLotacaoCadastrada(veiculo) || veiculo.getLotacoes().isEmpty() || (!veiculo.getLotacoes().get(0).getLotacao().equivale(veiculo.getLotacaoAtual()))) {
 				RenderArgs.current().put("mostrarCampoOdometro", true);
 			}
 			renderTemplate(template, veiculo);
 		}
 	}
-	
-	@RoleAdmin
-	@RoleAdminFrota
-	public static void incluir(){
-		Veiculo veiculo = new Veiculo();
-		veiculo.lotacaoAtual = new DpLotacao();
-		MenuMontador.instance().RecuperarMenuVeiculos(new Long(0), ItemMenu.DADOSCADASTRAIS);
-		render(veiculo);
-	}
-	
-	public static void buscarPeloId(Long Id) throws Exception {
-		Veiculo veiculo = Veiculo.findById(Id);
-		veiculo.configurarLotacaoAtual();
-		//veiculo.configurarOdometroParaMudancaDeLotacao();
-		montarCombos();
-		MenuMontador.instance().RecuperarMenuVeiculos(Id, ItemMenu.DADOSCADASTRAIS);
-		renderTemplate("@ler", veiculo);
-	}
-	
 
 	@RoleAdmin
 	@RoleAdminFrota
-	public static void editar(Long id) {
-		Veiculo veiculo = Veiculo.findById(id);
+	public static void incluir() {
+		Veiculo veiculo = new Veiculo();
+		veiculo.setLotacaoAtual(new DpLotacao());
+		MenuMontador.instance().recuperarMenuVeiculos(new Long(0), ItemMenu.DADOSCADASTRAIS);
+		render(veiculo);
+	}
+
+	public static void buscarPeloId(Long Id) throws Exception {
+		Veiculo veiculo = Veiculo.AR.findById(Id);
 		veiculo.configurarLotacaoAtual();
-		//veiculo.configurarOdometroParaMudancaDeLotacao();
-		MenuMontador.instance().RecuperarMenuVeiculos(id, ItemMenu.DADOSCADASTRAIS);
+		// veiculo.configurarOdometroParaMudancaDeLotacao();
+		montarCombos();
+		MenuMontador.instance().recuperarMenuVeiculos(Id, ItemMenu.DADOSCADASTRAIS);
+		renderTemplate("@ler", veiculo);
+	}
+
+	@RoleAdmin
+	@RoleAdminFrota
+	public static void editar(Long id) throws Exception {
+		Veiculo veiculo = Veiculo.AR.findById(id);
+		veiculo.configurarLotacaoAtual();
+		// veiculo.configurarOdometroParaMudancaDeLotacao();
+		MenuMontador.instance().recuperarMenuVeiculos(id, ItemMenu.DADOSCADASTRAIS);
 		render(veiculo);
 	}
 
 	@RoleAdmin
 	@RoleAdminFrota
 	public static void excluir(Long id) throws Exception {
-		Veiculo veiculo = Veiculo.findById(id);
+		Veiculo veiculo = Veiculo.AR.findById(id);
 		veiculo.delete();
 		listar();
 	}

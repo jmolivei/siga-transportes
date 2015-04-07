@@ -23,13 +23,13 @@ public class Finalidades extends Controller {
 	private static final String _ACTION_INCLUIR = "@incluir";
 	
     public static void listar() throws Exception {
-    	MenuMontador.instance().RecuperarMenuFinalidades(true);
+    	MenuMontador.instance().recuperarMenuFinalidades(true);
     	List<FinalidadeRequisicao> finalidades = FinalidadeRequisicao.listarTodos(AutorizacaoGIAntigo.titular().getOrgaoUsuario());
    		render(finalidades);
     }
 
     public static void listarTodas() throws Exception {
-    	MenuMontador.instance().RecuperarMenuFinalidades(false);
+    	MenuMontador.instance().recuperarMenuFinalidades(false);
     	List<FinalidadeRequisicao> finalidades = FinalidadeRequisicao.listarTodos();
    		render(finalidades);
     }

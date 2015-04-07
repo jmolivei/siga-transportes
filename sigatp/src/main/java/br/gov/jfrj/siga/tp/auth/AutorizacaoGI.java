@@ -15,6 +15,12 @@ import br.gov.jfrj.siga.vraptor.SigaObjects;
 
 import com.google.common.base.Optional;
 
+/**
+ * Classe que contem os dados de autorizacao do usuario. Agrupa em um mapa o nome da permissao e um boleano indicando se o usuario a possui ou nao.
+ * 
+ * @author db1
+ *
+ */
 @RequestScoped
 @Component
 public class AutorizacaoGI {
@@ -50,7 +56,7 @@ public class AutorizacaoGI {
 	}
 
 	public void incluir(String nomePermissao) {
-		this.statusPermissoes.put(nomePermissao, true);
+		this.statusPermissoes.put(nomePermissao, statusAutorizacao(nomePermissao));
 	}
 
 	public Boolean getStatusPermissao(String nomePermissao) {

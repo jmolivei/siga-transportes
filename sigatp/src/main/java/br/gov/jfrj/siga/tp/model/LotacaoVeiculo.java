@@ -18,23 +18,26 @@ import org.hibernate.envers.RelationTargetAuditMode;
 
 import play.data.binding.As;
 import play.data.validation.Required;
-import play.db.jpa.GenericModel;
 import play.i18n.Messages;
 import play.modules.br.jus.jfrj.siga.uteis.validadores.validarAnoData.ValidarAnoData;
 import br.gov.jfrj.siga.dp.DpLotacao;
+import br.gov.jfrj.siga.model.ActiveRecord;
+import br.gov.jfrj.siga.model.Objeto;
 import br.gov.jfrj.siga.tp.binder.DoubleBinder;
 
 @Entity
-//@Table(name = "LOTACAO_VEICULO_2", schema="SIGAOR")
+// @Table(name = "LOTACAO_VEICULO_2", schema="SIGAOR")
 @Audited
 @Table(schema = "SIGATP")
-public class LotacaoVeiculo extends GenericModel {
+public class LotacaoVeiculo extends Objeto {
+
+	private static final long serialVersionUID = 1912137163976035054L;
+	public static ActiveRecord<Veiculo> AR = new ActiveRecord<>(Veiculo.class);
+
 	public LotacaoVeiculo() {
-		
 	}
-	
-	public LotacaoVeiculo(Long id, Veiculo veiculo, DpLotacao lotacao,
-			Calendar dataHoraInicio, Calendar dataHoraFim, double odometroEmKm) {
+
+	public LotacaoVeiculo(Long id, Veiculo veiculo, DpLotacao lotacao, Calendar dataHoraInicio, Calendar dataHoraFim, double odometroEmKm) {
 		super();
 		this.id = id;
 		this.veiculo = veiculo;
@@ -45,47 +48,48 @@ public class LotacaoVeiculo extends GenericModel {
 	}
 
 	@Id
-	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "hibernate_sequence_generator") @SequenceGenerator(name = "hibernate_sequence_generator", sequenceName="SIGATP.hibernate_sequence") 
-	public Long id;
-	
+	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "hibernate_sequence_generator")
+	@SequenceGenerator(name = "hibernate_sequence_generator", sequenceName = "SIGATP.hibernate_sequence")
+	private Long id;
+
 	@ManyToOne
 	@NotNull
-	public Veiculo veiculo;
-	
- 	@Audited(targetAuditMode = RelationTargetAuditMode.NOT_AUDITED)
+	private Veiculo veiculo;
+
+	@Audited(targetAuditMode = RelationTargetAuditMode.NOT_AUDITED)
 	@ManyToOne
 	@NotNull
 	@JoinColumn(name = "ID_LOTA_SOLICITANTE")
-	public DpLotacao lotacao;
-	
+	private DpLotacao lotacao;
+
 	@Required
 	@NotNull
-	@ValidarAnoData(descricaoCampo="Data/Hora Inicio")
-	public Calendar dataHoraInicio;
-	
-	@As(lang={"*"}, value={"dd/MM/yyyy HH:mm"})
-	@ValidarAnoData(descricaoCampo="Data/Hora Fim")
-	public Calendar dataHoraFim;
-	
-	@As(binder=DoubleBinder.class)
-	public Double odometroEmKm;
-	
+	@ValidarAnoData(descricaoCampo = "Data/Hora Inicio")
+	private Calendar dataHoraInicio;
+
+	@As(lang = { "*" }, value = { "dd/MM/yyyy HH:mm" })
+	@ValidarAnoData(descricaoCampo = "Data/Hora Fim")
+	private Calendar dataHoraFim;
+
+	@As(binder = DoubleBinder.class)
+	private Double odometroEmKm;
+
 	/**
-	 * Inclui a nova lotação do veículo e preenche a data fim da lotação anterior 
+	 * Inclui a nova lotação do veículo e preenche a data fim da lotação anterior
 	 * 
 	 * @param veiculo
 	 */
 	public static String atualizarDataFimLotacaoAnterior(Veiculo veiculo) throws Exception {
-     	try { 
-    		List<LotacaoVeiculo> lotacoesVeiculo = LotacaoVeiculo.find("veiculo = ? and dataHoraFim is null order by dataHoraInicio DESC", veiculo).fetch();
-    		if(lotacoesVeiculo.size() == 1) {
-    			lotacoesVeiculo.get(0).dataHoraFim = Calendar.getInstance();
-    			lotacoesVeiculo.get(0).save();
-    		} else {
-    			if(lotacoesVeiculo.size() > 1) {
-    			   throw new Exception(Messages.get("lotacaoVeiculo.lotacoesVeiculo.MaiorQueUm.exception"));
-    			}
-    		}
+		try {
+			List<LotacaoVeiculo> lotacoesVeiculo = LotacaoVeiculo.AR.find("veiculo = ? and dataHoraFim is null order by dataHoraInicio DESC", veiculo).fetch();
+			if (lotacoesVeiculo.size() == 1) {
+				lotacoesVeiculo.get(0).dataHoraFim = Calendar.getInstance();
+				lotacoesVeiculo.get(0).save();
+			} else {
+				if (lotacoesVeiculo.size() > 1) {
+					throw new Exception(Messages.get("lotacaoVeiculo.lotacoesVeiculo.MaiorQueUm.exception"));
+				}
+			}
 		} catch (Exception e) {
 			throw new Exception(Messages.get("lotacaoVeiculo.lotacoesVeiculo.exception", e.getMessage()));
 		}
@@ -94,6 +98,54 @@ public class LotacaoVeiculo extends GenericModel {
 	}
 
 	public static List<LotacaoVeiculo> buscarTodosPorVeiculo(Veiculo veiculo) {
-		return LotacaoVeiculo.find("veiculo = ? order by dataHoraInicio DESC", veiculo).fetch();
+		return LotacaoVeiculo.AR.find("veiculo = ? order by dataHoraInicio DESC", veiculo).fetch();
+	}
+
+	public Long getId() {
+		return id;
+	}
+
+	public void setId(Long id) {
+		this.id = id;
+	}
+
+	public Veiculo getVeiculo() {
+		return veiculo;
+	}
+
+	public void setVeiculo(Veiculo veiculo) {
+		this.veiculo = veiculo;
+	}
+
+	public DpLotacao getLotacao() {
+		return lotacao;
+	}
+
+	public void setLotacao(DpLotacao lotacao) {
+		this.lotacao = lotacao;
+	}
+
+	public Calendar getDataHoraInicio() {
+		return dataHoraInicio;
+	}
+
+	public void setDataHoraInicio(Calendar dataHoraInicio) {
+		this.dataHoraInicio = dataHoraInicio;
+	}
+
+	public Calendar getDataHoraFim() {
+		return dataHoraFim;
+	}
+
+	public void setDataHoraFim(Calendar dataHoraFim) {
+		this.dataHoraFim = dataHoraFim;
+	}
+
+	public Double getOdometroEmKm() {
+		return odometroEmKm;
+	}
+
+	public void setOdometroEmKm(Double odometroEmKm) {
+		this.odometroEmKm = odometroEmKm;
 	}
 }

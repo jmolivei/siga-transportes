@@ -35,7 +35,7 @@ public class EscalasDeTrabalho extends Controller {
 	@RoleAdminMissao
 	@RoleAdminMissaoComplexo
     public static void incluir(Long idCondutor) throws Exception {
-    	MenuMontador.instance().RecuperarMenuCondutores(idCondutor, ItemMenu.ESCALASDETRABALHO);
+    	MenuMontador.instance().recuperarMenuCondutores(idCondutor, ItemMenu.ESCALASDETRABALHO);
     	Condutor condutor = Condutor.AR.findById(idCondutor);
     	
     	EscalaDeTrabalho escala = new EscalaDeTrabalho();
@@ -55,7 +55,7 @@ public class EscalasDeTrabalho extends Controller {
     public static void editar(Long id) {
     	EscalaDeTrabalho escala = EscalaDeTrabalho.findById(id);
     	
-    	MenuMontador.instance().RecuperarMenuCondutores(escala.condutor.getId(), ItemMenu.ESCALASDETRABALHO);
+    	MenuMontador.instance().recuperarMenuCondutores(escala.condutor.getId(), ItemMenu.ESCALASDETRABALHO);
     	
     	DiaDaSemana diaSemana = DiaDaSemana.SEGUNDA;
     	
@@ -74,7 +74,7 @@ public class EscalasDeTrabalho extends Controller {
     }
         
     public static void listarPorCondutor(Long idCondutor) throws Exception {
-    	MenuMontador.instance().RecuperarMenuCondutores(idCondutor, ItemMenu.ESCALASDETRABALHO);
+    	MenuMontador.instance().recuperarMenuCondutores(idCondutor, ItemMenu.ESCALASDETRABALHO);
         Condutor condutor = Condutor.AR.findById(idCondutor);
         
         List<EscalaDeTrabalho> escalas = EscalaDeTrabalho.buscarTodosPorCondutor(condutor);
@@ -148,7 +148,7 @@ public class EscalasDeTrabalho extends Controller {
                 System.out.println(error.message());
                 System.out.println(error.getKey());
             } */
-        	MenuMontador.instance().RecuperarMenuCondutores(escala.condutor.getId(), ItemMenu.ESCALASDETRABALHO);
+        	MenuMontador.instance().recuperarMenuCondutores(escala.condutor.getId(), ItemMenu.ESCALASDETRABALHO);
         	
             Condutor condutor = escala.condutor;
             

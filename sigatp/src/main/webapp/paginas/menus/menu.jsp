@@ -81,7 +81,7 @@
 					</ul>
 				</li>
 				<li><a id="menuAdmServicos" class="" href="@{ServicosVeiculo.listar}">Servi&ccedil;os</a></li>
-				<li><a id="menuAdmVeiculos" class="" href="@{Veiculos.listar}">Ve&iacute;culos</a></li>
+				<li><a id="menuAdmVeiculos" class="" href="${linkTo[VeiculoController].listar}">Ve&iacute;culos</a></li>
 			</ul>
 		</li> 
 	</c:when>

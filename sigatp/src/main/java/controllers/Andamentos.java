@@ -26,7 +26,7 @@ public class Andamentos extends Controller {
 	public static void listarPorRequisicao(Long idRequisicao, boolean popUp) {
 		RequisicaoTransporte requisicaoTransporte = RequisicaoTransporte.findById(idRequisicao);
 		List<Andamento> andamentos = Andamento.find("requisicaoTransporte = ? order by id desc",requisicaoTransporte).fetch();
-		MenuMontador.instance().RecuperarMenuRequisicoes(idRequisicao, popUp, popUp);
+		MenuMontador.instance().recuperarMenuRequisicoes(idRequisicao, popUp, popUp);
 		render(andamentos, requisicaoTransporte);
 	}
 	
@@ -67,7 +67,7 @@ public class Andamentos extends Controller {
 	private static void redirecionarSeErroAoSalvar(Andamento andamento) {
 		if(Validation.hasErrors()) 
 		{
-			MenuMontador.instance().RecuperarMenuRequisicoes(andamento.requisicaoTransporte.id, false, false);
+			MenuMontador.instance().recuperarMenuRequisicoes(andamento.requisicaoTransporte.id, false, false);
 			String template="";
 			switch (andamento.estadoRequisicao) {
 			case AUTORIZADA:
@@ -96,7 +96,7 @@ public class Andamentos extends Controller {
 		andamento.estadoRequisicao = EstadoRequisicao.valueOf(acaoExecutada);
 		
 		//TODO verificar a necessidade do ultimo true 
-		MenuMontador.instance().RecuperarMenuRequisicoes(id, false, true);
+		MenuMontador.instance().recuperarMenuRequisicoes(id, false, true);
 		
 		renderArgs.put("andamento", andamento);
 	}

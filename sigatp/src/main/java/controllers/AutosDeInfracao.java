@@ -19,17 +19,17 @@ import br.gov.jfrj.siga.tp.util.MenuMontador;
 @With(AutorizacaoGIAntigo.class)
 public class AutosDeInfracao extends Controller {
 
-	public static void listarPorVeiculo(Long idVeiculo) {
-		Veiculo veiculo = Veiculo.findById(idVeiculo);
+	public static void listarPorVeiculo(Long idVeiculo) throws Exception {
+		Veiculo veiculo = Veiculo.AR.findById(idVeiculo);
 		List<AutoDeInfracao> autosDeInfracao = AutoDeInfracao.buscarAutosDeInfracaoPorVeiculo(veiculo);
-		MenuMontador.instance().RecuperarMenuVeiculos(idVeiculo, ItemMenu.INFRACOES);
+		MenuMontador.instance().recuperarMenuVeiculos(idVeiculo, ItemMenu.INFRACOES);
 		render(autosDeInfracao, veiculo);
 	}
 	
 	public static void listarPorCondutor(Long idCondutor) throws Exception {
 		Condutor condutor = Condutor.AR.findById(idCondutor);
 		List<AutoDeInfracao> autosDeInfracao = AutoDeInfracao.buscarAutosDeInfracaoPorCondutor(condutor);
-		MenuMontador.instance().RecuperarMenuCondutores(idCondutor, ItemMenu.INFRACOES);
+		MenuMontador.instance().recuperarMenuCondutores(idCondutor, ItemMenu.INFRACOES);
 		render(autosDeInfracao, condutor);
 	}
 	

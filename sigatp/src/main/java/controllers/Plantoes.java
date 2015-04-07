@@ -25,7 +25,7 @@ public class Plantoes extends Controller {
 	public static void listarPorCondutor(Long idCondutor) throws Exception {
 		Condutor condutor = Condutor.AR.findById(idCondutor);
 		List<Plantao> plantoes = Plantao.buscarTodosPorCondutor(condutor);
-		MenuMontador.instance().RecuperarMenuCondutores(idCondutor, ItemMenu.PLANTOES);
+		MenuMontador.instance().recuperarMenuCondutores(idCondutor, ItemMenu.PLANTOES);
 		render(plantoes, condutor);
 	}
 	

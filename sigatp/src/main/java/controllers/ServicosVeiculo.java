@@ -33,7 +33,7 @@ public class ServicosVeiculo extends Controller {
 	public static void incluir() throws Exception {
 		ServicoVeiculo servico = new ServicoVeiculo();
 		EstadoServico estadoServico = EstadoServico.AGENDADO;
-		MenuMontador.instance().RecuperarMenuServicoVeiculo(servico.id, estadoServico);
+		MenuMontador.instance().recuperarMenuServicoVeiculo(servico.id, estadoServico);
 	 	montarCombos(servico.id);
 		render(servico, estadoServico);
 	}
@@ -43,7 +43,7 @@ public class ServicosVeiculo extends Controller {
 	public static void cancelar() throws Exception {
 		ServicoVeiculo servico = new ServicoVeiculo();
 		EstadoServico estadoServico = EstadoServico.CANCELADO;
-		MenuMontador.instance().RecuperarMenuServicoVeiculo(servico.id, estadoServico);
+		MenuMontador.instance().recuperarMenuServicoVeiculo(servico.id, estadoServico);
 	 	montarCombos(servico.id);
 		render(servico, estadoServico);
 	}
@@ -144,7 +144,7 @@ public class ServicosVeiculo extends Controller {
 	 	CpOrgaoUsuario cpOrgaoUsuario = AutorizacaoGIAntigo.titular().getOrgaoUsuario();
 		List<ServicoVeiculo> servicos = ServicoVeiculo.find("cpOrgaoUsuario", cpOrgaoUsuario).fetch();
 	  	EstadoServico situacaoServico = EstadoServico.AGENDADO; 
-	  	MenuMontador.instance().RecuperarMenuServicosVeiculo(null);
+	  	MenuMontador.instance().recuperarMenuServicosVeiculo(null);
 	  	Collections.sort(servicos);
 	  	render(servicos, situacaoServico);
 	}
@@ -157,7 +157,7 @@ public class ServicosVeiculo extends Controller {
 		CpOrgaoUsuario cpOrgaoUsuario = AutorizacaoGIAntigo.titular().getOrgaoUsuario();
 	  	List<ServicoVeiculo> servicos = ServicoVeiculo.find("cpOrgaoUsuario=? and situacaoServico = ?", cpOrgaoUsuario, estado).fetch();
 	  	EstadoServico situacaoServico = EstadoServico.AGENDADO; 
-	  	MenuMontador.instance().RecuperarMenuServicosVeiculo(estado);	  	
+	  	MenuMontador.instance().recuperarMenuServicosVeiculo(estado);	  	
 	  	renderTemplate("@listar", servicos, situacaoServico);
 	}
 
@@ -198,7 +198,7 @@ public class ServicosVeiculo extends Controller {
 	public static void editar(Long id) throws Exception {
 		ServicoVeiculo servico = ServicoVeiculo.findById(id);
 	 	montarCombos(servico.id);
-		MenuMontador.instance().RecuperarMenuServicoVeiculo(id, servico.situacaoServico);
+		MenuMontador.instance().recuperarMenuServicoVeiculo(id, servico.situacaoServico);
 		render(servico);
 	}
 	
@@ -262,7 +262,7 @@ public class ServicosVeiculo extends Controller {
 	
 	public static void ler(Long id) throws Exception {
 		ServicoVeiculo servico = ServicoVeiculo.findById(id);
-		MenuMontador.instance().RecuperarMenuServicoVeiculo(id, servico.situacaoServico);
+		MenuMontador.instance().recuperarMenuServicoVeiculo(id, servico.situacaoServico);
 	 	montarCombos(servico.id);
 	  	render();
 	}
@@ -270,7 +270,7 @@ public class ServicosVeiculo extends Controller {
 	private static void redirecionarSeErroAoSalvar(ServicoVeiculo servico, String template) throws Exception {
 		if(Validation.hasErrors()) 
 		{
-		 	MenuMontador.instance().RecuperarMenuServicosVeiculo(servico.situacaoServico);
+		 	MenuMontador.instance().recuperarMenuServicosVeiculo(servico.situacaoServico);
 		 	montarCombos(servico.id);
 		 	renderTemplate(template, servico);
 		}
@@ -309,7 +309,7 @@ public class ServicosVeiculo extends Controller {
 
 	protected static void recuperarPelaSigla(String sigla, Boolean popUp) throws Exception {
 		ServicoVeiculo servico = ServicoVeiculo.buscar(sigla);
-		MenuMontador.instance().RecuperarMenuServicoVeiculo(servico.id, servico.situacaoServico);
+		MenuMontador.instance().recuperarMenuServicoVeiculo(servico.id, servico.situacaoServico);
 		if(popUp != null) {
 			renderArgs.put("mostrarMenu", !popUp);
 		} else {

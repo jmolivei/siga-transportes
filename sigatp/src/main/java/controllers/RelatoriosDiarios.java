@@ -15,52 +15,50 @@ import br.gov.jfrj.siga.tp.util.MenuMontador;
 
 @With(AutorizacaoGIAntigo.class)
 public class RelatoriosDiarios extends Controller {
-	
-	public static void listarPorVeiculo(Long idVeiculo) {
-		Veiculo veiculo = Veiculo.findById(idVeiculo);
+
+	public static void listarPorVeiculo(Long idVeiculo) throws Exception {
+		Veiculo veiculo = Veiculo.AR.findById(idVeiculo);
 		List<RelatorioDiario> relatoriosDiarios = RelatorioDiario.buscarTodosPorVeiculo(veiculo);
-		MenuMontador.instance().RecuperarMenuVeiculos(idVeiculo, ItemMenu.RELATORIOSDIARIOS);
+		MenuMontador.instance().recuperarMenuVeiculos(idVeiculo, ItemMenu.RELATORIOSDIARIOS);
 		render(relatoriosDiarios, veiculo);
 	}
-	
+
 	@RoleAdmin
 	@RoleAdminFrota
-	public static void incluir(Long idVeiculo){
-		Veiculo veiculo = Veiculo.findById(idVeiculo);
+	public static void incluir(Long idVeiculo) throws Exception {
+		Veiculo veiculo = Veiculo.AR.findById(idVeiculo);
 		RelatorioDiario relatorioDiario = new RelatorioDiario();
 		relatorioDiario.veiculo = veiculo;
 		render(relatorioDiario);
 	}
-	
+
 	@RoleAdmin
 	@RoleAdminFrota
-	public static void editar(Long id){
+	public static void editar(Long id) {
 		RelatorioDiario relatorioDiario = RelatorioDiario.findById(id);
 		render(relatorioDiario);
 	}
-	
+
 	@RoleAdmin
 	@RoleAdminFrota
-	public static void salvar(@Valid RelatorioDiario relatorioDiario) throws Exception{
-		if(Validation.hasErrors()){
+	public static void salvar(@Valid RelatorioDiario relatorioDiario) throws Exception {
+		if (Validation.hasErrors()) {
 			List<Veiculo> veiculos = Veiculo.listarTodos(AutorizacaoGIAntigo.titular().getOrgaoUsuario());
 			String template;
 			template = relatorioDiario.id > 0 ? "@editar" : "@incluir";
-			renderTemplate(template, relatorioDiario,  veiculos);
-		}
-		else{
+			renderTemplate(template, relatorioDiario, veiculos);
+		} else {
 			relatorioDiario.save();
 			listarPorVeiculo(relatorioDiario.veiculo.getId());
-		}	
-	}	
-	
-	@RoleAdmin
-	@RoleAdminFrota
-	public static void excluir(Long id){
-		RelatorioDiario relatorioDiario = RelatorioDiario.findById(id);
-		relatorioDiario.delete();
-		listarPorVeiculo(relatorioDiario.veiculo.getId());		
+		}
 	}
 
+	@RoleAdmin
+	@RoleAdminFrota
+	public static void excluir(Long id) throws Exception {
+		RelatorioDiario relatorioDiario = RelatorioDiario.findById(id);
+		relatorioDiario.delete();
+		listarPorVeiculo(relatorioDiario.veiculo.getId());
+	}
 
 }

@@ -242,7 +242,7 @@ public class Relatorios extends Controller {
 			registros += delim;
 			SimpleDateFormat formatoData = new SimpleDateFormat("yyyy,M,d,H,m,s");
 			
-			registros += "[ \'" + "Servicos" + "\', \'" + servicoVeiculo.veiculo.placa + "\', new Date(" ;
+			registros += "[ \'" + "Servicos" + "\', \'" + servicoVeiculo.veiculo.getPlaca() + "\', new Date(" ;
 			
 			if (servicoVeiculo.dataHoraInicio.get(Calendar.YEAR) == dataHoraPesquisa.get(Calendar.YEAR) &&
 					servicoVeiculo.dataHoraInicio.get(Calendar.MONTH) == dataHoraPesquisa.get(Calendar.MONTH) &&	
@@ -280,7 +280,7 @@ public class Relatorios extends Controller {
 				label = missao.getSequence() + "-" + missao.condutor.getNome();
 			}
 			else {
-				label = missao.getSequence() + "-" + missao.veiculo.placa;
+				label = missao.getSequence() + "-" + missao.veiculo.getPlaca();
 			}
 			
 			registros += "[ \'" + "Missoes" + "\', \'" + label + "\', new Date(" ;
@@ -324,7 +324,7 @@ public class Relatorios extends Controller {
 //		for(int i=0; i < missoes.size(); i++){
 		for(int i=0; i < missoesFiltradas.size(); i++){		
 //			registros += "[ \'" + missoes.get(i).getSequence() + " <a href=\"a.htm\">t</a>\'"  + " , \'" + missoes.get(i).condutor.getNome() + "\', new Date(" +	formatoData.format(missoes.get(i).dataHoraSaida.getTime()) + "), new Date(";
-			registros += "[ \'" + missoes.get(i).getSequence() + " - " + missoes.get(i).veiculo.placa + "\', \'" + missoes.get(i).condutor.getNome() + "\', new Date(" +	formatoData.format(missoes.get(i).dataHoraSaida.getTime()) + "), new Date(";
+			registros += "[ \'" + missoes.get(i).getSequence() + " - " + missoes.get(i).veiculo.getPlaca() + "\', \'" + missoes.get(i).condutor.getNome() + "\', new Date(" +	formatoData.format(missoes.get(i).dataHoraSaida.getTime()) + "), new Date(";
 			
 			
 			if (missoes.get(i).dataHoraRetorno != null){

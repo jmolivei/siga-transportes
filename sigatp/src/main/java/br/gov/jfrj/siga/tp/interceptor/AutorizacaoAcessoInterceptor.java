@@ -3,7 +3,6 @@ package br.gov.jfrj.siga.tp.interceptor;
 import br.com.caelum.vraptor.InterceptionException;
 import br.com.caelum.vraptor.Intercepts;
 import br.com.caelum.vraptor.core.InterceptorStack;
-import br.com.caelum.vraptor.core.Localization;
 import br.com.caelum.vraptor.interceptor.ExecuteMethodInterceptor;
 import br.com.caelum.vraptor.interceptor.Interceptor;
 import br.com.caelum.vraptor.ioc.RequestScoped;
@@ -18,222 +17,183 @@ import br.gov.jfrj.siga.tp.auth.annotation.RoleAgente;
 import br.gov.jfrj.siga.tp.auth.annotation.RoleAprovador;
 import br.gov.jfrj.siga.tp.auth.annotation.RoleGabinete;
 
+/**
+ * Interceptor responsavel por verificar se o usuario tem permissao para acessar determinada URL (metodo) do controller. Verifica se o metodo possui alguma das anotacoes de validacao, caso possua, o
+ * sistema executa a regra de verificacao da permissao. Se o usuario nao possui acesso, o sistema lanca excecao informando o acesso negado.
+ * 
+ * @author db1
+ *
+ */
 @RequestScoped
 @Intercepts(after = { PreencherDadosAutorizacaoInterceptor.class }, before = ExecuteMethodInterceptor.class)
 public class AutorizacaoAcessoInterceptor implements Interceptor {
 
-	private AutorizacaoGI dadosAutorizacao;
-	private Localization localization;
+	private AutorizacaoGI autorizacaoGI;
 
-	public AutorizacaoAcessoInterceptor(AutorizacaoGI dadosAutorizacao, Localization localization) {
-		this.dadosAutorizacao = dadosAutorizacao;
-		this.localization = localization;
+	public AutorizacaoAcessoInterceptor(AutorizacaoGI dadosAutorizacao) {
+		this.autorizacaoGI = dadosAutorizacao;
 	}
-	
+
 	@Override
 	public void intercept(InterceptorStack stack, ResourceMethod method, Object resourceInstance) throws InterceptionException {
-		DadosParaValidacao dados = new DadosParaValidacao(method);
+		try {
+			DadosValidacaoAutorizacao dados = new DadosValidacaoAutorizacao(method);
 
-		this.validarAdmin(dados);
-		this.validarAprovador(dados);
-		this.validarAgente(dados);
-		this.validarGabinete(dados);
-		this.validarAdminGabinete(dados);
-		this.validarAdminFrota(dados);
-		this.validarAdminMissao(dados);
-		this.validarAdminMissaoComplexo(dados);
-		
-		stack.next(method, resourceInstance);
+			this.validarAdmin(dados);
+			this.validarAprovador(dados);
+			this.validarAgente(dados);
+			this.validarGabinete(dados);
+			this.validarAdminGabinete(dados);
+			this.validarAdminFrota(dados);
+			this.validarAdminMissao(dados);
+			this.validarAdminMissaoComplexo(dados);
+
+			stack.next(method, resourceInstance);
+		} catch (Exception e) {
+			throw new InterceptionException(e);
+		}
 	}
 
-	private void validarAdminMissaoComplexo(DadosParaValidacao dados) {
+	private void validarAdminMissaoComplexo(DadosValidacaoAutorizacao dados) throws Exception {
 		if (dados.isAdmMissaoComplexoAnnotation()) {
-			if (!dadosAutorizacao.ehAdministradorMissaoPorComplexo() 
-					&& !dados.isAdminAnnotation()
+			if (!autorizacaoGI.ehAdministradorMissaoPorComplexo() 
+					&& !dados.isAdminAnnotation() 
 					&& !dados.isGabineteAnnotation() 
 					&& !dados.isAprovadorAnnotation() 
 					&& !dados.isAgenteAnnotation()
-					&& !dados.isAdminGabineteAnnotation()
+					&& !dados.isAdminGabineteAnnotation() 
 					&& !dados.isAdmFrotaAnnotation() 
 					&& !dados.isAdmMissaoAnnotation()) {
-				try {
-//					throw new Exception("admMissaoComplexoAnnotation.exception");
-					// TODO Heidi Message Mudar!
-					 throw new Exception(localization.getMessage("admMissaoComplexoAnnotation.exception"));
-				} catch (Exception e) {
-					// tratarExcecoes(e);
-				}
+				throw new Exception("admMissaoComplexoAnnotation.exception");
 			}
-			if (!dadosAutorizacao.ehAdministradorMissaoPorComplexo())
+			if (!autorizacaoGI.ehAdministradorMissaoPorComplexo())
 				dados.setAdmMissaoComplexoAnnotation(false);
 		}
 	}
 
-	private void validarAdminMissao(DadosParaValidacao dados) {
+	private void validarAdminMissao(DadosValidacaoAutorizacao dados) throws Exception {
 		if (dados.isAdmMissaoAnnotation()) {
-			if (!dadosAutorizacao.ehAdministradorMissao()
-					&& !dados.isAdminAnnotation()
+			if (!autorizacaoGI.ehAdministradorMissao() 
+					&& !dados.isAdminAnnotation() 
 					&& !dados.isGabineteAnnotation() 
 					&& !dados.isAprovadorAnnotation() 
 					&& !dados.isAgenteAnnotation()
 					&& !dados.isAdminGabineteAnnotation() 
-					&& !dados.isAdmFrotaAnnotation()
+					&& !dados.isAdmFrotaAnnotation() 
 					&& !dados.isAdmMissaoComplexoAnnotation()) {
-				try {
-					throw new Exception("admMissaoAnnotation.exception");
-					// TODO Heidi Message Mudar!
-					// throw new Exception(Messages.get("admMissaoAnnotation.exception"));
-				} catch (Exception e) {
-					// tratarExcecoes(e);
-				}
+				throw new Exception("admMissaoAnnotation.exception");
 			}
 
-			if (!dadosAutorizacao.ehAdministradorMissao())
+			if (!autorizacaoGI.ehAdministradorMissao())
 				dados.setAdmMissaoAnnotation(false);
 		}
 	}
 
-	private void validarAdminFrota(DadosParaValidacao dados) {
+	private void validarAdminFrota(DadosValidacaoAutorizacao dados) throws Exception {
 		if (dados.isAdmFrotaAnnotation()) {
-			if (!dadosAutorizacao.ehAdministradorFrota() 
-					&& !dados.isAdminAnnotation()
+			if (!autorizacaoGI.ehAdministradorFrota() 
+					&& !dados.isAdminAnnotation() 
 					&& !dados.isGabineteAnnotation() 
 					&& !dados.isAprovadorAnnotation() 
 					&& !dados.isAgenteAnnotation()
 					&& !dados.isAdminGabineteAnnotation() 
-					&& !dados.isAdmMissaoAnnotation()
+					&& !dados.isAdmMissaoAnnotation() 
 					&& !dados.isAdmMissaoComplexoAnnotation()) {
-				try {
-					throw new Exception("admFrotaAnnotation.exception");
-					// TODO Heidi Message Mudar!
-					// throw new Exception(Messages.get("admFrotaAnnotation.exception"));
-				} catch (Exception e) {
-					// tratarExcecoes(e);
-				}
+				throw new Exception("admFrotaAnnotation.exception");
 			}
 
-			if (!dadosAutorizacao.ehAdministradorFrota())
+			if (!autorizacaoGI.ehAdministradorFrota())
 				dados.setAdmFrotaAnnotation(false);
 		}
 	}
 
-	private void validarAdminGabinete(DadosParaValidacao dados) {
+	private void validarAdminGabinete(DadosValidacaoAutorizacao dados) throws Exception {
 		if (dados.isAdminGabineteAnnotation()) {
-			if (!dadosAutorizacao.ehAdminGabinete() 
-					&& !dados.isAdminAnnotation()
+			if (!autorizacaoGI.ehAdminGabinete() 
+					&& !dados.isAdminAnnotation() 
 					&& !dados.isGabineteAnnotation() 
 					&& !dados.isAprovadorAnnotation() 
 					&& !dados.isAgenteAnnotation()
 					&& !dados.isAdmFrotaAnnotation() 
-					&& !dados.isAdmMissaoAnnotation()
+					&& !dados.isAdmMissaoAnnotation() 
 					&& !dados.isAdmMissaoComplexoAnnotation()) {
-				try {
-					throw new Exception("adminGabineteAnnotation.exception");
-					// TODO Heidi Message Mudar!
-					// throw new Exception(Messages.get("adminGabineteAnnotation.exception"));
-				} catch (Exception e) {
-					// tratarExcecoes(e);
-				}
+				throw new Exception("adminGabineteAnnotation.exception");
 			}
 
-			if (!dadosAutorizacao.ehAdminGabinete())
+			if (!autorizacaoGI.ehAdminGabinete())
 				dados.setAdminGabineteAnnotation(false);
 		}
 	}
 
-	private void validarGabinete(DadosParaValidacao dados) {
+	private void validarGabinete(DadosValidacaoAutorizacao dados) throws Exception {
 		if (dados.isGabineteAnnotation()) {
-			if (!dadosAutorizacao.ehGabinete() 
-					&& !dados.isAdminAnnotation()
+			if (!autorizacaoGI.ehGabinete() 
+					&& !dados.isAdminAnnotation() 
 					&& !dados.isAprovadorAnnotation() 
 					&& !dados.isAdminGabineteAnnotation() 
 					&& !dados.isAgenteAnnotation()
 					&& !dados.isAdmFrotaAnnotation() 
 					&& !dados.isAdmMissaoAnnotation()
 					&& !dados.isAdmMissaoComplexoAnnotation()) {
-				try {
-					throw new Exception("gabineteAnnotation.exception");
-					// TODO Heidi Message Mudar!
-					// throw new Exception(Messages.get("gabineteAnnotation.exception"));
-				} catch (Exception e) {
-					// tratarExcecoes(e);
-				}
+				throw new Exception("gabineteAnnotation.exception");
 			}
 
-			if (!dadosAutorizacao.ehGabinete())
+			if (!autorizacaoGI.ehGabinete())
 				dados.setGabineteAnnotation(false);
 		}
 	}
 
-	private void validarAgente(DadosParaValidacao dados) {
+	private void validarAgente(DadosValidacaoAutorizacao dados) throws Exception {
 		if (dados.isAgenteAnnotation()) {
-			if (!dadosAutorizacao.ehAgente() 
-					&& !dados.isAdminAnnotation()
+			if (!autorizacaoGI.ehAgente() 
+					&& !dados.isAdminAnnotation() 
 					&& !dados.isGabineteAnnotation() 
 					&& !dados.isAdminGabineteAnnotation() 
-					&& !dados.isAprovadorAnnotation() 
+					&& !dados.isAprovadorAnnotation()
 					&& !dados.isAdmFrotaAnnotation() 
-					&& !dados.isAdmMissaoAnnotation()
+					&& !dados.isAdmMissaoAnnotation() 
 					&& !dados.isAdmMissaoComplexoAnnotation()) {
-				try {
-					throw new Exception("agenteAnnotation.exception");
-					// TODO Heidi Message Mudar!
-					// throw new Exception(Messages.get("agenteAnnotation.exception"));
-				} catch (Exception e) {
-					// tratarExcecoes(e);
-				}
+				throw new Exception("agenteAnnotation.exception");
 			}
 
-			if (!dadosAutorizacao.ehAgente())
+			if (!autorizacaoGI.ehAgente())
 				dados.setAgenteAnnotation(false);
 		}
 	}
 
-	private void validarAprovador(DadosParaValidacao dados) {
+	private void validarAprovador(DadosValidacaoAutorizacao dados) throws Exception {
 		if (dados.isAprovadorAnnotation()) {
-			if (!dadosAutorizacao.ehAprovador() 
+			if (!autorizacaoGI.ehAprovador() 
 					&& !dados.isAdminAnnotation() 
 					&& !dados.isGabineteAnnotation() 
 					&& !dados.isAdminGabineteAnnotation() 
 					&& !dados.isAgenteAnnotation()
 					&& !dados.isAdmFrotaAnnotation() 
-					&& !dados.isAdmMissaoAnnotation()
+					&& !dados.isAdmMissaoAnnotation() 
 					&& !dados.isAdmMissaoComplexoAnnotation()) {
-				try {
-					throw new Exception("aprovadorAnnotation.exception");
-					// TODO Heidi Message Mudar!
-					// throw new Exception(Messages.get("aprovadorAnnotation.exception"));
-				} catch (Exception e) {
-					// tratarExcecoes(e);
-				}
+				throw new Exception("aprovadorAnnotation.exception");
 			}
 
-			if (!dadosAutorizacao.ehAprovador())
+			if (!autorizacaoGI.ehAprovador())
 				dados.setAprovadorAnnotation(false);
 		}
 	}
 
-	private void validarAdmin(DadosParaValidacao dados) {
+	private void validarAdmin(DadosValidacaoAutorizacao dados) throws Exception {
 		if (dados.isAdminAnnotation()) {
-			if (!dadosAutorizacao.ehAdministrador() 
+			if (!autorizacaoGI.ehAdministrador() 
 					&& !dados.isAprovadorAnnotation() 
 					&& !dados.isGabineteAnnotation() 
 					&& !dados.isAdminGabineteAnnotation() 
 					&& !dados.isAgenteAnnotation()
 					&& !dados.isAdmFrotaAnnotation() 
-					&& !dados.isAdmMissaoAnnotation()
+					&& !dados.isAdmMissaoAnnotation() 
 					&& !dados.isAdmMissaoComplexoAnnotation()) {
-				try {
-					throw new Exception("adminAnnotation.exception");
-					// TODO Heidi Message Mudar!
-					// throw new Exception(Messages.get("adminAnnotation.exception"));
-				} catch (Exception e) {
-					// tratarExcecoes(e);
-				}
+				throw new Exception("adminAnnotation.exception");
 			}
 
-			if (!dadosAutorizacao.ehAdministrador())
-			dados.setAdminAnnotation(Boolean.FALSE);
+			if (!autorizacaoGI.ehAdministrador())
+				dados.setAdminAnnotation(Boolean.FALSE);
 		}
 	}
 
@@ -241,8 +201,8 @@ public class AutorizacaoAcessoInterceptor implements Interceptor {
 	public boolean accepts(ResourceMethod method) {
 		return Boolean.TRUE;
 	}
-	
-	class DadosParaValidacao {
+
+	class DadosValidacaoAutorizacao {
 		boolean adminAnnotation;
 		boolean aprovadorAnnotation;
 		boolean gabineteAnnotation;
@@ -252,7 +212,7 @@ public class AutorizacaoAcessoInterceptor implements Interceptor {
 		boolean admMissaoAnnotation;
 		boolean admMissaoComplexoAnnotation;
 
-		public DadosParaValidacao(ResourceMethod method) {
+		public DadosValidacaoAutorizacao(ResourceMethod method) {
 			this.adminAnnotation = method.containsAnnotation(RoleAdmin.class);
 			this.aprovadorAnnotation = method.containsAnnotation(RoleAprovador.class);
 			this.gabineteAnnotation = method.containsAnnotation(RoleGabinete.class);

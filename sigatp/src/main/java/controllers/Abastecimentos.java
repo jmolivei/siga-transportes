@@ -40,10 +40,10 @@ public class Abastecimentos extends Controller {
 		render(abastecimentos);
 	}	
 
-	public static void listarPorVeiculo(Long idVeiculo) {
-		Veiculo veiculo = Veiculo.findById(idVeiculo);
+	public static void listarPorVeiculo(Long idVeiculo) throws Exception {
+		Veiculo veiculo = Veiculo.AR.findById(idVeiculo);
 		List<Abastecimento> abastecimentos = Abastecimento.buscarTodosPorVeiculo(veiculo);
-		MenuMontador.instance().RecuperarMenuVeiculos(idVeiculo, ItemMenu.ABASTECIMENTOS);
+		MenuMontador.instance().recuperarMenuVeiculos(idVeiculo, ItemMenu.ABASTECIMENTOS);
 		render(abastecimentos, veiculo);
 	}
 

@@ -23,16 +23,16 @@ public class Avarias extends Controller {
 		render(avarias);
 	}
 
-	public static void listarPorVeiculo(Long idVeiculo) {
+	public static void listarPorVeiculo(Long idVeiculo) throws Exception {
 		montarListaDeAvariasPorVeiculo(idVeiculo);
 		render();
 	}
-	
-	protected static void montarListaDeAvariasPorVeiculo(Long idVeiculo) {
-		Veiculo veiculo = Veiculo.findById(idVeiculo);
-		renderArgs.put("veiculo",veiculo);
-		renderArgs.put("avarias",Avaria.buscarTodasPorVeiculo(veiculo));
-		MenuMontador.instance().RecuperarMenuVeiculos(idVeiculo, ItemMenu.AVARIAS);
+
+	protected static void montarListaDeAvariasPorVeiculo(Long idVeiculo) throws Exception {
+		Veiculo veiculo = Veiculo.AR.findById(idVeiculo);
+		renderArgs.put("veiculo", veiculo);
+		renderArgs.put("avarias", Avaria.buscarTodasPorVeiculo(veiculo));
+		MenuMontador.instance().recuperarMenuVeiculos(idVeiculo, ItemMenu.AVARIAS);
 	}
 
 	@RoleAdmin
@@ -42,11 +42,11 @@ public class Avarias extends Controller {
 		boolean fixarVeiculo = false;
 		List<Veiculo> veiculos = Veiculo.listarTodos(AutorizacaoGIAntigo.titular().getOrgaoUsuario());
 		if (idVeiculo != null) {
-			avaria.veiculo = Veiculo.findById(idVeiculo);
+			avaria.veiculo = Veiculo.AR.findById(idVeiculo);
 			fixarVeiculo = true;
-			MenuMontador.instance().RecuperarMenuVeiculos(avaria.veiculo.getId(), ItemMenu.AVARIAS);
+			MenuMontador.instance().recuperarMenuVeiculos(avaria.veiculo.getId(), ItemMenu.AVARIAS);
 		}
-    	render(avaria, veiculos, fixarVeiculo);
+		render(avaria, veiculos, fixarVeiculo);
 	}
 
 	@RoleAdmin
@@ -58,44 +58,41 @@ public class Avarias extends Controller {
 			veiculo = avaria.veiculo;
 		}
 		List<Veiculo> veiculos = Veiculo.listarTodos(AutorizacaoGIAntigo.titular().getOrgaoUsuario());
-		MenuMontador.instance().RecuperarMenuVeiculos(avaria.veiculo.getId(), ItemMenu.AVARIAS);
+		MenuMontador.instance().recuperarMenuVeiculos(avaria.veiculo.getId(), ItemMenu.AVARIAS);
 		render(avaria, veiculos, veiculo, fixarVeiculo);
 	}
-	
+
 	@RoleAdmin
 	@RoleAdminFrota
 	public static void salvar(Avaria avaria, boolean fixarVeiculo) throws Exception {
 		validation.valid(avaria);
-		if(Validation.hasErrors()) 
-		{
-			MenuMontador.instance().RecuperarMenuVeiculos(avaria.veiculo.getId(), ItemMenu.AVARIAS);
+		if (Validation.hasErrors()) {
+			MenuMontador.instance().recuperarMenuVeiculos(avaria.veiculo.getId(), ItemMenu.AVARIAS);
 			List<Veiculo> veiculos = Veiculo.listarTodos(AutorizacaoGIAntigo.titular().getOrgaoUsuario());
-			Veiculo veiculo = Veiculo.findById(avaria.veiculo.getId());
+			Veiculo veiculo = Veiculo.AR.findById(avaria.veiculo.getId());
 			renderTemplate(ACTION_EDITAR, avaria, veiculos, veiculo, fixarVeiculo);
 		}
-		
+
 		if (avaria.podeCircular.equals(PerguntaSimNao.NAO)) {
-			List<Missao> missoes = Missao.retornarMissoes("veiculo.getId()", avaria.veiculo.getId(), 
-					avaria.veiculo.cpOrgaoUsuario.getId(), avaria.dataDeRegistro, avaria.dataDeSolucao);
+			List<Missao> missoes = Missao.retornarMissoes("veiculo.getId()", avaria.veiculo.getId(), avaria.veiculo.getCpOrgaoUsuario().getId(), avaria.dataDeRegistro, avaria.dataDeSolucao);
 			String listaMissoes = "";
 			String delimitador = "";
-	
+
 			for (Missao item : missoes) {
 				listaMissoes += delimitador;
 				listaMissoes += item.getSequence();
 				delimitador = ",";
 			}
-	
+
 			if (missoes.size() > 0) {
-				Validation.addError("LinkErroVeiculo", listaMissoes); 
+				Validation.addError("LinkErroVeiculo", listaMissoes);
 			}
 		}
-		
+
 		if (Validation.hasErrors()) {
 			String template = avaria.id > 0 ? "Avarias/editar.html" : "Avarias/incluir.html";
 			renderTemplate(template, avaria);
-		}
-		else {
+		} else {
 			avaria.save();
 
 			if (fixarVeiculo) {
@@ -108,7 +105,7 @@ public class Avarias extends Controller {
 
 	@RoleAdmin
 	@RoleAdminFrota
-	public static void excluir(Long id, boolean fixarVeiculo) {
+	public static void excluir(Long id, boolean fixarVeiculo) throws Exception {
 		Avaria avaria;
 		avaria = Avaria.findById(id);
 		Veiculo veiculo = avaria.veiculo;

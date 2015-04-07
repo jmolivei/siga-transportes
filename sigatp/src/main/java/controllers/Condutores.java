@@ -76,7 +76,7 @@ public class Condutores extends Controller {
 		} else {
 			condutor.setDpPessoa(new DpPessoa());
 		}
-		MenuMontador.instance().RecuperarMenuCondutores(id, ItemMenu.DADOSCADASTRAIS);
+		MenuMontador.instance().recuperarMenuCondutores(id, ItemMenu.DADOSCADASTRAIS);
 		render(condutor);
 	}
 
@@ -89,7 +89,7 @@ public class Condutores extends Controller {
 	@RoleAdminMissaoComplexo
 	public static void incluir() {
 		Condutor condutor = new Condutor();
-		MenuMontador.instance().RecuperarMenuCondutores(new Long(0),ItemMenu.DADOSCADASTRAIS);
+		MenuMontador.instance().recuperarMenuCondutores(new Long(0),ItemMenu.DADOSCADASTRAIS);
 		render(condutor);
 	}
 

@@ -17,6 +17,6 @@ public class Autorizacoes {
 	public static final String EXIBIR_MENU_ADMINISTRAR_FROTA = "exibirMenuAdministrarFrota";
 	public static final String EXIBIR_MENU_ADMINISTRAR = "exibirMenuAdministrar";
 	public static final String EXIBIR_MENU_GABINETE = "exibirMenuGabinete";
-	
+
 	public static final String EXIBIR_MENU_ADMMISSAO_ADMINISTRAR_MISSAO_COMPLEXO = "exibirMenuAdministrarMissaoComplexo";
 }

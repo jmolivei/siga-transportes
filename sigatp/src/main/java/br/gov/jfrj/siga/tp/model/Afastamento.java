@@ -24,7 +24,7 @@ import br.gov.jfrj.siga.model.ActiveRecord;
 @Entity
 @Audited
 @Table(schema = "SIGATP")
-public class Afastamento extends TPObjeto  {
+public class Afastamento extends TpModel  {
 	
 	public static ActiveRecord<Afastamento> AR = new ActiveRecord<>(Afastamento.class);
 	

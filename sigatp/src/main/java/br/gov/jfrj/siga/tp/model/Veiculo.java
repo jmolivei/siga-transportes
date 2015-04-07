@@ -30,11 +30,12 @@ import play.data.validation.MaxSize;
 import play.data.validation.MinSize;
 import play.data.validation.Required;
 import play.data.validation.Unique;
-import play.db.jpa.GenericModel;
 import play.db.jpa.JPA;
 import play.modules.br.jus.jfrj.siga.uteis.validadores.validarAnoData.ValidarAnoData;
 import br.gov.jfrj.siga.dp.CpOrgaoUsuario;
 import br.gov.jfrj.siga.dp.DpLotacao;
+import br.gov.jfrj.siga.model.ActiveRecord;
+import br.gov.jfrj.siga.model.Objeto;
 import br.gov.jfrj.siga.tp.binder.DoubleBinder;
 import br.gov.jfrj.siga.tp.util.PerguntaSimNao;
 import br.gov.jfrj.siga.tp.util.Situacao;
@@ -43,197 +44,202 @@ import br.gov.jfrj.siga.tp.validator.RenavamCheck;
 import br.jus.jfrj.siga.uteis.UpperCase;
 
 @Entity
-//@Table(name = "VEICULO_2", schema="SIGAOR")
+// @Table(name = "VEICULO_2", schema="SIGAOR")
 @Audited
 @Table(schema = "SIGATP")
-public class Veiculo extends GenericModel implements Comparable<Veiculo> {
+public class Veiculo extends Objeto implements Comparable<Veiculo> {
+
+	private static final long serialVersionUID = -3602265045747814797L;
+	public static ActiveRecord<Veiculo> AR = new ActiveRecord<>(Veiculo.class);
+
 	@Id
-	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "hibernate_sequence_generator") @SequenceGenerator(name = "hibernate_sequence_generator", sequenceName="SIGATP.hibernate_sequence") 
+	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "hibernate_sequence_generator")
+	@SequenceGenerator(name = "hibernate_sequence_generator", sequenceName = "SIGATP.hibernate_sequence")
 	private Long id;
-	
+
 	@Required
-	@MaxSize(value=8,message="veiculo.placa.maxSize.")
-	@Unique(message="veiculo.placa.unique")
+	@MaxSize(value = 8, message = "veiculo.placa.maxSize.")
+	@Unique(message = "veiculo.placa.unique")
 	@UpperCase
-	public String placa;
-	
+	private String placa;
+
 	@ManyToOne
-	public Grupo grupo;
-	
- 	@Audited(targetAuditMode = RelationTargetAuditMode.NOT_AUDITED)
+	private Grupo grupo;
+
+	@Audited(targetAuditMode = RelationTargetAuditMode.NOT_AUDITED)
 	@ManyToOne
 	@JoinColumn(name = "ID_ORGAO_USU")
-	public CpOrgaoUsuario cpOrgaoUsuario;  
+	private CpOrgaoUsuario cpOrgaoUsuario;
 
 	@Enumerated(EnumType.STRING)
-	public Situacao situacao;
-	
+	private Situacao situacao;
+
 	@Required
 	@UpperCase
-	@MaxSize(value=11,message="veiculo.patrimonio.maxSize")
-	public String patrimonio;
-	
-	@OneToMany(orphanRemoval=true,mappedBy="veiculo") 
-	//TODO: Verificar erro de Cast no token da Linha abaixo 
-//	@OrderBy("dataHoraInicio DESC") 
-	public List<LotacaoVeiculo> lotacoes;
-	
+	@MaxSize(value = 11, message = "veiculo.patrimonio.maxSize")
+	private String patrimonio;
+
+	@OneToMany(orphanRemoval = true, mappedBy = "veiculo")
+	// TODO: Verificar erro de Cast no token da Linha abaixo
+	// @OrderBy("dataHoraInicio DESC")
+	private List<LotacaoVeiculo> lotacoes;
+
 	@Transient
-	public DpLotacao lotacaoAtual;
-	
+	private DpLotacao lotacaoAtual;
+
 	@Transient
-	@As(binder=DoubleBinder.class)
-	public Double odometroEmKmAtual;
-	
+	@As(binder = DoubleBinder.class)
+	private Double odometroEmKmAtual;
+
 	@Enumerated(EnumType.STRING)
-	public PerguntaSimNao usoComum;
-	
-	@MinSize(value=4,message="veiculo.anoFabricacao.minSize")
-	@MaxSize(value=4,message="veiculo.anoFabricacao.maxSize")
-	public int anoFabricacao;
-	
-	@MinSize(value=4,message="veiculo.anoModelo.minSize")
-	@MaxSize(value=4,message="veiculo.anoModelo.maxSize")
-	public int anoModelo;
-	
+	private PerguntaSimNao usoComum;
+
+	@MinSize(value = 4, message = "veiculo.anoFabricacao.minSize")
+	@MaxSize(value = 4, message = "veiculo.anoFabricacao.maxSize")
+	private int anoFabricacao;
+
+	@MinSize(value = 4, message = "veiculo.anoModelo.minSize")
+	@MaxSize(value = 4, message = "veiculo.anoModelo.maxSize")
+	private int anoModelo;
+
 	@Required
 	@UpperCase
-	public String marca;
-	
+	private String marca;
+
 	@Required
 	@UpperCase
-	public String modelo;
-	
+	private String modelo;
+
 	@Enumerated(EnumType.STRING)
-	public TipoDeCombustivel tipoDeCombustivel;
+	private TipoDeCombustivel tipoDeCombustivel;
 
 	@ManyToOne
 	public Cor cor;
-	
+
 	@UpperCase
-	public String motor;
-	
+	private String motor;
+
 	@UpperCase
-	public String potencia;
-	
+	private String potencia;
+
 	@UpperCase
-	public String direcao;
-	
+	private String direcao;
+
 	@UpperCase
-	public String transmissao;
-	
+	private String transmissao;
+
 	@UpperCase
-	public String tipoDeBlindagem;	
-	
-	public String tanque;
-	
-	public String pneuMedida;
-	
-	public String pneuPressaoDianteira;	
-	
-	public String pneuPressaoTraseira;
-	
+	private String tipoDeBlindagem;
+
+	private String tanque;
+
+	private String pneuMedida;
+
+	private String pneuPressaoDianteira;
+
+	private String pneuPressaoTraseira;
+
 	@Required
 	@CheckWith(RenavamCheck.class)
-	public String renavam;	
-	
+	private String renavam;
+
 	@Required
 	@CheckWith(ChassiCheck.class)
 	@UpperCase
-	public String chassi;
-	
+	private String chassi;
+
 	@Enumerated(EnumType.STRING)
-	public PerguntaSimNao licenciamentoAnual;
-	
+	private PerguntaSimNao licenciamentoAnual;
+
 	@Enumerated(EnumType.STRING)
-	public PerguntaSimNao dpvat;
-	
+	private PerguntaSimNao dpvat;
+
 	@Enumerated(EnumType.STRING)
-	public CategoriaCNH categoriaCNH;
-	
-	public boolean temAIRBAG;
-	
-	public boolean temGPS;
-	
-	public boolean temPILOTOAUTOMATICO;
-	
-	public boolean temCONTROLEDETRACAO;
-	
-	public boolean temSENSORDEMARCHARE;
-	
-	public boolean temABS;
-	
-	public boolean temCDPLAYER;
-	
-	public boolean temBANCOSEMCOURO;
-	
-	public boolean temRODADELIGALEVE;
-	
-	public boolean temCAMERADEMARCHARE;
-	
-	public boolean temEBD;
-	
-	public boolean temDVDPLAYER;
-	
-	public boolean temTELALCDPAPOIOCABECA;
-	
-	public boolean temFREIOADISCONASQUATRORODAS;
-	
-	public boolean temARCONDICIONADO;
-	
-	public boolean temOUTROS;
-	
+	private CategoriaCNH categoriaCNH;
+
+	private boolean temAIRBAG;
+
+	private boolean temGPS;
+
+	private boolean temPILOTOAUTOMATICO;
+
+	private boolean temCONTROLEDETRACAO;
+
+	private boolean temSENSORDEMARCHARE;
+
+	private boolean temABS;
+
+	private boolean temCDPLAYER;
+
+	private boolean temBANCOSEMCOURO;
+
+	private boolean temRODADELIGALEVE;
+
+	private boolean temCAMERADEMARCHARE;
+
+	private boolean temEBD;
+
+	private boolean temDVDPLAYER;
+
+	private boolean temTELALCDPAPOIOCABECA;
+
+	private boolean temFREIOADISCONASQUATRORODAS;
+
+	private boolean temARCONDICIONADO;
+
+	private boolean temOUTROS;
+
 	@UpperCase
-	public String outros;
-	
-	@As(lang={"*"}, value={"dd/MM/yyyy"})
-	@ValidarAnoData(descricaoCampo="Data de Aquisicao")
-	public Calendar dataAquisicao;	
-	
-	@As(binder=DoubleBinder.class)
-	public Double valorAquisicao;
-	
-	@As(lang={"*"}, value={"dd/MM/yyyy"})
-	@ValidarAnoData(descricaoCampo="Data de Garantia")
-	public Calendar dataGarantia;
-	
+	private String outros;
+
+	@As(lang = { "*" }, value = { "dd/MM/yyyy" })
+	@ValidarAnoData(descricaoCampo = "Data de Aquisicao")
+	private Calendar dataAquisicao;
+
+	@As(binder = DoubleBinder.class)
+	private Double valorAquisicao;
+
+	@As(lang = { "*" }, value = { "dd/MM/yyyy" })
+	@ValidarAnoData(descricaoCampo = "Data de Garantia")
+	private Calendar dataGarantia;
+
 	@ManyToOne
-	public Fornecedor fornecedor;
-	
-	public String numeroCartaoAbastecimento;
-	
-	@As(lang={"*"}, value={"dd/MM/yyyy"})
-	@ValidarAnoData(descricaoCampo="Validade do Cartao de Abastecimento")
-	public Calendar validadeCartaoAbastecimento;
-	
-	public String numeroCartaoSeguro;
-	
-	@As(lang={"*"}, value={"dd/MM/yyyy"})
-	@ValidarAnoData(intervalo=10, descricaoCampo="Validade do Cartao de Seguro")
-	public Calendar validadeCartaoSeguro;
-	
-	@As(lang={"*"}, value={"dd/MM/yyyy HH:mm"}) 
-	@ValidarAnoData(descricaoCampo="Data de Alienacao")
-	public Calendar dataAlienacao;
-	
+	private Fornecedor fornecedor;
+
+	private String numeroCartaoAbastecimento;
+
+	@As(lang = { "*" }, value = { "dd/MM/yyyy" })
+	@ValidarAnoData(descricaoCampo = "Validade do Cartao de Abastecimento")
+	private Calendar validadeCartaoAbastecimento;
+
+	private String numeroCartaoSeguro;
+
+	@As(lang = { "*" }, value = { "dd/MM/yyyy" })
+	@ValidarAnoData(intervalo = 10, descricaoCampo = "Validade do Cartao de Seguro")
+	private Calendar validadeCartaoSeguro;
+
+	@As(lang = { "*" }, value = { "dd/MM/yyyy HH:mm" })
+	@ValidarAnoData(descricaoCampo = "Data de Alienacao")
+	private Calendar dataAlienacao;
+
 	@UpperCase
-	public String termoAlienacao;
-	
+	private String termoAlienacao;
+
 	@UpperCase
-	public String processoAlienacao;
-	
-	@OneToMany(mappedBy="veiculo",cascade=CascadeType.ALL)
-	public List<AutoDeInfracao> autosDeInfracao;
-	
-	@OneToMany(mappedBy="veiculo",orphanRemoval=true)
-	public List<Avaria> avarias;
-	
-	@OneToMany(mappedBy="veiculo",orphanRemoval=true)
-	public List<Abastecimento> abastecimentos;
-	
-	@OneToMany(mappedBy="veiculo",orphanRemoval=true)
-	public List<RelatorioDiario> relatoriosdiarios;
-	
+	private String processoAlienacao;
+
+	@OneToMany(mappedBy = "veiculo", cascade = CascadeType.ALL)
+	private List<AutoDeInfracao> autosDeInfracao;
+
+	@OneToMany(mappedBy = "veiculo", orphanRemoval = true)
+	private List<Avaria> avarias;
+
+	@OneToMany(mappedBy = "veiculo", orphanRemoval = true)
+	private List<Abastecimento> abastecimentos;
+
+	@OneToMany(mappedBy = "veiculo", orphanRemoval = true)
+	private List<RelatorioDiario> relatoriosdiarios;
+
 	public Veiculo() {
 		this.id = new Long(0);
 		this.grupo = null;
@@ -290,16 +296,14 @@ public class Veiculo extends GenericModel implements Comparable<Veiculo> {
 		this.termoAlienacao = "";
 		this.processoAlienacao = "";
 	}
-	
+
 	public String getDadosParaExibicao() {
 		return this.marca + " " + this.modelo + " - " + this.placa;
 	}
-	
-/*	@Override
-	public int compareTo(Veiculo o) {
-		return (this.situacao + this.placa).compareTo(o.situacao + o.placa);
-	}
-*/	
+
+	/*
+	 * @Override public int compareTo(Veiculo o) { return (this.situacao + this.placa).compareTo(o.situacao + o.placa); }
+	 */
 	@Override
 	public int compareTo(Veiculo o) {
 		return (this.situacao + this.marca + this.modelo).compareTo(o.situacao + o.marca + o.modelo);
@@ -307,64 +311,42 @@ public class Veiculo extends GenericModel implements Comparable<Veiculo> {
 
 	public Double getUltimoOdometroDeLotacao() {
 		Double retorno = (double) 0;
-		
-		if(lotacoes != null && !lotacoes.isEmpty() && lotacoes.get(0).odometroEmKm != null) {
-			retorno = lotacoes.get(0).odometroEmKm;
+
+		if (lotacoes != null && !lotacoes.isEmpty() && lotacoes.get(0).getOdometroEmKm() != null) {
+			retorno = lotacoes.get(0).getOdometroEmKm();
 		}
-		
+
 		return retorno;
 	}
-	
+
 	public DpLotacao getDpLotacaoVigente() {
 		DpLotacao retorno = null;
-		
-		if(lotacoes != null && !lotacoes.isEmpty()) {
-			retorno = lotacoes.get(0).lotacao;
+
+		if (lotacoes != null && !lotacoes.isEmpty()) {
+			retorno = lotacoes.get(0).getLotacao();
 		}
-		
 		return retorno;
 	}
-	
+
 	public static List<Veiculo> listarDisponiveis(String dataSaida, Long idMissao, Long idOrgao) {
 		List<Veiculo> veiculos;
 		String dataFormatadaOracle = "to_date('" + dataSaida + "', 'DD/MM/YYYY HH24:mi')";
-		String qrl = 	"SELECT v FROM Veiculo v where " +
-						" v.situacao = '" + Situacao.Ativo.toString() + "' " +
-						" AND v.cpOrgaoUsuario.id in  " + 
-						"(SELECT cp.id FROM CpOrgaoUsuario cp" +
-						" WHERE  cp.id = " + idOrgao + ")" +
-						" AND v.id not in " + 
-						"(SELECT s.veiculo.id FROM ServicoVeiculo s" +
-						" WHERE  s.veiculo.id = v.id" +
-						" AND   s.dataHoraInicio <= " + dataFormatadaOracle +
-						" AND    (s.dataHoraFim = NULL " + 
-						" OR    s.dataHoraFim >= " + dataFormatadaOracle + "))" +
-						" AND   v.id not in" + 
-						"(SELECT m.veiculo.id FROM Missao m" +
-						" WHERE  m.veiculo.id = v.id" +
-						" AND    m.id != " + idMissao +
-						" AND    m.estadoMissao != '" + EstadoMissao.CANCELADA + "'" +
-						" AND    m.estadoMissao != '" + EstadoMissao.PROGRAMADA + "'" +
-						" AND    m.estadoMissao != '" + EstadoMissao.FINALIZADA + "'" +
-						" AND   ((m.dataHoraSaida <=  " + dataFormatadaOracle +
-						" AND    m.dataHoraRetorno = NULL)" + 
-						" OR    (m.dataHoraSaida <=  " + dataFormatadaOracle +
-						" AND    m.dataHoraRetorno >= "  + dataFormatadaOracle + ")))" +
-						" AND v.id not in " + 
-						"(SELECT a.veiculo.id FROM Avaria a" +
-						" WHERE a.podeCircular = '" + PerguntaSimNao.NAO + "'" +
-						" AND a.dataDeRegistro <= " + dataFormatadaOracle +
-						" AND (a.dataDeSolucao = NULL " + 
-						" OR a.dataDeSolucao >= " + dataFormatadaOracle + "))" +
-						" ORDER BY v.marca, v.modelo";
-		
+		String qrl = "SELECT v FROM Veiculo v where " + " v.situacao = '" + Situacao.Ativo.toString() + "' " + " AND v.cpOrgaoUsuario.id in  " + "(SELECT cp.id FROM CpOrgaoUsuario cp"
+				+ " WHERE  cp.id = " + idOrgao + ")" + " AND v.id not in " + "(SELECT s.veiculo.id FROM ServicoVeiculo s" + " WHERE  s.veiculo.id = v.id" + " AND   s.dataHoraInicio <= "
+				+ dataFormatadaOracle + " AND    (s.dataHoraFim = NULL " + " OR    s.dataHoraFim >= " + dataFormatadaOracle + "))" + " AND   v.id not in" + "(SELECT m.veiculo.id FROM Missao m"
+				+ " WHERE  m.veiculo.id = v.id" + " AND    m.id != " + idMissao + " AND    m.estadoMissao != '" + EstadoMissao.CANCELADA + "'" + " AND    m.estadoMissao != '"
+				+ EstadoMissao.PROGRAMADA + "'" + " AND    m.estadoMissao != '" + EstadoMissao.FINALIZADA + "'" + " AND   ((m.dataHoraSaida <=  " + dataFormatadaOracle
+				+ " AND    m.dataHoraRetorno = NULL)" + " OR    (m.dataHoraSaida <=  " + dataFormatadaOracle + " AND    m.dataHoraRetorno >= " + dataFormatadaOracle + ")))" + " AND v.id not in "
+				+ "(SELECT a.veiculo.id FROM Avaria a" + " WHERE a.podeCircular = '" + PerguntaSimNao.NAO + "'" + " AND a.dataDeRegistro <= " + dataFormatadaOracle + " AND (a.dataDeSolucao = NULL "
+				+ " OR a.dataDeSolucao >= " + dataFormatadaOracle + "))" + " ORDER BY v.marca, v.modelo";
+
 		Query qry = JPA.em().createQuery(qrl);
 		try {
 			veiculos = (List<Veiculo>) qry.getResultList();
-		} catch(NoResultException ex) {
-			veiculos =null;
+		} catch (NoResultException ex) {
+			veiculos = null;
 		}
-		
+
 		return veiculos;
 	}
 
@@ -376,33 +358,27 @@ public class Veiculo extends GenericModel implements Comparable<Veiculo> {
 			if (veiculo.id.equals(m.veiculo.id)) {
 				return true;
 			}
-		} 
+		}
 		return false;
 	}
-	
+
 	public static List<Veiculo> listarTodos(CpOrgaoUsuario orgaoUsuario) throws Exception {
-		List<Veiculo> veiculos = Veiculo.find("cpOrgaoUsuario", orgaoUsuario).fetch();
+		List<Veiculo> veiculos = Veiculo.AR.find("cpOrgaoUsuario", orgaoUsuario).fetch();
 		Collections.sort(veiculos);
 		return veiculos;
 	}
-	
-	public static List<Veiculo> listarFiltradoPor(CpOrgaoUsuario orgaoUsuario,
-			DpLotacao lotacao) throws Exception  {
+
+	public static List<Veiculo> listarFiltradoPor(CpOrgaoUsuario orgaoUsuario, DpLotacao lotacao) throws Exception {
 
 		List<Veiculo> veiculos;
-		
-		String qrl = 	"SELECT v FROM Veiculo v WHERE " +	
-						"  v.cpOrgaoUsuario.id = " + orgaoUsuario.getId() + 
-						" AND v.id in (SELECT L.veiculo.id FROM LotacaoVeiculo L " + 
-						" where L.veiculo.id = v.id " +   	
-						" AND L.lotacao.idLotacaoIni = " + lotacao.getIdLotacaoIni() + 
-						" AND L.dataHoraFim IS NULL)" +
-						" ORDER BY v.marca, v.modelo";
+
+		String qrl = "SELECT v FROM Veiculo v WHERE " + "  v.cpOrgaoUsuario.id = " + orgaoUsuario.getId() + " AND v.id in (SELECT L.veiculo.id FROM LotacaoVeiculo L " + " where L.veiculo.id = v.id "
+				+ " AND L.lotacao.idLotacaoIni = " + lotacao.getIdLotacaoIni() + " AND L.dataHoraFim IS NULL)" + " ORDER BY v.marca, v.modelo";
 
 		Query qry = JPA.em().createQuery(qrl);
 		try {
 			veiculos = (List<Veiculo>) qry.getResultList();
-		} catch(NoResultException ex) {
+		} catch (NoResultException ex) {
 			veiculos = null;
 		}
 		return veiculos;
@@ -417,15 +393,503 @@ public class Veiculo extends GenericModel implements Comparable<Veiculo> {
 	}
 
 	public DpLotacao getUltimaLotacao() {
-		
+
 		return this.getDpLotacaoVigente();
 	}
-	
+
 	public Long getId() {
 		return id;
 	}
-	
+
 	public void setId(Long id) {
 		this.id = id;
+	}
+
+	public String getPlaca() {
+		return placa;
+	}
+
+	public void setPlaca(String placa) {
+		this.placa = placa;
+	}
+
+	public Grupo getGrupo() {
+		return grupo;
+	}
+
+	public void setGrupo(Grupo grupo) {
+		this.grupo = grupo;
+	}
+
+	public CpOrgaoUsuario getCpOrgaoUsuario() {
+		return cpOrgaoUsuario;
+	}
+
+	public void setCpOrgaoUsuario(CpOrgaoUsuario cpOrgaoUsuario) {
+		this.cpOrgaoUsuario = cpOrgaoUsuario;
+	}
+
+	public Situacao getSituacao() {
+		return situacao;
+	}
+
+	public void setSituacao(Situacao situacao) {
+		this.situacao = situacao;
+	}
+
+	public String getPatrimonio() {
+		return patrimonio;
+	}
+
+	public void setPatrimonio(String patrimonio) {
+		this.patrimonio = patrimonio;
+	}
+
+	public List<LotacaoVeiculo> getLotacoes() {
+		return lotacoes;
+	}
+
+	public void setLotacoes(List<LotacaoVeiculo> lotacoes) {
+		this.lotacoes = lotacoes;
+	}
+
+	public DpLotacao getLotacaoAtual() {
+		return lotacaoAtual;
+	}
+
+	public void setLotacaoAtual(DpLotacao lotacaoAtual) {
+		this.lotacaoAtual = lotacaoAtual;
+	}
+
+	public Double getOdometroEmKmAtual() {
+		return odometroEmKmAtual;
+	}
+
+	public void setOdometroEmKmAtual(Double odometroEmKmAtual) {
+		this.odometroEmKmAtual = odometroEmKmAtual;
+	}
+
+	public PerguntaSimNao getUsoComum() {
+		return usoComum;
+	}
+
+	public void setUsoComum(PerguntaSimNao usoComum) {
+		this.usoComum = usoComum;
+	}
+
+	public int getAnoFabricacao() {
+		return anoFabricacao;
+	}
+
+	public void setAnoFabricacao(int anoFabricacao) {
+		this.anoFabricacao = anoFabricacao;
+	}
+
+	public int getAnoModelo() {
+		return anoModelo;
+	}
+
+	public void setAnoModelo(int anoModelo) {
+		this.anoModelo = anoModelo;
+	}
+
+	public String getMarca() {
+		return marca;
+	}
+
+	public void setMarca(String marca) {
+		this.marca = marca;
+	}
+
+	public String getModelo() {
+		return modelo;
+	}
+
+	public void setModelo(String modelo) {
+		this.modelo = modelo;
+	}
+
+	public TipoDeCombustivel getTipoDeCombustivel() {
+		return tipoDeCombustivel;
+	}
+
+	public void setTipoDeCombustivel(TipoDeCombustivel tipoDeCombustivel) {
+		this.tipoDeCombustivel = tipoDeCombustivel;
+	}
+
+	public Cor getCor() {
+		return cor;
+	}
+
+	public void setCor(Cor cor) {
+		this.cor = cor;
+	}
+
+	public String getMotor() {
+		return motor;
+	}
+
+	public void setMotor(String motor) {
+		this.motor = motor;
+	}
+
+	public String getPotencia() {
+		return potencia;
+	}
+
+	public void setPotencia(String potencia) {
+		this.potencia = potencia;
+	}
+
+	public String getDirecao() {
+		return direcao;
+	}
+
+	public void setDirecao(String direcao) {
+		this.direcao = direcao;
+	}
+
+	public String getTransmissao() {
+		return transmissao;
+	}
+
+	public void setTransmissao(String transmissao) {
+		this.transmissao = transmissao;
+	}
+
+	public String getTipoDeBlindagem() {
+		return tipoDeBlindagem;
+	}
+
+	public void setTipoDeBlindagem(String tipoDeBlindagem) {
+		this.tipoDeBlindagem = tipoDeBlindagem;
+	}
+
+	public String getTanque() {
+		return tanque;
+	}
+
+	public void setTanque(String tanque) {
+		this.tanque = tanque;
+	}
+
+	public String getPneuMedida() {
+		return pneuMedida;
+	}
+
+	public void setPneuMedida(String pneuMedida) {
+		this.pneuMedida = pneuMedida;
+	}
+
+	public String getPneuPressaoDianteira() {
+		return pneuPressaoDianteira;
+	}
+
+	public void setPneuPressaoDianteira(String pneuPressaoDianteira) {
+		this.pneuPressaoDianteira = pneuPressaoDianteira;
+	}
+
+	public String getPneuPressaoTraseira() {
+		return pneuPressaoTraseira;
+	}
+
+	public void setPneuPressaoTraseira(String pneuPressaoTraseira) {
+		this.pneuPressaoTraseira = pneuPressaoTraseira;
+	}
+
+	public String getRenavam() {
+		return renavam;
+	}
+
+	public void setRenavam(String renavam) {
+		this.renavam = renavam;
+	}
+
+	public String getChassi() {
+		return chassi;
+	}
+
+	public void setChassi(String chassi) {
+		this.chassi = chassi;
+	}
+
+	public PerguntaSimNao getLicenciamentoAnual() {
+		return licenciamentoAnual;
+	}
+
+	public void setLicenciamentoAnual(PerguntaSimNao licenciamentoAnual) {
+		this.licenciamentoAnual = licenciamentoAnual;
+	}
+
+	public PerguntaSimNao getDpvat() {
+		return dpvat;
+	}
+
+	public void setDpvat(PerguntaSimNao dpvat) {
+		this.dpvat = dpvat;
+	}
+
+	public CategoriaCNH getCategoriaCNH() {
+		return categoriaCNH;
+	}
+
+	public void setCategoriaCNH(CategoriaCNH categoriaCNH) {
+		this.categoriaCNH = categoriaCNH;
+	}
+
+	public boolean isTemAIRBAG() {
+		return temAIRBAG;
+	}
+
+	public void setTemAIRBAG(boolean temAIRBAG) {
+		this.temAIRBAG = temAIRBAG;
+	}
+
+	public boolean isTemGPS() {
+		return temGPS;
+	}
+
+	public void setTemGPS(boolean temGPS) {
+		this.temGPS = temGPS;
+	}
+
+	public boolean isTemPILOTOAUTOMATICO() {
+		return temPILOTOAUTOMATICO;
+	}
+
+	public void setTemPILOTOAUTOMATICO(boolean temPILOTOAUTOMATICO) {
+		this.temPILOTOAUTOMATICO = temPILOTOAUTOMATICO;
+	}
+
+	public boolean isTemCONTROLEDETRACAO() {
+		return temCONTROLEDETRACAO;
+	}
+
+	public void setTemCONTROLEDETRACAO(boolean temCONTROLEDETRACAO) {
+		this.temCONTROLEDETRACAO = temCONTROLEDETRACAO;
+	}
+
+	public boolean isTemSENSORDEMARCHARE() {
+		return temSENSORDEMARCHARE;
+	}
+
+	public void setTemSENSORDEMARCHARE(boolean temSENSORDEMARCHARE) {
+		this.temSENSORDEMARCHARE = temSENSORDEMARCHARE;
+	}
+
+	public boolean isTemABS() {
+		return temABS;
+	}
+
+	public void setTemABS(boolean temABS) {
+		this.temABS = temABS;
+	}
+
+	public boolean isTemCDPLAYER() {
+		return temCDPLAYER;
+	}
+
+	public void setTemCDPLAYER(boolean temCDPLAYER) {
+		this.temCDPLAYER = temCDPLAYER;
+	}
+
+	public boolean isTemBANCOSEMCOURO() {
+		return temBANCOSEMCOURO;
+	}
+
+	public void setTemBANCOSEMCOURO(boolean temBANCOSEMCOURO) {
+		this.temBANCOSEMCOURO = temBANCOSEMCOURO;
+	}
+
+	public boolean isTemRODADELIGALEVE() {
+		return temRODADELIGALEVE;
+	}
+
+	public void setTemRODADELIGALEVE(boolean temRODADELIGALEVE) {
+		this.temRODADELIGALEVE = temRODADELIGALEVE;
+	}
+
+	public boolean isTemCAMERADEMARCHARE() {
+		return temCAMERADEMARCHARE;
+	}
+
+	public void setTemCAMERADEMARCHARE(boolean temCAMERADEMARCHARE) {
+		this.temCAMERADEMARCHARE = temCAMERADEMARCHARE;
+	}
+
+	public boolean isTemEBD() {
+		return temEBD;
+	}
+
+	public void setTemEBD(boolean temEBD) {
+		this.temEBD = temEBD;
+	}
+
+	public boolean isTemDVDPLAYER() {
+		return temDVDPLAYER;
+	}
+
+	public void setTemDVDPLAYER(boolean temDVDPLAYER) {
+		this.temDVDPLAYER = temDVDPLAYER;
+	}
+
+	public boolean isTemTELALCDPAPOIOCABECA() {
+		return temTELALCDPAPOIOCABECA;
+	}
+
+	public void setTemTELALCDPAPOIOCABECA(boolean temTELALCDPAPOIOCABECA) {
+		this.temTELALCDPAPOIOCABECA = temTELALCDPAPOIOCABECA;
+	}
+
+	public boolean isTemFREIOADISCONASQUATRORODAS() {
+		return temFREIOADISCONASQUATRORODAS;
+	}
+
+	public void setTemFREIOADISCONASQUATRORODAS(boolean temFREIOADISCONASQUATRORODAS) {
+		this.temFREIOADISCONASQUATRORODAS = temFREIOADISCONASQUATRORODAS;
+	}
+
+	public boolean isTemARCONDICIONADO() {
+		return temARCONDICIONADO;
+	}
+
+	public void setTemARCONDICIONADO(boolean temARCONDICIONADO) {
+		this.temARCONDICIONADO = temARCONDICIONADO;
+	}
+
+	public boolean isTemOUTROS() {
+		return temOUTROS;
+	}
+
+	public void setTemOUTROS(boolean temOUTROS) {
+		this.temOUTROS = temOUTROS;
+	}
+
+	public String getOutros() {
+		return outros;
+	}
+
+	public void setOutros(String outros) {
+		this.outros = outros;
+	}
+
+	public Calendar getDataAquisicao() {
+		return dataAquisicao;
+	}
+
+	public void setDataAquisicao(Calendar dataAquisicao) {
+		this.dataAquisicao = dataAquisicao;
+	}
+
+	public Double getValorAquisicao() {
+		return valorAquisicao;
+	}
+
+	public void setValorAquisicao(Double valorAquisicao) {
+		this.valorAquisicao = valorAquisicao;
+	}
+
+	public Calendar getDataGarantia() {
+		return dataGarantia;
+	}
+
+	public void setDataGarantia(Calendar dataGarantia) {
+		this.dataGarantia = dataGarantia;
+	}
+
+	public Fornecedor getFornecedor() {
+		return fornecedor;
+	}
+
+	public void setFornecedor(Fornecedor fornecedor) {
+		this.fornecedor = fornecedor;
+	}
+
+	public String getNumeroCartaoAbastecimento() {
+		return numeroCartaoAbastecimento;
+	}
+
+	public void setNumeroCartaoAbastecimento(String numeroCartaoAbastecimento) {
+		this.numeroCartaoAbastecimento = numeroCartaoAbastecimento;
+	}
+
+	public Calendar getValidadeCartaoAbastecimento() {
+		return validadeCartaoAbastecimento;
+	}
+
+	public void setValidadeCartaoAbastecimento(Calendar validadeCartaoAbastecimento) {
+		this.validadeCartaoAbastecimento = validadeCartaoAbastecimento;
+	}
+
+	public String getNumeroCartaoSeguro() {
+		return numeroCartaoSeguro;
+	}
+
+	public void setNumeroCartaoSeguro(String numeroCartaoSeguro) {
+		this.numeroCartaoSeguro = numeroCartaoSeguro;
+	}
+
+	public Calendar getValidadeCartaoSeguro() {
+		return validadeCartaoSeguro;
+	}
+
+	public void setValidadeCartaoSeguro(Calendar validadeCartaoSeguro) {
+		this.validadeCartaoSeguro = validadeCartaoSeguro;
+	}
+
+	public Calendar getDataAlienacao() {
+		return dataAlienacao;
+	}
+
+	public void setDataAlienacao(Calendar dataAlienacao) {
+		this.dataAlienacao = dataAlienacao;
+	}
+
+	public String getTermoAlienacao() {
+		return termoAlienacao;
+	}
+
+	public void setTermoAlienacao(String termoAlienacao) {
+		this.termoAlienacao = termoAlienacao;
+	}
+
+	public String getProcessoAlienacao() {
+		return processoAlienacao;
+	}
+
+	public void setProcessoAlienacao(String processoAlienacao) {
+		this.processoAlienacao = processoAlienacao;
+	}
+
+	public List<AutoDeInfracao> getAutosDeInfracao() {
+		return autosDeInfracao;
+	}
+
+	public void setAutosDeInfracao(List<AutoDeInfracao> autosDeInfracao) {
+		this.autosDeInfracao = autosDeInfracao;
+	}
+
+	public List<Avaria> getAvarias() {
+		return avarias;
+	}
+
+	public void setAvarias(List<Avaria> avarias) {
+		this.avarias = avarias;
+	}
+
+	public List<Abastecimento> getAbastecimentos() {
+		return abastecimentos;
+	}
+
+	public void setAbastecimentos(List<Abastecimento> abastecimentos) {
+		this.abastecimentos = abastecimentos;
+	}
+
+	public List<RelatorioDiario> getRelatoriosdiarios() {
+		return relatoriosdiarios;
+	}
+
+	public void setRelatoriosdiarios(List<RelatorioDiario> relatoriosdiarios) {
+		this.relatoriosdiarios = relatoriosdiarios;
 	}
 }

@@ -2,11 +2,16 @@ package br.gov.jfrj.siga.tp.util;
 
 import java.lang.reflect.Method;
 
-import play.mvc.Scope.RenderArgs;
+import br.com.caelum.vraptor.Result;
 
 public enum Combo {
 
-	Cor("cores","models"), Grupo("grupos","models"), DpLotacao("dpLotacoes","br.gov.jfrj.siga.dp"), CategoriaCNH("categoriasCNH","models"),Fornecedor("fornecedores","models"), Veiculo("veiculos","models");
+	Cor("cores","models"), 
+	Grupo("grupos","models"), 
+	DpLotacao("dpLotacoes","br.gov.jfrj.siga.dp"), 
+	CategoriaCNH("categoriasCNH","models"),
+	Fornecedor("fornecedores","models"), 
+	Veiculo("veiculos","models");
 	
 	private String descricao;
 	private String pacote;
@@ -53,13 +58,13 @@ public enum Combo {
 	 * @return
 	 * @throws Exception 
 	 */
-	public static RenderArgs montar(RenderArgs parametrosRequest,Combo... args) throws Exception {
-		for (Combo combo : args) {		
-				Class<?> nomeDaClasse = Class.forName(combo.nomeCompletoDaClasse());
-				Method  metodo = nomeDaClasse.getDeclaredMethod ("findAll");
-				parametrosRequest.put(combo.getDescricao(),metodo.invoke (null));
+	public static Result montar(Result result, Combo... args) throws Exception {
+		// TODO: Refatorar esse metodo para utilizar o AR.
+		for (Combo combo : args) {
+			Class<?> nomeDaClasse = Class.forName(combo.nomeCompletoDaClasse());
+			Method metodo = nomeDaClasse.getDeclaredMethod("findAll");
+			result.include(combo.getDescricao(), metodo.invoke(null));
 		}
-		return parametrosRequest;
+		return result;
 	}
-	
 }
