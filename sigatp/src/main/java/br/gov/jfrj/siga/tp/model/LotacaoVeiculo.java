@@ -18,21 +18,21 @@ import org.hibernate.envers.RelationTargetAuditMode;
 
 import play.data.binding.As;
 import play.data.validation.Required;
-import play.i18n.Messages;
 import play.modules.br.jus.jfrj.siga.uteis.validadores.validarAnoData.ValidarAnoData;
+import br.com.caelum.vraptor.Convert;
 import br.gov.jfrj.siga.dp.DpLotacao;
 import br.gov.jfrj.siga.model.ActiveRecord;
-import br.gov.jfrj.siga.model.Objeto;
-import br.gov.jfrj.siga.tp.binder.DoubleBinder;
+import br.gov.jfrj.siga.tp.binder.DoubleConverter;
+import br.gov.jfrj.siga.tp.util.TpMessages;
 
 @Entity
 // @Table(name = "LOTACAO_VEICULO_2", schema="SIGAOR")
 @Audited
 @Table(schema = "SIGATP")
-public class LotacaoVeiculo extends Objeto {
+public class LotacaoVeiculo extends TpModel {
 
 	private static final long serialVersionUID = 1912137163976035054L;
-	public static ActiveRecord<Veiculo> AR = new ActiveRecord<>(Veiculo.class);
+	public static ActiveRecord<LotacaoVeiculo> AR = new ActiveRecord<>(LotacaoVeiculo.class);
 
 	public LotacaoVeiculo() {
 	}
@@ -71,7 +71,7 @@ public class LotacaoVeiculo extends Objeto {
 	@ValidarAnoData(descricaoCampo = "Data/Hora Fim")
 	private Calendar dataHoraFim;
 
-	@As(binder = DoubleBinder.class)
+	@Convert(DoubleConverter.class)
 	private Double odometroEmKm;
 
 	/**
@@ -81,17 +81,17 @@ public class LotacaoVeiculo extends Objeto {
 	 */
 	public static String atualizarDataFimLotacaoAnterior(Veiculo veiculo) throws Exception {
 		try {
-			List<LotacaoVeiculo> lotacoesVeiculo = LotacaoVeiculo.AR.find("veiculo = ? and dataHoraFim is null order by dataHoraInicio DESC", veiculo).fetch();
+			List<LotacaoVeiculo> lotacoesVeiculo = LotacaoVeiculo.AR.find("id = ? and dataHoraFim is null order by dataHoraInicio DESC", veiculo.getId()).fetch();
 			if (lotacoesVeiculo.size() == 1) {
 				lotacoesVeiculo.get(0).dataHoraFim = Calendar.getInstance();
 				lotacoesVeiculo.get(0).save();
 			} else {
 				if (lotacoesVeiculo.size() > 1) {
-					throw new Exception(Messages.get("lotacaoVeiculo.lotacoesVeiculo.MaiorQueUm.exception"));
+					throw new Exception(TpMessages.getMessage("lotacaoVeiculo.lotacoesVeiculo.MaiorQueUm.exception"));
 				}
 			}
 		} catch (Exception e) {
-			throw new Exception(Messages.get("lotacaoVeiculo.lotacoesVeiculo.exception", e.getMessage()));
+			throw new Exception(TpMessages.getMessage("lotacaoVeiculo.lotacoesVeiculo.exception", e.getMessage()));
 		}
 
 		return "ok";

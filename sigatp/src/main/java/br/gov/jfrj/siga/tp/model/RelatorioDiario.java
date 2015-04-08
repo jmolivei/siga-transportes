@@ -17,10 +17,10 @@ import javax.validation.constraints.NotNull;
 import org.hibernate.envers.Audited;
 
 import play.data.binding.As;
-import play.data.validation.Required;
 import play.modules.br.jus.jfrj.siga.uteis.validadores.validarAnoData.ValidarAnoData;
+import br.com.caelum.vraptor.Convert;
 import br.gov.jfrj.siga.model.ActiveRecord;
-import br.gov.jfrj.siga.tp.binder.DoubleBinder;
+import br.gov.jfrj.siga.tp.binder.DoubleConverter;
 import br.gov.jfrj.siga.tp.util.PerguntaSimNao;
 import br.jus.jfrj.siga.uteis.UpperCase;
 
@@ -36,21 +36,20 @@ public class RelatorioDiario extends TpModel {
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "hibernate_sequence_generator") @SequenceGenerator(name = "hibernate_sequence_generator", sequenceName="SIGATP.hibernate_sequence") 
 	private Long id;
 	
-	@Required
+	@NotNull
 	@As(lang={"*"}, value={"dd/MM/yyyy"})
 	@ValidarAnoData(descricaoCampo="Data")
 	private Calendar data;
 	
-	@Required
 	@ManyToOne
 	@NotNull
 	private Veiculo veiculo;	
 	
-	@Required
-	@As(binder=DoubleBinder.class)
-	private double odometroEmKm;
+	@NotNull
+	@Convert(DoubleConverter.class)
+	public double odometroEmKm;
 	
-	@Required
+	@NotNull
 	@Enumerated(EnumType.STRING)
 	private NivelDeCombustivel nivelDeCombustivel;
 	

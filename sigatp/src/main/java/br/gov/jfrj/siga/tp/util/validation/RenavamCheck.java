@@ -1,25 +1,34 @@
-package br.gov.jfrj.siga.tp.validator;
+package br.gov.jfrj.siga.tp.util.validation;
+
+import javax.validation.ConstraintValidator;
+import javax.validation.ConstraintValidatorContext;
 
 import org.apache.commons.lang.StringUtils;
-import play.data.validation.Check;
 
-public class RenavamCheck extends Check {
+public class RenavamCheck implements ConstraintValidator<Renavam, String>{
 	int base = 11;
 
 	@Override
-	public boolean isSatisfied(Object validatedObject, Object value) {
-		String renavam = ((String) value).toString();
-		this.setMessage("Renavam Inv&aacute;lido.");
+	public void initialize(Renavam annotation) {
+	}
+
+	@Override
+	public boolean isValid(String value, ConstraintValidatorContext constraintValidatorContext) {
+		String message = "Renavam Inv&aacute;lido.";
 		
-		if (!renavam.matches("^[0-9]{1," + base + "}+$")) {
-			if (renavam.equals("")) {
-				this.setMessage("");
+		if (!value.matches("^[0-9]{1," + base + "}+$")) {
+			if (value.equals("")) {
+				message = "";
 			}
+			constraintValidatorContext.buildConstraintViolationWithTemplate(message).addConstraintViolation();
 			return false;
 		}
-
-		return validarRenavam(renavam);
- 	}
+		if(!validarRenavam(value)) {
+			constraintValidatorContext.buildConstraintViolationWithTemplate(message).addConstraintViolation();
+			return false;
+		}
+		return true;
+	}
 	
 	public Boolean validarRenavam(String renavam) {
 		int[] multiplicadores = {3,2,9,8,7,6,5,4,3,2};

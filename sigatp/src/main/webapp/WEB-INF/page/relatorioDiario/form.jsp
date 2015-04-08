@@ -21,7 +21,7 @@
 		      	<label for="relatorioDiario.nivelDeCombustivel" class= "obrigatorio">N&iacute;vel de Combust&iacute;vel</label>
 				<select name="relatorioDiario.nivelDeCombustivel">
 				    <c:forEach var="nivel" items="${relatorioDiario.nivelDeCombustivel.values()}">
-				        <option value="${relatorioDiario.nivelDeCombustivel.descricao}" ${nivel.descricao == relatorioDiario.nivelDeCombustivel.descricao ? 'selected="selected"' : ''}>${nivel.descricao}</option>
+				        <option value="${relatorioDiario.nivelDeCombustivel}" ${nivel.descricao == relatorioDiario.nivelDeCombustivel.descricao ? 'selected="selected"' : ''}>${nivel.descricao}</option>
 				    </c:forEach>
 				</select>
 			</div>

@@ -8,7 +8,7 @@ import br.gov.jfrj.siga.dp.CpUF;
 public class Uf extends CpUF {
 
 	public static List<Uf> listarTodos() {
-		return CpRepository.findAll(Uf.class);
+		return TpDao.findAll(Uf.class);
 	}
 
 	public Uf() {

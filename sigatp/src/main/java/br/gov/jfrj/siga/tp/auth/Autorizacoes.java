@@ -1,5 +1,11 @@
 package br.gov.jfrj.siga.tp.auth;
 
+/**
+ * Constantes que representam as autorizacoes de acesso ao sistema.
+ * 
+ * @author db1
+ *
+ */
 public class Autorizacoes {
 
 	public static final String AGN_AGENTE = "AGN:Agente";

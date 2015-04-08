@@ -22,7 +22,8 @@ import play.data.binding.As;
 import play.data.validation.Required;
 import play.db.jpa.GenericModel;
 import play.modules.br.jus.jfrj.siga.uteis.validadores.validarAnoData.ValidarAnoData;
-import br.gov.jfrj.siga.tp.binder.DoubleBinder;
+import br.com.caelum.vraptor.Convert;
+import br.gov.jfrj.siga.tp.binder.DoubleConverter;
 import br.gov.jfrj.siga.tp.util.PerguntaSimNao;
 import br.jus.jfrj.siga.uteis.UpperCase;
 
@@ -72,10 +73,10 @@ public class AutoDeInfracao extends GenericModel implements Comparable<AutoDeInf
 	public PerguntaSimNao foiRecebido;
 	
 	@Required
-	@As(binder=DoubleBinder.class)
+	@Convert(DoubleConverter.class)
 	public double valor;
 	
-	@As(binder=DoubleBinder.class)
+	@Convert(DoubleConverter.class)
 	public double valorComDesconto;
 	
 	@Required
