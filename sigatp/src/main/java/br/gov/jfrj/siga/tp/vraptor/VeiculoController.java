@@ -25,7 +25,6 @@ import br.gov.jfrj.siga.tp.model.ItemMenu;
 import br.gov.jfrj.siga.tp.model.LotacaoVeiculo;
 import br.gov.jfrj.siga.tp.model.TipoDeCombustivel;
 import br.gov.jfrj.siga.tp.model.TpDao;
-import br.gov.jfrj.siga.tp.model.TpModel;
 import br.gov.jfrj.siga.tp.model.Veiculo;
 import br.gov.jfrj.siga.tp.util.Combo;
 import br.gov.jfrj.siga.tp.util.MenuMontador;
@@ -39,7 +38,8 @@ import com.google.common.base.Optional;
 @Path("/app/veiculos/")
 public class VeiculoController extends TpController {
 
-	public VeiculoController(HttpServletRequest request, Result result, Localization localization, Validator validator, SigaObjects so, AutorizacaoGI dadosAutorizacao, EntityManager em) throws Exception {
+	public VeiculoController(HttpServletRequest request, Result result, Localization localization, Validator validator, SigaObjects so, AutorizacaoGI dadosAutorizacao, EntityManager em)
+			throws Exception {
 		super(request, result, TpDao.getInstance(), localization, validator, so, dadosAutorizacao, em);
 	}
 
@@ -70,18 +70,18 @@ public class VeiculoController extends TpController {
 		result.redirectTo(this).listar();
 	}
 
-	// @RoleAdmin
-	// @RoleAdminFrota
+	@RoleAdmin
+	@RoleAdminFrota
 	@Path("/incluir")
 	public void incluir() throws Exception {
-		MenuMontador.instance(result).recuperarMenuVeiculos(TpModel.VAZIO, ItemMenu.DADOSCADASTRAIS);
+		MenuMontador.instance(result).recuperarMenuVeiculos(null, ItemMenu.DADOSCADASTRAIS);
 		montarCombos();
 		result.include("mostrarCampoOdometro", Boolean.FALSE);
 		result.include("veiculo", new Veiculo(new DpLotacao()));
 	}
 
-	// @RoleAdmin
-	// @RoleAdminFrota
+	@RoleAdmin
+	@RoleAdminFrota
 	@Path("/editar/{id}")
 	public void editar(Long id) throws Exception {
 		Veiculo veiculo = Veiculo.AR.findById(id);
@@ -89,8 +89,8 @@ public class VeiculoController extends TpController {
 		// veiculo.configurarOdometroParaMudancaDeLotacao();
 		MenuMontador.instance(result).recuperarMenuVeiculos(id, ItemMenu.DADOSCADASTRAIS);
 		montarCombos();
+		result.include("veiculo", veiculo);
 		result.include("mostrarCampoOdometro", Boolean.FALSE);
-		// render(veiculo);
 	}
 
 	@RoleAdmin
@@ -116,7 +116,6 @@ public class VeiculoController extends TpController {
 		// render("@Avarias.listarPorVeiculo");
 	}
 
-	// @Before(priority = 200, only = { "incluir", "editar", "salvar" })
 	private void montarCombos() throws Exception {
 		Combo.montar(result, Combo.Cor, Combo.Fornecedor);
 		result.include(Combo.Grupo.getDescricao(), Grupo.listarTodos());

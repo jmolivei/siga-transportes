@@ -1,6 +1,8 @@
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+
 <p class="gt-table-action-list">
 	<c:if test="${menuVeiculosIncluir}"> <a class="once"
-		href="@{Veiculos.incluir()}"> <img
+		href="${linkTo[VeiculoController].incluir}"> <img
 		src="/sigatp/public/images/editaricon.png"
 		style="margin-right: 5px;">Dados Cadastrais</a>&nbsp;&nbsp;&nbsp;
 	</c:if>

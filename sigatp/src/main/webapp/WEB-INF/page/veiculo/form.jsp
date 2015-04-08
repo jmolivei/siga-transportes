@@ -315,15 +315,12 @@
 	function esconderCampoOdometro() {
 	    $('#grupoOdometro').hide();
 	}
-
 	
 	<c:choose>
 	    <c:when test="${mostrarCampoOdometro}">
-	    	console.log('positivo');
 	    	mostrarCampoOdometro();
 	    </c:when>
 	    <c:otherwise>
-	    	console.log('negativo');
 	    	esconderCampoOdometro();
 	    </c:otherwise>
 	</c:choose>
