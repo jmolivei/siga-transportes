@@ -15,6 +15,13 @@ import br.gov.jfrj.siga.tp.auth.annotation.RoleAdminFrota;
 import br.gov.jfrj.siga.tp.model.TpDao;
 import br.gov.jfrj.siga.vraptor.SigaObjects;
 
+/**
+ * TODO: remover ao final da migracao
+ * 
+ * @author db1
+ *
+ */
+@Deprecated
 @Resource
 public class TesteController extends TpController {
 	
