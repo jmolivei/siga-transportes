@@ -38,7 +38,7 @@ public class PreencherDadosAutorizacaoInterceptor implements Interceptor {
 			.incluir(Autorizacoes.GAB_GABINETE)
 			.incluir(Autorizacoes.ADMGAB_ADMIN_GABINETE)
 			.incluir(Autorizacoes.AGN_AGENTE)
-			.incluirAdministrarMissaoComplexo()
+			.incluirAdministrarMissaoComplexo(result)
 			.preencherDadosAutorizacoes(result);
 
 		stack.next(method, resourceInstance);

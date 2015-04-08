@@ -26,6 +26,7 @@ import com.google.common.base.Optional;
 @Component
 public class AutorizacaoGI {
 
+	private static final String CP_COMPLEXO_ADMINISTRADOR = "cpComplexoAdministrador";
 	private SigaObjects so;
 	private Map<String, Boolean> statusPermissoes = new HashMap<String, Boolean>();
 
@@ -35,7 +36,8 @@ public class AutorizacaoGI {
 	}
 
 	/**
-	 * Recupera na configuração do GI o complexo do perfil AdministradorPorComplexo para usuário logado verificando Órgao e Lotação e o tipo de configurção "Utilizar Complexo"
+	 * Recupera na configuração do GI o complexo do perfil AdministradorPorComplexo para usuário logado verificando Órgao e Lotação e o 
+	 * tipo de configurção "Utilizar Complexo"
 	 * 
 	 * @return
 	 * @throws Exception
@@ -74,6 +76,35 @@ public class AutorizacaoGI {
 		return Boolean.FALSE;
 	}
 
+	public AutorizacaoGI incluirAdministrarMissaoComplexo(Result result) {
+		try {
+			CpComplexo cpComplexo = recuperarComplexoAdministrador();
+			Boolean encontrouComplexo = cpComplexo != null;
+			if (encontrouComplexo) {
+				result.include(CP_COMPLEXO_ADMINISTRADOR, cpComplexo);
+			}
+			this.statusPermissoes.put(Autorizacoes.EXIBIR_MENU_ADMMISSAO_ADMINISTRAR_MISSAO_COMPLEXO, encontrouComplexo);
+		} catch (Exception e) {
+			this.statusPermissoes.put(Autorizacoes.EXIBIR_MENU_ADMMISSAO_ADMINISTRAR_MISSAO_COMPLEXO, Boolean.FALSE);
+		}
+		return this;
+	}
+
+	public Boolean deveExibirMenuAdmissaoComplexo() {
+		return getStatusPermissao(Autorizacoes.EXIBIR_MENU_ADMMISSAO_ADMINISTRAR_MISSAO_COMPLEXO);
+	}
+
+	public void preencherDadosAutorizacoes(Result result) {
+		result.include(Autorizacoes.EXIBIR_MENU_ADMINISTRAR, ehAdministrador());
+		result.include(Autorizacoes.EXIBIR_MENU_ADMINISTRAR_FROTA, ehAdministradorFrota());
+		result.include(Autorizacoes.EXIBIR_MENU_ADMINISTRAR_MISSAO, ehAdministradorMissao());
+		result.include(Autorizacoes.EXIBIR_MENU_APROVADOR, ehAprovador());
+		result.include(Autorizacoes.EXIBIR_MENU_GABINETE, ehGabinete());
+		result.include(Autorizacoes.EXIBIR_MENU_ADMIN_GABINETE, ehAdminGabinete());
+		result.include(Autorizacoes.EXIBIR_MENU_AGENTE, ehAgente());
+		result.include(Autorizacoes.EXIBIR_MENU_ADMMISSAO_ADMINISTRAR_MISSAO_COMPLEXO, deveExibirMenuAdmissaoComplexo());
+	}
+	
 	public Boolean ehAdministrador() {
 		return getStatusPermissao(Autorizacoes.ADM_ADMINISTRAR);
 	}
@@ -104,29 +135,5 @@ public class AutorizacaoGI {
 
 	public Boolean ehAgente() {
 		return getStatusPermissao(Autorizacoes.AGN_AGENTE);
-	}
-
-	public AutorizacaoGI incluirAdministrarMissaoComplexo() {
-		try {
-			this.statusPermissoes.put(Autorizacoes.EXIBIR_MENU_ADMMISSAO_ADMINISTRAR_MISSAO_COMPLEXO, recuperarComplexoAdministrador() != null);
-		} catch (Exception e) {
-			this.statusPermissoes.put(Autorizacoes.EXIBIR_MENU_ADMMISSAO_ADMINISTRAR_MISSAO_COMPLEXO, Boolean.FALSE);
-		}
-		return this;
-	}
-
-	public Boolean deveExibirMenuAdmissaoComplexo() {
-		return getStatusPermissao(Autorizacoes.EXIBIR_MENU_ADMMISSAO_ADMINISTRAR_MISSAO_COMPLEXO);
-	}
-
-	public void preencherDadosAutorizacoes(Result result) {
-		result.include(Autorizacoes.EXIBIR_MENU_ADMINISTRAR, ehAdministrador());
-		result.include(Autorizacoes.EXIBIR_MENU_ADMINISTRAR_FROTA, ehAdministradorFrota());
-		result.include(Autorizacoes.EXIBIR_MENU_ADMINISTRAR_MISSAO, ehAdministradorMissao());
-		result.include(Autorizacoes.EXIBIR_MENU_APROVADOR, ehAprovador());
-		result.include(Autorizacoes.EXIBIR_MENU_GABINETE, ehGabinete());
-		result.include(Autorizacoes.EXIBIR_MENU_ADMIN_GABINETE, ehAdminGabinete());
-		result.include(Autorizacoes.EXIBIR_MENU_AGENTE, ehAgente());
-		result.include(Autorizacoes.EXIBIR_MENU_ADMMISSAO_ADMINISTRAR_MISSAO_COMPLEXO, deveExibirMenuAdmissaoComplexo());
 	}
 }
