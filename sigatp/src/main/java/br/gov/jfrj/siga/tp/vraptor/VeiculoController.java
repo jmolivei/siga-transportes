@@ -16,7 +16,6 @@ import br.com.caelum.vraptor.view.Results;
 import br.gov.jfrj.siga.cp.model.DpLotacaoSelecao;
 import br.gov.jfrj.siga.dp.CpOrgaoUsuario;
 import br.gov.jfrj.siga.dp.DpLotacao;
-import br.gov.jfrj.siga.tp.auth.AutorizacaoGI;
 import br.gov.jfrj.siga.tp.auth.annotation.RoleAdmin;
 import br.gov.jfrj.siga.tp.auth.annotation.RoleAdminFrota;
 import br.gov.jfrj.siga.tp.model.CategoriaCNH;
@@ -37,9 +36,9 @@ import com.google.common.base.Optional;
 @Resource
 @Path("/app/veiculos/")
 public class VeiculoController extends TpController {
-
-	public VeiculoController(HttpServletRequest request, Result result, Localization localization, Validator validator, SigaObjects so, AutorizacaoGI dadosAutorizacao, EntityManager em) throws Exception {
-		super(request, result, TpDao.getInstance(), localization, validator, so, dadosAutorizacao, em);
+	
+	public VeiculoController(HttpServletRequest request, Result result, Localization localization, Validator validator, SigaObjects so, EntityManager em) throws Exception {
+		super(request, result, TpDao.getInstance(), localization, validator, so, em);
 	}
 
 	@Path("/listar")
@@ -48,8 +47,8 @@ public class VeiculoController extends TpController {
 		result.include("veiculos", Veiculo.listarTodos(cpOrgaoUsuario));
 	}
 
-//	@RoleAdmin
-//	@RoleAdminFrota
+	@RoleAdmin
+	@RoleAdminFrota
 	@Path("/salvar")
 	public void salvar(@Valid final Veiculo veiculo) throws Exception {
 		validarAntesDeSalvar(veiculo);
@@ -69,8 +68,8 @@ public class VeiculoController extends TpController {
 		result.redirectTo(this).listar();
 	}
 
-//	@RoleAdmin
-//	@RoleAdminFrota
+	@RoleAdmin
+	@RoleAdminFrota
 	@Path("/incluir")
 	public void incluir() throws Exception {
 		preencherResultComDadosPadrao(null);
@@ -78,8 +77,8 @@ public class VeiculoController extends TpController {
 		result.include("veiculo", new Veiculo(new DpLotacao()));
 	}
 
-//	@RoleAdmin
-//	@RoleAdminFrota
+	@RoleAdmin
+	@RoleAdminFrota
 	@Path("/editar/{id}")
 	public void editar(Long id) throws Exception {
 		Veiculo veiculo = Veiculo.AR.findById(id);

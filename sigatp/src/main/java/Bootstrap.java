@@ -1,4 +1,9 @@
-
+/**
+ * TODO: remover ao final da migracao
+ * 
+ * @author db1
+ *
+ */
 @Deprecated
 // @OnApplicationStart
 public class Bootstrap /* extends Job<Object> */{

@@ -17,11 +17,9 @@ import javax.validation.constraints.NotNull;
 
 import org.hibernate.envers.Audited;
 
-import play.data.binding.As;
 import play.data.validation.Required;
 import play.db.jpa.GenericModel;
 import play.i18n.Messages;
-import br.gov.jfrj.siga.tp.binder.HourMinuteBinder;
 
 @Entity
 @Audited
@@ -36,14 +34,14 @@ public class DiaDeTrabalho extends GenericModel implements Comparable<DiaDeTraba
 	public DiaDaSemana diaEntrada;
 	
 	@Required
-	@As(binder=HourMinuteBinder.class)
+//	@As(binder=HourMinuteBinder.class)
 	public Calendar horaEntrada;
 	
 	@Enumerated(EnumType.STRING)
 	public DiaDaSemana diaSaida;
 	
 	@Required
-	@As(binder=HourMinuteBinder.class)
+//	@As(binder=HourMinuteBinder.class)
 	public Calendar horaSaida;
 	
 	@NotNull

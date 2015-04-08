@@ -5,7 +5,9 @@ import javax.validation.ConstraintValidatorContext;
 
 import org.apache.commons.lang.StringUtils;
 
-public class RenavamCheck implements ConstraintValidator<Renavam, String>{
+import br.gov.jfrj.siga.tp.util.MessagesBundle;
+
+public class RenavamCheck implements ConstraintValidator<Renavam, String> {
 	int base = 11;
 
 	@Override
@@ -14,49 +16,51 @@ public class RenavamCheck implements ConstraintValidator<Renavam, String>{
 
 	@Override
 	public boolean isValid(String value, ConstraintValidatorContext constraintValidatorContext) {
-		String message = "Renavam Inv&aacute;lido.";
-		
-		if (!value.matches("^[0-9]{1," + base + "}+$")) {
-			if (value.equals("")) {
-				message = "";
+		if (value != null) {
+			String message = MessagesBundle.getMessage("renavamCheck.validation");
+
+			if (!value.matches("^[0-9]{1," + base + "}+$")) {
+				if (value.equals("")) {
+					message = "";
+				}
+				constraintValidatorContext.buildConstraintViolationWithTemplate(message).addConstraintViolation();
+				return false;
 			}
-			constraintValidatorContext.buildConstraintViolationWithTemplate(message).addConstraintViolation();
-			return false;
-		}
-		if(!validarRenavam(value)) {
-			constraintValidatorContext.buildConstraintViolationWithTemplate(message).addConstraintViolation();
-			return false;
+			if (!validarRenavam(value)) {
+				constraintValidatorContext.buildConstraintViolationWithTemplate(message).addConstraintViolation();
+				return false;
+			}
 		}
 		return true;
 	}
-	
+
 	public Boolean validarRenavam(String renavam) {
-		int[] multiplicadores = {3,2,9,8,7,6,5,4,3,2};
+		int[] multiplicadores = { 3, 2, 9, 8, 7, 6, 5, 4, 3, 2 };
 		int soma = 0;
-    	String digitoRetornado;
-    	int resto;
-    	String renavamSemDigito;
-    	String digitoInformado;
-    	
-    	renavam = renavam.trim().replace("-","").replace(".", "");
+		String digitoRetornado;
+		int resto;
+		String renavamSemDigito;
+		String digitoInformado;
+
+		renavam = renavam.trim().replace("-", "").replace(".", "");
 
 		if (renavam.length() < base) {
 			renavam = StringUtils.repeat("0", base - renavam.length()) + renavam;
 		}
-		
-		renavamSemDigito = renavam.substring(0,renavam.length()-1); 
-		digitoInformado = renavam.substring(renavam.length()-1);
-		
-    	for (int i = 0; i <= renavamSemDigito.length() - 1; i++) {
-    		soma += Integer.parseInt(renavamSemDigito.substring(i, i+1)) * multiplicadores[i];
-    	}
-    	
-    	resto = soma % base;
-    	digitoRetornado = (base - resto >= 10) ? "0" : String.valueOf(base - resto);
-    	return digitoInformado.equals(digitoRetornado);
+
+		renavamSemDigito = renavam.substring(0, renavam.length() - 1);
+		digitoInformado = renavam.substring(renavam.length() - 1);
+
+		for (int i = 0; i <= renavamSemDigito.length() - 1; i++) {
+			soma += Integer.parseInt(renavamSemDigito.substring(i, i + 1)) * multiplicadores[i];
+		}
+
+		resto = soma % base;
+		digitoRetornado = (base - resto >= 10) ? "0" : String.valueOf(base - resto);
+		return digitoInformado.equals(digitoRetornado);
 	}
-	
+
 	public static String padLeft(String s, int n) {
-	    return String.format("%1$" + n + "s", s);  
+		return String.format("%1$" + n + "s", s);
 	}
 }

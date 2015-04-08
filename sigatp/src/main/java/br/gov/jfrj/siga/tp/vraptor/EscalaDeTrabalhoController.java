@@ -11,16 +11,16 @@ import br.com.caelum.vraptor.Result;
 import br.com.caelum.vraptor.Validator;
 import br.com.caelum.vraptor.core.Localization;
 import br.gov.jfrj.siga.dp.dao.CpDao;
-import br.gov.jfrj.siga.tp.auth.AutorizacaoGI;
 import br.gov.jfrj.siga.tp.model.EscalaDeTrabalho;
+import br.gov.jfrj.siga.tp.model.TpDao;
 import br.gov.jfrj.siga.vraptor.SigaObjects;
 
 //@With(AutorizacaoGIAntigo.class)
 @Resource
 public class EscalaDeTrabalhoController extends TpController {
 
-	public EscalaDeTrabalhoController(HttpServletRequest request, Result result, CpDao dao, Localization localization, Validator validator, SigaObjects so, AutorizacaoGI dadosAutorizacao, EntityManager em) throws Exception {
-		super(request, result, dao, localization, validator, so, dadosAutorizacao, em);
+	public EscalaDeTrabalhoController(HttpServletRequest request, Result result, CpDao dao, Localization localization, Validator validator, SigaObjects so, EntityManager em) throws Exception {
+		super(request, result, TpDao.getInstance(), localization, validator, so, em);
 	}
 
 	@Path("/app/escalaDeTrabalho/listar")
