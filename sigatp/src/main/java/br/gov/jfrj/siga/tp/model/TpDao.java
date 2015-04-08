@@ -21,7 +21,7 @@ public class TpDao extends CpDao {
 	public static <T extends Objeto> JPAQuery find(Class<T> entityClass, String query, Object... params) {
 		try {
 			ActiveRecord<T> ar = new ActiveRecord<T>(entityClass);
-			return ar.find(query);
+			return ar.find(query, params);
 		} catch (Exception e) {
 			throw new RuntimeException("Erro ao recuperar o registro", e);
 		}

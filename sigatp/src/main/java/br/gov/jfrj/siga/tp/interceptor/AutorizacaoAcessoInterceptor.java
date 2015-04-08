@@ -2,7 +2,6 @@ package br.gov.jfrj.siga.tp.interceptor;
 
 import br.com.caelum.vraptor.InterceptionException;
 import br.com.caelum.vraptor.Intercepts;
-import br.com.caelum.vraptor.Result;
 import br.com.caelum.vraptor.core.InterceptorStack;
 import br.com.caelum.vraptor.interceptor.Interceptor;
 import br.com.caelum.vraptor.ioc.RequestScoped;
@@ -16,12 +15,10 @@ import br.gov.jfrj.siga.tp.auth.annotation.RoleAdminMissaoComplexo;
 import br.gov.jfrj.siga.tp.auth.annotation.RoleAgente;
 import br.gov.jfrj.siga.tp.auth.annotation.RoleAprovador;
 import br.gov.jfrj.siga.tp.auth.annotation.RoleGabinete;
-import br.gov.jfrj.siga.vraptor.SigaController;
 
 /**
- * Interceptor responsavel por verificar se o usuario tem permissao para acessar determinada URL (metodo) do controller. 
- * Verifica se o metodo possui alguma das anotacoes de validacao, caso possua, o sistema executa a regra de verificacao 
- * da permissao. Se o usuario nao possui acesso, o sistema lanca excecao informando o acesso negado.
+ * Interceptor responsavel por verificar se o usuario tem permissao para acessar determinada URL (metodo) do controller. Verifica se o metodo possui alguma das anotacoes de validacao, caso possua, o
+ * sistema executa a regra de verificacao da permissao. Se o usuario nao possui acesso, o sistema lanca excecao informando o acesso negado.
  * 
  * @author db16
  *
@@ -31,10 +28,8 @@ import br.gov.jfrj.siga.vraptor.SigaController;
 public class AutorizacaoAcessoInterceptor implements Interceptor {
 
 	private AutorizacaoGI autorizacaoGI;
-	private Result result;
 
-	public AutorizacaoAcessoInterceptor(Result result, AutorizacaoGI dadosAutorizacao) {
-		this.result = result;
+	public AutorizacaoAcessoInterceptor(AutorizacaoGI dadosAutorizacao) {
 		this.autorizacaoGI = dadosAutorizacao;
 	}
 
@@ -54,9 +49,6 @@ public class AutorizacaoAcessoInterceptor implements Interceptor {
 
 			stack.next(method, resourceInstance);
 		} catch (Exception e) {
-			e.printStackTrace();
-			// TODO: verificar como mostrar a excecao corretamente
-//			result.forwardTo(SigaController.class).appexception();
 			throw new InterceptionException(e);
 		}
 	}
