@@ -1,11 +1,9 @@
 package br.gov.jfrj.siga.tp.model;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Iterator;
 import java.util.List;
-
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -16,9 +14,7 @@ import javax.persistence.NoResultException;
 import javax.persistence.Query;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
-
 import org.hibernate.envers.Audited;
-
 import play.data.binding.As;
 import play.db.jpa.JPA;
 import play.modules.br.jus.jfrj.siga.uteis.validadores.validarAnoData.ValidarAnoData;
@@ -250,24 +246,4 @@ WHERE p.timestamp = (SELECT MAX(ee.timestamp) FROM Entity ee WHERE ee.entityId =
 		this.referencia = referencia;
 	}
 	
-	//TODO  HD ARRUMARRR!
-	public String getDataHoraInicioFormatada() {
-		return formatarData(getDataHoraInicio());
-	}
-	
-	public String getDataHoraFimFormatada() {
-		return formatarData(getDataHoraFim());
-	}
-	
-	private static String formatarData(Calendar data) {
-		return String.format("%02d",data.get(Calendar.DAY_OF_MONTH)) + "/" + String.format("%02d",data.get(Calendar.MONTH) + 1) + "/" + String.format("%04d",data.get(Calendar.YEAR));
-	}
-	
-	public String formatDateDDMMYYYY(Calendar cal) {
-		return new SimpleDateFormat("dd/MM/yyyy").format(cal.getTime());
-	}
-	
-	public String formatDateDDMMYYYYHHMM(Calendar cal) {
-		return new SimpleDateFormat("dd/MM/yyyy HH:MM").format(cal.getTime());
-	}
 }

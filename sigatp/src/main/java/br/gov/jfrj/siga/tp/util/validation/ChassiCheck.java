@@ -1,20 +1,26 @@
-package br.gov.jfrj.siga.tp.validator;
+package br.gov.jfrj.siga.tp.util.validation;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import play.data.validation.Check;
+import javax.validation.ConstraintValidator;
+import javax.validation.ConstraintValidatorContext;
 
-public class ChassiCheck extends Check {
+public class ChassiCheck implements ConstraintValidator<Chassi, String> {
 	
-
-
 	@Override
-	public boolean isSatisfied(Object validatedObject, Object value) {
-		// TODO Auto-generated method stub
-		this.setMessage("Chassi Inválido");
-    	return validarChassi(((String) value).toString());
- 	}
+	public void initialize(Chassi annotation) {
+	}
+	
+	@Override
+	public boolean isValid(String value, ConstraintValidatorContext constraintValidatorContext) {
+		if(!validarChassi(value)) {
+			constraintValidatorContext.buildConstraintViolationWithTemplate("Chassi Inválido")
+				.addConstraintViolation();
+			return false;
+		}
+		return true;
+	}	
 	
 	public Boolean validarChassi(String valor) {
 		/* 
@@ -42,9 +48,5 @@ public class ChassiCheck extends Check {
 	//	return (MzeroNoPrimeiroDigito.find()) && (MespacoNoChassi.find())
 	//			&& (MrepeticaoMaisDe6Vezes.find()) && (McaracteresiIoOqQ.find())
 	//			&& (Multimos4Numericos.find());
-    }	
-	
-;
-    	
-
+    }
 }

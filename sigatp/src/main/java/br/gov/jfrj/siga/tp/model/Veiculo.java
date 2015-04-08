@@ -25,12 +25,12 @@ import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
+import net.sf.oval.constraint.NotEmpty;
+
 import org.hibernate.envers.Audited;
 import org.hibernate.envers.RelationTargetAuditMode;
-import org.hibernate.validator.constraints.NotEmpty;
 
 import play.data.binding.As;
-import play.data.validation.CheckWith;
 import play.data.validation.Unique;
 import play.db.jpa.JPA;
 import play.modules.br.jus.jfrj.siga.uteis.validadores.validarAnoData.ValidarAnoData;
@@ -41,8 +41,8 @@ import br.gov.jfrj.siga.model.ActiveRecord;
 import br.gov.jfrj.siga.tp.binder.DoubleConverter;
 import br.gov.jfrj.siga.tp.util.PerguntaSimNao;
 import br.gov.jfrj.siga.tp.util.Situacao;
-import br.gov.jfrj.siga.tp.validator.ChassiCheck;
-import br.gov.jfrj.siga.tp.validator.RenavamCheck;
+import br.gov.jfrj.siga.tp.util.validation.Chassi;
+import br.gov.jfrj.siga.tp.util.validation.Renavam;
 import br.jus.jfrj.siga.uteis.UpperCase;
 
 @Entity
@@ -142,11 +142,11 @@ public class Veiculo extends TpModel implements Comparable<Veiculo> {
 	private String pneuPressaoTraseira;
 
 	@NotEmpty
-	@CheckWith(RenavamCheck.class)
+	@Renavam
 	private String renavam;
 
 	@NotEmpty
-	@CheckWith(ChassiCheck.class)
+	@Chassi
 	@UpperCase
 	private String chassi;
 

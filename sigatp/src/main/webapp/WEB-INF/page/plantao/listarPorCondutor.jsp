@@ -5,6 +5,8 @@
 <%@ taglib prefix="siga" uri="http://localhost/jeetags"%>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 
+<jsp:include page="../tags/calendario.jsp" />
+
 <siga:pagina titulo="Transportes">
 	<div class="gt-bd clearfix">
 		<div class="gt-content clearfix">
@@ -22,15 +24,12 @@
 									<th width="5"></th>
 									<th width="5"></th>
 								</tr>
-								
 							</thead>
 							<tbody>
 								<c:forEach items="${plantoes}" var="item">
 									<tr>
-										<td>${item.getDataHoraInicioFormatada()}</td>
-										<td>${item.getDataHoraFimFormatada()}</td>
-<%-- 										<td>${item.dataHoraInicio.format("dd/MM/yyyy HH:mm")}aa</td> --%>
-<%-- 										<td>${item.dataHoraFim.format("dd/MM/yyyy HH:mm")}aa</td> --%>
+										<td><fmt:formatDate pattern="dd/MM/yyyy HH:mm" value="${item.dataHoraInicio.time}" /></td>
+										<td><fmt:formatDate pattern="dd/MM/yyyy HH:mm" value="${item.dataHoraFim.time}" /></td>
 										<td><a href="${linkTo[PlantaoController].editar[item.condutor.id][item.id]}">Editar</a></td>
 										<td><a href="${linkTo[PlantaoController].excluir[item.id]}"
 											onclick="javascript:return confirm('Tem certeza de que deseja excluir este plant\u00E3o?');">Excluir</a></td>
