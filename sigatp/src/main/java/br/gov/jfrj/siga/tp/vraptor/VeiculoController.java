@@ -7,30 +7,33 @@ import javax.persistence.EntityManager;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 
-import play.data.validation.Validation;
-import play.mvc.Before;
-import play.mvc.Scope.RenderArgs;
 import br.com.caelum.vraptor.Path;
 import br.com.caelum.vraptor.Resource;
 import br.com.caelum.vraptor.Result;
 import br.com.caelum.vraptor.Validator;
 import br.com.caelum.vraptor.core.Localization;
-import br.com.caelum.vraptor.validator.I18nMessage;
 import br.com.caelum.vraptor.view.Results;
+import br.gov.jfrj.siga.cp.model.DpLotacaoSelecao;
 import br.gov.jfrj.siga.dp.CpOrgaoUsuario;
 import br.gov.jfrj.siga.dp.DpLotacao;
 import br.gov.jfrj.siga.tp.auth.AutorizacaoGI;
 import br.gov.jfrj.siga.tp.auth.annotation.RoleAdmin;
 import br.gov.jfrj.siga.tp.auth.annotation.RoleAdminFrota;
+import br.gov.jfrj.siga.tp.model.CategoriaCNH;
 import br.gov.jfrj.siga.tp.model.Grupo;
 import br.gov.jfrj.siga.tp.model.ItemMenu;
 import br.gov.jfrj.siga.tp.model.LotacaoVeiculo;
+import br.gov.jfrj.siga.tp.model.TipoDeCombustivel;
 import br.gov.jfrj.siga.tp.model.TpDao;
 import br.gov.jfrj.siga.tp.model.TpModel;
 import br.gov.jfrj.siga.tp.model.Veiculo;
 import br.gov.jfrj.siga.tp.util.Combo;
 import br.gov.jfrj.siga.tp.util.MenuMontador;
+import br.gov.jfrj.siga.tp.util.PerguntaSimNao;
+import br.gov.jfrj.siga.tp.util.Situacao;
 import br.gov.jfrj.siga.vraptor.SigaObjects;
+
+import com.google.common.base.Optional;
 
 @Resource
 @Path("/app/veiculos/")
@@ -41,32 +44,16 @@ public class VeiculoController extends TpController {
 	}
 
 	@Path("/listar")
-	public void listar(@Valid Veiculo veiculo) throws Exception {
-		validator.add(new I18nMessage("validacao.teste", "validacao.teste"));
-		
+	public void listar() throws Exception {
 		CpOrgaoUsuario cpOrgaoUsuario = getTitular().getOrgaoUsuario();
 		result.include("veiculos", Veiculo.listarTodos(cpOrgaoUsuario));
-		validator.onErrorUse(Results.page()).of(VeiculoController.class).listar(null);
 	}
 
-	@RoleAdmin
-	@RoleAdminFrota
+	// @RoleAdmin
+	// @RoleAdminFrota
 	@Path("/salvar")
-	public void salvar(Veiculo veiculo) throws Exception {
-		montarCombos();
-
-		if (veiculoNaoTemLotacaoCadastrada(veiculo) || lotacaoDoVeiculoMudou(veiculo)) {
-			Double odometroAnterior = veiculo.getUltimoOdometroDeLotacao();
-			if (odometroAnterior > veiculo.getOdometroEmKmAtual()) {
-				Validation.addError("odometroEmKmAtual", "veiculo.odometroEmKmAtual.maiorAnterior.validation");
-			}
-			if (veiculo.getOdometroEmKmAtual().equals(new Double(0))) {
-				Validation.addError("odometroEmKmAtual", "veiculo.odometroEmKmAtual.zero.validation");
-			}
-		}
-
-		// TODO: chamar validacao
-		// validation.valid(veiculo);
+	public void salvar(@Valid final Veiculo veiculo) throws Exception {
+		validarAntesDeSalvar(veiculo);
 		redirecionarSeErroAoSalvar(veiculo);
 
 		veiculo.setCpOrgaoUsuario(getTitular().getOrgaoUsuario());
@@ -80,22 +67,21 @@ public class VeiculoController extends TpController {
 			LotacaoVeiculo novalotacao = new LotacaoVeiculo(null, veiculo, veiculo.getLotacaoAtual(), Calendar.getInstance(), null, veiculo.getOdometroEmKmAtual());
 			novalotacao.save();
 		}
-		listar(null);
+		result.redirectTo(this).listar();
 	}
 
-	@RoleAdmin
-	@RoleAdminFrota
+	// @RoleAdmin
+	// @RoleAdminFrota
 	@Path("/incluir")
 	public void incluir() throws Exception {
-		Veiculo veiculo = new Veiculo();
-		veiculo.setLotacaoAtual(new DpLotacao());
 		MenuMontador.instance(result).recuperarMenuVeiculos(TpModel.VAZIO, ItemMenu.DADOSCADASTRAIS);
 		montarCombos();
-		// render(veiculo);
+		result.include("mostrarCampoOdometro", Boolean.FALSE);
+		result.include("veiculo", new Veiculo(new DpLotacao()));
 	}
 
-	@RoleAdmin
-	@RoleAdminFrota
+	// @RoleAdmin
+	// @RoleAdminFrota
 	@Path("/editar/{id}")
 	public void editar(Long id) throws Exception {
 		Veiculo veiculo = Veiculo.AR.findById(id);
@@ -103,6 +89,7 @@ public class VeiculoController extends TpController {
 		// veiculo.configurarOdometroParaMudancaDeLotacao();
 		MenuMontador.instance(result).recuperarMenuVeiculos(id, ItemMenu.DADOSCADASTRAIS);
 		montarCombos();
+		result.include("mostrarCampoOdometro", Boolean.FALSE);
 		// render(veiculo);
 	}
 
@@ -112,7 +99,7 @@ public class VeiculoController extends TpController {
 	public void excluir(Long id) throws Exception {
 		Veiculo veiculo = Veiculo.AR.findById(id);
 		veiculo.delete();
-		listar(null);
+		listar();
 	}
 
 	// public void buscarPeloId(Long Id) throws Exception {
@@ -129,11 +116,16 @@ public class VeiculoController extends TpController {
 		// render("@Avarias.listarPorVeiculo");
 	}
 
-	@Before(priority = 200, only = { "incluir", "editar", "salvar" })
+	// @Before(priority = 200, only = { "incluir", "editar", "salvar" })
 	private void montarCombos() throws Exception {
 		Combo.montar(result, Combo.Cor, Combo.Fornecedor);
 		result.include(Combo.Grupo.getDescricao(), Grupo.listarTodos());
 		result.include("dpLotacoes", buscarDpLotacoes());
+		result.include("situacoes", Situacao.values());
+		result.include("respostasSimNao", PerguntaSimNao.values());
+		result.include("lotacaoSel", new DpLotacaoSelecao());
+		result.include("tiposDeCombustivel", TipoDeCombustivel.values());
+		result.include("categoriasCNH", CategoriaCNH.values());
 	}
 
 	private List<DpLotacao> buscarDpLotacoes() {
@@ -153,19 +145,32 @@ public class VeiculoController extends TpController {
 		return (veiculo.getLotacoes().size() > 0) && (!veiculo.getLotacoes().get(0).getLotacao().equivale(veiculo.getLotacaoAtual()));
 	}
 
-	private void redirecionarSeErroAoSalvar(Veiculo veiculo) throws Exception {
-		if (Validation.hasErrors()) {
-			montarCombos();
-			MenuMontador.instance(result).recuperarMenuVeiculos(veiculo.getId(), ItemMenu.DADOSCADASTRAIS);
-			String template = veiculo.getId() > 0 ? "@editar" : "@incluir";
-			if (veiculoNaoTemLotacaoCadastrada(veiculo) || veiculo.getLotacoes().isEmpty() || (!veiculo.getLotacoes().get(0).getLotacao().equivale(veiculo.getLotacaoAtual()))) {
-				RenderArgs.current().put("mostrarCampoOdometro", true);
-			}
-			// renderTemplate(template, veiculo);
+	private void validarAntesDeSalvar(Veiculo veiculo) {
+		if (veiculoNaoTemLotacaoCadastrada(veiculo) || lotacaoDoVeiculoMudou(veiculo)) {
+			final Double odometroAnterior = veiculo.getUltimoOdometroDeLotacao();
+			final Double odometroEmKmAtual = Optional.fromNullable(veiculo.getOdometroEmKmAtual()).or(0D);
+
+			error(odometroAnterior > odometroEmKmAtual, "odometroEmKmAtual", "veiculo.odometroEmKmAtual.maiorAnterior.validation");
+			error(odometroEmKmAtual.equals(new Double(0)), "odometroEmKmAtual", "veiculo.odometroEmKmAtual.maiorAnterior.validation");
 		}
 	}
 
-	// public void emdesenvolvimento() {
-	// render();
-	// }
+	private void redirecionarSeErroAoSalvar(Veiculo veiculo) throws Exception {
+		if (validator.hasErrors()) {
+			montarCombos();
+			result.include("veiculo", veiculo);
+			result.include("mostrarCampoOdometro", deveMostrarCampoOdometro(veiculo));
+			MenuMontador.instance(result).recuperarMenuVeiculos(veiculo.getId(), ItemMenu.DADOSCADASTRAIS);
+
+			if (veiculo.ehNovo()) {
+				validator.onErrorUse(Results.page()).of(VeiculoController.class).incluir();
+			} else {
+				validator.onErrorUse(Results.page()).of(VeiculoController.class).editar(veiculo.getId());
+			}
+		}
+	}
+
+	private boolean deveMostrarCampoOdometro(Veiculo veiculo) {
+		return veiculoNaoTemLotacaoCadastrada(veiculo) || veiculo.getLotacoes().isEmpty() || (!veiculo.getLotacoes().get(0).getLotacao().equivale(veiculo.getLotacaoAtual()));
+	}
 }

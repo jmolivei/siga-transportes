@@ -19,7 +19,7 @@ import play.mvc.Controller;
 import play.mvc.Http;
 import br.gov.jfrj.siga.dp.DpPessoa;
 import br.gov.jfrj.siga.tp.model.Andamento;
-import br.gov.jfrj.siga.tp.model.CpRepository;
+import br.gov.jfrj.siga.tp.model.TpDao;
 import br.gov.jfrj.siga.tp.model.EstadoRequisicao;
 import br.gov.jfrj.siga.tp.model.FinalidadeRequisicao;
 import br.gov.jfrj.siga.tp.model.RequisicaoTransporte;

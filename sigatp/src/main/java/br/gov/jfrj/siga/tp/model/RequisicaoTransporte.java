@@ -249,7 +249,7 @@ public class RequisicaoTransporte extends GenericModel implements Comparable<Req
 			throw new Exception(Messages.get("requisicaoTransporte.codigoRequisicao.exception", codigoRequisicao));
 		}
 
-		CpOrgaoUsuario cpOrgaoUsuario = CpRepository.find(CpOrgaoUsuario.class, "acronimoOrgaoUsu",partesDoCodigo[0]).first();
+		CpOrgaoUsuario cpOrgaoUsuario = TpDao.find(CpOrgaoUsuario.class, "acronimoOrgaoUsu",partesDoCodigo[0]).first();
 		Integer ano = new Integer(Integer.parseInt(partesDoCodigo[2]));
 		Long numero = new Long(Integer.parseInt(partesDoCodigo[3]));
 		String siglaDocumento = partesDoCodigo[4] + partesDoCodigo[1];

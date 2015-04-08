@@ -27,7 +27,7 @@ import br.gov.jfrj.siga.tp.auth.annotation.RoleAdminMissaoComplexo;
 import br.gov.jfrj.siga.tp.auth.annotation.RoleAgente;
 import br.gov.jfrj.siga.tp.auth.annotation.RoleAprovador;
 import br.gov.jfrj.siga.tp.auth.annotation.RoleGabinete;
-import br.gov.jfrj.siga.tp.model.CpRepository;
+import br.gov.jfrj.siga.tp.model.TpDao;
 
 
 public class AutorizacaoGIAntigo extends SigaApplication {
@@ -161,22 +161,22 @@ public class AutorizacaoGIAntigo extends SigaApplication {
 	
 	public static CpComplexo recuperarComplexoPadrao(DpPessoa dpPessoa) throws Exception {
 		long TIPO_CONFIG_COMPLEXO_PADRAO = 400;
-		CpTipoConfiguracao tpConf = CpRepository.findById(CpTipoConfiguracao.class, TIPO_CONFIG_COMPLEXO_PADRAO);
-		CpSituacaoConfiguracao cpSituacaoConfiguracaoPode = CpRepository.findById(CpSituacaoConfiguracao.class, 1L); 
-		CpSituacaoConfiguracao cpSituacaoConfiguracaoPadrao = CpRepository.findById(CpSituacaoConfiguracao.class, 5L); 
+		CpTipoConfiguracao tpConf = TpDao.findById(CpTipoConfiguracao.class, TIPO_CONFIG_COMPLEXO_PADRAO);
+		CpSituacaoConfiguracao cpSituacaoConfiguracaoPode = TpDao.findById(CpSituacaoConfiguracao.class, 1L); 
+		CpSituacaoConfiguracao cpSituacaoConfiguracaoPadrao = TpDao.findById(CpSituacaoConfiguracao.class, 5L); 
 		List<CpConfiguracao> configuracoes = null;
 		CpComplexo cpComplexo = null;
 
 		// Recuperando Configuração Pode para uma lotação específica
 		Object[] parametros =  {dpPessoa.getLotacao().getIdLotacaoIni(), cpSituacaoConfiguracaoPode, dpPessoa.getOrgaoUsuario(),tpConf};
-		configuracoes = CpRepository.find(CpConfiguracao.class, "((lotacao.idLotacaoIni = ? and cpSituacaoConfiguracao = ?) and orgaoUsuario = ?  and cpTipoConfiguracao = ? and hisIdcFim is null  )", parametros).fetch();
+		configuracoes = TpDao.find(CpConfiguracao.class, "((lotacao.idLotacaoIni = ? and cpSituacaoConfiguracao = ?) and orgaoUsuario = ?  and cpTipoConfiguracao = ? and hisIdcFim is null  )", parametros).fetch();
 		if (configuracoes != null && configuracoes.size() > 0) {
 			cpComplexo = configuracoes.get(0).getComplexo();
 		} else {
 		
 		// Recuperando Configuração default para um Órgão específico
 		Object[] parametros1 =  {cpSituacaoConfiguracaoPadrao, dpPessoa.getOrgaoUsuario(),tpConf};
-		configuracoes = CpRepository.find(CpConfiguracao.class, "((cpSituacaoConfiguracao = ?) and orgaoUsuario = ?  and cpTipoConfiguracao = ? and hisIdcFim is null  )", parametros1).fetch();
+		configuracoes = TpDao.find(CpConfiguracao.class, "((cpSituacaoConfiguracao = ?) and orgaoUsuario = ?  and cpTipoConfiguracao = ? and hisIdcFim is null  )", parametros1).fetch();
 		if (configuracoes != null && configuracoes.size() > 0) {
 			cpComplexo = configuracoes.get(0).getComplexo();
 		}
@@ -198,14 +198,14 @@ public class AutorizacaoGIAntigo extends SigaApplication {
 	 */
 	protected static CpComplexo recuperarComplexoAdministrador() throws Exception {
 		String SERVICO_COMPLEXO_ADMINISTRADOR = "SIGA-TP-ADMMISSAOCOMPLEXO";
-		CpServico cpServico = CpRepository.find(CpServico.class, "siglaServico",SERVICO_COMPLEXO_ADMINISTRADOR).first();
-		CpSituacaoConfiguracao cpSituacaoConfiguracaoPode = CpRepository.findById(CpSituacaoConfiguracao.class, 1L); 
+		CpServico cpServico = TpDao.find(CpServico.class, "siglaServico",SERVICO_COMPLEXO_ADMINISTRADOR).first();
+		CpSituacaoConfiguracao cpSituacaoConfiguracaoPode = TpDao.findById(CpSituacaoConfiguracao.class, 1L); 
 		List<CpConfiguracao> configuracoes = null;
 		CpComplexo cpComplexo = null;
 
 		// and dtHistDtFim IS NOT NULL
 		Object[] parametros =  {AutorizacaoGIAntigo.titular().getIdPessoaIni(),cpSituacaoConfiguracaoPode, cpServico};
-		configuracoes = CpRepository.find(CpConfiguracao.class, "(dpPessoa.idPessoaIni = ? and cpSituacaoConfiguracao = ? and cpServico = ? and hisIdcFim is null )", parametros).fetch();
+		configuracoes = TpDao.find(CpConfiguracao.class, "(dpPessoa.idPessoaIni = ? and cpSituacaoConfiguracao = ? and cpServico = ? and hisIdcFim is null )", parametros).fetch();
 		if (configuracoes != null) {
 			cpComplexo = configuracoes.get(0).getComplexo();
 		}

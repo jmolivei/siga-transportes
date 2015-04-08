@@ -32,12 +32,12 @@ import play.i18n.Messages;
 import play.modules.br.jus.jfrj.siga.uteis.validadores.sequence.SequenceMethods;
 import play.modules.br.jus.jfrj.siga.uteis.validadores.upperCase.UpperCase;
 import play.modules.br.jus.jfrj.siga.uteis.validadores.validarAnoData.ValidarAnoData;
+import br.com.caelum.vraptor.Convert;
 import br.gov.jfrj.siga.cp.CpComplexo;
 import br.gov.jfrj.siga.dp.CpOrgaoUsuario;
 import br.gov.jfrj.siga.dp.DpPessoa;
 import br.gov.jfrj.siga.model.ActiveRecord;
-import br.gov.jfrj.siga.model.Objeto;
-import br.gov.jfrj.siga.tp.binder.DoubleBinder;
+import br.gov.jfrj.siga.tp.binder.DoubleConverter;
 import br.gov.jfrj.siga.tp.util.PerguntaSimNao;
 import br.gov.jfrj.siga.tp.util.Reflexao;
 import br.jus.jfrj.siga.uteis.Sequence;
@@ -69,7 +69,7 @@ public class Missao extends  TpModel implements Comparable<Missao>,SequenceMetho
 	public Calendar dataHora;
 	
 	@Transient
-	@As(binder=DoubleBinder.class)
+	@Convert(DoubleConverter.class)
 	public double distanciaPercorridaEmKm;
 	
 	@Transient
@@ -77,7 +77,7 @@ public class Missao extends  TpModel implements Comparable<Missao>,SequenceMetho
 	@ValidarAnoData(descricaoCampo="Data/Hora")
 	public Calendar tempoBruto;
 	
-	@As(binder=DoubleBinder.class)
+	@Convert(DoubleConverter.class)
 	public double consumoEmLitros;
 	
 	@Required
@@ -86,7 +86,7 @@ public class Missao extends  TpModel implements Comparable<Missao>,SequenceMetho
 	@ValidarAnoData(descricaoCampo="Data/Hora")
 	public Calendar dataHoraSaida;
 	
-	@As(binder=DoubleBinder.class)
+	@Convert(DoubleConverter.class)
 	public double odometroSaidaEmKm;
 	
 	@Enumerated(EnumType.STRING)
@@ -126,7 +126,7 @@ public class Missao extends  TpModel implements Comparable<Missao>,SequenceMetho
 	@ValidarAnoData(descricaoCampo="Data/Hora Retorno")
 	public Calendar dataHoraRetorno;
 
-	@As(binder=DoubleBinder.class)
+	@Convert(DoubleConverter.class)
 	public double odometroRetornoEmKm;
 	
 	@Enumerated(EnumType.STRING)
@@ -256,7 +256,7 @@ public class Missao extends  TpModel implements Comparable<Missao>,SequenceMetho
 			throw new Exception(Messages.get("missao.buscar.sequence.exception", sequence));
 		}
 
-		CpOrgaoUsuario cpOrgaoUsuario = CpRepository.find(CpOrgaoUsuario.class, "acronimoOrgaoUsu",partesDoCodigo[0]).first();
+		CpOrgaoUsuario cpOrgaoUsuario = TpDao.find(CpOrgaoUsuario.class, "acronimoOrgaoUsu",partesDoCodigo[0]).first();
 		Integer ano = new Integer(Integer.parseInt(partesDoCodigo[2]));
 		Long numero = new Long(Integer.parseInt(partesDoCodigo[3]));
 		String siglaDocumento = partesDoCodigo[4] + partesDoCodigo[1];

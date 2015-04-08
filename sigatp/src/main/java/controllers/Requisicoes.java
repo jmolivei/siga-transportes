@@ -18,7 +18,7 @@ import br.gov.jfrj.siga.tp.auth.annotation.RoleAdminMissao;
 import br.gov.jfrj.siga.tp.auth.annotation.RoleAdminMissaoComplexo;
 import br.gov.jfrj.siga.tp.auth.annotation.RoleAprovador;
 import br.gov.jfrj.siga.tp.model.Andamento;
-import br.gov.jfrj.siga.tp.model.CpRepository;
+import br.gov.jfrj.siga.tp.model.TpDao;
 import br.gov.jfrj.siga.tp.model.EstadoRequisicao;
 import br.gov.jfrj.siga.tp.model.FinalidadeRequisicao;
 import br.gov.jfrj.siga.tp.model.RequisicaoTransporte;
@@ -45,7 +45,7 @@ public class Requisicoes extends Controller {
 		carregarRequisicoesUltimosSeteDiasPorEstados(estadosRequisicao);
 		RenderArgs.current().put("estadoRequisicao",EstadoRequisicao.ABERTA);
 		MenuMontador.instance().recuperarMenuListarPAprovarRequisicoes(null);
-		List<CpComplexo> complexos = CpRepository.find(CpComplexo.class, "orgaoUsuario", AutorizacaoGIAntigo.titular().getOrgaoUsuario()).fetch();
+		List<CpComplexo> complexos = TpDao.find(CpComplexo.class, "orgaoUsuario", AutorizacaoGIAntigo.titular().getOrgaoUsuario()).fetch();
 		render(complexos);
 	}
 

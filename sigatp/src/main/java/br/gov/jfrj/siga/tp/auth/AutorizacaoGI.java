@@ -10,13 +10,14 @@ import br.gov.jfrj.siga.cp.CpComplexo;
 import br.gov.jfrj.siga.cp.CpConfiguracao;
 import br.gov.jfrj.siga.cp.CpServico;
 import br.gov.jfrj.siga.cp.CpSituacaoConfiguracao;
-import br.gov.jfrj.siga.tp.model.CpRepository;
+import br.gov.jfrj.siga.tp.model.TpDao;
 import br.gov.jfrj.siga.vraptor.SigaObjects;
 
 import com.google.common.base.Optional;
 
 /**
- * Classe que contem os dados de autorizacao do usuario. Agrupa em um mapa o nome da permissao e um boleano indicando se o usuario a possui ou nao.
+ * Classe que contem os dados de autorizacao do usuario. Agrupa em um mapa o nome da permissao e um boleano indicando 
+ * se o usuario a possui ou nao.
  * 
  * @author db1
  *
@@ -34,21 +35,22 @@ public class AutorizacaoGI {
 	}
 
 	/**
-	 * Recupera na configuração do GI o complexo do perfil AdministradorPorComplexo para usuário logado verificando Órgao e Lotação e o tipo de configurção "Utilizar Complexo"
+	 * Recupera na configuração do GI o complexo do perfil AdministradorPorComplexo para usuário logado verificando Órgao 
+	 * e Lotação e o tipo de configurção "Utilizar Complexo"
 	 * 
 	 * @return
 	 * @throws Exception
 	 */
 	protected CpComplexo recuperarComplexoAdministrador() throws Exception {
 		String SERVICO_COMPLEXO_ADMINISTRADOR = "SIGA-TP-ADMMISSAOCOMPLEXO";
-		CpServico cpServico = CpRepository.find(CpServico.class, "siglaServico", SERVICO_COMPLEXO_ADMINISTRADOR).first();
-		CpSituacaoConfiguracao cpSituacaoConfiguracaoPode = CpRepository.findById(CpSituacaoConfiguracao.class, 1L);
+		CpServico cpServico = TpDao.find(CpServico.class, "siglaServico", SERVICO_COMPLEXO_ADMINISTRADOR).first();
+		CpSituacaoConfiguracao cpSituacaoConfiguracaoPode = TpDao.findById(CpSituacaoConfiguracao.class, 1L);
 		List<CpConfiguracao> configuracoes = null;
 		CpComplexo cpComplexo = null;
 
 		// and dtHistDtFim IS NOT NULL
 		Object[] parametros = { so.getTitular().getIdPessoaIni(), cpSituacaoConfiguracaoPode, cpServico };
-		configuracoes = CpRepository.find(CpConfiguracao.class, "(dpPessoa.idPessoaIni = ? and cpSituacaoConfiguracao = ? and cpServico = ? and hisIdcFim is null )", parametros).fetch();
+		configuracoes = TpDao.find(CpConfiguracao.class, "(dpPessoa.idPessoaIni = ? and cpSituacaoConfiguracao = ? and cpServico = ? and hisIdcFim is null )", parametros).fetch();
 
 		if (configuracoes != null)
 			cpComplexo = configuracoes.get(0).getComplexo();

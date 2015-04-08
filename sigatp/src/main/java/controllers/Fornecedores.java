@@ -50,7 +50,7 @@ public class Fornecedores extends Controller {
 	@RoleGabinete
 	public static void salvar(@Valid Fornecedor fornecedor) {
 		if (Validation.hasErrors()) {
-			String template = fornecedor.id > 0 ? "Fornecedores/editar.html"
+			String template = fornecedor.getId() > 0 ? "Fornecedores/editar.html"
 					: "Fornecedores/incluir.html";
 			renderTemplate(template, fornecedor);
 		} else {

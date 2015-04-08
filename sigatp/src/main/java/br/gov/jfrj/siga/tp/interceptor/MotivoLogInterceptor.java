@@ -12,12 +12,23 @@ import br.com.caelum.vraptor.interceptor.Interceptor;
 import br.com.caelum.vraptor.resource.ResourceMethod;
 import br.gov.jfrj.siga.tp.auth.annotation.LogMotivo;
 
+/**
+ * Interceptor que processa a anotacao {@link LogMotivo}.
+ * 
+ * Funciona junto a tag MotivoLog nos formulários Abastecimentos/listar e
+ * ControlesGabinete/listar, método de exclusão.
+ * Necessário incluir uma tag <form> com id="formulario".
+ * Incluir também a tag #{motivoLog /} antes de </form>
+ * 
+ *  @author db1
+ *
+ */
 @Intercepts(after = { AutorizacaoAcessoInterceptor.class }, before = ExecuteMethodInterceptor.class)
 public class MotivoLogInterceptor implements Interceptor {
 
-	private HttpServletRequest request;
 	private Result result;
 	private Localization localization;
+	private HttpServletRequest request;
 
 	public MotivoLogInterceptor(Result result, HttpServletRequest request, Localization localization) {
 		this.result = result;

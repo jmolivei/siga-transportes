@@ -20,10 +20,11 @@ import play.data.binding.As;
 import play.data.validation.Required;
 import play.i18n.Messages;
 import play.modules.br.jus.jfrj.siga.uteis.validadores.validarAnoData.ValidarAnoData;
+import br.com.caelum.vraptor.Convert;
 import br.gov.jfrj.siga.dp.DpLotacao;
 import br.gov.jfrj.siga.model.ActiveRecord;
 import br.gov.jfrj.siga.model.Objeto;
-import br.gov.jfrj.siga.tp.binder.DoubleBinder;
+import br.gov.jfrj.siga.tp.binder.DoubleConverter;
 
 @Entity
 // @Table(name = "LOTACAO_VEICULO_2", schema="SIGAOR")
@@ -71,7 +72,7 @@ public class LotacaoVeiculo extends Objeto {
 	@ValidarAnoData(descricaoCampo = "Data/Hora Fim")
 	private Calendar dataHoraFim;
 
-	@As(binder = DoubleBinder.class)
+	@Convert(DoubleConverter.class)
 	private Double odometroEmKm;
 
 	/**

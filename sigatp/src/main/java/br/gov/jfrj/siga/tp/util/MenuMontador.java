@@ -18,14 +18,14 @@ public class MenuMontador {
 
 	public void recuperarMenuVeiculos(Long id, ItemMenu menuVeiculos) {
 		result.include("idVeiculo", id);
-		result.include("menuVeiculosIncluir", (id == 0));
-		result.include("menuVeiculosEditar", (id != 0) && (menuVeiculos != ItemMenu.DADOSCADASTRAIS));
-		result.include("menuAvarias", (id != 0) && (menuVeiculos != ItemMenu.AVARIAS));
-		result.include("menuRelatoriosdiarios", (id != 0) && (menuVeiculos != ItemMenu.RELATORIOSDIARIOS));
-		result.include("menuAgenda", (id != 0) && (menuVeiculos != ItemMenu.AGENDA));
-		result.include("menuAbastecimentos", (id != 0) && (menuVeiculos != ItemMenu.ABASTECIMENTOS));
-		result.include("menuAutosdeinfracoes", (id != 0) && (menuVeiculos != ItemMenu.INFRACOES));
-		result.include("menuLotacoes", (id != 0) && (menuVeiculos != ItemMenu.LOTACOES));
+		result.include("menuVeiculosIncluir", (id == null));
+		result.include("menuVeiculosEditar", (id != null) && (menuVeiculos != ItemMenu.DADOSCADASTRAIS));
+		result.include("menuAvarias", (id != null) && (menuVeiculos != ItemMenu.AVARIAS));
+		result.include("menuRelatoriosdiarios", (id != null) && (menuVeiculos != ItemMenu.RELATORIOSDIARIOS));
+		result.include("menuAgenda", (id != null) && (menuVeiculos != ItemMenu.AGENDA));
+		result.include("menuAbastecimentos", (id != null) && (menuVeiculos != ItemMenu.ABASTECIMENTOS));
+		result.include("menuAutosdeinfracoes", (id != null) && (menuVeiculos != ItemMenu.INFRACOES));
+		result.include("menuLotacoes", (id != null) && (menuVeiculos != ItemMenu.LOTACOES));
 	}
 
 	public void recuperarMenuCondutores(Long id, ItemMenu menuCondutor) {

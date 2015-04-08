@@ -20,8 +20,9 @@ import play.data.binding.As;
 import play.data.validation.Required;
 import play.db.jpa.GenericModel;
 import play.modules.br.jus.jfrj.siga.uteis.validadores.validarAnoData.ValidarAnoData;
+import br.com.caelum.vraptor.Convert;
 import br.gov.jfrj.siga.dp.DpPessoa;
-import br.gov.jfrj.siga.tp.binder.DoubleBinder;
+import br.gov.jfrj.siga.tp.binder.DoubleConverter;
 
 @Entity
 @Audited
@@ -60,11 +61,11 @@ public class ControleGabinete extends GenericModel {
 	public Condutor condutor;	
 	
 	@Required
-	@As(binder=DoubleBinder.class)
+	@Convert(DoubleConverter.class)
 	public double odometroEmKmSaida;
 	
 	@Required
-	@As(binder=DoubleBinder.class)
+	@Convert(DoubleConverter.class)
 	public double odometroEmKmRetorno;
 	
 	@Required
