@@ -19,68 +19,67 @@ import javax.validation.constraints.NotNull;
 import org.hibernate.envers.Audited;
 
 import play.data.binding.As;
-import play.data.validation.Required;
-import play.db.jpa.GenericModel;
 import play.modules.br.jus.jfrj.siga.uteis.validadores.validarAnoData.ValidarAnoData;
-import br.com.caelum.vraptor.Convert;
-import br.gov.jfrj.siga.tp.binder.DoubleConverter;
+import br.gov.jfrj.siga.model.ActiveRecord;
 import br.gov.jfrj.siga.tp.util.PerguntaSimNao;
 import br.jus.jfrj.siga.uteis.UpperCase;
 
 @Entity
 @Audited
 @Table(schema = "SIGATP")
-public class AutoDeInfracao extends GenericModel implements Comparable<AutoDeInfracao> {
+public class AutoDeInfracao extends TpModel implements Comparable<AutoDeInfracao> {
+	
+	public static ActiveRecord<AutoDeInfracao> AR = new ActiveRecord<>(AutoDeInfracao.class);
 	
 	@Id
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "hibernate_sequence_generator") @SequenceGenerator(name = "hibernate_sequence_generator", sequenceName="SIGATP.hibernate_sequence") 
 	public Long id;
 	
-	@Required
+//	@Required
 	@As(lang={"*"}, value = {"dd/MM/yyyy HH:mm"})
 	@ValidarAnoData(descricaoCampo="Data/Hora")
 	public Calendar dataHora;
 	
-	@Required
+//	@Required
 	@ManyToOne
-	@NotNull
+//	@NotNull
 	public Veiculo veiculo;	
 	
-	@Required
+//	@Required
 	public String codigoDaAutuacao;
 	
-	@Required
+//	@Required
 	public String codigoDaPenalidade;
 	
-	@Required
+//	@Required
 	@UpperCase
 	public String descricao;
 	
-	@Required
+//	@Required
 	@Enumerated(EnumType.STRING)
 	public Gravidade gravidade;
 	
-	@Required
+//	@Required
 	@UpperCase
 	public String enquadramento;
 	
-	@Required
+//	@Required
 	@UpperCase
 	public String local;
 	
-	@Required
+//	@Required
 	@Enumerated(EnumType.STRING)
 	public PerguntaSimNao foiRecebido;
 	
-	@Required
+//	@Required
 	public double valor;
 	
 	public double valorComDesconto;
 	
-	@Required
+//	@Required
 	public int quantidadeDePontos;
 	
-	@Required
+//	@Required
 	@As(lang={"*"}, value = {"dd/MM/yyyy"})
 	@ValidarAnoData(intervalo=2, descricaoCampo="Data de Vencimento")
 	public Calendar dataDeVencimento;
@@ -92,7 +91,7 @@ public class AutoDeInfracao extends GenericModel implements Comparable<AutoDeInf
 	//@Required
 	//public Requisicao requisicao;
 	
-	@Required
+//	@Required
 	@ManyToOne
 	@NotNull
 	public Condutor condutor;
@@ -116,6 +115,166 @@ public class AutoDeInfracao extends GenericModel implements Comparable<AutoDeInf
 		return dataDePagamento != null ? PerguntaSimNao.SIM : PerguntaSimNao.NAO;
 	}
 	
+	public Calendar getDataHora() {
+		return dataHora;
+	}
+
+	public void setDataHora(Calendar dataHora) {
+		this.dataHora = dataHora;
+	}
+
+	public Veiculo getVeiculo() {
+		return veiculo;
+	}
+
+	public void setVeiculo(Veiculo veiculo) {
+		this.veiculo = veiculo;
+	}
+
+	public String getCodigoDaAutuacao() {
+		return codigoDaAutuacao;
+	}
+
+	public void setCodigoDaAutuacao(String codigoDaAutuacao) {
+		this.codigoDaAutuacao = codigoDaAutuacao;
+	}
+
+	public String getCodigoDaPenalidade() {
+		return codigoDaPenalidade;
+	}
+
+	public void setCodigoDaPenalidade(String codigoDaPenalidade) {
+		this.codigoDaPenalidade = codigoDaPenalidade;
+	}
+
+	public String getDescricao() {
+		return descricao;
+	}
+
+	public void setDescricao(String descricao) {
+		this.descricao = descricao;
+	}
+
+	public Gravidade getGravidade() {
+		return gravidade;
+	}
+
+	public void setGravidade(Gravidade gravidade) {
+		this.gravidade = gravidade;
+	}
+
+	public String getEnquadramento() {
+		return enquadramento;
+	}
+
+	public void setEnquadramento(String enquadramento) {
+		this.enquadramento = enquadramento;
+	}
+
+	public String getLocal() {
+		return local;
+	}
+
+	public void setLocal(String local) {
+		this.local = local;
+	}
+
+	public PerguntaSimNao getFoiRecebido() {
+		return foiRecebido;
+	}
+
+	public void setFoiRecebido(PerguntaSimNao foiRecebido) {
+		this.foiRecebido = foiRecebido;
+	}
+
+	public double getValor() {
+		return valor;
+	}
+
+	public void setValor(double valor) {
+		this.valor = valor;
+	}
+
+	public double getValorComDesconto() {
+		return valorComDesconto;
+	}
+
+	public void setValorComDesconto(double valorComDesconto) {
+		this.valorComDesconto = valorComDesconto;
+	}
+
+	public int getQuantidadeDePontos() {
+		return quantidadeDePontos;
+	}
+
+	public void setQuantidadeDePontos(int quantidadeDePontos) {
+		this.quantidadeDePontos = quantidadeDePontos;
+	}
+
+	public Calendar getDataDeVencimento() {
+		return dataDeVencimento;
+	}
+
+	public void setDataDeVencimento(Calendar dataDeVencimento) {
+		this.dataDeVencimento = dataDeVencimento;
+	}
+
+	public Calendar getDataDePagamento() {
+		return dataDePagamento;
+	}
+
+	public void setDataDePagamento(Calendar dataDePagamento) {
+		this.dataDePagamento = dataDePagamento;
+	}
+
+	public Condutor getCondutor() {
+		return condutor;
+	}
+
+	public void setCondutor(Condutor condutor) {
+		this.condutor = condutor;
+	}
+
+	public Calendar getDataLimiteApresentacao() {
+		return dataLimiteApresentacao;
+	}
+
+	public void setDataLimiteApresentacao(Calendar dataLimiteApresentacao) {
+		this.dataLimiteApresentacao = dataLimiteApresentacao;
+	}
+
+	public String getMemorando() {
+		return memorando;
+	}
+
+	public void setMemorando(String memorando) {
+		this.memorando = memorando;
+	}
+
+	public Calendar getDataDoProcesso() {
+		return dataDoProcesso;
+	}
+
+	public void setDataDoProcesso(Calendar dataDoProcesso) {
+		this.dataDoProcesso = dataDoProcesso;
+	}
+
+	public String getNumeroDoProcesso() {
+		return numeroDoProcesso;
+	}
+
+	public void setNumeroDoProcesso(String numeroDoProcesso) {
+		this.numeroDoProcesso = numeroDoProcesso;
+	}
+
+	public void setId(Long id) {
+		this.id = id;
+	}
+
+	@Override
+	public Long getId() {
+		return this.id;
+	}
 	
 	public AutoDeInfracao(){
 		this.id = new Long(0);
@@ -157,13 +316,13 @@ public class AutoDeInfracao extends GenericModel implements Comparable<AutoDeInf
 
 
 	public static List<AutoDeInfracao> buscarAutosDeInfracaoPorVeiculo(Veiculo veiculo) {
-		List<AutoDeInfracao> autosDeInfracao = AutoDeInfracao.find("veiculo", veiculo).fetch();
+		List<AutoDeInfracao> autosDeInfracao = AutoDeInfracao.AR.find("veiculo", veiculo).fetch();
   		Collections.sort(autosDeInfracao, Collections.reverseOrder());
 		return autosDeInfracao;
 	}
 
 	public static List<AutoDeInfracao> buscarAutosDeInfracaoPorCondutor(Condutor condutor) {
-		List<AutoDeInfracao> autosDeInfracao = AutoDeInfracao.find("condutor", condutor).fetch();
+		List<AutoDeInfracao> autosDeInfracao = AutoDeInfracao.AR.find("condutor", condutor).fetch();
   		Collections.sort(autosDeInfracao, Collections.reverseOrder());
 		return autosDeInfracao;
 	}
@@ -177,10 +336,10 @@ public class AutoDeInfracao extends GenericModel implements Comparable<AutoDeInf
 		return dataDePagamento.after(Calendar.getInstance());
 	}
 
-
 	public static List<AutoDeInfracao> listarOrdenado() {
-		List<AutoDeInfracao> autosDeInfracao = AutoDeInfracao.findAll();
+		List<AutoDeInfracao> autosDeInfracao = AutoDeInfracao.AR.findAll();
   		Collections.sort(autosDeInfracao, Collections.reverseOrder());
 		return autosDeInfracao;
 	}
+	
 }

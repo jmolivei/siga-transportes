@@ -55,7 +55,7 @@ public class AutosDeInfracao extends Controller {
 	public static void editar(Long id) throws Exception {
 		List<Veiculo> veiculos = Veiculo.listarTodos(AutorizacaoGIAntigo.titular().getOrgaoUsuario());
     	List<Condutor> condutores = Condutor.listarTodos(AutorizacaoGIAntigo.titular().getOrgaoUsuario());
- 		AutoDeInfracao autoDeInfracao = AutoDeInfracao.findById(id);
+ 		AutoDeInfracao autoDeInfracao = AutoDeInfracao.AR.findById(id);
  		TipoDeNotificacao tipoNotificacao = autoDeInfracao.codigoDaAutuacao != null ? TipoDeNotificacao.AUTUACAO : TipoDeNotificacao.PENALIDADE;
 		render(autoDeInfracao, veiculos, condutores, tipoNotificacao);		
     }
@@ -85,8 +85,8 @@ public class AutosDeInfracao extends Controller {
 	@RoleAdmin
 	@RoleAdminMissao
 	@RoleAdminMissaoComplexo
-	public static void excluir(Long id) {
-	   AutoDeInfracao autoDeInfracao = AutoDeInfracao.findById(id);
+	public static void excluir(Long id) throws Exception {
+	   AutoDeInfracao autoDeInfracao = AutoDeInfracao.AR.findById(id);
 	   autoDeInfracao.delete();
 	   listar();
     }

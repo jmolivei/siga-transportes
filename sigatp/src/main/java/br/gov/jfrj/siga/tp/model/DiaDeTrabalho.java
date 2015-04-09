@@ -18,27 +18,30 @@ import javax.validation.constraints.NotNull;
 import org.hibernate.envers.Audited;
 
 import play.data.validation.Required;
-import play.db.jpa.GenericModel;
 import play.i18n.Messages;
+import br.gov.jfrj.siga.model.ActiveRecord;
 
 @Entity
 @Audited
 @Table(schema = "SIGATP")
-public class DiaDeTrabalho extends GenericModel implements Comparable<DiaDeTrabalho> {
+public class DiaDeTrabalho extends TpModel implements Comparable<DiaDeTrabalho> {
+
+	private static final long serialVersionUID = 1L;
+	public static ActiveRecord<DiaDeTrabalho> AR = new ActiveRecord<>(DiaDeTrabalho.class);
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "hibernate_sequence_generator") @SequenceGenerator(name = "hibernate_sequence_generator", sequenceName="SIGATP.hibernate_sequence") 
-	public Long id;
+	private Long id;
 	
 	@Enumerated(EnumType.STRING)
-	public DiaDaSemana diaEntrada;
+	private DiaDaSemana diaEntrada;
 	
 	@Required
 //	@As(binder=HourMinuteBinder.class)
 	public Calendar horaEntrada;
 	
 	@Enumerated(EnumType.STRING)
-	public DiaDaSemana diaSaida;
+	private DiaDaSemana diaSaida;
 	
 	@Required
 //	@As(binder=HourMinuteBinder.class)
@@ -46,12 +49,60 @@ public class DiaDeTrabalho extends GenericModel implements Comparable<DiaDeTraba
 	
 	@NotNull
 	@ManyToOne
-	public EscalaDeTrabalho escalaDeTrabalho;
+	private EscalaDeTrabalho escalaDeTrabalho;
 	
 	public DiaDeTrabalho() {
 		Inicializar();
 	}
 	
+	public Long getId() {
+		return id;
+	}
+
+	public void setId(Long id) {
+		this.id = id;
+	}
+
+	public DiaDaSemana getDiaEntrada() {
+		return diaEntrada;
+	}
+
+	public void setDiaEntrada(DiaDaSemana diaEntrada) {
+		this.diaEntrada = diaEntrada;
+	}
+
+	public Calendar getHoraEntrada() {
+		return horaEntrada;
+	}
+
+	public void setHoraEntrada(Calendar horaEntrada) {
+		this.horaEntrada = horaEntrada;
+	}
+
+	public DiaDaSemana getDiaSaida() {
+		return diaSaida;
+	}
+
+	public void setDiaSaida(DiaDaSemana diaSaida) {
+		this.diaSaida = diaSaida;
+	}
+
+	public Calendar getHoraSaida() {
+		return horaSaida;
+	}
+
+	public void setHoraSaida(Calendar horaSaida) {
+		this.horaSaida = horaSaida;
+	}
+
+	public EscalaDeTrabalho getEscalaDeTrabalho() {
+		return escalaDeTrabalho;
+	}
+
+	public void setEscalaDeTrabalho(EscalaDeTrabalho escalaDeTrabalho) {
+		this.escalaDeTrabalho = escalaDeTrabalho;
+	}
+
 	private void Inicializar() {
 		SimpleDateFormat formatar = new SimpleDateFormat("dd/MM/yyyy HH:mm");
 		this.id = new Long(0);
@@ -90,8 +141,6 @@ public class DiaDeTrabalho extends GenericModel implements Comparable<DiaDeTraba
 		return formatar.format(horaEntrada.getTime());
 	}
 	
-	
-	
 	public String getHoraSaidaFormatada(String formato) {
 		SimpleDateFormat formatar = new SimpleDateFormat(formato);
 		return formatar.format(horaSaida.getTime());
@@ -99,7 +148,7 @@ public class DiaDeTrabalho extends GenericModel implements Comparable<DiaDeTraba
 	
 	@Override
 	public int compareTo(DiaDeTrabalho o) {
-		return (this.diaEntrada.getOrdem() + this.getHoraEntradaFormatada("HHmm")).compareTo((o.diaEntrada.getOrdem() +  o.getHoraSaidaFormatada("HHmm")));
+		return (this.diaEntrada.getOrdem() + this.getHoraEntradaFormatada("HH:mm")).compareTo((o.diaEntrada.getOrdem() +  o.getHoraSaidaFormatada("HH:mm")));
 	}
 	
 	@Override
