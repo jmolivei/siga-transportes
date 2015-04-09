@@ -6,9 +6,9 @@ import br.com.caelum.vraptor.InterceptionException;
 import br.com.caelum.vraptor.Intercepts;
 import br.com.caelum.vraptor.Result;
 import br.com.caelum.vraptor.core.InterceptorStack;
-import br.com.caelum.vraptor.core.Localization;
 import br.com.caelum.vraptor.interceptor.ExecuteMethodInterceptor;
 import br.com.caelum.vraptor.interceptor.Interceptor;
+import br.com.caelum.vraptor.ioc.RequestScoped;
 import br.com.caelum.vraptor.resource.ResourceMethod;
 import br.gov.jfrj.siga.tp.auth.annotation.LogMotivo;
 
@@ -23,17 +23,16 @@ import br.gov.jfrj.siga.tp.auth.annotation.LogMotivo;
  *  @author db1
  *
  */
+@RequestScoped
 @Intercepts(after = { AutorizacaoAcessoInterceptor.class }, before = ExecuteMethodInterceptor.class)
 public class MotivoLogInterceptor implements Interceptor {
 
 	private Result result;
-	private Localization localization;
 	private HttpServletRequest request;
 
-	public MotivoLogInterceptor(Result result, HttpServletRequest request, Localization localization) {
+	public MotivoLogInterceptor(Result result, HttpServletRequest request) {
 		this.result = result;
 		this.request = request;
-		this.localization = localization;
 	}
 
 	@Override
@@ -43,7 +42,7 @@ public class MotivoLogInterceptor implements Interceptor {
 		if (motivoLogAnnotation != null) {
 			String motivoLog = request.getParameter("motivoLog");
 			if (motivoLog == null) {
-				throw new InterceptionException(localization.getMessage("motivoLogAnnotation.exception"));
+				throw new InterceptionException("motivoLogAnnotation.exception");
 			}
 			result.include("motivoLog", motivoLog);
 		}

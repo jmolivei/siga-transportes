@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import br.com.caelum.vraptor.Result;
 import br.com.caelum.vraptor.ioc.Component;
 import br.com.caelum.vraptor.ioc.RequestScoped;
 import br.gov.jfrj.siga.cp.CpComplexo;
@@ -16,8 +17,7 @@ import br.gov.jfrj.siga.vraptor.SigaObjects;
 import com.google.common.base.Optional;
 
 /**
- * Classe que contem os dados de autorizacao do usuario. Agrupa em um mapa o nome da permissao e um boleano indicando 
- * se o usuario a possui ou nao.
+ * Classe que contem os dados de autorizacao do usuario. Agrupa em um mapa o nome da permissao e um boleano indicando se o usuario a possui ou nao.
  * 
  * @author db1
  *
@@ -26,8 +26,9 @@ import com.google.common.base.Optional;
 @Component
 public class AutorizacaoGI {
 
-	private Map<String, Boolean> statusPermissoes = new HashMap<String, Boolean>();
+	private static final String CP_COMPLEXO_ADMINISTRADOR = "cpComplexoAdministrador";
 	private SigaObjects so;
+	private Map<String, Boolean> statusPermissoes = new HashMap<String, Boolean>();
 
 	public AutorizacaoGI(SigaObjects so) {
 		this.so = so;
@@ -35,8 +36,8 @@ public class AutorizacaoGI {
 	}
 
 	/**
-	 * Recupera na configuração do GI o complexo do perfil AdministradorPorComplexo para usuário logado verificando Órgao 
-	 * e Lotação e o tipo de configurção "Utilizar Complexo"
+	 * Recupera na configuração do GI o complexo do perfil AdministradorPorComplexo para usuário logado verificando Órgao e Lotação e o 
+	 * tipo de configurção "Utilizar Complexo"
 	 * 
 	 * @return
 	 * @throws Exception
@@ -49,16 +50,17 @@ public class AutorizacaoGI {
 		CpComplexo cpComplexo = null;
 
 		// and dtHistDtFim IS NOT NULL
-		Object[] parametros = { so.getTitular().getIdPessoaIni(), cpSituacaoConfiguracaoPode, cpServico };
-		configuracoes = TpDao.find(CpConfiguracao.class, "(dpPessoa.idPessoaIni = ? and cpSituacaoConfiguracao = ? and cpServico = ? and hisIdcFim is null )", parametros).fetch();
+		Object[] parametros = { so.getTitular().getIdPessoaIni(), cpSituacaoConfiguracaoPode.getIdSitConfiguracao(), cpServico };
+		configuracoes = TpDao.find(CpConfiguracao.class, "(dpPessoa.idPessoaIni = ? and cpSituacaoConfiguracao.idSitConfiguracao = ? and cpServico = ? and hisIdcFim is null )", parametros).fetch();
 
 		if (configuracoes != null)
 			cpComplexo = configuracoes.get(0).getComplexo();
 		return cpComplexo;
 	}
 
-	public void incluir(String nomePermissao) {
+	public AutorizacaoGI incluir(String nomePermissao) {
 		this.statusPermissoes.put(nomePermissao, statusAutorizacao(nomePermissao));
+		return this;
 	}
 
 	public Boolean getStatusPermissao(String nomePermissao) {
@@ -74,6 +76,35 @@ public class AutorizacaoGI {
 		return Boolean.FALSE;
 	}
 
+	public AutorizacaoGI incluirAdministrarMissaoComplexo(Result result) {
+		try {
+			CpComplexo cpComplexo = recuperarComplexoAdministrador();
+			Boolean encontrouComplexo = cpComplexo != null;
+			if (encontrouComplexo) {
+				result.include(CP_COMPLEXO_ADMINISTRADOR, cpComplexo);
+			}
+			this.statusPermissoes.put(Autorizacoes.EXIBIR_MENU_ADMMISSAO_ADMINISTRAR_MISSAO_COMPLEXO, encontrouComplexo);
+		} catch (Exception e) {
+			this.statusPermissoes.put(Autorizacoes.EXIBIR_MENU_ADMMISSAO_ADMINISTRAR_MISSAO_COMPLEXO, Boolean.FALSE);
+		}
+		return this;
+	}
+
+	public Boolean deveExibirMenuAdmissaoComplexo() {
+		return getStatusPermissao(Autorizacoes.EXIBIR_MENU_ADMMISSAO_ADMINISTRAR_MISSAO_COMPLEXO);
+	}
+
+	public void preencherDadosAutorizacoes(Result result) {
+		result.include(Autorizacoes.EXIBIR_MENU_ADMINISTRAR, ehAdministrador());
+		result.include(Autorizacoes.EXIBIR_MENU_ADMINISTRAR_FROTA, ehAdministradorFrota());
+		result.include(Autorizacoes.EXIBIR_MENU_ADMINISTRAR_MISSAO, ehAdministradorMissao());
+		result.include(Autorizacoes.EXIBIR_MENU_APROVADOR, ehAprovador());
+		result.include(Autorizacoes.EXIBIR_MENU_GABINETE, ehGabinete());
+		result.include(Autorizacoes.EXIBIR_MENU_ADMIN_GABINETE, ehAdminGabinete());
+		result.include(Autorizacoes.EXIBIR_MENU_AGENTE, ehAgente());
+		result.include(Autorizacoes.EXIBIR_MENU_ADMMISSAO_ADMINISTRAR_MISSAO_COMPLEXO, deveExibirMenuAdmissaoComplexo());
+	}
+	
 	public Boolean ehAdministrador() {
 		return getStatusPermissao(Autorizacoes.ADM_ADMINISTRAR);
 	}
@@ -104,17 +135,5 @@ public class AutorizacaoGI {
 
 	public Boolean ehAgente() {
 		return getStatusPermissao(Autorizacoes.AGN_AGENTE);
-	}
-
-	public void incluirAdministrarMissaoComplexo() {
-		try {
-			this.statusPermissoes.put(Autorizacoes.EXIBIR_MENU_ADMMISSAO_ADMINISTRAR_MISSAO_COMPLEXO, recuperarComplexoAdministrador() != null);
-		} catch (Exception e) {
-			this.statusPermissoes.put(Autorizacoes.EXIBIR_MENU_ADMMISSAO_ADMINISTRAR_MISSAO_COMPLEXO, Boolean.FALSE);
-		}
-	}
-
-	public Boolean deveExibirMenuAdmissaoComplexo() {
-		return getStatusPermissao(Autorizacoes.EXIBIR_MENU_ADMMISSAO_ADMINISTRAR_MISSAO_COMPLEXO);
 	}
 }

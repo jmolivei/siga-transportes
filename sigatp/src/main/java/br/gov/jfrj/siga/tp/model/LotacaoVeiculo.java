@@ -23,7 +23,7 @@ import br.com.caelum.vraptor.Convert;
 import br.gov.jfrj.siga.dp.DpLotacao;
 import br.gov.jfrj.siga.model.ActiveRecord;
 import br.gov.jfrj.siga.tp.binder.DoubleConverter;
-import br.gov.jfrj.siga.tp.util.TpMessages;
+import br.gov.jfrj.siga.tp.util.MessagesBundle;
 
 @Entity
 // @Table(name = "LOTACAO_VEICULO_2", schema="SIGAOR")
@@ -87,11 +87,11 @@ public class LotacaoVeiculo extends TpModel {
 				lotacoesVeiculo.get(0).save();
 			} else {
 				if (lotacoesVeiculo.size() > 1) {
-					throw new Exception(TpMessages.getMessage("lotacaoVeiculo.lotacoesVeiculo.MaiorQueUm.exception"));
+					throw new Exception(MessagesBundle.getMessage("lotacaoVeiculo.lotacoesVeiculo.MaiorQueUm.exception"));
 				}
 			}
 		} catch (Exception e) {
-			throw new Exception(TpMessages.getMessage("lotacaoVeiculo.lotacoesVeiculo.exception", e.getMessage()));
+			throw new Exception(MessagesBundle.getMessage("lotacaoVeiculo.lotacoesVeiculo.exception", e.getMessage()));
 		}
 
 		return "ok";

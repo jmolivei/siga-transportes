@@ -63,7 +63,8 @@ public class ExceptionHandlerInterceptor implements Interceptor {
 	private Throwable encontrarCausa(InterceptionException ie) {
 		Throwable cause = ie.getCause();
 		if (cause instanceof ApplicationLogicException) {
-			return cause.getCause();
+			Throwable applicationExceptionCause = cause.getCause();
+			return applicationExceptionCause != null ? applicationExceptionCause : cause;
 		}
 		return cause;
 	}

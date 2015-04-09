@@ -2,7 +2,7 @@ package br.gov.jfrj.siga.tp.util;
 
 import br.com.caelum.vraptor.core.Localization;
 
-public class TpMessages {
+public class MessagesBundle {
 	private static final ThreadLocal<Localization> THREAD_LOCAL = new ThreadLocal<Localization>();
 
 	public static void set(Localization localization) {

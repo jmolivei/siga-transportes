@@ -15,11 +15,12 @@ import br.com.caelum.vraptor.util.jpa.extra.ParameterLoaderInterceptor;
 import br.gov.jfrj.siga.model.ActiveRecord;
 import br.gov.jfrj.siga.model.ContextoPersistencia;
 import br.gov.jfrj.siga.tp.model.TpDao;
-import br.gov.jfrj.siga.tp.util.TpMessages;
+import br.gov.jfrj.siga.tp.util.MessagesBundle;
 import br.gov.jfrj.siga.vraptor.ParameterOptionalLoaderInterceptor;
 
 /**
- * Interceptor que inicia a instancia do DAO a ser utilizado pelo sistema. O DAO deve ser utilizado quando se deseja realizar operacoes quando nao se pode utilizar o {@link ActiveRecord}.
+ * Interceptor que inicia a instancia do DAO a ser utilizado pelo sistema. O DAO deve ser utilizado quando se deseja 
+ * realizar operacoes quando nao se pode utilizar o {@link ActiveRecord}.
  * 
  * @author db1.
  *
@@ -36,16 +37,12 @@ public class ContextInterceptor implements Interceptor {
 		this.localization = localization;
 	}
 
-	@Override
-	public boolean accepts(ResourceMethod method) {
-		return Boolean.TRUE;
-	}
 
 	@Override
 	public void intercept(InterceptorStack stack, ResourceMethod method, Object resourceInstance) throws InterceptionException {
 		try {
 			ContextoPersistencia.setEntityManager(em);
-			TpMessages.set(localization);
+			MessagesBundle.set(localization);
 			TpDao.freeInstance();
 			TpDao.getInstance((Session) em.getDelegate(), ((Session) em.getDelegate()).getSessionFactory().openStatelessSession());
 			stack.next(method, resourceInstance);
@@ -53,8 +50,13 @@ public class ContextInterceptor implements Interceptor {
 			rollbackTransaction();
 			throw e;
 		} finally {
-			TpMessages.remove();
+			MessagesBundle.remove();
 		}
+	}
+
+	@Override
+	public boolean accepts(ResourceMethod method) {
+		return Boolean.TRUE;
 	}
 
 	private void rollbackTransaction() {

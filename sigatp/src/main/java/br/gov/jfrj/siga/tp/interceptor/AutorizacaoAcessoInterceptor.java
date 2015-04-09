@@ -17,10 +17,12 @@ import br.gov.jfrj.siga.tp.auth.annotation.RoleAprovador;
 import br.gov.jfrj.siga.tp.auth.annotation.RoleGabinete;
 
 /**
- * Interceptor responsavel por verificar se o usuario tem permissao para acessar determinada URL (metodo) do controller. Verifica se o metodo possui alguma das anotacoes de validacao, caso possua, o
- * sistema executa a regra de verificacao da permissao. Se o usuario nao possui acesso, o sistema lanca excecao informando o acesso negado.
+ * Interceptor responsavel por verificar se o usuario tem permissao para acessar determinada URL (metodo) do controller. 
+ * Verifica se o metodo possui alguma das anotacoes de validacao, caso possua, osistema executa a regra de verificacao 
+ * da permissao. Se o usuario nao possui acesso, o sistema lanca excecao informando 
+ * o acesso negado.
  * 
- * @author db16
+ * @author db1
  *
  */
 @RequestScoped
@@ -55,8 +57,14 @@ public class AutorizacaoAcessoInterceptor implements Interceptor {
 
 	private void validarAdminMissaoComplexo(DadosValidacaoAutorizacao dados) throws Exception {
 		if (dados.isAdmMissaoComplexoAnnotation()) {
-			if (!autorizacaoGI.ehAdministradorMissaoPorComplexo() && !dados.isAdminAnnotation() && !dados.isGabineteAnnotation() && !dados.isAprovadorAnnotation() && !dados.isAgenteAnnotation()
-					&& !dados.isAdminGabineteAnnotation() && !dados.isAdmFrotaAnnotation() && !dados.isAdmMissaoAnnotation()) {
+			if (!autorizacaoGI.ehAdministradorMissaoPorComplexo() 
+					&& !dados.isAdminAnnotation() 
+					&& !dados.isGabineteAnnotation() 
+					&& !dados.isAprovadorAnnotation() 
+					&& !dados.isAgenteAnnotation()
+					&& !dados.isAdminGabineteAnnotation() 
+					&& !dados.isAdmFrotaAnnotation() 
+					&& !dados.isAdmMissaoAnnotation()) {
 				throw new Exception("admMissaoComplexoAnnotation.exception");
 			}
 			if (!autorizacaoGI.ehAdministradorMissaoPorComplexo())
@@ -66,8 +74,14 @@ public class AutorizacaoAcessoInterceptor implements Interceptor {
 
 	private void validarAdminMissao(DadosValidacaoAutorizacao dados) throws Exception {
 		if (dados.isAdmMissaoAnnotation()) {
-			if (!autorizacaoGI.ehAdministradorMissao() && !dados.isAdminAnnotation() && !dados.isGabineteAnnotation() && !dados.isAprovadorAnnotation() && !dados.isAgenteAnnotation()
-					&& !dados.isAdminGabineteAnnotation() && !dados.isAdmFrotaAnnotation() && !dados.isAdmMissaoComplexoAnnotation()) {
+			if (!autorizacaoGI.ehAdministradorMissao() 
+					&& !dados.isAdminAnnotation() 
+					&& !dados.isGabineteAnnotation() 
+					&& !dados.isAprovadorAnnotation() 
+					&& !dados.isAgenteAnnotation()
+					&& !dados.isAdminGabineteAnnotation()
+					&& !dados.isAdmFrotaAnnotation() 
+					&& !dados.isAdmMissaoComplexoAnnotation()) {
 				throw new Exception("admMissaoAnnotation.exception");
 			}
 
@@ -78,8 +92,14 @@ public class AutorizacaoAcessoInterceptor implements Interceptor {
 
 	private void validarAdminFrota(DadosValidacaoAutorizacao dados) throws Exception {
 		if (dados.isAdmFrotaAnnotation()) {
-			if (!autorizacaoGI.ehAdministradorFrota() && !dados.isAdminAnnotation() && !dados.isGabineteAnnotation() && !dados.isAprovadorAnnotation() && !dados.isAgenteAnnotation()
-					&& !dados.isAdminGabineteAnnotation() && !dados.isAdmMissaoAnnotation() && !dados.isAdmMissaoComplexoAnnotation()) {
+			if (!autorizacaoGI.ehAdministradorFrota() 
+					&& !dados.isAdminAnnotation() 
+					&& !dados.isGabineteAnnotation() 
+					&& !dados.isAprovadorAnnotation() 
+					&& !dados.isAgenteAnnotation()
+					&& !dados.isAdminGabineteAnnotation() 
+					&& !dados.isAdmMissaoAnnotation() 
+					&& !dados.isAdmMissaoComplexoAnnotation()) {
 				throw new Exception("admFrotaAnnotation.exception");
 			}
 
@@ -90,8 +110,14 @@ public class AutorizacaoAcessoInterceptor implements Interceptor {
 
 	private void validarAdminGabinete(DadosValidacaoAutorizacao dados) throws Exception {
 		if (dados.isAdminGabineteAnnotation()) {
-			if (!autorizacaoGI.ehAdminGabinete() && !dados.isAdminAnnotation() && !dados.isGabineteAnnotation() && !dados.isAprovadorAnnotation() && !dados.isAgenteAnnotation()
-					&& !dados.isAdmFrotaAnnotation() && !dados.isAdmMissaoAnnotation() && !dados.isAdmMissaoComplexoAnnotation()) {
+			if (!autorizacaoGI.ehAdminGabinete() 
+					&& !dados.isAdminAnnotation() 
+					&& !dados.isGabineteAnnotation() 
+					&& !dados.isAprovadorAnnotation() 
+					&& !dados.isAgenteAnnotation()
+					&& !dados.isAdmFrotaAnnotation() 
+					&& !dados.isAdmMissaoAnnotation() 
+					&& !dados.isAdmMissaoComplexoAnnotation()) {
 				throw new Exception("adminGabineteAnnotation.exception");
 			}
 
@@ -102,8 +128,14 @@ public class AutorizacaoAcessoInterceptor implements Interceptor {
 
 	private void validarGabinete(DadosValidacaoAutorizacao dados) throws Exception {
 		if (dados.isGabineteAnnotation()) {
-			if (!autorizacaoGI.ehGabinete() && !dados.isAdminAnnotation() && !dados.isAprovadorAnnotation() && !dados.isAdminGabineteAnnotation() && !dados.isAgenteAnnotation()
-					&& !dados.isAdmFrotaAnnotation() && !dados.isAdmMissaoAnnotation() && !dados.isAdmMissaoComplexoAnnotation()) {
+			if (!autorizacaoGI.ehGabinete() 
+					&& !dados.isAdminAnnotation() 
+					&& !dados.isAprovadorAnnotation() 
+					&& !dados.isAdminGabineteAnnotation() 
+					&& !dados.isAgenteAnnotation()
+					&& !dados.isAdmFrotaAnnotation() 
+					&& !dados.isAdmMissaoAnnotation() 
+					&& !dados.isAdmMissaoComplexoAnnotation()) {
 				throw new Exception("gabineteAnnotation.exception");
 			}
 
@@ -114,8 +146,14 @@ public class AutorizacaoAcessoInterceptor implements Interceptor {
 
 	private void validarAgente(DadosValidacaoAutorizacao dados) throws Exception {
 		if (dados.isAgenteAnnotation()) {
-			if (!autorizacaoGI.ehAgente() && !dados.isAdminAnnotation() && !dados.isGabineteAnnotation() && !dados.isAdminGabineteAnnotation() && !dados.isAprovadorAnnotation()
-					&& !dados.isAdmFrotaAnnotation() && !dados.isAdmMissaoAnnotation() && !dados.isAdmMissaoComplexoAnnotation()) {
+			if (!autorizacaoGI.ehAgente() 
+					&& !dados.isAdminAnnotation() 
+					&& !dados.isGabineteAnnotation() 
+					&& !dados.isAdminGabineteAnnotation() 
+					&& !dados.isAprovadorAnnotation()
+					&& !dados.isAdmFrotaAnnotation() 
+					&& !dados.isAdmMissaoAnnotation() 
+					&& !dados.isAdmMissaoComplexoAnnotation()) {
 				throw new Exception("agenteAnnotation.exception");
 			}
 
@@ -126,8 +164,14 @@ public class AutorizacaoAcessoInterceptor implements Interceptor {
 
 	private void validarAprovador(DadosValidacaoAutorizacao dados) throws Exception {
 		if (dados.isAprovadorAnnotation()) {
-			if (!autorizacaoGI.ehAprovador() && !dados.isAdminAnnotation() && !dados.isGabineteAnnotation() && !dados.isAdminGabineteAnnotation() && !dados.isAgenteAnnotation()
-					&& !dados.isAdmFrotaAnnotation() && !dados.isAdmMissaoAnnotation() && !dados.isAdmMissaoComplexoAnnotation()) {
+			if (!autorizacaoGI.ehAprovador() 
+					&& !dados.isAdminAnnotation() 
+					&& !dados.isGabineteAnnotation() 
+					&& !dados.isAdminGabineteAnnotation() 
+					&& !dados.isAgenteAnnotation()
+					&& !dados.isAdmFrotaAnnotation() 
+					&& !dados.isAdmMissaoAnnotation() 
+					&& !dados.isAdmMissaoComplexoAnnotation()) {
 				throw new Exception("aprovadorAnnotation.exception");
 			}
 
@@ -138,8 +182,14 @@ public class AutorizacaoAcessoInterceptor implements Interceptor {
 
 	private void validarAdmin(DadosValidacaoAutorizacao dados) throws Exception {
 		if (dados.isAdminAnnotation()) {
-			if (!autorizacaoGI.ehAdministrador() && !dados.isAprovadorAnnotation() && !dados.isGabineteAnnotation() && !dados.isAdminGabineteAnnotation() && !dados.isAgenteAnnotation()
-					&& !dados.isAdmFrotaAnnotation() && !dados.isAdmMissaoAnnotation() && !dados.isAdmMissaoComplexoAnnotation()) {
+			if (!autorizacaoGI.ehAdministrador() 
+					&& !dados.isAprovadorAnnotation() 
+					&& !dados.isGabineteAnnotation() 
+					&& !dados.isAdminGabineteAnnotation() 
+					&& !dados.isAgenteAnnotation()
+					&& !dados.isAdmFrotaAnnotation() 
+					&& !dados.isAdmMissaoAnnotation() 
+					&& !dados.isAdmMissaoComplexoAnnotation()) {
 				throw new Exception("adminAnnotation.exception");
 			}
 

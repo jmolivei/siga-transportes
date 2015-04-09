@@ -15,7 +15,8 @@ import br.com.caelum.vraptor.ioc.RequestScoped;
 import br.com.caelum.vraptor.resource.ResourceMethod;
 
 /**
- * Interceptor que realiza a validacao dos atributos anotados com @Valid (Bean validation). Verifica nos parametros do metodo a ser invocado no controller se existe algo com a anotacao mencionada. Se
+ * Interceptor que realiza a validacao dos atributos anotados com @Valid (Bean validation). 
+ * Verifica nos parametros do metodo a ser invocado no controller se existe algo com a anotacao mencionada. Se
  * sim, executa a validacao nesse parametro.
  * 
  * @author db1

@@ -66,7 +66,7 @@ public class Abastecimento extends GenericModel implements Comparable<Abastecime
 	private double quantidadeEmLitros;
 	
 	@Required
-	@As(binder=PriceBinder.class)
+//	@As(binder=PriceBinder.class)
 	private double precoPorLitro;
 	
 	@Required
