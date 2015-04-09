@@ -6,12 +6,16 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 import javax.validation.Constraint;
+import javax.validation.Payload;
 
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.FIELD)
-@Constraint(validatedBy=ChassiCheck.class)
+@Constraint(validatedBy = ChassiCheck.class)
 public @interface Chassi {
+
 	String message() default "{chassiCheck.validation}";
-	Class<Object>[] groups() default {};
-	Class<Object>[] payload() default {};
+
+	Class<?>[] groups() default {};
+
+	Class<? extends Payload>[] payload() default {};
 }

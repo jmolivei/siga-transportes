@@ -12,7 +12,6 @@ import br.com.caelum.vraptor.Validator;
 import br.com.caelum.vraptor.core.Localization;
 import br.com.caelum.vraptor.validator.ValidationMessage;
 import br.gov.jfrj.siga.dp.dao.CpDao;
-import br.gov.jfrj.siga.tp.auth.AutorizacaoGI;
 import br.gov.jfrj.siga.tp.auth.annotation.RoleAdmin;
 import br.gov.jfrj.siga.tp.auth.annotation.RoleAdminMissao;
 import br.gov.jfrj.siga.tp.auth.annotation.RoleAdminMissaoComplexo;
@@ -20,14 +19,15 @@ import br.gov.jfrj.siga.tp.model.Afastamento;
 import br.gov.jfrj.siga.tp.model.Condutor;
 import br.gov.jfrj.siga.tp.model.ItemMenu;
 import br.gov.jfrj.siga.tp.model.Missao;
+import br.gov.jfrj.siga.tp.model.TpDao;
 import br.gov.jfrj.siga.vraptor.SigaObjects;
 
 //@With(AutorizacaoGI.class)
 @Resource
 public class AfastamentoController extends TpController {
 
-	public AfastamentoController(HttpServletRequest request, Result result, CpDao dao, Localization localization, Validator validator, SigaObjects so, AutorizacaoGI dadosAutorizacao, EntityManager em) throws Exception {
-		super(request, result, dao, localization, validator, so, dadosAutorizacao, em);
+	public AfastamentoController(HttpServletRequest request, Result result, CpDao dao, Localization localization, Validator validator, SigaObjects so, EntityManager em) throws Exception {
+		super(request, result, TpDao.getInstance(), localization, validator, so, em);
 	}
 
 	@Path("/app/afastamento/listar/{idCondutor}")

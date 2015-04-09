@@ -62,15 +62,13 @@ public class Abastecimento extends GenericModel implements Comparable<Abastecime
 	
 	@Required
 	@Min(value=1, message="abastecimento.quantidadeEmLitros.min")
-	@Convert(DoubleConverter.class)
 	private double quantidadeEmLitros;
 	
 	@Required
-	@As(binder=PriceBinder.class)
+//	@As(binder=PriceBinder.class)
 	private double precoPorLitro;
 	
 	@Required
-	@Convert(DoubleConverter.class)
 	private double valorTotalDaNotaFiscal;
 	
 	@Required
@@ -90,15 +88,12 @@ public class Abastecimento extends GenericModel implements Comparable<Abastecime
 	private NivelDeCombustivel nivelDeCombustivel;
 	
 	@Required
-	@Convert(DoubleConverter.class)
 	private double odometroEmKm;
 	
 	@Required
-	@Convert(DoubleConverter.class)
 	private double distanciaPercorridaEmKm;
 	
 	@Required
-	@Convert(DoubleConverter.class)
 	private double consumoMedioEmKmPorLitro;
 	
  	@Audited(targetAuditMode = RelationTargetAuditMode.NOT_AUDITED)
