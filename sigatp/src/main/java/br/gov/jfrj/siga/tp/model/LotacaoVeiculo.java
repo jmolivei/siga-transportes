@@ -71,7 +71,6 @@ public class LotacaoVeiculo extends TpModel {
 	@ValidarAnoData(descricaoCampo = "Data/Hora Fim")
 	private Calendar dataHoraFim;
 
-	@Convert(DoubleConverter.class)
 	private Double odometroEmKm;
 
 	/**

@@ -3,11 +3,9 @@
 <%@ taglib uri="http://localhost/jeetags" prefix="siga" %>
 <%@ taglib prefix="sigatp" tagdir="/WEB-INF/tags/" %>
 
-<sigatp:calendario/>
-<sigatp:decimal/>
 <jsp:include page="menu.jsp" />
 <sigatp:erros/>
-
+			
 <form id="formVeiculos" action="${linkTo[VeiculoController].salvar[veiculo]}" enctype="multipart/form-data">
 	<input type="hidden" name="veiculo.id" value="${veiculo.id}">
 	

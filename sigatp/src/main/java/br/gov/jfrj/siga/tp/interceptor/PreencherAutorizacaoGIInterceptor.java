@@ -19,12 +19,12 @@ import br.gov.jfrj.siga.tp.auth.Autorizacoes;
  */
 @RequestScoped
 @Intercepts(after = { ContextInterceptor.class }, before = InstantiateInterceptor.class)
-public class PreencherDadosAutorizacaoInterceptor implements Interceptor {
+public class PreencherAutorizacaoGIInterceptor implements Interceptor {
 
 	private AutorizacaoGI autorizacaoGI;
 	private Result result;
 
-	public PreencherDadosAutorizacaoInterceptor(Result result, AutorizacaoGI autorizacaoGI) {
+	public PreencherAutorizacaoGIInterceptor(Result result, AutorizacaoGI autorizacaoGI) {
 		this.result = result;
 		this.autorizacaoGI = autorizacaoGI;
 	}

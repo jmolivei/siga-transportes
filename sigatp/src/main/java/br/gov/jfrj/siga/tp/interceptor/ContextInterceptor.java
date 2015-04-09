@@ -12,6 +12,7 @@ import br.com.caelum.vraptor.interceptor.Interceptor;
 import br.com.caelum.vraptor.ioc.RequestScoped;
 import br.com.caelum.vraptor.resource.ResourceMethod;
 import br.com.caelum.vraptor.util.jpa.extra.ParameterLoaderInterceptor;
+import br.gov.jfrj.siga.cp.bl.Cp;
 import br.gov.jfrj.siga.model.ActiveRecord;
 import br.gov.jfrj.siga.model.ContextoPersistencia;
 import br.gov.jfrj.siga.tp.model.TpDao;
@@ -19,8 +20,7 @@ import br.gov.jfrj.siga.tp.util.MessagesBundle;
 import br.gov.jfrj.siga.vraptor.ParameterOptionalLoaderInterceptor;
 
 /**
- * Interceptor que inicia a instancia do DAO a ser utilizado pelo sistema. O DAO deve ser utilizado quando se deseja 
- * realizar operacoes quando nao se pode utilizar o {@link ActiveRecord}.
+ * Interceptor que inicia a instancia do DAO a ser utilizado pelo sistema. O DAO deve ser utilizado quando se deseja realizar operacoes quando nao se pode utilizar o {@link ActiveRecord}.
  * 
  * @author db1.
  *
@@ -37,18 +37,18 @@ public class ContextInterceptor implements Interceptor {
 		this.localization = localization;
 	}
 
-
 	@Override
 	public void intercept(InterceptorStack stack, ResourceMethod method, Object resourceInstance) throws InterceptionException {
 		try {
 			ContextoPersistencia.setEntityManager(em);
 			MessagesBundle.set(localization);
+			Cp.getInstance().getConf().limparCacheSeNecessario();
 			TpDao.freeInstance();
 			TpDao.getInstance((Session) em.getDelegate(), ((Session) em.getDelegate()).getSessionFactory().openStatelessSession());
 			stack.next(method, resourceInstance);
 		} catch (Exception e) {
 			rollbackTransaction();
-			throw e;
+			throw new InterceptionException(e);
 		} finally {
 			MessagesBundle.remove();
 		}

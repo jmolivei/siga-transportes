@@ -2,10 +2,14 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" buffer="64kb" %>
 <%@ taglib uri="http://localhost/jeetags" prefix="siga" %>
 
+<sigatp:calendario/>
+<sigatp:decimal/>
+			
 <siga:pagina titulo="SIGA-Transporte">
 	<div class="gt-bd clearfix">
 		<div class="gt-content clearfix">
 			<h2>${veiculo.dadosParaExibicao}</h2>
+			
 			<jsp:include page="form.jsp" />
 		</div>
 	</div>

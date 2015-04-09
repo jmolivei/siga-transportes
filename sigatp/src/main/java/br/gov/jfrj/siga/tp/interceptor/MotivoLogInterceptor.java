@@ -46,6 +46,7 @@ public class MotivoLogInterceptor implements Interceptor {
 			}
 			result.include("motivoLog", motivoLog);
 		}
+		stack.next(method, resourceInstance);
 	}
 
 	@Override

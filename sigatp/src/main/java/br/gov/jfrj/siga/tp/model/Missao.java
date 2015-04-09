@@ -32,12 +32,10 @@ import play.i18n.Messages;
 import play.modules.br.jus.jfrj.siga.uteis.validadores.sequence.SequenceMethods;
 import play.modules.br.jus.jfrj.siga.uteis.validadores.upperCase.UpperCase;
 import play.modules.br.jus.jfrj.siga.uteis.validadores.validarAnoData.ValidarAnoData;
-import br.com.caelum.vraptor.Convert;
 import br.gov.jfrj.siga.cp.CpComplexo;
 import br.gov.jfrj.siga.dp.CpOrgaoUsuario;
 import br.gov.jfrj.siga.dp.DpPessoa;
 import br.gov.jfrj.siga.model.ActiveRecord;
-import br.gov.jfrj.siga.tp.binder.DoubleConverter;
 import br.gov.jfrj.siga.tp.util.PerguntaSimNao;
 import br.gov.jfrj.siga.tp.util.Reflexao;
 import br.jus.jfrj.siga.uteis.Sequence;
@@ -69,7 +67,6 @@ public class Missao extends  TpModel implements Comparable<Missao>,SequenceMetho
 	public Calendar dataHora;
 	
 	@Transient
-	@Convert(DoubleConverter.class)
 	public double distanciaPercorridaEmKm;
 	
 	@Transient
@@ -77,7 +74,6 @@ public class Missao extends  TpModel implements Comparable<Missao>,SequenceMetho
 	@ValidarAnoData(descricaoCampo="Data/Hora")
 	public Calendar tempoBruto;
 	
-	@Convert(DoubleConverter.class)
 	public double consumoEmLitros;
 	
 	@Required
@@ -86,7 +82,6 @@ public class Missao extends  TpModel implements Comparable<Missao>,SequenceMetho
 	@ValidarAnoData(descricaoCampo="Data/Hora")
 	public Calendar dataHoraSaida;
 	
-	@Convert(DoubleConverter.class)
 	public double odometroSaidaEmKm;
 	
 	@Enumerated(EnumType.STRING)
@@ -126,7 +121,6 @@ public class Missao extends  TpModel implements Comparable<Missao>,SequenceMetho
 	@ValidarAnoData(descricaoCampo="Data/Hora Retorno")
 	public Calendar dataHoraRetorno;
 
-	@Convert(DoubleConverter.class)
 	public double odometroRetornoEmKm;
 	
 	@Enumerated(EnumType.STRING)

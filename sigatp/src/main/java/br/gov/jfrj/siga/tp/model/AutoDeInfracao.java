@@ -73,10 +73,8 @@ public class AutoDeInfracao extends GenericModel implements Comparable<AutoDeInf
 	public PerguntaSimNao foiRecebido;
 	
 	@Required
-	@Convert(DoubleConverter.class)
 	public double valor;
 	
-	@Convert(DoubleConverter.class)
 	public double valorComDesconto;
 	
 	@Required
