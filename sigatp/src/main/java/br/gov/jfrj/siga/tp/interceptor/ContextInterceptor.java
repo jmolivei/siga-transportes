@@ -44,7 +44,6 @@ public class ContextInterceptor implements Interceptor {
 			MessagesBundle.set(localization);
 			TpDao.freeInstance();
 			TpDao.getInstance((Session) em.getDelegate(), ((Session) em.getDelegate()).getSessionFactory().openStatelessSession());
-			Cp.getInstance().getConf().limparCacheSeNecessario();
 			stack.next(method, resourceInstance);
 		} catch (Exception e) {
 			rollbackTransaction();
