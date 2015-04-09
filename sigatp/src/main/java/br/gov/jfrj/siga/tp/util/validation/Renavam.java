@@ -11,5 +11,7 @@ import javax.validation.Constraint;
 @Target(ElementType.FIELD)
 @Constraint(validatedBy=RenavamCheck.class)
 public @interface Renavam {
-
+	String message() default "{renavamCheck.validation}";
+	Class<Object>[] groups() default {};
+	Class<Object>[] payload() default {};
 }

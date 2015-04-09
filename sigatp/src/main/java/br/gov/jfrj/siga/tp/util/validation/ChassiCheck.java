@@ -14,12 +14,10 @@ public class ChassiCheck implements ConstraintValidator<Chassi, String> {
 	
 	@Override
 	public boolean isValid(String value, ConstraintValidatorContext constraintValidatorContext) {
-		if(!validarChassi(value)) {
-			constraintValidatorContext.buildConstraintViolationWithTemplate("Chassi Inválido")
-				.addConstraintViolation();
+		if(value == null) {
 			return false;
 		}
-		return true;
+		return validarChassi(value);
 	}	
 	
 	public Boolean validarChassi(String valor) {

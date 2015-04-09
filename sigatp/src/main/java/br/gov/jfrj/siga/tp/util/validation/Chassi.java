@@ -11,5 +11,7 @@ import javax.validation.Constraint;
 @Target(ElementType.FIELD)
 @Constraint(validatedBy=ChassiCheck.class)
 public @interface Chassi {
-
+	String message() default "{chassiCheck.validation}";
+	Class<Object>[] groups() default {};
+	Class<Object>[] payload() default {};
 }

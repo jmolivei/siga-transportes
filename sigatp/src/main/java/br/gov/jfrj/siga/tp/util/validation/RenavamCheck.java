@@ -14,20 +14,15 @@ public class RenavamCheck implements ConstraintValidator<Renavam, String>{
 
 	@Override
 	public boolean isValid(String value, ConstraintValidatorContext constraintValidatorContext) {
-		String message = "Renavam Inv&aacute;lido.";
+		if(value == null) {
+			return false;
+		}
 		
 		if (!value.matches("^[0-9]{1," + base + "}+$")) {
-			if (value.equals("")) {
-				message = "";
-			}
-			constraintValidatorContext.buildConstraintViolationWithTemplate(message).addConstraintViolation();
 			return false;
 		}
-		if(!validarRenavam(value)) {
-			constraintValidatorContext.buildConstraintViolationWithTemplate(message).addConstraintViolation();
-			return false;
-		}
-		return true;
+		
+		return validarRenavam(value);
 	}
 	
 	public Boolean validarRenavam(String renavam) {
