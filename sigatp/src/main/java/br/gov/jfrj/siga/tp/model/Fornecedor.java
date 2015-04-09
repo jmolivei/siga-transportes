@@ -14,12 +14,11 @@ import javax.persistence.Table;
 
 import org.hibernate.envers.Audited;
 
-import play.data.validation.CheckWith;
 import play.data.validation.Required;
 import play.data.validation.Unique;
 import play.db.jpa.GenericModel;
 import play.modules.br.jus.jfrj.siga.uteis.validadores.upperCase.UpperCase;
-import play.modules.br.jus.jfrj.siga.uteis.validadores.email.EmailCheck;
+import br.gov.jfrj.siga.validation.Email;
 
 @SuppressWarnings("serial")
 @Entity
@@ -50,8 +49,8 @@ public class Fornecedor extends GenericModel implements Comparable<Fornecedor> {
 
 	private String fax;
 
-	@CheckWith(EmailCheck.class)
 	@Unique
+	@Email(nullable=true)
 	private String eMail;
 
 	@UpperCase
