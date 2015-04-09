@@ -1,8 +1,23 @@
-package br.gov.jfrj.siga.tp.validator;
+package br.gov.jfrj.siga.tp.util.validation;
 
-import play.data.validation.Check;
+import javax.validation.ConstraintValidator;
+import javax.validation.ConstraintValidatorContext;
 
-public class CnhCheck extends Check {
+public class CnhCheck implements ConstraintValidator<Cnh, String>{
+	
+	@Override
+	public void initialize(Cnh annotation) {
+	}
+	
+	@Override
+	public boolean isValid(String value, ConstraintValidatorContext constraintValidatorContext) {
+		if(!validarCnh(value)){
+			constraintValidatorContext.buildConstraintViolationWithTemplate("{condutor.CnhCheck.cnhinvalida}")
+				.addConstraintViolation();
+			return false;
+		}
+		return true;
+	}
 	
 	private static String zeros(int quantidade) {
 		String retorno = "00000000000";
@@ -108,9 +123,4 @@ public class CnhCheck extends Check {
 		}
 	}
 
-	@Override
-	public boolean isSatisfied(Object validatedObject, Object value) {
-		this.setMessage("condutor.CnhCheck.cnhinvalida");
-    	return validarCnh(((String) value).toString());	
-    }
 };

@@ -12,22 +12,37 @@ import org.hibernate.envers.Audited;
 import play.data.validation.Required;
 import play.db.jpa.GenericModel;
 
-
 @Entity
-//@Table(name = "COR_2", schema="SIGAOR")
+// @Table(name = "COR_2", schema="SIGAOR")
 @Audited
 @Table(schema = "SIGATP")
-public class Cor extends GenericModel  {
-	
+public class Cor extends GenericModel {
+
 	@Id
-	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "hibernate_sequence_generator") @SequenceGenerator(name = "hibernate_sequence_generator", sequenceName="SIGATP.hibernate_sequence") 
-	public long id;
-	
-	public Cor() {
-		this.nome="";
-	}
+	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "hibernate_sequence_generator")
+	@SequenceGenerator(name = "hibernate_sequence_generator", sequenceName = "SIGATP.hibernate_sequence")
+	private long id;
 
 	@Required
-	public String nome;
+	private String nome;
 
+	public Cor() {
+		this.nome = "";
+	}
+
+	public long getId() {
+		return id;
+	}
+
+	public String getNome() {
+		return nome;
+	}
+
+	public void setId(long id) {
+		this.id = id;
+	}
+
+	public void setNome(String nome) {
+		this.nome = nome;
+	}
 }

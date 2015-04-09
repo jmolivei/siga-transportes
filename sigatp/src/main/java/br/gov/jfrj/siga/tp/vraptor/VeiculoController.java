@@ -5,35 +5,40 @@ import java.util.List;
 
 import javax.persistence.EntityManager;
 import javax.servlet.http.HttpServletRequest;
+import javax.validation.Valid;
 
-import play.data.validation.Validation;
-import play.mvc.Before;
-import play.mvc.Scope.RenderArgs;
 import br.com.caelum.vraptor.Path;
 import br.com.caelum.vraptor.Resource;
 import br.com.caelum.vraptor.Result;
+import br.com.caelum.vraptor.Validator;
 import br.com.caelum.vraptor.core.Localization;
+import br.com.caelum.vraptor.view.Results;
+import br.gov.jfrj.siga.cp.model.DpLotacaoSelecao;
 import br.gov.jfrj.siga.dp.CpOrgaoUsuario;
 import br.gov.jfrj.siga.dp.DpLotacao;
-import br.gov.jfrj.siga.tp.auth.AutorizacaoGI;
 import br.gov.jfrj.siga.tp.auth.annotation.RoleAdmin;
 import br.gov.jfrj.siga.tp.auth.annotation.RoleAdminFrota;
+import br.gov.jfrj.siga.tp.model.CategoriaCNH;
 import br.gov.jfrj.siga.tp.model.Grupo;
 import br.gov.jfrj.siga.tp.model.ItemMenu;
 import br.gov.jfrj.siga.tp.model.LotacaoVeiculo;
+import br.gov.jfrj.siga.tp.model.TipoDeCombustivel;
 import br.gov.jfrj.siga.tp.model.TpDao;
-import br.gov.jfrj.siga.tp.model.TpModel;
 import br.gov.jfrj.siga.tp.model.Veiculo;
 import br.gov.jfrj.siga.tp.util.Combo;
 import br.gov.jfrj.siga.tp.util.MenuMontador;
+import br.gov.jfrj.siga.tp.util.PerguntaSimNao;
+import br.gov.jfrj.siga.tp.util.Situacao;
 import br.gov.jfrj.siga.vraptor.SigaObjects;
+
+import com.google.common.base.Optional;
 
 @Resource
 @Path("/app/veiculos/")
 public class VeiculoController extends TpController {
-
-	public VeiculoController(HttpServletRequest request, Result result, Localization localization, SigaObjects so, AutorizacaoGI dadosAutorizacao, EntityManager em) throws Exception {
-		super(request, result, TpDao.getInstance(), localization, so, dadosAutorizacao, em);
+	
+	public VeiculoController(HttpServletRequest request, Result result, Localization localization, Validator validator, SigaObjects so, EntityManager em) throws Exception {
+		super(request, result, TpDao.getInstance(), localization, validator, so, em);
 	}
 
 	@Path("/listar")
@@ -45,21 +50,8 @@ public class VeiculoController extends TpController {
 	@RoleAdmin
 	@RoleAdminFrota
 	@Path("/salvar")
-	public void salvar(Veiculo veiculo) throws Exception {
-		montarCombos();
-
-		if (veiculoNaoTemLotacaoCadastrada(veiculo) || lotacaoDoVeiculoMudou(veiculo)) {
-			Double odometroAnterior = veiculo.getUltimoOdometroDeLotacao();
-			if (odometroAnterior > veiculo.getOdometroEmKmAtual()) {
-				Validation.addError("odometroEmKmAtual", "veiculo.odometroEmKmAtual.maiorAnterior.validation");
-			}
-			if (veiculo.getOdometroEmKmAtual().equals(new Double(0))) {
-				Validation.addError("odometroEmKmAtual", "veiculo.odometroEmKmAtual.zero.validation");
-			}
-		}
-
-		// TODO: chamar validacao
-		// validation.valid(veiculo);
+	public void salvar(@Valid final Veiculo veiculo) throws Exception {
+		validarAntesDeSalvar(veiculo);
 		redirecionarSeErroAoSalvar(veiculo);
 
 		veiculo.setCpOrgaoUsuario(getTitular().getOrgaoUsuario());
@@ -73,18 +65,16 @@ public class VeiculoController extends TpController {
 			LotacaoVeiculo novalotacao = new LotacaoVeiculo(null, veiculo, veiculo.getLotacaoAtual(), Calendar.getInstance(), null, veiculo.getOdometroEmKmAtual());
 			novalotacao.save();
 		}
-		listar();
+		result.redirectTo(this).listar();
 	}
 
 	@RoleAdmin
 	@RoleAdminFrota
 	@Path("/incluir")
 	public void incluir() throws Exception {
-		Veiculo veiculo = new Veiculo();
-		veiculo.setLotacaoAtual(new DpLotacao());
-		MenuMontador.instance(result).recuperarMenuVeiculos(TpModel.VAZIO, ItemMenu.DADOSCADASTRAIS);
-		montarCombos();
-		// render(veiculo);
+		preencherResultComDadosPadrao(null);
+		result.include("mostrarCampoOdometro", Boolean.FALSE);
+		result.include("veiculo", new Veiculo(new DpLotacao()));
 	}
 
 	@RoleAdmin
@@ -93,10 +83,9 @@ public class VeiculoController extends TpController {
 	public void editar(Long id) throws Exception {
 		Veiculo veiculo = Veiculo.AR.findById(id);
 		veiculo.configurarLotacaoAtual();
-		// veiculo.configurarOdometroParaMudancaDeLotacao();
-		MenuMontador.instance(result).recuperarMenuVeiculos(id, ItemMenu.DADOSCADASTRAIS);
-		montarCombos();
-		// render(veiculo);
+		preencherResultComDadosPadrao(id);
+		result.include("veiculo", veiculo);
+		result.include("mostrarCampoOdometro", Boolean.FALSE);
 	}
 
 	@RoleAdmin
@@ -108,25 +97,34 @@ public class VeiculoController extends TpController {
 		listar();
 	}
 
-	// public void buscarPeloId(Long Id) throws Exception {
-	// Veiculo veiculo = Veiculo.AR.findById(Id);
-	// veiculo.configurarLotacaoAtual();
-	// veiculo.configurarOdometroParaMudancaDeLotacao();
-	// montarCombos();
-	// MenuMontador.instance(result).recuperarMenuVeiculos(Id, ItemMenu.DADOSCADASTRAIS);
-	// renderTemplate("@ler", veiculo);
-	// }
-
-	public void listarAvarias(Long idVeiculo) {
-		// Avarias.montarListaDeAvariasPorVeiculo(idVeiculo);
-		// render("@Avarias.listarPorVeiculo");
+	@Path("/ler/{id}")
+	public void ler(Long id) throws Exception {
+		Veiculo veiculo = Veiculo.AR.findById(id);
+		veiculo.configurarLotacaoAtual();
+		veiculo.configurarOdometroParaMudancaDeLotacao();
+		preencherResultComDadosPadrao(id);
+		result.include("veiculo", veiculo);
 	}
 
-	@Before(priority = 200, only = { "incluir", "editar", "salvar" })
-	private void montarCombos() throws Exception {
+	@Path("/{idVeiculo}/avarias")
+	public void listarAvarias(Long idVeiculo) throws Exception {
+		result.redirectTo(AvariasController.class).listarPorVeiculo(idVeiculo);
+	}
+
+	private void preencherResultComDadosPadrao(Long id) throws Exception {
 		Combo.montar(result, Combo.Cor, Combo.Fornecedor);
+		
 		result.include(Combo.Grupo.getDescricao(), Grupo.listarTodos());
 		result.include("dpLotacoes", buscarDpLotacoes());
+		result.include("situacoes", Situacao.values());
+		result.include("respostasSimNao", PerguntaSimNao.values());
+		result.include("lotacaoSel", new DpLotacaoSelecao());
+		result.include("tiposDeCombustivel", TipoDeCombustivel.values());
+		result.include("categoriasCNH", CategoriaCNH.values());
+
+		MenuMontador
+			.instance(result)
+			.recuperarMenuVeiculos(id, ItemMenu.DADOSCADASTRAIS);
 	}
 
 	private List<DpLotacao> buscarDpLotacoes() {
@@ -146,19 +144,31 @@ public class VeiculoController extends TpController {
 		return (veiculo.getLotacoes().size() > 0) && (!veiculo.getLotacoes().get(0).getLotacao().equivale(veiculo.getLotacaoAtual()));
 	}
 
-	private void redirecionarSeErroAoSalvar(Veiculo veiculo) throws Exception {
-		if (Validation.hasErrors()) {
-			montarCombos();
-			MenuMontador.instance(result).recuperarMenuVeiculos(veiculo.getId(), ItemMenu.DADOSCADASTRAIS);
-			String template = veiculo.getId() > 0 ? "@editar" : "@incluir";
-			if (veiculoNaoTemLotacaoCadastrada(veiculo) || veiculo.getLotacoes().isEmpty() || (!veiculo.getLotacoes().get(0).getLotacao().equivale(veiculo.getLotacaoAtual()))) {
-				RenderArgs.current().put("mostrarCampoOdometro", true);
-			}
-			// renderTemplate(template, veiculo);
+	private void validarAntesDeSalvar(Veiculo veiculo) {
+		if (veiculoNaoTemLotacaoCadastrada(veiculo) || lotacaoDoVeiculoMudou(veiculo)) {
+			final Double odometroAnterior = veiculo.getUltimoOdometroDeLotacao();
+			final Double odometroEmKmAtual = Optional.fromNullable(veiculo.getOdometroEmKmAtual()).or(0D);
+
+			error(odometroAnterior > odometroEmKmAtual, "odometroEmKmAtual", "veiculo.odometroEmKmAtual.maiorAnterior.validation");
+			error(odometroEmKmAtual.equals(new Double(0)), "odometroEmKmAtual", "veiculo.odometroEmKmAtual.maiorAnterior.validation");
 		}
 	}
 
-	// public void emdesenvolvimento() {
-	// render();
-	// }
+	private void redirecionarSeErroAoSalvar(Veiculo veiculo) throws Exception {
+		if (validator.hasErrors()) {
+			preencherResultComDadosPadrao(veiculo.getId());
+			result.include("veiculo", veiculo);
+			result.include("mostrarCampoOdometro", deveMostrarCampoOdometro(veiculo));
+
+			if (veiculo.ehNovo()) {
+				validator.onErrorUse(Results.page()).of(VeiculoController.class).incluir();
+			} else {
+				validator.onErrorUse(Results.page()).of(VeiculoController.class).editar(veiculo.getId());
+			}
+		}
+	}
+
+	private boolean deveMostrarCampoOdometro(Veiculo veiculo) {
+		return veiculoNaoTemLotacaoCadastrada(veiculo) || veiculo.getLotacoes().isEmpty() || (!veiculo.getLotacoes().get(0).getLotacao().equivale(veiculo.getLotacaoAtual()));
+	}
 }

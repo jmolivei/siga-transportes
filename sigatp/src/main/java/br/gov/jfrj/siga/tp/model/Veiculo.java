@@ -20,34 +20,34 @@ import javax.persistence.Query;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.persistence.Transient;
+import javax.validation.constraints.Max;
+import javax.validation.constraints.Min;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 
 import org.hibernate.envers.Audited;
 import org.hibernate.envers.RelationTargetAuditMode;
+import org.hibernate.validator.constraints.NotEmpty;
 
-import play.data.binding.As;
-import play.data.validation.CheckWith;
-import play.data.validation.MaxSize;
-import play.data.validation.MinSize;
-import play.data.validation.Required;
 import play.data.validation.Unique;
 import play.db.jpa.JPA;
 import play.modules.br.jus.jfrj.siga.uteis.validadores.validarAnoData.ValidarAnoData;
+import br.com.caelum.vraptor.Convert;
 import br.gov.jfrj.siga.dp.CpOrgaoUsuario;
 import br.gov.jfrj.siga.dp.DpLotacao;
 import br.gov.jfrj.siga.model.ActiveRecord;
-import br.gov.jfrj.siga.model.Objeto;
-import br.gov.jfrj.siga.tp.binder.DoubleBinder;
+import br.gov.jfrj.siga.tp.binder.DoubleConverter;
 import br.gov.jfrj.siga.tp.util.PerguntaSimNao;
 import br.gov.jfrj.siga.tp.util.Situacao;
-import br.gov.jfrj.siga.tp.validator.ChassiCheck;
-import br.gov.jfrj.siga.tp.validator.RenavamCheck;
+import br.gov.jfrj.siga.tp.util.validation.Chassi;
+import br.gov.jfrj.siga.tp.util.validation.Renavam;
 import br.jus.jfrj.siga.uteis.UpperCase;
 
 @Entity
 // @Table(name = "VEICULO_2", schema="SIGAOR")
 @Audited
 @Table(schema = "SIGATP")
-public class Veiculo extends Objeto implements Comparable<Veiculo> {
+public class Veiculo extends TpModel implements Comparable<Veiculo> {
 
 	private static final long serialVersionUID = -3602265045747814797L;
 	public static ActiveRecord<Veiculo> AR = new ActiveRecord<>(Veiculo.class);
@@ -57,12 +57,13 @@ public class Veiculo extends Objeto implements Comparable<Veiculo> {
 	@SequenceGenerator(name = "hibernate_sequence_generator", sequenceName = "SIGATP.hibernate_sequence")
 	private Long id;
 
-	@Required
-	@MaxSize(value = 8, message = "veiculo.placa.maxSize.")
-	@Unique(message = "veiculo.placa.unique")
+	@NotEmpty
+	@Size(max = 8, message = "{veiculo.placa.maxSize}")
+	@Unique(message = "{veiculo.placa.unique}")
 	@UpperCase
 	private String placa;
 
+	@NotNull
 	@ManyToOne
 	private Grupo grupo;
 
@@ -74,9 +75,9 @@ public class Veiculo extends Objeto implements Comparable<Veiculo> {
 	@Enumerated(EnumType.STRING)
 	private Situacao situacao;
 
-	@Required
+	@NotEmpty
 	@UpperCase
-	@MaxSize(value = 11, message = "veiculo.patrimonio.maxSize")
+	@Size(max = 11, message = "{veiculo.patrimonio.maxSize}")
 	private String patrimonio;
 
 	@OneToMany(orphanRemoval = true, mappedBy = "veiculo")
@@ -88,25 +89,24 @@ public class Veiculo extends Objeto implements Comparable<Veiculo> {
 	private DpLotacao lotacaoAtual;
 
 	@Transient
-	@As(binder = DoubleBinder.class)
-	private Double odometroEmKmAtual;
+	private Double odometroEmKmAtual = 0D;
 
 	@Enumerated(EnumType.STRING)
 	private PerguntaSimNao usoComum;
 
-	@MinSize(value = 4, message = "veiculo.anoFabricacao.minSize")
-	@MaxSize(value = 4, message = "veiculo.anoFabricacao.maxSize")
+	@Max(value = 9999, message = "{veiculo.anoFabricacao.maxSize}")
+	@Min(value = 1000, message = "{veiculo.anoFabricacao.minSize}")
 	private int anoFabricacao;
 
-	@MinSize(value = 4, message = "veiculo.anoModelo.minSize")
-	@MaxSize(value = 4, message = "veiculo.anoModelo.maxSize")
+	@Max(value = 9999, message = "{veiculo.anoModelo.maxSize}")
+	@Min(value = 1000, message = "{veiculo.anoModelo.minSize}")
 	private int anoModelo;
 
-	@Required
+	@NotEmpty
 	@UpperCase
 	private String marca;
 
-	@Required
+	@NotEmpty
 	@UpperCase
 	private String modelo;
 
@@ -139,12 +139,12 @@ public class Veiculo extends Objeto implements Comparable<Veiculo> {
 
 	private String pneuPressaoTraseira;
 
-	@Required
-	@CheckWith(RenavamCheck.class)
+	@org.hibernate.validator.constraints.NotEmpty
+	@Renavam
 	private String renavam;
 
-	@Required
-	@CheckWith(ChassiCheck.class)
+	@NotEmpty
+	@Chassi
 	@UpperCase
 	private String chassi;
 
@@ -192,14 +192,14 @@ public class Veiculo extends Objeto implements Comparable<Veiculo> {
 	@UpperCase
 	private String outros;
 
-	@As(lang = { "*" }, value = { "dd/MM/yyyy" })
+//	@As(lang = { "*" }, value = { "dd/MM/yyyy" })
 	@ValidarAnoData(descricaoCampo = "Data de Aquisicao")
 	private Calendar dataAquisicao;
 
-	@As(binder = DoubleBinder.class)
+	@Convert(DoubleConverter.class)
 	private Double valorAquisicao;
 
-	@As(lang = { "*" }, value = { "dd/MM/yyyy" })
+//	@As(lang = { "*" }, value = { "dd/MM/yyyy" })
 	@ValidarAnoData(descricaoCampo = "Data de Garantia")
 	private Calendar dataGarantia;
 
@@ -208,17 +208,17 @@ public class Veiculo extends Objeto implements Comparable<Veiculo> {
 
 	private String numeroCartaoAbastecimento;
 
-	@As(lang = { "*" }, value = { "dd/MM/yyyy" })
+//	@As(lang = { "*" }, value = { "dd/MM/yyyy" })
 	@ValidarAnoData(descricaoCampo = "Validade do Cartao de Abastecimento")
 	private Calendar validadeCartaoAbastecimento;
 
 	private String numeroCartaoSeguro;
 
-	@As(lang = { "*" }, value = { "dd/MM/yyyy" })
+//	@As(lang = { "*" }, value = { "dd/MM/yyyy" })
 	@ValidarAnoData(intervalo = 10, descricaoCampo = "Validade do Cartao de Seguro")
 	private Calendar validadeCartaoSeguro;
 
-	@As(lang = { "*" }, value = { "dd/MM/yyyy HH:mm" })
+//	@As(lang = { "*" }, value = { "dd/MM/yyyy HH:mm" })
 	@ValidarAnoData(descricaoCampo = "Data de Alienacao")
 	private Calendar dataAlienacao;
 
@@ -297,6 +297,10 @@ public class Veiculo extends Objeto implements Comparable<Veiculo> {
 		this.processoAlienacao = "";
 	}
 
+	public Veiculo(DpLotacao dpLotacao) {
+		this.setLotacaoAtual(dpLotacao);
+	}
+
 	public String getDadosParaExibicao() {
 		return this.marca + " " + this.modelo + " - " + this.placa;
 	}
@@ -328,6 +332,7 @@ public class Veiculo extends Objeto implements Comparable<Veiculo> {
 		return retorno;
 	}
 
+	@SuppressWarnings("unchecked")
 	public static List<Veiculo> listarDisponiveis(String dataSaida, Long idMissao, Long idOrgao) {
 		List<Veiculo> veiculos;
 		String dataFormatadaOracle = "to_date('" + dataSaida + "', 'DD/MM/YYYY HH24:mi')";
@@ -368,6 +373,7 @@ public class Veiculo extends Objeto implements Comparable<Veiculo> {
 		return veiculos;
 	}
 
+	@SuppressWarnings("unchecked")
 	public static List<Veiculo> listarFiltradoPor(CpOrgaoUsuario orgaoUsuario, DpLotacao lotacao) throws Exception {
 
 		List<Veiculo> veiculos;

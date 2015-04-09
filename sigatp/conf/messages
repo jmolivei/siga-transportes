@@ -125,3 +125,5 @@ tpTags.parametrosInvalidos.exception=N\u00FAmero de par\u00E2metros inv\u00E1lid
 tpTags.naoInformados.exception=Par\u00E2metros: texto, parteTextoLink e/ou comando n\u00E3o informados.
 tpTags.comandoNaoInformado.exception=Par\u00E2metro: comando n\u00E3o informado.
 missao.categoriaCNHCondutorErradaParaVeiculo.validation=A categoria da carteira de motorista do condutor n\u00E3o permite conduzir o ve\u00EDculo.
+
+validacao.teste=Teste de valicacao

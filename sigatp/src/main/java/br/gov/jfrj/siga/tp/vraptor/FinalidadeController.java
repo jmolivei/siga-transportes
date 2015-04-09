@@ -11,8 +11,9 @@ import play.data.validation.Validation;
 import br.com.caelum.vraptor.Path;
 import br.com.caelum.vraptor.Resource;
 import br.com.caelum.vraptor.Result;
+import br.com.caelum.vraptor.Validator;
 import br.com.caelum.vraptor.core.Localization;
-import br.gov.jfrj.siga.tp.auth.AutorizacaoGI;
+import br.gov.jfrj.siga.dp.dao.CpDao;
 import br.gov.jfrj.siga.tp.model.FinalidadeRequisicao;
 import br.gov.jfrj.siga.tp.model.TpDao;
 import br.gov.jfrj.siga.vraptor.SigaObjects;
@@ -21,13 +22,13 @@ import br.gov.jfrj.siga.vraptor.SigaObjects;
 @Resource
 public class FinalidadeController extends TpController {
 	
-	public FinalidadeController(HttpServletRequest request, Result result, Localization localization, SigaObjects so, AutorizacaoGI dadosAutorizacao, EntityManager em) throws Exception {
-		super(request, result, TpDao.getInstance(), localization, so, dadosAutorizacao, em);
-	}
-
 	private static final String ACTION = "action";
 	private static final String ACTION_EDITAR = "views.botoes.editar";
 	private static final String ACTION_INCLUIR = "views.botoes.incluir";
+
+	public FinalidadeController(HttpServletRequest request, Result result, CpDao dao, Localization localization, Validator validator, SigaObjects so, EntityManager em) throws Exception {
+		super(request, result, TpDao.getInstance(), localization, validator, so, em);
+	}
 
 	@Path("/app/finalidade/listar")
 	public void listar(String mensagem) {

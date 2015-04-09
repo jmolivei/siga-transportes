@@ -22,21 +22,16 @@ import javax.validation.constraints.NotNull;
 import org.hibernate.envers.Audited;
 import org.hibernate.envers.RelationTargetAuditMode;
 
-
-
-
-
-
-
 import play.data.binding.As;
 import play.data.validation.Min;
 import play.data.validation.Required;
 import play.db.jpa.GenericModel;
 import play.db.jpa.JPA;
 import play.modules.br.jus.jfrj.siga.uteis.validadores.validarAnoData.ValidarAnoData;
+import br.com.caelum.vraptor.Convert;
 import br.gov.jfrj.siga.dp.CpOrgaoUsuario;
 import br.gov.jfrj.siga.dp.DpPessoa;
-import br.gov.jfrj.siga.tp.binder.DoubleBinder;
+import br.gov.jfrj.siga.tp.binder.DoubleConverter;
 import br.gov.jfrj.siga.tp.binder.PriceBinder;
 
 @SuppressWarnings("serial")
@@ -67,15 +62,15 @@ public class Abastecimento extends GenericModel implements Comparable<Abastecime
 	
 	@Required
 	@Min(value=1, message="abastecimento.quantidadeEmLitros.min")
-	@As(binder=DoubleBinder.class)
+	@Convert(DoubleConverter.class)
 	private double quantidadeEmLitros;
 	
 	@Required
-	@As(binder=PriceBinder.class)
+//	@As(binder=PriceBinder.class)
 	private double precoPorLitro;
 	
 	@Required
-	@As(binder=DoubleBinder.class)
+	@Convert(DoubleConverter.class)
 	private double valorTotalDaNotaFiscal;
 	
 	@Required
@@ -95,15 +90,15 @@ public class Abastecimento extends GenericModel implements Comparable<Abastecime
 	private NivelDeCombustivel nivelDeCombustivel;
 	
 	@Required
-	@As(binder=DoubleBinder.class)
+	@Convert(DoubleConverter.class)
 	private double odometroEmKm;
 	
 	@Required
-	@As(binder=DoubleBinder.class)
+	@Convert(DoubleConverter.class)
 	private double distanciaPercorridaEmKm;
 	
 	@Required
-	@As(binder=DoubleBinder.class)
+	@Convert(DoubleConverter.class)
 	private double consumoMedioEmKmPorLitro;
 	
  	@Audited(targetAuditMode = RelationTargetAuditMode.NOT_AUDITED)
@@ -379,6 +374,6 @@ public class Abastecimento extends GenericModel implements Comparable<Abastecime
 
 	public String getDadosParaExibicao() {
 		SimpleDateFormat dataFormatada = new SimpleDateFormat("dd-MM-yyyy HH:mm");
-		return dataFormatada.format(this.dataHora.getTime()) + " - " + this.fornecedor.razaoSocial;
+		return dataFormatada.format(this.dataHora.getTime()) + " - " + this.fornecedor.getRazaoSocial();
 	}
 }

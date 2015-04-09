@@ -10,7 +10,7 @@ import play.mvc.With;
 import br.gov.jfrj.siga.cp.CpComplexo;
 import br.gov.jfrj.siga.dp.CpOrgaoUsuario;
 import br.gov.jfrj.siga.tp.auth.annotation.RoleAdmin;
-import br.gov.jfrj.siga.tp.model.CpRepository;
+import br.gov.jfrj.siga.tp.model.TpDao;
 import br.gov.jfrj.siga.tp.model.Parametro;
 
 @With(AutorizacaoGIAntigo.class)
@@ -49,8 +49,8 @@ public class Parametros extends Controller {
 	}
 
 	private static void carregarDadosPerifericos() {
-		List<CpOrgaoUsuario> cpOrgaoUsuarios = CpRepository.findAll(CpOrgaoUsuario.class);
-		List<CpComplexo> cpComplexos = CpRepository.findAll(CpComplexo.class);
+		List<CpOrgaoUsuario> cpOrgaoUsuarios = TpDao.findAll(CpOrgaoUsuario.class);
+		List<CpComplexo> cpComplexos = TpDao.findAll(CpComplexo.class);
 		RenderArgs.current().put("cpOrgaoUsuarios", cpOrgaoUsuarios);
 		RenderArgs.current().put("cpComplexos", cpComplexos);
 	}

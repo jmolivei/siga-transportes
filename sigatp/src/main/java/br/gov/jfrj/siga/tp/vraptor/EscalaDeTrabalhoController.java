@@ -14,8 +14,9 @@ import play.data.validation.Validation;
 import br.com.caelum.vraptor.Path;
 import br.com.caelum.vraptor.Resource;
 import br.com.caelum.vraptor.Result;
+import br.com.caelum.vraptor.Validator;
 import br.com.caelum.vraptor.core.Localization;
-import br.gov.jfrj.siga.tp.auth.AutorizacaoGI;
+import br.gov.jfrj.siga.dp.dao.CpDao;
 import br.gov.jfrj.siga.tp.auth.annotation.RoleAdmin;
 import br.gov.jfrj.siga.tp.auth.annotation.RoleAdminMissao;
 import br.gov.jfrj.siga.tp.auth.annotation.RoleAdminMissaoComplexo;
@@ -32,8 +33,8 @@ import br.gov.jfrj.siga.vraptor.SigaObjects;
 @Resource
 public class EscalaDeTrabalhoController extends TpController {
 
-	public EscalaDeTrabalhoController(HttpServletRequest request, Result result, Localization localization, SigaObjects so, AutorizacaoGI dadosAutorizacao, EntityManager em) throws Exception {
-		super(request, result, TpDao.getInstance(), localization, so, dadosAutorizacao, em);
+	public EscalaDeTrabalhoController(HttpServletRequest request, Result result, CpDao dao, Localization localization, Validator validator, SigaObjects so, EntityManager em) throws Exception {
+		super(request, result, TpDao.getInstance(), localization, validator, so, em);
 	}
 
 	@Path("/app/escalaDeTrabalho/listar")
@@ -91,9 +92,9 @@ public class EscalaDeTrabalhoController extends TpController {
 		listarPorCondutor(escala.getCondutor().getId());
 	}
     
-//	@RoleAdmin
-//	@RoleAdminMissao
-//	@RoleAdminMissaoComplexo
+	@RoleAdmin
+	@RoleAdminMissao
+	@RoleAdminMissaoComplexo
 	@Path("/app/escalaDeTrabalho/salvar")
 	public void salvar(EscalaDeTrabalho escala, EscalaDeTrabalho novaEscala) throws Exception {
 		

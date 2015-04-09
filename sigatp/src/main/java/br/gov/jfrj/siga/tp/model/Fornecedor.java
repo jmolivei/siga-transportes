@@ -25,70 +25,65 @@ import play.modules.br.jus.jfrj.siga.uteis.validadores.email.EmailCheck;
 @Entity
 @Audited
 @Table(schema = "SIGATP")
-public class Fornecedor extends GenericModel implements Comparable<Fornecedor>{
-	
+public class Fornecedor extends GenericModel implements Comparable<Fornecedor> {
+
 	@Id
-	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "hibernate_sequence_generator") @SequenceGenerator(name = "hibernate_sequence_generator", sequenceName="SIGATP.hibernate_sequence") 
-	public long id;
-	
+	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "hibernate_sequence_generator")
+	@SequenceGenerator(name = "hibernate_sequence_generator", sequenceName = "SIGATP.hibernate_sequence")
+	private long id;
+
 	@Enumerated(EnumType.STRING)
-	public RamoDeAtividade ramoDeAtividade;
-	
+	private RamoDeAtividade ramoDeAtividade;
+
 	@Required
-	@Unique(message="fornecedor.cnpj.unique")
-	public String cnpj;
-	
+	@Unique(message = "fornecedor.cnpj.unique")
+	private String cnpj;
+
 	@Required
 	@UpperCase
-	public String razaoSocial;
-	
-	@UpperCase
-	public String nomeContato;
-	
-	public String telefone;
-	
-	public String fax;
-	
-	@CheckWith(EmailCheck.class)
-	@Unique
-	public String eMail;
-	
-	@UpperCase
-	public String logradouro;
+	private String razaoSocial;
 
 	@UpperCase
-	public String complemento;
-	
-	public String cep;
-	
+	private String nomeContato;
+
+	private String telefone;
+
+	private String fax;
+
+	@CheckWith(EmailCheck.class)
+	@Unique
+	private String eMail;
+
 	@UpperCase
-	public String bairro;
-	
+	private String logradouro;
+
 	@UpperCase
-	public String localidade;
-	
+	private String complemento;
+
+	private String cep;
+
 	@UpperCase
-	public String uf;
-	
-	public String enderecoVirtual;
-	
-	
+	private String bairro;
+
+	@UpperCase
+	private String localidade;
+
+	@UpperCase
+	private String uf;
+
+	private String enderecoVirtual;
+
 	public String getRazaoSocialECNPJ() {
 		return this.razaoSocial + " - " + this.cnpj;
 	}
 
-	
-	public Fornecedor(){
+	public Fornecedor() {
 		this.id = new Long(0);
 		this.ramoDeAtividade = RamoDeAtividade.COMBUSTIVEL;
 	}
 
-	
-	public Fornecedor(long id, RamoDeAtividade ramoDeAtividade, String cnpj,
-			String razaoSocial, String nomeContato, String telefone,
-			String fax, String eMail, String logradouro, String complemento,
-			String cep, String bairro, String cidade, String localidade, String uf,
-			String enderecoVirtual) {
+	public Fornecedor(long id, RamoDeAtividade ramoDeAtividade, String cnpj, String razaoSocial, String nomeContato, String telefone, String fax, String eMail, String logradouro, String complemento,
+			String cep, String bairro, String cidade, String localidade, String uf, String enderecoVirtual) {
 		super();
 		this.id = id;
 		this.ramoDeAtividade = ramoDeAtividade;
@@ -112,13 +107,13 @@ public class Fornecedor extends GenericModel implements Comparable<Fornecedor>{
 		return this.razaoSocial.compareTo(o.razaoSocial);
 	}
 
-	public static List<Fornecedor> buscarTodosPorUF(String uf){
+	public static List<Fornecedor> buscarTodosPorUF(String uf) {
 		List<Fornecedor> fornecedores = Fornecedor.find("uf", uf).fetch();
 		Collections.sort(fornecedores);
 		return fornecedores;
 	}
 
-	public static List<Fornecedor> buscarTodosPorCep(String cep){
+	public static List<Fornecedor> buscarTodosPorCep(String cep) {
 		List<Fornecedor> fornecedores = Fornecedor.find("cep", cep).fetch();
 		Collections.sort(fornecedores);
 		return fornecedores;
@@ -128,5 +123,125 @@ public class Fornecedor extends GenericModel implements Comparable<Fornecedor>{
 		List<Fornecedor> fornecedores = Fornecedor.findAll();
 		Collections.sort(fornecedores);
 		return fornecedores;
+	}
+
+	public long getId() {
+		return id;
+	}
+
+	public void setId(long id) {
+		this.id = id;
+	}
+
+	public RamoDeAtividade getRamoDeAtividade() {
+		return ramoDeAtividade;
+	}
+
+	public void setRamoDeAtividade(RamoDeAtividade ramoDeAtividade) {
+		this.ramoDeAtividade = ramoDeAtividade;
+	}
+
+	public String getCnpj() {
+		return cnpj;
+	}
+
+	public void setCnpj(String cnpj) {
+		this.cnpj = cnpj;
+	}
+
+	public String getRazaoSocial() {
+		return razaoSocial;
+	}
+
+	public void setRazaoSocial(String razaoSocial) {
+		this.razaoSocial = razaoSocial;
+	}
+
+	public String getNomeContato() {
+		return nomeContato;
+	}
+
+	public void setNomeContato(String nomeContato) {
+		this.nomeContato = nomeContato;
+	}
+
+	public String getTelefone() {
+		return telefone;
+	}
+
+	public void setTelefone(String telefone) {
+		this.telefone = telefone;
+	}
+
+	public String getFax() {
+		return fax;
+	}
+
+	public void setFax(String fax) {
+		this.fax = fax;
+	}
+
+	public String geteMail() {
+		return eMail;
+	}
+
+	public void seteMail(String eMail) {
+		this.eMail = eMail;
+	}
+
+	public String getLogradouro() {
+		return logradouro;
+	}
+
+	public void setLogradouro(String logradouro) {
+		this.logradouro = logradouro;
+	}
+
+	public String getComplemento() {
+		return complemento;
+	}
+
+	public void setComplemento(String complemento) {
+		this.complemento = complemento;
+	}
+
+	public String getCep() {
+		return cep;
+	}
+
+	public void setCep(String cep) {
+		this.cep = cep;
+	}
+
+	public String getBairro() {
+		return bairro;
+	}
+
+	public void setBairro(String bairro) {
+		this.bairro = bairro;
+	}
+
+	public String getLocalidade() {
+		return localidade;
+	}
+
+	public void setLocalidade(String localidade) {
+		this.localidade = localidade;
+	}
+
+	public String getUf() {
+		return uf;
+	}
+
+	public void setUf(String uf) {
+		this.uf = uf;
+	}
+
+	public String getEnderecoVirtual() {
+		return enderecoVirtual;
+	}
+
+	public void setEnderecoVirtual(String enderecoVirtual) {
+		this.enderecoVirtual = enderecoVirtual;
 	}
 }

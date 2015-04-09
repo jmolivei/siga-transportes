@@ -23,14 +23,12 @@
     #{/if}
     
     #{if error.key.contains('LinkGenericoErro')}
-		#{tp.tags.erroGenericolink error.message(),
-		      			   comando: '<a href="#" onclick="javascript:window.history.back();">Voltar</a>'}
+		#{tp.tags.erroGenericolink error.message(), comando: '<a href="#" onclick="javascript:window.history.back();">Voltar</a>'}
 		#{/tp.tags.erroGenericolink} 
     #{/if}
             
     #{if error.message() != 'Validation failed' && error.message() != 'Required'  && !error.key.contains('LinkErro') && !error.key.contains('LinkGenericoErro')}
  		  <li>${error.raw()}</li>
- <!--     <li>${error.raw()} Campo ${error.getKey()}</li> -->
     #{/if}
     #{/errors}
     </div>

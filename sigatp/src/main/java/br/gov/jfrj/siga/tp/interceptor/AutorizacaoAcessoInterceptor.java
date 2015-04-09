@@ -3,7 +3,6 @@ package br.gov.jfrj.siga.tp.interceptor;
 import br.com.caelum.vraptor.InterceptionException;
 import br.com.caelum.vraptor.Intercepts;
 import br.com.caelum.vraptor.core.InterceptorStack;
-import br.com.caelum.vraptor.interceptor.ExecuteMethodInterceptor;
 import br.com.caelum.vraptor.interceptor.Interceptor;
 import br.com.caelum.vraptor.ioc.RequestScoped;
 import br.com.caelum.vraptor.resource.ResourceMethod;
@@ -18,14 +17,16 @@ import br.gov.jfrj.siga.tp.auth.annotation.RoleAprovador;
 import br.gov.jfrj.siga.tp.auth.annotation.RoleGabinete;
 
 /**
- * Interceptor responsavel por verificar se o usuario tem permissao para acessar determinada URL (metodo) do controller. Verifica se o metodo possui alguma das anotacoes de validacao, caso possua, o
- * sistema executa a regra de verificacao da permissao. Se o usuario nao possui acesso, o sistema lanca excecao informando o acesso negado.
+ * Interceptor responsavel por verificar se o usuario tem permissao para acessar determinada URL (metodo) do controller. 
+ * Verifica se o metodo possui alguma das anotacoes de validacao, caso possua, osistema executa a regra de verificacao 
+ * da permissao. Se o usuario nao possui acesso, o sistema lanca excecao informando 
+ * o acesso negado.
  * 
  * @author db1
  *
  */
 @RequestScoped
-@Intercepts(after = { PreencherDadosAutorizacaoInterceptor.class }, before = ExecuteMethodInterceptor.class)
+@Intercepts(after = { PreencherDadosAutorizacaoInterceptor.class }, before = MotivoLogInterceptor.class)
 public class AutorizacaoAcessoInterceptor implements Interceptor {
 
 	private AutorizacaoGI autorizacaoGI;
@@ -78,7 +79,7 @@ public class AutorizacaoAcessoInterceptor implements Interceptor {
 					&& !dados.isGabineteAnnotation() 
 					&& !dados.isAprovadorAnnotation() 
 					&& !dados.isAgenteAnnotation()
-					&& !dados.isAdminGabineteAnnotation() 
+					&& !dados.isAdminGabineteAnnotation()
 					&& !dados.isAdmFrotaAnnotation() 
 					&& !dados.isAdmMissaoComplexoAnnotation()) {
 				throw new Exception("admMissaoAnnotation.exception");
@@ -133,7 +134,7 @@ public class AutorizacaoAcessoInterceptor implements Interceptor {
 					&& !dados.isAdminGabineteAnnotation() 
 					&& !dados.isAgenteAnnotation()
 					&& !dados.isAdmFrotaAnnotation() 
-					&& !dados.isAdmMissaoAnnotation()
+					&& !dados.isAdmMissaoAnnotation() 
 					&& !dados.isAdmMissaoComplexoAnnotation()) {
 				throw new Exception("gabineteAnnotation.exception");
 			}

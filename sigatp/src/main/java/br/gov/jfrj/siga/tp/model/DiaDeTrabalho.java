@@ -17,11 +17,9 @@ import javax.validation.constraints.NotNull;
 
 import org.hibernate.envers.Audited;
 
-import play.data.binding.As;
 import play.data.validation.Required;
 import play.i18n.Messages;
 import br.gov.jfrj.siga.model.ActiveRecord;
-import br.gov.jfrj.siga.tp.binder.HourMinuteBinder;
 
 @Entity
 @Audited
@@ -39,15 +37,15 @@ public class DiaDeTrabalho extends TpModel implements Comparable<DiaDeTrabalho> 
 	private DiaDaSemana diaEntrada;
 	
 	@Required
-	@As(binder=HourMinuteBinder.class)
-	private Calendar horaEntrada;
+//	@As(binder=HourMinuteBinder.class)
+	public Calendar horaEntrada;
 	
 	@Enumerated(EnumType.STRING)
 	private DiaDaSemana diaSaida;
 	
 	@Required
-	@As(binder=HourMinuteBinder.class)
-	private Calendar horaSaida;
+//	@As(binder=HourMinuteBinder.class)
+	public Calendar horaSaida;
 	
 	@NotNull
 	@ManyToOne

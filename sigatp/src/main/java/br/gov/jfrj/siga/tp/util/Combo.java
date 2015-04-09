@@ -3,15 +3,16 @@ package br.gov.jfrj.siga.tp.util;
 import java.lang.reflect.Method;
 
 import br.com.caelum.vraptor.Result;
+import br.gov.jfrj.siga.model.ActiveRecord;
 
 public enum Combo {
 
-	Cor("cores","models"), 
-	Grupo("grupos","models"), 
+	Cor("cores","br.gov.jfrj.siga.tp.model"), 
+	Grupo("grupos","br.gov.jfrj.siga.tp.model"), 
 	DpLotacao("dpLotacoes","br.gov.jfrj.siga.dp"), 
-	CategoriaCNH("categoriasCNH","models"),
-	Fornecedor("fornecedores","models"), 
-	Veiculo("veiculos","models");
+	CategoriaCNH("categoriasCNH","br.gov.jfrj.siga.tp.model"),
+	Fornecedor("fornecedores","br.gov.jfrj.siga.tp.model"), 
+	Veiculo("veiculos","br.gov.jfrj.siga.tp.model");
 	
 	private String descricao;
 	private String pacote;
@@ -58,12 +59,13 @@ public enum Combo {
 	 * @return
 	 * @throws Exception 
 	 */
+	@SuppressWarnings({ "rawtypes", "unchecked" })
 	public static Result montar(Result result, Combo... args) throws Exception {
 		// TODO: Refatorar esse metodo para utilizar o AR.
 		for (Combo combo : args) {
 			Class<?> nomeDaClasse = Class.forName(combo.nomeCompletoDaClasse());
-			Method metodo = nomeDaClasse.getDeclaredMethod("findAll");
-			result.include(combo.getDescricao(), metodo.invoke(null));
+			ActiveRecord<?> activeRecord = new ActiveRecord(nomeDaClasse);
+			result.include(combo.getDescricao(), activeRecord.findAll());
 		}
 		return result;
 	}

@@ -180,7 +180,7 @@ public class ServicoVeiculo extends GenericModel implements Comparable<ServicoVe
 			throw new Exception(Messages.get("servicoVeiculo.sequence.exception", sequence));
 		}
 		
-		CpOrgaoUsuario cpOrgaoUsuario = CpRepository.find(CpOrgaoUsuario.class, "acronimoOrgaoUsu",partesDoCodigo[0]).first();
+		CpOrgaoUsuario cpOrgaoUsuario = CpOrgaoUsuario.AR.find("acronimoOrgaoUsu",partesDoCodigo[0]).first();
 		Integer ano = new Integer(Integer.parseInt(partesDoCodigo[2]));
 		Long numero = new Long(Integer.parseInt(partesDoCodigo[3]));
 		

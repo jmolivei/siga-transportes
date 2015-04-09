@@ -55,7 +55,7 @@ public class EscalaDeTrabalho extends TpModel {
 	@OneToMany(mappedBy="escalaDeTrabalho")
  	private List<DiaDeTrabalho> diasDeTrabalho;
 	
-	public long getId() {
+	public Long getId() {
 		return id;
 	}
 
