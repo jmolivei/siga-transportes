@@ -10,7 +10,9 @@
 	<div class="gt-bd clearfix">
 		<div class="gt-content clearfix">
 			<h2>Lista de Autos de Infra&ccedil;&atilde;o</h2>
-
+			
+			<sigatp:erros></sigatp:erros>
+			
 			<c:if test="${autosDeInfracao.size() > 0}">
 				<div class="gt-content-box gt-for-table">
 					<table id="htmlgrid" class="gt-table">

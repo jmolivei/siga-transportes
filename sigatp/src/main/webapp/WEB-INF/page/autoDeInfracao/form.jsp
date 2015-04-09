@@ -2,8 +2,10 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <%@ taglib uri="http://localhost/jeetags" prefix="siga"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt"%>
+<%@ taglib prefix="sigatp" tagdir="/WEB-INF/tags/" %>
 
 <jsp:include page="../tags/calendario.jsp" />
+<sigatp:erros/>
 
 <script>
 function verificaCampos(){
@@ -40,7 +42,7 @@ function verificaCampos(){
 	<div class="gt-content-box gt-form clearfix">
 		<div class="coluna margemDireitaG">
 	       	<label for="autoDeInfracao.dataHora" class= "obrigatorio">Data e Hora</label>
-			<input type="text" id="dataHora" name="autoDeInfracao.dataHora" size="16" class="dataHora" value="<fmt:formatDate pattern="dd/MM/yyyy" value="${autoDeInfracao.dataHora}"/>"/> 
+			<input type="text" id="dataHora" name="autoDeInfracao.dataHora" size="16" class="dataHora" value="<fmt:formatDate pattern="dd/MM/yyyy HH:mm" value="${autoDeInfracao.dataHora.time}"/>"/> 
 			<label for="autoDeInfracao.veiculo.id" class= "obrigatorio">Ve&iacute;culo</label>
 	       	<select name="autoDeInfracao.veiculo.id">
 	       		<c:forEach items="${veiculos}" var="veiculo">
@@ -91,13 +93,13 @@ function verificaCampos(){
 			<label for="autoDeInfracao.numeroDoProcesso">N&uacute;mero do Processo</label>
 			<input type="text" id="numeroDoProcesso" name="autoDeInfracao.numeroDoProcesso" value="${autoDeInfracao.numeroDoProcesso}" />			
 			<label for="autoDeInfracao.dataDeVencimento" class= "obrigatorio">Vencimento</label>
-			<input type="text" id="dataDeVencimento" name="autoDeInfracao.dataDeVencimento" size="8" value="<fmt:formatDate pattern="dd/MM/yyyy" value="${autoDeInfracao.dataDeVencimento}"/>" class="datePicker"/>
+			<input type="text" id="dataDeVencimento" name="autoDeInfracao.dataDeVencimento" size="8" value="<fmt:formatDate pattern="dd/MM/yyyy" value="${autoDeInfracao.dataDeVencimento.time}"/>" class="datePicker"/>
 			<label for="autoDeInfracao.valor" class= "obrigatorio">Valor</label>
 			<input type="text" id="valor" name="autoDeInfracao.valor" value="${autoDeInfracao.valor}" class="decimal"/>
 			<label for="autoDeInfracao.valorComDesconto">Valor c/ Desconto</label>
 			<input type="text" name="autoDeInfracao.valorComDesconto" value="${autoDeInfracao.valorComDesconto}" class="decimal"/>
 			<label for="autoDeInfracao.dataDePagamento">Pagamento</label>
-			<input type="text" name="autoDeInfracao.dataDePagamento" size="8" value="<fmt:formatDate pattern="dd/MM/yyyy" value="${autoDeInfracao.dataDePagamento}"/>" class="datePicker"/>
+			<input type="text" name="autoDeInfracao.dataDePagamento" size="8" value="<fmt:formatDate pattern="dd/MM/yyyy" value="${autoDeInfracao.dataDePagamento.time}"/>" class="datePicker"/>
 		
 			<input type="hidden" name="autoDeInfracao.id" value="${autoDeInfracao.id}"/>
 		</div>
@@ -105,6 +107,6 @@ function verificaCampos(){
 	<span class="alerta menor"><fmt:message key="views.erro.preenchimentoObrigatorio"/></span>
 	<div class="gt-table-buttons">
 		<input type="submit" value="<fmt:message key="views.botoes.salvar"/>" class="gt-btn-medium gt-btn-left" />
-		<input type="button" value="<fmt:message key="views.botoes.cancelar"/>" class="gt-btn-medium gt-btn-left" onClick="javascript:window.location='${linkTo[AutoDeInfracaoController].listar}" />
+		<input type="button" value="<fmt:message key="views.botoes.cancelar"/>" class="gt-btn-medium gt-btn-left" onClick="javascript:window.location='${linkTo[AutoDeInfracaoController].listar}'" />
 	</div>
 </form>
