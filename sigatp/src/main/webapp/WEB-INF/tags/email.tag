@@ -18,4 +18,4 @@ $(document).ready(function() {
 		};		
 	});
 });
-</script>ipt>
+</script>

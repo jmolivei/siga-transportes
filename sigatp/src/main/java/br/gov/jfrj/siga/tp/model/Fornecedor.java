@@ -18,18 +18,22 @@ import play.data.validation.Required;
 import play.data.validation.Unique;
 import play.db.jpa.GenericModel;
 import play.modules.br.jus.jfrj.siga.uteis.validadores.upperCase.UpperCase;
-import br.gov.jfrj.siga.validation.Email;
+import br.gov.jfrj.siga.model.ActiveRecord;
+//import br.gov.jfrj.siga.validation.Email;
 
 @SuppressWarnings("serial")
 @Entity
 @Audited
 @Table(schema = "SIGATP")
-public class Fornecedor extends GenericModel implements Comparable<Fornecedor> {
+public class Fornecedor extends TpModel implements Comparable<Fornecedor> {
 
+	public static ActiveRecord<Fornecedor> AR = new ActiveRecord<>(
+			Fornecedor.class);
+	
 	@Id
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "hibernate_sequence_generator")
 	@SequenceGenerator(name = "hibernate_sequence_generator", sequenceName = "SIGATP.hibernate_sequence")
-	private long id;
+	private Long id;
 
 	@Enumerated(EnumType.STRING)
 	private RamoDeAtividade ramoDeAtividade;
@@ -50,7 +54,7 @@ public class Fornecedor extends GenericModel implements Comparable<Fornecedor> {
 	private String fax;
 
 	@Unique
-	@Email(nullable=true)
+//	@Email(nullable=true)
 	private String eMail;
 
 	@UpperCase
@@ -107,24 +111,25 @@ public class Fornecedor extends GenericModel implements Comparable<Fornecedor> {
 	}
 
 	public static List<Fornecedor> buscarTodosPorUF(String uf) {
-		List<Fornecedor> fornecedores = Fornecedor.find("uf", uf).fetch();
+		List<Fornecedor> fornecedores = Fornecedor.AR.find("uf", uf).fetch();
 		Collections.sort(fornecedores);
 		return fornecedores;
 	}
 
 	public static List<Fornecedor> buscarTodosPorCep(String cep) {
-		List<Fornecedor> fornecedores = Fornecedor.find("cep", cep).fetch();
+		List<Fornecedor> fornecedores = Fornecedor.AR.find("cep", cep).fetch();
 		Collections.sort(fornecedores);
 		return fornecedores;
 	}
 
+	@SuppressWarnings("unchecked")
 	public static List<Fornecedor> listarTodos() {
-		List<Fornecedor> fornecedores = Fornecedor.findAll();
+		List<Fornecedor> fornecedores = Fornecedor.AR.findAll();
 		Collections.sort(fornecedores);
 		return fornecedores;
 	}
 
-	public long getId() {
+	public Long getId() {
 		return id;
 	}
 
@@ -132,6 +137,10 @@ public class Fornecedor extends GenericModel implements Comparable<Fornecedor> {
 		this.id = id;
 	}
 
+	public String getRamoAtividadeDescricao() {
+		return ramoDeAtividade.getDescricao();
+	}
+	
 	public RamoDeAtividade getRamoDeAtividade() {
 		return ramoDeAtividade;
 	}
