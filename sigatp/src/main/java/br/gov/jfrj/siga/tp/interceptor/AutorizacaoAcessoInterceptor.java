@@ -26,7 +26,7 @@ import br.gov.jfrj.siga.tp.auth.annotation.RoleGabinete;
  *
  */
 @RequestScoped
-@Intercepts(after = { PreencherDadosAutorizacaoInterceptor.class }, before = MotivoLogInterceptor.class)
+@Intercepts(after = { PreencherAutorizacaoGIInterceptor.class }, before = MotivoLogInterceptor.class)
 public class AutorizacaoAcessoInterceptor implements Interceptor {
 
 	private AutorizacaoGI autorizacaoGI;

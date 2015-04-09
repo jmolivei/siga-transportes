@@ -15,9 +15,7 @@ import play.data.validation.Required;
 import play.data.validation.Unique;
 import play.db.jpa.GenericModel;
 import play.modules.br.jus.jfrj.siga.uteis.validadores.upperCase.UpperCase;
-import br.com.caelum.vraptor.Convert;
 import br.gov.jfrj.siga.dp.CpOrgaoUsuario;
-import br.gov.jfrj.siga.tp.binder.DoubleConverter;
 
 @SuppressWarnings("serial")
 @Entity
@@ -44,7 +42,6 @@ public class Penalidade extends GenericModel {
 	public String artigoCTB;
 	
 	@Required
-	@Convert(DoubleConverter.class)
 	public double valor;
 	
 	@Required

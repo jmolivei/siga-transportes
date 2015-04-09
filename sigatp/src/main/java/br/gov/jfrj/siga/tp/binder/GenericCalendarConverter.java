@@ -20,7 +20,6 @@ public class GenericCalendarConverter implements Converter<Calendar> {
 	private static final String[] PADROES = { 
 		"dd/MM/yyyy", 
 		DD_MM_YYYY_HH_MM
-
 	};
 
 	@Override

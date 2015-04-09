@@ -5,8 +5,6 @@ import javax.validation.ConstraintValidatorContext;
 
 import org.apache.commons.lang.StringUtils;
 
-import br.gov.jfrj.siga.tp.util.MessagesBundle;
-
 public class RenavamCheck implements ConstraintValidator<Renavam, String> {
 	int base = 11;
 
@@ -16,22 +14,15 @@ public class RenavamCheck implements ConstraintValidator<Renavam, String> {
 
 	@Override
 	public boolean isValid(String value, ConstraintValidatorContext constraintValidatorContext) {
-		if (value != null) {
-			String message = MessagesBundle.getMessage("renavamCheck.validation");
-
-			if (!value.matches("^[0-9]{1," + base + "}+$")) {
-				if (value.equals("")) {
-					message = "";
-				}
-				constraintValidatorContext.buildConstraintViolationWithTemplate(message).addConstraintViolation();
-				return false;
-			}
-			if (!validarRenavam(value)) {
-				constraintValidatorContext.buildConstraintViolationWithTemplate(message).addConstraintViolation();
-				return false;
-			}
+		if(value == null) {
+			return false;
 		}
-		return true;
+		
+		if (!value.matches("^[0-9]{1," + base + "}+$")) {
+			return false;
+		}
+		
+		return validarRenavam(value);
 	}
 
 	public Boolean validarRenavam(String renavam) {

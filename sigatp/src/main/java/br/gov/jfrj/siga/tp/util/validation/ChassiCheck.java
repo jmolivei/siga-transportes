@@ -6,8 +6,6 @@ import java.util.regex.Pattern;
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
 
-import br.gov.jfrj.siga.tp.util.MessagesBundle;
-
 public class ChassiCheck implements ConstraintValidator<Chassi, String> {
 
 	@Override
@@ -16,13 +14,12 @@ public class ChassiCheck implements ConstraintValidator<Chassi, String> {
 
 	@Override
 	public boolean isValid(String value, ConstraintValidatorContext constraintValidatorContext) {
-		if (value != null && !validarChassi(value)) {
-			constraintValidatorContext.buildConstraintViolationWithTemplate(MessagesBundle.getMessage("chassi.validation")).addConstraintViolation();
+		if(value == null) {
 			return false;
 		}
-		return true;
-	}
-
+		return validarChassi(value);
+	}	
+	
 	public Boolean validarChassi(String valor) {
 		/*
 		 * Criticar o chassi sempre que: 1 - Possuir o número "0" (ZERO) como 1º dígito. 2 - Possuir espaço no chassi 3 - Se, a partir do 4º dígito, houver uma repetição consecutiva, por mais de seis

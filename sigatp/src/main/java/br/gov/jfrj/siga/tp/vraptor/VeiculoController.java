@@ -36,7 +36,7 @@ import com.google.common.base.Optional;
 @Resource
 @Path("/app/veiculos/")
 public class VeiculoController extends TpController {
-	
+
 	public VeiculoController(HttpServletRequest request, Result result, Localization localization, Validator validator, SigaObjects so, EntityManager em) throws Exception {
 		super(request, result, TpDao.getInstance(), localization, validator, so, em);
 	}
@@ -72,20 +72,27 @@ public class VeiculoController extends TpController {
 	@RoleAdminFrota
 	@Path("/incluir")
 	public void incluir() throws Exception {
-		preencherResultComDadosPadrao(null);
-		result.include("mostrarCampoOdometro", Boolean.FALSE);
-		result.include("veiculo", new Veiculo(new DpLotacao()));
+		result.forwardTo(this).editar(null);
 	}
 
 	@RoleAdmin
 	@RoleAdminFrota
 	@Path("/editar/{id}")
 	public void editar(Long id) throws Exception {
-		Veiculo veiculo = Veiculo.AR.findById(id);
-		veiculo.configurarLotacaoAtual();
+		Veiculo veiculo = obterVeiculo(id);
 		preencherResultComDadosPadrao(id);
 		result.include("veiculo", veiculo);
 		result.include("mostrarCampoOdometro", Boolean.FALSE);
+
+	}
+
+	private Veiculo obterVeiculo(Long id) throws Exception {
+		if (id != null) {
+			Veiculo veiculo = Veiculo.AR.findById(id);
+			veiculo.configurarLotacaoAtual();
+			return veiculo;
+		}
+		return new Veiculo(new DpLotacao());
 	}
 
 	@RoleAdmin
@@ -99,8 +106,7 @@ public class VeiculoController extends TpController {
 
 	@Path("/ler/{id}")
 	public void ler(Long id) throws Exception {
-		Veiculo veiculo = Veiculo.AR.findById(id);
-		veiculo.configurarLotacaoAtual();
+		Veiculo veiculo = obterVeiculo(id);
 		veiculo.configurarOdometroParaMudancaDeLotacao();
 		preencherResultComDadosPadrao(id);
 		result.include("veiculo", veiculo);
@@ -113,7 +119,7 @@ public class VeiculoController extends TpController {
 
 	private void preencherResultComDadosPadrao(Long id) throws Exception {
 		Combo.montar(result, Combo.Cor, Combo.Fornecedor);
-		
+
 		result.include(Combo.Grupo.getDescricao(), Grupo.listarTodos());
 		result.include("dpLotacoes", buscarDpLotacoes());
 		result.include("situacoes", Situacao.values());
@@ -122,9 +128,7 @@ public class VeiculoController extends TpController {
 		result.include("tiposDeCombustivel", TipoDeCombustivel.values());
 		result.include("categoriasCNH", CategoriaCNH.values());
 
-		MenuMontador
-			.instance(result)
-			.recuperarMenuVeiculos(id, ItemMenu.DADOSCADASTRAIS);
+		MenuMontador.instance(result).recuperarMenuVeiculos(id, ItemMenu.DADOSCADASTRAIS);
 	}
 
 	private List<DpLotacao> buscarDpLotacoes() {
@@ -161,7 +165,7 @@ public class VeiculoController extends TpController {
 			result.include("mostrarCampoOdometro", deveMostrarCampoOdometro(veiculo));
 
 			if (veiculo.ehNovo()) {
-				validator.onErrorUse(Results.page()).of(VeiculoController.class).incluir();
+				validator.onErrorUse(Results.page()).of(VeiculoController.class).editar(null);
 			} else {
 				validator.onErrorUse(Results.page()).of(VeiculoController.class).editar(veiculo.getId());
 			}

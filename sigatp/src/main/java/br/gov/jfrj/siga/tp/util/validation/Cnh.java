@@ -11,5 +11,7 @@ import javax.validation.Constraint;
 @Target(ElementType.FIELD)
 @Constraint(validatedBy=CnhCheck.class)
 public @interface Cnh {
-
+	String message() default "{condutor.CnhCheck.cnhinvalida}";
+	Class<Object>[] groups() default {};
+	Class<Object>[] payload() default {};
 }

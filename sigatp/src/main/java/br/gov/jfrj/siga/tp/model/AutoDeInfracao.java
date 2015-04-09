@@ -71,7 +71,6 @@ public class AutoDeInfracao extends TpModel implements Comparable<AutoDeInfracao
 	@Convert(DoubleConverter.class)
 	public double valor;
 	
-	@Convert(DoubleConverter.class)
 	public double valorComDesconto;
 	
 	@NotNull

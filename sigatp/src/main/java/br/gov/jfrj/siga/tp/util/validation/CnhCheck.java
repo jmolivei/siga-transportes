@@ -11,12 +11,10 @@ public class CnhCheck implements ConstraintValidator<Cnh, String>{
 	
 	@Override
 	public boolean isValid(String value, ConstraintValidatorContext constraintValidatorContext) {
-		if(!validarCnh(value)){
-			constraintValidatorContext.buildConstraintViolationWithTemplate("{condutor.CnhCheck.cnhinvalida}")
-				.addConstraintViolation();
+		if(value == null) {
 			return false;
 		}
-		return true;
+		return validarCnh(value);
 	}
 	
 	private static String zeros(int quantidade) {
