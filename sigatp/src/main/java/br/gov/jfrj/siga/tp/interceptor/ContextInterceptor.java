@@ -12,7 +12,6 @@ import br.com.caelum.vraptor.interceptor.Interceptor;
 import br.com.caelum.vraptor.ioc.RequestScoped;
 import br.com.caelum.vraptor.resource.ResourceMethod;
 import br.com.caelum.vraptor.util.jpa.extra.ParameterLoaderInterceptor;
-import br.gov.jfrj.siga.cp.bl.Cp;
 import br.gov.jfrj.siga.model.ActiveRecord;
 import br.gov.jfrj.siga.model.ContextoPersistencia;
 import br.gov.jfrj.siga.tp.model.TpDao;
@@ -44,7 +43,6 @@ public class ContextInterceptor implements Interceptor {
 			MessagesBundle.set(localization);
 			TpDao.freeInstance();
 			TpDao.getInstance((Session) em.getDelegate(), ((Session) em.getDelegate()).getSessionFactory().openStatelessSession());
-			Cp.getInstance().getConf().limparCacheSeNecessario();
 			stack.next(method, resourceInstance);
 		} catch (Exception e) {
 			rollbackTransaction();
