@@ -56,6 +56,7 @@ public class PlantaoController extends TpController {
 			plantao.setCondutor(buscaCondutor(idCondutor));
 		}
 
+		MenuMontador.instance(result).recuperarMenuCondutores(idCondutor, ItemMenu.PLANTOES);
 		result.include("plantao", plantao);
 		result.include("idCond", idCondutor);
 	}
