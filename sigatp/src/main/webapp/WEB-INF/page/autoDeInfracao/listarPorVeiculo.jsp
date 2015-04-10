@@ -12,7 +12,7 @@
 			<h2>${veiculo.dadosParaExibicao}</h2>
 			<h3>Autos de Infra&ccedil;&atilde;o</h3>
 
-			<%-- #{include 'Veiculos/menu.html' /} --%>
+			<jsp:include page="../veiculo/menu.jsp"></jsp:include>
 
 			<c:choose>
 				<c:when test="${autosDeInfracao.size() > 0}">
