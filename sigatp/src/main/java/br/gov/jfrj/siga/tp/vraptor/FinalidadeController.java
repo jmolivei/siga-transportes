@@ -6,7 +6,6 @@ import javax.persistence.EntityManager;
 import javax.persistence.EntityTransaction;
 import javax.persistence.PersistenceException;
 import javax.servlet.http.HttpServletRequest;
-import javax.validation.Valid;
 
 import play.data.validation.Validation;
 import br.com.caelum.vraptor.Path;
@@ -14,6 +13,7 @@ import br.com.caelum.vraptor.Resource;
 import br.com.caelum.vraptor.Result;
 import br.com.caelum.vraptor.Validator;
 import br.com.caelum.vraptor.core.Localization;
+import br.com.caelum.vraptor.view.Results;
 import br.gov.jfrj.siga.dp.dao.CpDao;
 import br.gov.jfrj.siga.tp.auth.annotation.RoleAdmin;
 import br.gov.jfrj.siga.tp.auth.annotation.RoleAdminMissao;
@@ -58,9 +58,9 @@ public class FinalidadeController extends TpController {
     	result.include("finalidades", finalidades);
     }
 	
-//	@RoleAdmin
-//	@RoleAdminMissao
-//	@RoleAdminMissaoComplexo
+	@RoleAdmin
+	@RoleAdminMissao
+	@RoleAdminMissaoComplexo
 	@Path("/app/finalidade/editar/{id}")
 	public void editar(final Long id) throws Exception {
     	FinalidadeRequisicao finalidade = buscar(id);
@@ -74,26 +74,27 @@ public class FinalidadeController extends TpController {
     	result.include("finalidade", finalidade);
     }
 	
-//	@RoleAdmin
-//	@RoleAdminMissao
-//	@RoleAdminMissaoComplexo
+	@RoleAdmin
+	@RoleAdminMissao
+	@RoleAdminMissaoComplexo
 	@Path("/app/finalidade/salvar/{finalidade}")
-	public void salvar(@Valid final FinalidadeRequisicao fin) throws Exception {
-		FinalidadeRequisicao finalidade = buscar(fin.getId());
-		finalidade.setDescricao(fin.getDescricao());
+	public void salvar(final FinalidadeRequisicao finalidade) throws Exception {
 		
-		if(isUpdate(finalidade))
-			finalidade.checarProprietario(getTitular().getOrgaoUsuario());
+		error(null == finalidade.getDescricao(), "finalidade", "views.erro.campoObrigatorio");
+		FinalidadeRequisicao finalidadeBuscada = buscar(finalidade.getId());
+		finalidadeBuscada.setDescricao(finalidade.getDescricao());
+		
+		if(isUpdate(finalidadeBuscada))
+			finalidadeBuscada.checarProprietario(getTitular().getOrgaoUsuario());
     	
-    	finalidade.setCpOrgaoOrigem(getTitular().getOrgaoUsuario());
+    	finalidadeBuscada.setCpOrgaoOrigem(getTitular().getOrgaoUsuario());
 		
-    	if(Validation.hasErrors()) {
-    		result.include("finalidade", finalidade);
-			result.include(ACTION, (finalidade.getId() == 0 ? ACTION_INCLUIR : ACTION_EDITAR));
-			return;
+    	if(validator.hasErrors()) {
+    		result.include("finalidade", finalidadeBuscada);
+			validator.onErrorUse(Results.logic()).forwardTo(FinalidadeController.class).editar(finalidadeBuscada.getId());
 		}
 
-	 	finalidade.save();
+	 	finalidadeBuscada.save();
 	 	listar();
     }
 
