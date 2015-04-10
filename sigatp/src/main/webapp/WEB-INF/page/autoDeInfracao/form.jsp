@@ -46,14 +46,14 @@ function verificaCampos(){
 			<label for="autoDeInfracao.veiculo.id" class= "obrigatorio">Ve&iacute;culo</label>
 	       	<select name="autoDeInfracao.veiculo.id">
 	       		<c:forEach items="${veiculos}" var="veiculo">
-	       			<option value="${veiculo.id}">${veiculo.dadosParaExibicao}</option>
+	       			<option value="${veiculo.id}" ${autoDeInfracao.veiculo.id == veiculo.id ? 'selected' : ''}>${veiculo.dadosParaExibicao}</option>
 	       		</c:forEach>
 	       	</select>
 
 			<label for="autoDeInfracao.condutor.id" class= "obrigatorio">Condutor</label>
 	       	<select name="autoDeInfracao.condutor.id">
 	       		<c:forEach items="${condutores}" var="condutor">
-	       			<option value="${condutor.id}">${condutor.dadosParaExibicao}</option>
+	       			<option value="${condutor.id}" ${autoDeInfracao.condutor.id == condutor.id ? 'selected' : ''}>${condutor.dadosParaExibicao}</option>
 	       		</c:forEach>
 	       	</select>
 			<label for="autoDeInfracao.local" class= "obrigatorio">Local</label>
@@ -77,17 +77,17 @@ function verificaCampos(){
 			<label for="autoDeInfracao.gravidade" class= "obrigatorio">Gravidade</label>
 	       	<select name="autoDeInfracao.gravidade">
 	       		<c:forEach items="${autoDeInfracao.gravidade.values()}" var="gravidade">
-	       			<option value="${gravidade}">${gravidade}</option>
+	       			<option value="${gravidade}" ${autoDeInfracao.gravidade == gravidade ? 'selected' : ''}>${gravidade}</option>
 	       		</c:forEach>
 	       	</select>
 			<label for="autoDeInfracao.quantidadeDePontos" class= "obrigatorio">Qtd. de Pontos</label>
 			<input type="text" id="quantidadeDePontos" name="autoDeInfracao.quantidadeDePontos" size="1" value="${autoDeInfracao.quantidadeDePontos}" />
 		</div>
 		<div class="coluna">
-			<label for="autoDeInfracao.recebido" class= "obrigatorio">Recebido?</label>
-	       	<select name="autoDeInfracao.recebido">
+			<label for="autoDeInfracao.foiRecebido" class= "obrigatorio">Recebido?</label>
+	       	<select name="autoDeInfracao.foiRecebido">
 	       		<c:forEach items="${autoDeInfracao.foiRecebido.values()}" var="foiRecebido">
-	       			<option value="${foiRecebido}">${foiRecebido.descricao}</option>
+	       			<option value="${foiRecebido}" ${autoDeInfracao.foiRecebido == foiRecebido ? 'selected' : ''}>${foiRecebido.descricao}</option>
 	       		</c:forEach>
 	       	</select>
 			<label for="autoDeInfracao.numeroDoProcesso">N&uacute;mero do Processo</label>

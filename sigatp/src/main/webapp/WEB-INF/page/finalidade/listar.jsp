@@ -1,17 +1,14 @@
-﻿<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
 <%@ taglib uri="http://localhost/jeetags" prefix="siga" %>
-
-<c:if test="${erros}">
-	<fmt:message key="${erros}" />
-</c:if>
+<%@ taglib prefix="sigatp" tagdir="/WEB-INF/tags/" %>
 
 <siga:pagina titulo="Transportes">
 	<div class="gt-bd clearfix">
 		<div class="gt-content clearfix">
+			<sigatp:erros/>
 			<h2><fmt:message key="finalidades" /></h2>
-			<%-- #{include 'Finalidades/menu.html' /} --%>
-			<%-- #{if finalidades.size() > 0} --%>
+			<jsp:include page="menu.jsp"></jsp:include>
 			<c:choose>
 				<c:when test="${finalidades.size() > 0}">
 					<div class="gt-content-box gt-for-table">
@@ -24,7 +21,6 @@
 								</tr>
 							</thead>
 							<tbody>
-								<%-- #{list finalidades, as:'item'} --%>
 								<c:forEach items="${finalidades}" var="item">
 							   		<tr>
 						    	    	<td>${item.descricao}</td>
@@ -34,7 +30,10 @@
 								</c:forEach>
 							</tbody>
 					    </table>
-						<div id="pagination"/> 
+						<div id="pagination"></div>
+						<div class="gt-table-buttons">
+							<a href="${linkTo[FinalidadeController].editar[0]}" id="botaoIncluirFinalidade" class="gt-btn-medium gt-btn-left"><fmt:message key="views.botoes.incluir" /></a>
+						</div>
 					</div>
 				</c:when>
 				<c:otherwise>
@@ -42,10 +41,6 @@
 					<h3>N&atilde;o existem finalidades cadastradas.</h3>
 				</c:otherwise>
 			</c:choose>
-			
-			<div class="gt-table-buttons">
-				<a href="${linkTo[FinalidadeController].editar[0]}" id="botaoIncluirFinalidade" class="gt-btn-medium gt-btn-left"><fmt:message key="views.botoes.incluir" /></a>
-			</div>
 		</div>
 	</div>
 </siga:pagina>
