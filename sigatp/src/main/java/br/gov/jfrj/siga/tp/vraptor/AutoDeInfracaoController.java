@@ -4,7 +4,6 @@ import java.util.List;
 import javax.persistence.EntityManager;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
-import play.mvc.With;
 import br.com.caelum.vraptor.Path;
 import br.com.caelum.vraptor.Resource;
 import br.com.caelum.vraptor.Result;
@@ -22,10 +21,8 @@ import br.gov.jfrj.siga.tp.model.TipoDeNotificacao;
 import br.gov.jfrj.siga.tp.model.TpDao;
 import br.gov.jfrj.siga.tp.model.Veiculo;
 import br.gov.jfrj.siga.vraptor.SigaObjects;
-import controllers.AutorizacaoGIAntigo;
 
 @Resource
-@With(AutorizacaoGIAntigo.class)
 public class AutoDeInfracaoController extends TpController{
 
 	public AutoDeInfracaoController(HttpServletRequest request, Result result,
@@ -63,9 +60,9 @@ public class AutoDeInfracaoController extends TpController{
 		result.include("autosDeInfracao", autosDeInfracao);
 	}
 
-//	@RoleAdmin
-//	@RoleAdminMissao
-//	@RoleAdminMissaoComplexo
+	@RoleAdmin
+	@RoleAdminMissao
+	@RoleAdminMissaoComplexo
 	@Path("/app/autoDeInfracao/incluir/{notificacao}")
 	public void incluir(String notificacao) throws Exception {
 		List<Veiculo> veiculos = Veiculo.listarTodos(getTitular().getOrgaoUsuario());
@@ -79,9 +76,9 @@ public class AutoDeInfracaoController extends TpController{
 		result.include("tipoNotificacao", tipoNotificacao);
 	}
 
-//	@RoleAdmin
-//	@RoleAdminMissao
-//	@RoleAdminMissaoComplexo
+	@RoleAdmin
+	@RoleAdminMissao
+	@RoleAdminMissaoComplexo
 	@Path("/app/autoDeInfracao/editar/{id}")
 	public void editar(Long id) throws Exception {
 		List<Veiculo> veiculos = Veiculo.listarTodos(getTitular().getOrgaoUsuario());
@@ -96,9 +93,9 @@ public class AutoDeInfracaoController extends TpController{
 		result.include("tipoNotificacao", tipoNotificacao);
 	}
 
-//	@RoleAdmin
-//	@RoleAdminMissao
-//	@RoleAdminMissaoComplexo
+	@RoleAdmin
+	@RoleAdminMissao
+	@RoleAdminMissaoComplexo
 	public void salvar(@Valid AutoDeInfracao autoDeInfracao) throws Exception {
 		autoDeInfracao.setCondutor(Condutor.AR.findById(autoDeInfracao.getCondutor().getId()));
 		autoDeInfracao.setVeiculo(Veiculo.AR.findById(autoDeInfracao.getVeiculo().getId()));
@@ -129,9 +126,9 @@ public class AutoDeInfracaoController extends TpController{
 		}
 	}
 	
-//	@RoleAdmin
-//	@RoleAdminMissao
-//	@RoleAdminMissaoComplexo
+	@RoleAdmin
+	@RoleAdminMissao
+	@RoleAdminMissaoComplexo
 	@Path("/app/autoDeInfracao/excluir/{id}")
 	public void excluir(Long id) throws Exception {
 		AutoDeInfracao autoDeInfracao = AutoDeInfracao.AR.findById(id);
