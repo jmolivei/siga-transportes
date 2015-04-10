@@ -12,17 +12,17 @@ escalas.componentes = function(){
 escalas.init = function(){
 	escalas.componentes();
 	
-	escalas.salvar.addEventListener("click", function(){
+	/*escalas.salvar.addEventListener("click", function(){
 			escalas.submitForm(urlSalvar);
-		});
+		});*/
 
-	escalas.finalizar.addEventListener('click', function(){
+	/*escalas.finalizar.addEventListener('click', function(){
 			escalas.submitForm(urlFinalizar);
-		});
+		});*/
 
-	escalas.cancelar.addEventListener('click', function(){
+	/*escalas.cancelar.addEventListener('click', function(){
 			window.location = urlCancelar;
-		});
+		});*/
 
 	escalas.incluir.addEventListener('click', function(){
 			var divrow = document.getElementById("rowDiasDeTrabalho");

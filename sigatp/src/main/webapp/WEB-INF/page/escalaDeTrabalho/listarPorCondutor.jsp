@@ -1,6 +1,7 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
 <%@ taglib uri="http://localhost/jeetags" prefix="siga" %>
+<%@ taglib prefix="sigatp" tagdir="/WEB-INF/tags/" %>
 
 <script type="text/javascript">
 		var urlSalvar = '<c:out value="${linkTo[EscalaDeTrabalhoController].salvar}" />';
@@ -8,15 +9,12 @@
 		var urlCancelar = '<c:out value="${linkTo[CondutorController].lista}" />';
 </script>
 
-<c:if test="${erros}">
-	<fmt:message key="${erros}" />
-</c:if>
-
 <siga:pagina titulo="Transportes">
 	<div class="gt-bd clearfix">
 		<div class="gt-content clearfix">
 			<h2>${condutor.dadosParaExibicao}</h2>
 			<h3>Escalas de Trabalho</h3>
+			<sigatp:erros/>
 			<form id="formEscalasDeTrabalho" method="get,post" onsubmit="return false;" enctype="multipart/form-data">
 				<div class="gt-content-box gt-for-table">
 					<h3>&nbsp;&nbsp;Escala de Trabalho Vigente</h3>
@@ -73,9 +71,9 @@
 				<br />
 				<span style="color: red; font-weight: bolder; font-size: smaller;"><fmt:message key="views.erro.preenchimentoObrigatorio" /></span>
 				<div class="gt-table-buttons">
-					<input type="button" id="salvar" value='<fmt:message key="views.botoes.salvar" />' class="gt-btn-medium gt-btn-left" />
-					<input type="button" id="finalizar" value='<fmt:message key="views.botoes.finalizar" />' class="gt-btn-medium gt-btn-left" />
-					<input type="button" id="cancelar" value='<fmt:message key="views.botoes.cancelar" />' class="gt-btn-medium gt-btn-left" />
+					<input type="button" id="salvar" value='<fmt:message key="views.botoes.salvar" />' onclick="escalas.submitForm(urlSalvar)" class="gt-btn-medium gt-btn-left" />
+					<input type="button" id="finalizar" value='<fmt:message key="views.botoes.finalizar" />' onclick="escalas.submitForm(urlFinalizar)" class="gt-btn-medium gt-btn-left" />
+					<input type="button" id="cancelar" value='<fmt:message key="views.botoes.cancelar" />' onclick="javascript:window.location = urlCancelar" class="gt-btn-medium gt-btn-left" />
 				</div>
 			</form>
 
@@ -114,4 +112,4 @@
 	</div>
 </siga:pagina>
 
-<script type="text/javascript" src="../../../public/javascripts/escalasDeTrabalho/escalas.js"></script>
+<script type="text/javascript" src="../../../public/javascripts/escalasDeTrabalho/listarPorCondutor.js"></script>

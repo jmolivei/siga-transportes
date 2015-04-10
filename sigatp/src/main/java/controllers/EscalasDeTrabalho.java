@@ -168,7 +168,7 @@ public class EscalasDeTrabalho extends Controller {
         
         if (ehMesmoDia(escala.getDataVigenciaInicio(), Calendar.getInstance())) {
         	if (escala.getId() > 0) {
-        	 	DiaDeTrabalho.delete("escalaDeTrabalho", escala);
+        	 	//DiaDeTrabalho.delete("escalaDeTrabalho", escala);
         	} 
         	
         	escala.save();
