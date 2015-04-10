@@ -41,7 +41,6 @@ import br.gov.jfrj.siga.tp.util.Situacao;
 import br.gov.jfrj.siga.tp.util.validation.Chassi;
 import br.gov.jfrj.siga.tp.util.validation.Renavam;
 import br.gov.jfrj.siga.tp.util.validation.UpperCase;
-import br.gov.jfrj.siga.validation.Email;
 
 @Entity
 // @Table(name = "VEICULO_2", schema="SIGAOR")
@@ -102,7 +101,6 @@ public class Veiculo extends TpModel implements Comparable<Veiculo> {
 	@Min(value = 1000, message = "{veiculo.anoModelo.minSize}")
 	private int anoModelo;
 
-	@Email
 	@NotEmpty
 	@UpperCase
 	private String marca;
@@ -193,13 +191,13 @@ public class Veiculo extends TpModel implements Comparable<Veiculo> {
 	@UpperCase
 	private String outros;
 
-//	@As(lang = { "*" }, value = { "dd/MM/yyyy" })
+	// @As(lang = { "*" }, value = { "dd/MM/yyyy" })
 	@ValidarAnoData(descricaoCampo = "Data de Aquisicao")
 	private Calendar dataAquisicao;
 
 	private Double valorAquisicao;
 
-//	@As(lang = { "*" }, value = { "dd/MM/yyyy" })
+	// @As(lang = { "*" }, value = { "dd/MM/yyyy" })
 	@ValidarAnoData(descricaoCampo = "Data de Garantia")
 	private Calendar dataGarantia;
 
@@ -208,17 +206,17 @@ public class Veiculo extends TpModel implements Comparable<Veiculo> {
 
 	private String numeroCartaoAbastecimento;
 
-//	@As(lang = { "*" }, value = { "dd/MM/yyyy" })
+	// @As(lang = { "*" }, value = { "dd/MM/yyyy" })
 	@ValidarAnoData(descricaoCampo = "Validade do Cartao de Abastecimento")
 	private Calendar validadeCartaoAbastecimento;
 
 	private String numeroCartaoSeguro;
 
-//	@As(lang = { "*" }, value = { "dd/MM/yyyy" })
+	// @As(lang = { "*" }, value = { "dd/MM/yyyy" })
 	@ValidarAnoData(intervalo = 10, descricaoCampo = "Validade do Cartao de Seguro")
 	private Calendar validadeCartaoSeguro;
 
-//	@As(lang = { "*" }, value = { "dd/MM/yyyy HH:mm" })
+	// @As(lang = { "*" }, value = { "dd/MM/yyyy HH:mm" })
 	@ValidarAnoData(descricaoCampo = "Data de Alienacao")
 	private Calendar dataAlienacao;
 

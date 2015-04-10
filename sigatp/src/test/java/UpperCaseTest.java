@@ -1,7 +1,7 @@
 import org.junit.*;
 
 import br.gov.jfrj.siga.tp.model.UsuarioTeste;
-import br.gov.jfrj.siga.tp.util.validation.RenavamCheck;
+import br.gov.jfrj.siga.tp.util.validation.RenavamConstraintValidator;
 
 import java.util.*;
 

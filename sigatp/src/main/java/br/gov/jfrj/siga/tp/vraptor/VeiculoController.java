@@ -47,8 +47,8 @@ public class VeiculoController extends TpController {
 		result.include("veiculos", Veiculo.listarTodos(cpOrgaoUsuario));
 	}
 
-	@RoleAdmin
-	@RoleAdminFrota
+	// @RoleAdmin
+	// @RoleAdminFrota
 	@Path("/salvar")
 	public void salvar(@Valid final Veiculo veiculo) throws Exception {
 		validarAntesDeSalvar(veiculo);
@@ -68,15 +68,15 @@ public class VeiculoController extends TpController {
 		result.redirectTo(this).listar();
 	}
 
-	@RoleAdmin
-	@RoleAdminFrota
+	// @RoleAdmin
+	// @RoleAdminFrota
 	@Path("/incluir")
 	public void incluir() throws Exception {
 		result.forwardTo(this).editar(null);
 	}
 
-	@RoleAdmin
-	@RoleAdminFrota
+	// @RoleAdmin
+	// @RoleAdminFrota
 	@Path("/editar/{id}")
 	public void editar(Long id) throws Exception {
 		Veiculo veiculo = obterVeiculo(id);
@@ -84,15 +84,6 @@ public class VeiculoController extends TpController {
 		result.include("veiculo", veiculo);
 		result.include("mostrarCampoOdometro", Boolean.FALSE);
 
-	}
-
-	private Veiculo obterVeiculo(Long id) throws Exception {
-		if (id != null) {
-			Veiculo veiculo = Veiculo.AR.findById(id);
-			veiculo.configurarLotacaoAtual();
-			return veiculo;
-		}
-		return new Veiculo(new DpLotacao());
 	}
 
 	@RoleAdmin
@@ -115,20 +106,6 @@ public class VeiculoController extends TpController {
 	@Path("/{idVeiculo}/avarias")
 	public void listarAvarias(Long idVeiculo) throws Exception {
 		result.redirectTo(AvariasController.class).listarPorVeiculo(idVeiculo);
-	}
-
-	private void preencherResultComDadosPadrao(Long id) throws Exception {
-		Combo.montar(result, Combo.Cor, Combo.Fornecedor);
-
-		result.include(Combo.Grupo.getDescricao(), Grupo.listarTodos());
-		result.include("dpLotacoes", buscarDpLotacoes());
-		result.include("situacoes", Situacao.values());
-		result.include("respostasSimNao", PerguntaSimNao.values());
-		result.include("lotacaoSel", new DpLotacaoSelecao());
-		result.include("tiposDeCombustivel", TipoDeCombustivel.values());
-		result.include("categoriasCNH", CategoriaCNH.values());
-
-		MenuMontador.instance(result).recuperarMenuVeiculos(id, ItemMenu.DADOSCADASTRAIS);
 	}
 
 	private List<DpLotacao> buscarDpLotacoes() {
@@ -154,8 +131,12 @@ public class VeiculoController extends TpController {
 			final Double odometroEmKmAtual = Optional.fromNullable(veiculo.getOdometroEmKmAtual()).or(0D);
 
 			error(odometroAnterior > odometroEmKmAtual, "odometroEmKmAtual", "veiculo.odometroEmKmAtual.maiorAnterior.validation");
-			error(odometroEmKmAtual.equals(new Double(0)), "odometroEmKmAtual", "veiculo.odometroEmKmAtual.maiorAnterior.validation");
+			error(odometroEmKmAtual.equals(new Double(0)), "odometroEmKmAtual", "veiculo.odometroEmKmAtual.zero.validation");
 		}
+	}
+
+	private boolean deveMostrarCampoOdometro(Veiculo veiculo) {
+		return veiculoNaoTemLotacaoCadastrada(veiculo) || veiculo.getLotacoes().isEmpty() || (!veiculo.getLotacoes().get(0).getLotacao().equivale(veiculo.getLotacaoAtual()));
 	}
 
 	private void redirecionarSeErroAoSalvar(Veiculo veiculo) throws Exception {
@@ -172,7 +153,26 @@ public class VeiculoController extends TpController {
 		}
 	}
 
-	private boolean deveMostrarCampoOdometro(Veiculo veiculo) {
-		return veiculoNaoTemLotacaoCadastrada(veiculo) || veiculo.getLotacoes().isEmpty() || (!veiculo.getLotacoes().get(0).getLotacao().equivale(veiculo.getLotacaoAtual()));
+	private void preencherResultComDadosPadrao(Long id) throws Exception {
+		Combo.montar(result, Combo.Cor, Combo.Fornecedor);
+
+		result.include(Combo.Grupo.getDescricao(), Grupo.listarTodos());
+		result.include("dpLotacoes", buscarDpLotacoes());
+		result.include("situacoes", Situacao.values());
+		result.include("respostasSimNao", PerguntaSimNao.values());
+		result.include("lotacaoSel", new DpLotacaoSelecao());
+		result.include("tiposDeCombustivel", TipoDeCombustivel.values());
+		result.include("categoriasCNH", CategoriaCNH.values());
+
+		MenuMontador.instance(result).recuperarMenuVeiculos(id, ItemMenu.DADOSCADASTRAIS);
+	}
+
+	private Veiculo obterVeiculo(Long id) throws Exception {
+		if (id != null) {
+			Veiculo veiculo = Veiculo.AR.findById(id);
+			veiculo.configurarLotacaoAtual();
+			return veiculo;
+		}
+		return new Veiculo(new DpLotacao());
 	}
 }

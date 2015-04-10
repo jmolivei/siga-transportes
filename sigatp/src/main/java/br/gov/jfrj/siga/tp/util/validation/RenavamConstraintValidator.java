@@ -5,7 +5,7 @@ import javax.validation.ConstraintValidatorContext;
 
 import org.apache.commons.lang.StringUtils;
 
-public class RenavamCheck implements ConstraintValidator<Renavam, String> {
+public class RenavamConstraintValidator implements ConstraintValidator<Renavam, String> {
 	int base = 11;
 
 	@Override
@@ -14,14 +14,12 @@ public class RenavamCheck implements ConstraintValidator<Renavam, String> {
 
 	@Override
 	public boolean isValid(String value, ConstraintValidatorContext constraintValidatorContext) {
-		if(value == null) {
-			return false;
+		if (value == null) {
+			return true;
 		}
-		
 		if (!value.matches("^[0-9]{1," + base + "}+$")) {
 			return false;
 		}
-		
 		return validarRenavam(value);
 	}
 

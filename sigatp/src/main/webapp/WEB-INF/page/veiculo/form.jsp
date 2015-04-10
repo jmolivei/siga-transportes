@@ -3,6 +3,8 @@
 <%@ taglib uri="http://localhost/jeetags" prefix="siga" %>
 <%@ taglib prefix="sigatp" tagdir="/WEB-INF/tags/" %>
 
+<sigatp:calendario/>
+<sigatp:decimal/>
 <jsp:include page="menu.jsp" />
 <sigatp:erros/>
 			
@@ -22,24 +24,20 @@
 		       	<label for= "veiculo.situacao" class= "obrigatorio"> Situa&ccedil;&atilde;o</label>
 		       	<select name="veiculo.situacao">
 		       		<c:forEach items="${situacoes}" var="situacao">
-		       			<option value="${situacao}">${situacao}</option>
+		       			<option value="${situacao}" ${veiculo.situacao == situacao ? 'selected' : ''}>${situacao}</option>
 		       		</c:forEach>
 		       	</select>
 		       	
 		       	<label for= "veiculo.usoComum" class= "obrigatorio"> Uso comum</label>
      		    <select name="veiculo.usoComum">
 		       		<c:forEach items="${respostasSimNao}" var="respostaSimNao">
-		       			<option value="${respostaSimNao}">${respostaSimNao.descricao}</option>
+		       			<option value="${respostaSimNao}" ${veiculo.usoComum == respostaSimNao ? 'selected' : ''}>${respostaSimNao.descricao}</option>
 		       		</c:forEach>
 		       	</select>
 			</div>
 			<div class="coluna margemDireitaG">
 		       	<label for= "veiculo.grupo.id">Grupo</label>
-			    <select name="veiculo.grupo.id">
-		       		<c:forEach items="${grupos}" var="grupo">
-		       			<option value="${grupo.id}">${grupo.dadosParaExibicao}</option>
-		       		</c:forEach>
-		       	</select>
+		       	<siga:select name="veiculo.grupo.id" list="grupos" listKey="id" listValue="dadosParaExibicao" value="${veiculo.grupo.id}"/>
 		       	
 		       	<label for= "veiculo.lotacaoAtual"> Lota&ccedil;&atilde;o</label>
 		       	<siga:selecao propriedade="lotacao" tema="simple" modulo="siga"/>
@@ -92,12 +90,8 @@
 		<div class="coluna">    
 			<div class="coluna">
 		       	<label for= "veiculo.cor.id">Cor</label>
-	       		<select name="veiculo.cor.id">
-		       		<c:forEach items="${cores}" var="cor">
-		       			<option value="${cor.id}">${cor.nome}</option>
-		       		</c:forEach>
-		       	</select>
-				
+		       	<siga:select name="veiculo.cor.id" list="cores" listKey="id" listValue="nome" value="${veiculo.cor.id}"/>
+		       		
 		       	<label for= "veiculo.tipoDeBlindagem">Tipo de blindagem</label>
 				<input type="text" name="veiculo.tipoDeBlindagem" value="${veiculo.tipoDeBlindagem}"/>
 		       	<label for= "veiculo.chassi" class= "obrigatorio">Chassi</label>
@@ -211,11 +205,7 @@
   	<div class="gt-form gt-content-box clearfix">
 		<div class="coluna">
 			<label for="veiculo.fornecedor.id">Fornecedor</label>
-			<select name="veiculo.fornecedor.id">
-	       		<c:forEach items="${fornecedores}" var="fornecedor">
-	       			<option value="${fornecedor.id}">${fornecedor.razaoSocialECNPJ}</option>
-	       		</c:forEach>
-	       	</select>
+	       	<siga:select name="veiculo.fornecedor.id" list="fornecedores" listKey="id" listValue="razaoSocialECNPJ" value="${veiculo.fornecedor.id}"/>
 		</div>
 		<div class="coluna">
 			<div class="coluna">
@@ -224,11 +214,11 @@
 			</div>
 			<div class="coluna">
 				<label for="veiculo.dataAquisicao">Data</label>
-				<input type="text" name="veiculo.dataAquisicao" class="datePicker" value="${veiculo.dataAquisicao.format('dd/MM/yyyy')}" size="8"/>
+				<input type="text" name="veiculo.dataAquisicao" class="datePicker" value="<fmt:formatDate pattern="dd/MM/yyyy" value="${veiculo.dataAquisicao.time}" />" size="8"/>
 			</div>
 			<div class="coluna">
 				<label for="veiculo.dataGarantia">Dt.garantia</label>
-				<input type="text" name="veiculo.dataGarantia" class="datePicker" value="${veiculo.dataGarantia.format('dd/MM/yyyy')}" size="8"/>
+				<input type="text" name="veiculo.dataGarantia" class="datePicker" value="<fmt:formatDate pattern="dd/MM/yyyy" value="${veiculo.dataGarantia.time}" />" size="8"/>
 			</div>
 		</div>
 	</div>
@@ -242,7 +232,7 @@
 			</div>
 			<div class="coluna">
 				<label> Validade</label>
-				<input type="text" name="veiculo.validadeCartaoAbastecimento" class="datePicker" value="${veiculo.validadeCartaoAbastecimento.format('dd/MM/yyyy')}" size="8"/>
+				<input type="text" name="veiculo.validadeCartaoAbastecimento" class="datePicker" value="<fmt:formatDate pattern="dd/MM/yyyy" value="${veiculo.validadeCartaoAbastecimento.time}"/>" size="8"/>
 			</div>
 		</div>
 		<div class="coluna margemDireitaG"> 
@@ -253,7 +243,7 @@
 			</div>
 	     	<div class="coluna">
 				<label> Validade</label>							
-				<input type="text" name="veiculo.validadeCartaoSeguro"  class="datePicker" value="${veiculo.validadeCartaoSeguro.format('dd/MM/yyyy')}" size="8"/>
+				<input type="text" name="veiculo.validadeCartaoSeguro"  class="datePicker" value="<fmt:formatDate pattern="dd/MM/yyyy" value="${veiculo.validadeCartaoSeguro.time}"/>" size="8"/>
 			</div>
 		</div> 
 		<div class="coluna"> 
@@ -268,8 +258,7 @@
 			</div>
 	     	<div class="coluna">
 				<label> Data</label>							
-				<!--<input type="text" name="veiculo.dataAlienacao" class="dataHora"  value="${veiculo.dataAlienacao.format('dd/MM/yyyy HH:mm')}" size="12"/>*/ -->
-				<input type="text" name="veiculo.dataAlienacao" class="datePicker"  value="${veiculo.dataAlienacao.format('dd/MM/yyyy')}" size="8"/>
+				<input type="text" name="veiculo.dataAlienacao" class="datePicker"  value="<fmt:formatDate pattern="dd/MM/yyyy" value="${veiculo.dataAlienacao.time}"/>" size="8"/>
 			</div>
 		</div> <!-- fim alienação -->
 	</div>
