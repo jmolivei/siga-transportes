@@ -14,7 +14,9 @@ import br.gov.jfrj.siga.tp.model.TpDao;
 import br.gov.jfrj.siga.vraptor.SigaObjects;
 
 /**
- * Controller criado apenas para considerar a chamado ao metodo buscarPelaSequence na tela de erro.
+ * Controller criado apenas para considerar a chamado ao metodo buscarPelaSequence na tela de erro. 
+ * 
+ * TODO: implementar as regras do controller.
  * 
  * @author db1
  *

@@ -5,7 +5,6 @@ import java.util.List;
 
 import javax.persistence.EntityManager;
 import javax.servlet.http.HttpServletRequest;
-import javax.validation.Valid;
 
 import br.com.caelum.vraptor.Path;
 import br.com.caelum.vraptor.Resource;
@@ -50,8 +49,8 @@ public class VeiculoController extends TpController {
 	@RoleAdmin
 	@RoleAdminFrota
 	@Path("/salvar")
-	public void salvar(@Valid final Veiculo veiculo) throws Exception {
-		validarAntesDeSalvar(veiculo);
+	public void salvar(final Veiculo veiculo, DpLotacaoSelecao lotacaoAtualSel) throws Exception {
+		validarAntesDeSalvar(veiculo.comAtualSelecionada(lotacaoAtualSel));
 		redirecionarSeErroAoSalvar(veiculo);
 
 		veiculo.setCpOrgaoUsuario(getTitular().getOrgaoUsuario());
@@ -62,7 +61,7 @@ public class VeiculoController extends TpController {
 		}
 
 		if (veiculoNaoTemLotacaoCadastrada(veiculo) || lotacaoDoVeiculoMudou(veiculo)) {
-			LotacaoVeiculo novalotacao = new LotacaoVeiculo(null, veiculo, veiculo.getLotacaoAtual(), Calendar.getInstance(), null, veiculo.getOdometroEmKmAtual());
+			LotacaoVeiculo novalotacao = new LotacaoVeiculo(null, veiculo, veiculo.comAtualSelecionada(lotacaoAtualSel).getLotacaoAtual(), Calendar.getInstance(), null, veiculo.getOdometroEmKmAtual());
 			novalotacao.save();
 		}
 		result.redirectTo(this).listar();
@@ -133,6 +132,7 @@ public class VeiculoController extends TpController {
 			error(odometroAnterior > odometroEmKmAtual, "odometroEmKmAtual", "veiculo.odometroEmKmAtual.maiorAnterior.validation");
 			error(odometroEmKmAtual.equals(new Double(0)), "odometroEmKmAtual", "veiculo.odometroEmKmAtual.zero.validation");
 		}
+		validator.validate(veiculo);
 	}
 
 	private boolean deveMostrarCampoOdometro(Veiculo veiculo) {
@@ -160,7 +160,7 @@ public class VeiculoController extends TpController {
 		result.include("dpLotacoes", buscarDpLotacoes());
 		result.include("situacoes", Situacao.values());
 		result.include("respostasSimNao", PerguntaSimNao.values());
-		result.include("lotacaoSel", new DpLotacaoSelecao());
+		result.include("lotacaoAtualSel", new DpLotacaoSelecao());
 		result.include("tiposDeCombustivel", TipoDeCombustivel.values());
 		result.include("categoriasCNH", CategoriaCNH.values());
 

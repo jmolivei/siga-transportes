@@ -1,4 +1,4 @@
-package br.gov.jfrj.siga.tp.util.validation;
+package br.gov.jfrj.siga.tp.validation.annotation;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;

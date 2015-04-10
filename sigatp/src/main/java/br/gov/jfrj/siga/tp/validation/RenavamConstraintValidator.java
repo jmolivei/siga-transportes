@@ -1,9 +1,11 @@
-package br.gov.jfrj.siga.tp.util.validation;
+package br.gov.jfrj.siga.tp.validation;
 
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
 
 import org.apache.commons.lang.StringUtils;
+
+import br.gov.jfrj.siga.tp.validation.annotation.Renavam;
 
 public class RenavamConstraintValidator implements ConstraintValidator<Renavam, String> {
 	int base = 11;

@@ -32,15 +32,16 @@ import org.hibernate.validator.constraints.NotEmpty;
 import play.data.validation.Unique;
 import play.db.jpa.JPA;
 import play.modules.br.jus.jfrj.siga.uteis.validadores.validarAnoData.ValidarAnoData;
+import br.gov.jfrj.siga.cp.model.DpLotacaoSelecao;
 import br.gov.jfrj.siga.dp.CpOrgaoUsuario;
 import br.gov.jfrj.siga.dp.DpLotacao;
 import br.gov.jfrj.siga.model.ActiveRecord;
 import br.gov.jfrj.siga.tp.util.MessagesBundle;
 import br.gov.jfrj.siga.tp.util.PerguntaSimNao;
 import br.gov.jfrj.siga.tp.util.Situacao;
-import br.gov.jfrj.siga.tp.util.validation.Chassi;
-import br.gov.jfrj.siga.tp.util.validation.Renavam;
-import br.gov.jfrj.siga.tp.util.validation.UpperCase;
+import br.gov.jfrj.siga.tp.validation.annotation.Chassi;
+import br.gov.jfrj.siga.tp.validation.annotation.Renavam;
+import br.gov.jfrj.siga.tp.validation.annotation.UpperCase;
 
 @Entity
 // @Table(name = "VEICULO_2", schema="SIGAOR")
@@ -88,7 +89,7 @@ public class Veiculo extends TpModel implements Comparable<Veiculo> {
 	private DpLotacao lotacaoAtual;
 
 	@Transient
-	private Double odometroEmKmAtual = 0D;
+	private Double odometroEmKmAtual;
 
 	@Enumerated(EnumType.STRING)
 	private PerguntaSimNao usoComum;
@@ -898,5 +899,14 @@ public class Veiculo extends TpModel implements Comparable<Veiculo> {
 
 	public void setRelatoriosdiarios(List<RelatorioDiario> relatoriosdiarios) {
 		this.relatoriosdiarios = relatoriosdiarios;
+	}
+
+	public Veiculo comAtualSelecionada(DpLotacaoSelecao lotacaoAtualSel) {
+		if (lotacaoAtualSel.getId() != null) {
+			DpLotacao dpLotacao = new DpLotacao();
+			dpLotacao.setId(lotacaoAtualSel.getId());
+			this.lotacaoAtual = dpLotacao;
+		}
+		return this;
 	}
 }
