@@ -24,7 +24,7 @@ public class RelatorioDiarioController extends TpController {
 	
 	public RelatorioDiarioController(HttpServletRequest request, Result result, Localization localization, 
 			Validator validator, SigaObjects so, EntityManager em) throws Exception {
-		super(request, result, TpDao.getInstance(), localization, validator, so, em);
+		super(request, result, TpDao.getInstance(), validator, so, em);
 	}
 
 	@Path("/listar/{idVeiculo}")
@@ -71,7 +71,7 @@ public class RelatorioDiarioController extends TpController {
 	public void excluir(Long id) throws Exception {
 		RelatorioDiario relatorioDiario = RelatorioDiario.AR.findById(id);
 		relatorioDiario.delete();
-		listarPorVeiculo(relatorioDiario.getVeiculo().getId());		
+		result.redirectTo(this).listarPorVeiculo(relatorioDiario.getVeiculo().getId());
 	}
 	
 	private void redirecionarSeErroAoSalvar(RelatorioDiario relatorioDiario) throws Exception {
