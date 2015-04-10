@@ -9,7 +9,12 @@ public class MessagesBundle {
 		THREAD_LOCAL.set(localization);
 	}
 
+	@SuppressWarnings("all")
 	public static String getMessage(String key, String... args) {
+		Localization localization = THREAD_LOCAL.get();
+		if (localization == null) {
+			return "???" + key + "???";
+		}
 		return THREAD_LOCAL.get().getMessage(key, args);
 	}
 

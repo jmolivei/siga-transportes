@@ -17,13 +17,14 @@ import br.gov.jfrj.siga.dp.dao.CpDao;
 import br.gov.jfrj.siga.tp.model.EscalaDeTrabalho;
 import br.gov.jfrj.siga.tp.model.EstadoMissao;
 import br.gov.jfrj.siga.tp.model.Missao;
+import br.gov.jfrj.siga.tp.model.TpDao;
 import br.gov.jfrj.siga.vraptor.SigaObjects;
 
 @Resource
 public class MissaoController extends TpController {
 
 	public MissaoController(HttpServletRequest request, Result result, CpDao dao, Localization localization, Validator validator, SigaObjects so, EntityManager em) throws Exception {
-		super(request, result, dao, localization, validator, so, em);
+		super(request, result, TpDao.getInstance(), localization, validator, so, em);
 	}
 
 	@SuppressWarnings("unchecked")

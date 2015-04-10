@@ -10,7 +10,7 @@ import javax.validation.Payload;
 
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.FIELD)
-@Constraint(validatedBy = RenavamCheck.class)
+@Constraint(validatedBy = RenavamConstraintValidator.class)
 public @interface Renavam {
 
 	String message() default "{renavamCheck.validation}";

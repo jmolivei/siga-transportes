@@ -1,7 +1,5 @@
 package br.gov.jfrj.siga.tp.util;
 
-import java.lang.reflect.Method;
-
 import br.com.caelum.vraptor.Result;
 import br.gov.jfrj.siga.model.ActiveRecord;
 
@@ -61,7 +59,6 @@ public enum Combo {
 	 */
 	@SuppressWarnings({ "rawtypes", "unchecked" })
 	public static Result montar(Result result, Combo... args) throws Exception {
-		// TODO: Refatorar esse metodo para utilizar o AR.
 		for (Combo combo : args) {
 			Class<?> nomeDaClasse = Class.forName(combo.nomeCompletoDaClasse());
 			ActiveRecord<?> activeRecord = new ActiveRecord(nomeDaClasse);

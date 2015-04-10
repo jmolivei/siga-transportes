@@ -9,7 +9,9 @@ import javax.validation.Constraint;
 
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.FIELD)
-@Constraint(validatedBy=CnhCheck.class)
+@Constraint(validatedBy=CnhConstraintValidator.class)
 public @interface Cnh {
-
+	String message() default "{condutor.CnhCheck.cnhinvalida}";
+	Class<Object>[] groups() default {};
+	Class<Object>[] payload() default {};
 }

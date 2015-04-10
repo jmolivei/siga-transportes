@@ -1,18 +1,20 @@
 package br.gov.jfrj.siga.tp.vraptor;
 
 import java.util.List;
-
 import javax.persistence.EntityManager;
 import javax.servlet.http.HttpServletRequest;
-
-import play.data.validation.Validation;
+import javax.validation.Valid;
 import play.mvc.With;
 import br.com.caelum.vraptor.Path;
 import br.com.caelum.vraptor.Resource;
 import br.com.caelum.vraptor.Result;
 import br.com.caelum.vraptor.Validator;
 import br.com.caelum.vraptor.core.Localization;
+import br.com.caelum.vraptor.view.Results;
 import br.gov.jfrj.siga.dp.dao.CpDao;
+import br.gov.jfrj.siga.tp.auth.annotation.RoleAdmin;
+import br.gov.jfrj.siga.tp.auth.annotation.RoleAdminMissao;
+import br.gov.jfrj.siga.tp.auth.annotation.RoleAdminMissaoComplexo;
 import br.gov.jfrj.siga.tp.model.AutoDeInfracao;
 import br.gov.jfrj.siga.tp.model.Condutor;
 import br.gov.jfrj.siga.tp.model.ItemMenu;
@@ -97,16 +99,17 @@ public class AutoDeInfracaoController extends TpController{
 //	@RoleAdmin
 //	@RoleAdminMissao
 //	@RoleAdminMissaoComplexo
-	public void salvar(AutoDeInfracao autoDeInfracao) throws Exception {
-//		autoDeInfracao.setCondutor(buscaCondutor(autoDeInfracao.getCondutor().getId()));
+	public void salvar(@Valid AutoDeInfracao autoDeInfracao) throws Exception {
+		autoDeInfracao.setCondutor(Condutor.AR.findById(autoDeInfracao.getCondutor().getId()));
+		autoDeInfracao.setVeiculo(Veiculo.AR.findById(autoDeInfracao.getVeiculo().getId()));
+		
 		TipoDeNotificacao tipoNotificacao = autoDeInfracao.codigoDaAutuacao != null ? 
 				TipoDeNotificacao.AUTUACAO : TipoDeNotificacao.PENALIDADE;
 
-		if (autoDeInfracao.dataDePagamento != null
-				&& autoDeInfracao.dataPosteriorDataCorrente(autoDeInfracao.dataDePagamento)) 
-			Validation.addError("dataPagamento", "autosDeInfracao.dataDePagamento.validation");
+ 		error(autoDeInfracao.dataDePagamento != null && autoDeInfracao.dataPosteriorDataCorrente(autoDeInfracao.dataDePagamento)
+ 				, "dataPagamento", "veiculo.autosDeInfracao.dataDePagamento.validation");
 
-		if (Validation.hasErrors()) {
+		if (validator.hasErrors()) {
 			List<Veiculo> veiculos = Veiculo.listarTodos(getTitular().getOrgaoUsuario());
 			List<Condutor> condutores = Condutor.listarTodos(getTitular().getOrgaoUsuario());
 			
@@ -114,11 +117,11 @@ public class AutoDeInfracaoController extends TpController{
 			result.include("veiculos", veiculos);
 			result.include("condutores", condutores);
 			result.include("tipoNotificacao", tipoNotificacao);
-			
+				
 			if(autoDeInfracao.id  > 0)
-				result.forwardTo(this).editar(autoDeInfracao.id);
-			else 
-				result.forwardTo(this).incluir(tipoNotificacao.getDescricao());
+				validator.onErrorUse(Results.logic()).forwardTo(AutoDeInfracaoController.class).editar(autoDeInfracao.id);
+			else
+				validator.onErrorUse(Results.logic()).forwardTo(AutoDeInfracaoController.class).incluir(tipoNotificacao.getDescricao());
 			
 		} else {
 			autoDeInfracao.save();

@@ -3,7 +3,6 @@ package br.gov.jfrj.siga.tp.model;
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.List;
-
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
@@ -16,9 +15,6 @@ import javax.persistence.Table;
 import javax.persistence.Transient;
 import javax.validation.constraints.NotNull;
 import org.hibernate.envers.Audited;
-import play.data.binding.As;
-import play.data.validation.Required;
-import play.modules.br.jus.jfrj.siga.uteis.validadores.validarAnoData.ValidarAnoData;
 import br.com.caelum.vraptor.Convert;
 import br.gov.jfrj.siga.model.ActiveRecord;
 import br.gov.jfrj.siga.tp.binder.DoubleConverter;
@@ -36,78 +32,71 @@ public class AutoDeInfracao extends TpModel implements Comparable<AutoDeInfracao
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "hibernate_sequence_generator") @SequenceGenerator(name = "hibernate_sequence_generator", sequenceName="SIGATP.hibernate_sequence") 
 	public Long id;
 	
-//	@Required
-	@As(lang={"*"}, value = {"dd/MM/yyyy HH:mm"})
-	@ValidarAnoData(descricaoCampo="Data/Hora")
+//	@As(lang={"*"}, value = {"dd/MM/yyyy HH:mm"})
+//	@ValidarAnoData(descricaoCampo="Data/Hora")
+	@NotNull
 	public Calendar dataHora;
 	
-//	@Required
 	@ManyToOne
-//	@NotNull
+	@NotNull
 	public Veiculo veiculo;	
 	
-//	@Required
+	@NotNull
 	public String codigoDaAutuacao;
 	
-//	@Required
+	@NotNull
 	public String codigoDaPenalidade;
 	
-//	@Required
+	@NotNull
 	@UpperCase
 	public String descricao;
 	
-//	@Required
+	@NotNull
 	@Enumerated(EnumType.STRING)
 	public Gravidade gravidade;
 	
-//	@Required
+	@NotNull
 	@UpperCase
 	public String enquadramento;
 	
-//	@Required
+	@NotNull
 	@UpperCase
 	public String local;
 	
-//	@Required
+	@NotNull
 	@Enumerated(EnumType.STRING)
 	public PerguntaSimNao foiRecebido;
 	
-//	@Required
+	@NotNull
 	@Convert(DoubleConverter.class)
 	public double valor;
 	
-	@Convert(DoubleConverter.class)
 	public double valorComDesconto;
 	
-//	@Required
+	@NotNull
 	public int quantidadeDePontos;
 	
-//	@Required
-	@As(lang={"*"}, value = {"dd/MM/yyyy"})
-	@ValidarAnoData(intervalo=2, descricaoCampo="Data de Vencimento")
+//	@ValidarAnoData(intervalo=2, descricaoCampo="Data de Vencimento")
+	@NotNull
 	public Calendar dataDeVencimento;
 	
-	@As(lang={"*"}, value = {"dd/MM/yyyy"})
-	@ValidarAnoData(intervalo=5, descricaoCampo="Data de Pagamento")
+//	@ValidarAnoData(intervalo=5, descricaoCampo="Data de Pagamento")
 	public Calendar dataDePagamento;
 	
 	//@Required
 	//public Requisicao requisicao;
 	
-//	@Required
 	@ManyToOne
 	@NotNull
 	public Condutor condutor;
 	
-	@As(lang={"*"}, value = {"dd/MM/yyyy"})
-	@ValidarAnoData(descricaoCampo="Data Limite Apresentacao")
+//	@ValidarAnoData(descricaoCampo="Data Limite Apresentacao")
 	public Calendar dataLimiteApresentacao;
 	
 	@UpperCase
 	public String memorando;
 	
-	@As(lang={"*"}, value = {"dd/MM/yyyy"})
-	@ValidarAnoData(descricaoCampo="Data do Processo")
+//	@ValidarAnoData(descricaoCampo="Data do Processo")
 	public Calendar dataDoProcesso;
 	
 	@UpperCase

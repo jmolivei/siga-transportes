@@ -10,10 +10,10 @@ import javax.validation.Payload;
 
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.FIELD)
-@Constraint(validatedBy = ChassiCheck.class)
+@Constraint(validatedBy = ChassiConstraintValidator.class)
 public @interface Chassi {
 
-	String message() default "{chassiCheck.validation}";
+	String message() default "{chassi.validation}";
 
 	Class<?>[] groups() default {};
 

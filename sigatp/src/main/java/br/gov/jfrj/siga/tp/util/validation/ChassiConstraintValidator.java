@@ -6,9 +6,7 @@ import java.util.regex.Pattern;
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
 
-import br.gov.jfrj.siga.tp.util.MessagesBundle;
-
-public class ChassiCheck implements ConstraintValidator<Chassi, String> {
+public class ChassiConstraintValidator implements ConstraintValidator<Chassi, String> {
 
 	@Override
 	public void initialize(Chassi annotation) {
@@ -16,11 +14,10 @@ public class ChassiCheck implements ConstraintValidator<Chassi, String> {
 
 	@Override
 	public boolean isValid(String value, ConstraintValidatorContext constraintValidatorContext) {
-		if (value != null && !validarChassi(value)) {
-			constraintValidatorContext.buildConstraintViolationWithTemplate(MessagesBundle.getMessage("chassi.validation")).addConstraintViolation();
-			return false;
+		if (value == null) {
+			return true;
 		}
-		return true;
+		return validarChassi(value);
 	}
 
 	public Boolean validarChassi(String valor) {
