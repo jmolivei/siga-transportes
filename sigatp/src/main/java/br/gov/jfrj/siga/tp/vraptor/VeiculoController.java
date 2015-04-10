@@ -47,8 +47,8 @@ public class VeiculoController extends TpController {
 		result.include("veiculos", Veiculo.listarTodos(cpOrgaoUsuario));
 	}
 
-	// @RoleAdmin
-	// @RoleAdminFrota
+	@RoleAdmin
+	@RoleAdminFrota
 	@Path("/salvar")
 	public void salvar(@Valid final Veiculo veiculo) throws Exception {
 		validarAntesDeSalvar(veiculo);
@@ -68,15 +68,15 @@ public class VeiculoController extends TpController {
 		result.redirectTo(this).listar();
 	}
 
-	// @RoleAdmin
-	// @RoleAdminFrota
+	@RoleAdmin
+	@RoleAdminFrota
 	@Path("/incluir")
 	public void incluir() throws Exception {
 		result.forwardTo(this).editar(null);
 	}
 
-	// @RoleAdmin
-	// @RoleAdminFrota
+	@RoleAdmin
+	@RoleAdminFrota
 	@Path("/editar/{id}")
 	public void editar(Long id) throws Exception {
 		Veiculo veiculo = obterVeiculo(id);
