@@ -29,7 +29,6 @@ import org.hibernate.envers.Audited;
 import org.hibernate.envers.RelationTargetAuditMode;
 import org.hibernate.validator.constraints.NotEmpty;
 
-import play.data.validation.Unique;
 import play.db.jpa.JPA;
 import play.modules.br.jus.jfrj.siga.uteis.validadores.validarAnoData.ValidarAnoData;
 import br.gov.jfrj.siga.cp.model.DpLotacaoSelecao;
@@ -41,12 +40,14 @@ import br.gov.jfrj.siga.tp.util.PerguntaSimNao;
 import br.gov.jfrj.siga.tp.util.Situacao;
 import br.gov.jfrj.siga.tp.validation.annotation.Chassi;
 import br.gov.jfrj.siga.tp.validation.annotation.Renavam;
+import br.gov.jfrj.siga.tp.validation.annotation.Unique;
 import br.gov.jfrj.siga.tp.validation.annotation.UpperCase;
 
 @Entity
 // @Table(name = "VEICULO_2", schema="SIGAOR")
 @Audited
 @Table(schema = "SIGATP")
+@Unique(message = "{veiculo.placa.unique}", field = "placa")
 public class Veiculo extends TpModel implements Comparable<Veiculo> {
 
 	private static final long serialVersionUID = -3602265045747814797L;
@@ -59,7 +60,7 @@ public class Veiculo extends TpModel implements Comparable<Veiculo> {
 
 	@NotEmpty
 	@Size(max = 8, message = "{veiculo.placa.maxSize}")
-	@Unique(message = "{veiculo.placa.unique}")
+	// @Unique(message = "{veiculo.placa.unique}")
 	@UpperCase
 	private String placa;
 
