@@ -1,7 +1,9 @@
-package br.gov.jfrj.siga.tp.util.validation;
+package br.gov.jfrj.siga.tp.validation;
 
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
+
+import br.gov.jfrj.siga.tp.validation.annotation.Cnh;
 
 public class CnhConstraintValidator implements ConstraintValidator<Cnh, String> {
 

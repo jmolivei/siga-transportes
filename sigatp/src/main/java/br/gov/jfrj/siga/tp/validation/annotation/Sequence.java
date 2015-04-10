@@ -1,4 +1,4 @@
-package br.gov.jfrj.siga.tp.util.validation;
+package br.gov.jfrj.siga.tp.validation.annotation;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
@@ -14,10 +14,18 @@ import br.jus.jfrj.siga.uteis.SiglaDocumentoType;
  * @author jlo
  *
  */
+/**
+ * 
+ * Nao esta sendo utilizada em nenhum campo e nao possui validador.
+ * 
+ * @author db1
+ *
+ */
+@Deprecated
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.FIELD)
-public @interface Sequence
-{
-    String propertieOrgao();
-    SiglaDocumentoType siglaDocumento(); 
+public @interface Sequence {
+	String propertieOrgao();
+
+	SiglaDocumentoType siglaDocumento();
 }

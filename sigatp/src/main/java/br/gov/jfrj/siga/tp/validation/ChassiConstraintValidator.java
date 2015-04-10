@@ -1,10 +1,12 @@
-package br.gov.jfrj.siga.tp.util.validation;
+package br.gov.jfrj.siga.tp.validation;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
+
+import br.gov.jfrj.siga.tp.validation.annotation.Chassi;
 
 public class ChassiConstraintValidator implements ConstraintValidator<Chassi, String> {
 
