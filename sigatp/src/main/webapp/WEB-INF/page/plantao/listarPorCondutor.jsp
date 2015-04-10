@@ -5,8 +5,6 @@
 <%@ taglib prefix="siga" uri="http://localhost/jeetags"%>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 
-<jsp:include page="../tags/calendario.jsp" />
-
 <siga:pagina titulo="Transportes">
 	<div class="gt-bd clearfix">
 		<div class="gt-content clearfix">
@@ -47,8 +45,9 @@
 				</c:otherwise>
 			</c:choose>
 			<div class="gt-table-buttons">
-				<a href="${linkTo[PlantaoController].incluir[idCond]}"
-					class="gt-btn-medium gt-btn-left"><fmt:message key="views.botoes.incluir"/></a>
+				<a href="${linkTo[PlantaoController].incluir[idCond]}" class="gt-btn-medium gt-btn-left">
+					<fmt:message key="views.botoes.incluir"/>
+				</a>
 			</div>
 		</div>
 	</div>
