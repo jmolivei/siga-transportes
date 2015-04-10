@@ -32,8 +32,6 @@ public class AutoDeInfracao extends TpModel implements Comparable<AutoDeInfracao
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "hibernate_sequence_generator") @SequenceGenerator(name = "hibernate_sequence_generator", sequenceName="SIGATP.hibernate_sequence") 
 	public Long id;
 	
-//	@As(lang={"*"}, value = {"dd/MM/yyyy HH:mm"})
-//	@ValidarAnoData(descricaoCampo="Data/Hora")
 	@NotNull
 	public Calendar dataHora;
 	
@@ -76,11 +74,9 @@ public class AutoDeInfracao extends TpModel implements Comparable<AutoDeInfracao
 	@NotNull
 	public int quantidadeDePontos;
 	
-//	@ValidarAnoData(intervalo=2, descricaoCampo="Data de Vencimento")
 	@NotNull
 	public Calendar dataDeVencimento;
 	
-//	@ValidarAnoData(intervalo=5, descricaoCampo="Data de Pagamento")
 	public Calendar dataDePagamento;
 	
 	//@Required
@@ -90,13 +86,11 @@ public class AutoDeInfracao extends TpModel implements Comparable<AutoDeInfracao
 	@NotNull
 	public Condutor condutor;
 	
-//	@ValidarAnoData(descricaoCampo="Data Limite Apresentacao")
 	public Calendar dataLimiteApresentacao;
 	
 	@UpperCase
 	public String memorando;
 	
-//	@ValidarAnoData(descricaoCampo="Data do Processo")
 	public Calendar dataDoProcesso;
 	
 	@UpperCase
