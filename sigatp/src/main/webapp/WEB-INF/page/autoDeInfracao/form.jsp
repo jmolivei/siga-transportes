@@ -42,7 +42,7 @@ function verificaCampos(){
 	<div class="gt-content-box gt-form clearfix">
 		<div class="coluna margemDireitaG">
 	       	<label for="autoDeInfracao.dataHora" class= "obrigatorio">Data e Hora</label>
-			<input type="text" id="dataHora" name="autoDeInfracao.dataHora" size="16" class="dataHora" value="<fmt:formatDate pattern="dd/MM/yyyy HH:mm" value="${autoDeInfracao.dataHora.time}"/>"/> 
+			<input type="text" id="dataHora" name="autoDeInfracao.dataHora" value="<fmt:formatDate pattern="dd/MM/yyyy HH:mm" value="${autoDeInfracao.dataHora.time}" />" size="20" class="dataHora"/> 
 			<label for="autoDeInfracao.veiculo.id" class= "obrigatorio">Ve&iacute;culo</label>
 	       	<select name="autoDeInfracao.veiculo.id">
 	       		<c:forEach items="${veiculos}" var="veiculo">

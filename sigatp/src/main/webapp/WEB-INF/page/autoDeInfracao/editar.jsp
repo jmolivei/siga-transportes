@@ -4,8 +4,6 @@
 <%@ taglib prefix="siga" uri="http://localhost/jeetags"%>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 
-<jsp:include page="../tags/calendario.jsp" />
-
 <siga:pagina>
 	<div class="gt-bd clearfix">
 		<div class="gt-content clearfix">

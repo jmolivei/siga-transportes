@@ -7,8 +7,8 @@
 <sigatp:decimal/>
 <jsp:include page="menu.jsp" />
 <sigatp:erros/>
-			
-<form id="formVeiculos" action="${linkTo[VeiculoController].salvar[veiculo]}" enctype="multipart/form-data">
+
+<form id="formVeiculos" action="${linkTo[VeiculoController].salvar[veiculo]}" method="post" enctype="multipart/form-data">
 	<input type="hidden" name="veiculo.id" value="${veiculo.id}">
 	
 	<h3>Dados de Identifica&ccedil;&atilde;o</h3>
