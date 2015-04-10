@@ -30,6 +30,7 @@ function verificaCampos(){
 		<div class="gt-content clearfix">
 			<h2>${plantao.condutor.dadosParaExibicao} - ${plantao.id > 0 ? "Editar": "Inserir" } Plant&atilde;o</h2>
 			<sigatp:erros/>
+			<jsp:include page="../veiculo/menu.jsp"/>
 			<br>
 			<form name="formPlantoes" id="formPlantoes" action="${linkTo[PlantaoController].salvar}" method="post" cssClass="form">
 				<input type="hidden" name="plantao.id" value="${plantao.id}" />

@@ -10,7 +10,8 @@
 		<div class="gt-content clearfix">
 			<h2>${condutor.dadosParaExibicao}</h2>
 			<h3>Plant&otilde;es</h3>
-
+			<jsp:include page="../condutor/menu.jsp"></jsp:include>
+	
 			<c:choose>
 				<c:when test="${plantoes.size()>0}">
 					<div class="gt-content-box gt-for-table">
