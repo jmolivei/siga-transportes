@@ -3,6 +3,8 @@
 <%@ taglib uri="http://localhost/jeetags" prefix="siga" %>
 <%@ taglib prefix="sigatp" tagdir="/WEB-INF/tags/" %>
 
+<jsp:include page="../tags/calendario.jsp" />
+
 <script type="text/javascript">
 		var urlSalvar = '<c:out value="${linkTo[EscalaDeTrabalhoController].salvar}" />';
 		var urlFinalizar = '<c:out value="${linkTo[EscalaDeTrabalhoController].finalizar}" />';
@@ -15,7 +17,8 @@
 			<h2>${condutor.dadosParaExibicao}</h2>
 			<h3>Escalas de Trabalho</h3>
 			<sigatp:erros/>
-			<form id="formEscalasDeTrabalho" method="get,post" onsubmit="return false;" enctype="multipart/form-data">
+			<jsp:include page="../condutor/menu.jsp"></jsp:include>
+			<form id="formEscalasDeTrabalho" method="post" onsubmit="return false;" enctype="multipart/form-data">
 				<div class="gt-content-box gt-for-table">
 					<h3>&nbsp;&nbsp;Escala de Trabalho Vigente</h3>
 					<input type="hidden" name="escala.dataVigenciaInicio" value='<fmt:formatDate pattern="dd/MM/yyyy HH:mm" value="${escala.dataVigenciaInicio.time}"/>' />
