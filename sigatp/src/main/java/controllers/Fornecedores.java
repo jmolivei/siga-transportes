@@ -7,6 +7,7 @@ import play.data.validation.Validation;
 import play.mvc.Before;
 import play.mvc.Controller;
 import play.mvc.With;
+import br.gov.jfrj.siga.dp.CpUF;
 import br.gov.jfrj.siga.tp.auth.annotation.RoleAdmin;
 import br.gov.jfrj.siga.tp.auth.annotation.RoleAdminFrota;
 import br.gov.jfrj.siga.tp.auth.annotation.RoleAdminGabinete;
@@ -38,8 +39,8 @@ public class Fornecedores extends Controller {
 	@RoleAdminMissao
 	@RoleAdminGabinete
 	@RoleGabinete
-	public static void editar(Long id) {
-		Fornecedor fornecedor = Fornecedor.findById(id);
+	public static void editar(Long id) throws Exception {
+		Fornecedor fornecedor = Fornecedor.AR.findById(id);
 		render(fornecedor);
 	}
 
@@ -62,15 +63,15 @@ public class Fornecedores extends Controller {
 	@RoleAdmin
 	@RoleAdminFrota
 	@RoleAdminMissao
-	public static void excluir(Long id) {
-		Fornecedor fornecedor = Fornecedor.findById(id);
+	public static void excluir(Long id) throws Exception {
+		Fornecedor fornecedor = Fornecedor.AR.findById(id);
 		fornecedor.delete();
 		listar();
 	}
 
 	@Before(priority = 200, only = { "incluir", "editar", "salvar" })
 	private static void listarUf() {
-		List<Uf> listaUF = Uf.listarTodos();
+		List<CpUF> listaUF = Uf.listarTodos();
 		renderArgs.put("listaUF", listaUF);
 	}
 }

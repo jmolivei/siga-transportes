@@ -1,4 +1,4 @@
-package br.gov.jfrj.siga.tp.validator;
+package br.gov.jfrj.siga.tp.vraptor.validator;
 
 import java.util.ArrayList;
 import java.util.HashMap;

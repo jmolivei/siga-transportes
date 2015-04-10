@@ -29,24 +29,25 @@ import org.hibernate.envers.Audited;
 import org.hibernate.envers.RelationTargetAuditMode;
 import org.hibernate.validator.constraints.NotEmpty;
 
-import play.data.validation.Unique;
 import play.db.jpa.JPA;
 import play.modules.br.jus.jfrj.siga.uteis.validadores.validarAnoData.ValidarAnoData;
-import br.com.caelum.vraptor.Convert;
+import br.gov.jfrj.siga.cp.model.DpLotacaoSelecao;
 import br.gov.jfrj.siga.dp.CpOrgaoUsuario;
 import br.gov.jfrj.siga.dp.DpLotacao;
 import br.gov.jfrj.siga.model.ActiveRecord;
-import br.gov.jfrj.siga.tp.binder.DoubleConverter;
+import br.gov.jfrj.siga.tp.util.MessagesBundle;
 import br.gov.jfrj.siga.tp.util.PerguntaSimNao;
 import br.gov.jfrj.siga.tp.util.Situacao;
-import br.gov.jfrj.siga.tp.util.validation.Chassi;
-import br.gov.jfrj.siga.tp.util.validation.Renavam;
-import br.jus.jfrj.siga.uteis.UpperCase;
+import br.gov.jfrj.siga.tp.validation.annotation.Chassi;
+import br.gov.jfrj.siga.tp.validation.annotation.Renavam;
+import br.gov.jfrj.siga.tp.validation.annotation.Unique;
+import br.gov.jfrj.siga.tp.validation.annotation.UpperCase;
 
 @Entity
 // @Table(name = "VEICULO_2", schema="SIGAOR")
 @Audited
 @Table(schema = "SIGATP")
+@Unique(message = "{veiculo.placa.unique}", field = "placa")
 public class Veiculo extends TpModel implements Comparable<Veiculo> {
 
 	private static final long serialVersionUID = -3602265045747814797L;
@@ -59,7 +60,6 @@ public class Veiculo extends TpModel implements Comparable<Veiculo> {
 
 	@NotEmpty
 	@Size(max = 8, message = "{veiculo.placa.maxSize}")
-	@Unique(message = "{veiculo.placa.unique}")
 	@UpperCase
 	private String placa;
 
@@ -89,7 +89,7 @@ public class Veiculo extends TpModel implements Comparable<Veiculo> {
 	private DpLotacao lotacaoAtual;
 
 	@Transient
-	private Double odometroEmKmAtual = 0D;
+	private Double odometroEmKmAtual;
 
 	@Enumerated(EnumType.STRING)
 	private PerguntaSimNao usoComum;
@@ -139,7 +139,7 @@ public class Veiculo extends TpModel implements Comparable<Veiculo> {
 
 	private String pneuPressaoTraseira;
 
-	@org.hibernate.validator.constraints.NotEmpty
+	@NotEmpty
 	@Renavam
 	private String renavam;
 
@@ -192,14 +192,13 @@ public class Veiculo extends TpModel implements Comparable<Veiculo> {
 	@UpperCase
 	private String outros;
 
-//	@As(lang = { "*" }, value = { "dd/MM/yyyy" })
+	// @As(lang = { "*" }, value = { "dd/MM/yyyy" })
 	@ValidarAnoData(descricaoCampo = "Data de Aquisicao")
 	private Calendar dataAquisicao;
 
-	@Convert(DoubleConverter.class)
 	private Double valorAquisicao;
 
-//	@As(lang = { "*" }, value = { "dd/MM/yyyy" })
+	// @As(lang = { "*" }, value = { "dd/MM/yyyy" })
 	@ValidarAnoData(descricaoCampo = "Data de Garantia")
 	private Calendar dataGarantia;
 
@@ -208,17 +207,17 @@ public class Veiculo extends TpModel implements Comparable<Veiculo> {
 
 	private String numeroCartaoAbastecimento;
 
-//	@As(lang = { "*" }, value = { "dd/MM/yyyy" })
+	// @As(lang = { "*" }, value = { "dd/MM/yyyy" })
 	@ValidarAnoData(descricaoCampo = "Validade do Cartao de Abastecimento")
 	private Calendar validadeCartaoAbastecimento;
 
 	private String numeroCartaoSeguro;
 
-//	@As(lang = { "*" }, value = { "dd/MM/yyyy" })
+	// @As(lang = { "*" }, value = { "dd/MM/yyyy" })
 	@ValidarAnoData(intervalo = 10, descricaoCampo = "Validade do Cartao de Seguro")
 	private Calendar validadeCartaoSeguro;
 
-//	@As(lang = { "*" }, value = { "dd/MM/yyyy HH:mm" })
+	// @As(lang = { "*" }, value = { "dd/MM/yyyy HH:mm" })
 	@ValidarAnoData(descricaoCampo = "Data de Alienacao")
 	private Calendar dataAlienacao;
 
@@ -302,6 +301,9 @@ public class Veiculo extends TpModel implements Comparable<Veiculo> {
 	}
 
 	public String getDadosParaExibicao() {
+		if (ehNovo()) {
+			return MessagesBundle.getMessage("veiculo.cadastro");
+		}
 		return this.marca + " " + this.modelo + " - " + this.placa;
 	}
 
@@ -897,5 +899,14 @@ public class Veiculo extends TpModel implements Comparable<Veiculo> {
 
 	public void setRelatoriosdiarios(List<RelatorioDiario> relatoriosdiarios) {
 		this.relatoriosdiarios = relatoriosdiarios;
+	}
+
+	public Veiculo comAtualSelecionada(DpLotacaoSelecao lotacaoAtualSel) {
+		if (lotacaoAtualSel.getId() != null) {
+			DpLotacao dpLotacao = new DpLotacao();
+			dpLotacao.setId(lotacaoAtualSel.getId());
+			this.lotacaoAtual = dpLotacao;
+		}
+		return this;
 	}
 }

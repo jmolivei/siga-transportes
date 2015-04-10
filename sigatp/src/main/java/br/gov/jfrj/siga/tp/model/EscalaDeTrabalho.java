@@ -152,8 +152,8 @@ public class EscalaDeTrabalho extends TpModel {
 			
 			String dataSaidaMissao = String.valueOf(DiaDaSemana.getDiaDaSemana(data).getOrdem()) + strHoraSaidaMissao; 
 			                       
-			if (Integer.parseInt(dataSaidaMissao) >= Integer.parseInt(diaDeTrabalho.diaEntrada.getOrdem() + diaDeTrabalho.getHoraEntradaFormatada("HHmm"))
-				&&	Integer.parseInt(dataSaidaMissao) <= Integer.parseInt(diaDeTrabalho.diaSaida.getOrdem() + diaDeTrabalho.getHoraSaidaFormatada("HHmm"))) {
+			if (Integer.parseInt(dataSaidaMissao) >= Integer.parseInt(diaDeTrabalho.getDiaEntrada().getOrdem() + diaDeTrabalho.getHoraEntradaFormatada("HHmm"))
+				&&	Integer.parseInt(dataSaidaMissao) <= Integer.parseInt(diaDeTrabalho.getDiaSaida().getOrdem() + diaDeTrabalho.getHoraSaidaFormatada("HHmm"))) {
 				return true;
 			}
 		}

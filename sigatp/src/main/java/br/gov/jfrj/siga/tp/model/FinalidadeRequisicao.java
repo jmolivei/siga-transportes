@@ -11,11 +11,11 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
+import javax.validation.constraints.NotNull;
 
 import org.hibernate.envers.Audited;
 import org.hibernate.envers.RelationTargetAuditMode;
 
-import play.data.validation.Required;
 import play.data.validation.Unique;
 import play.i18n.Messages;
 import play.modules.br.jus.jfrj.siga.uteis.validadores.upperCase.UpperCase;
@@ -37,7 +37,7 @@ public class FinalidadeRequisicao extends TpModel {
 	@SequenceGenerator(name = "hibernate_sequence_generator", sequenceName="SIGATP.hibernate_sequence") 
 	private Long id;
 	
-	@Required
+	@NotNull
 	@Unique(message="finalidadeRequisicao.descricao.unique")
 	@Column(unique=true)
 	@UpperCase

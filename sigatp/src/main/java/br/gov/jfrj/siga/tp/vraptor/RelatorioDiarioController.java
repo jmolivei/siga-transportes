@@ -1,26 +1,20 @@
 package br.gov.jfrj.siga.tp.vraptor;
 
-import java.util.Calendar;
 import java.util.List;
 
 import javax.persistence.EntityManager;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 
-import controllers.AutorizacaoGIAntigo;
 import br.com.caelum.vraptor.Path;
 import br.com.caelum.vraptor.Resource;
 import br.com.caelum.vraptor.Result;
 import br.com.caelum.vraptor.Validator;
 import br.com.caelum.vraptor.core.Localization;
 import br.com.caelum.vraptor.view.Results;
-import br.gov.jfrj.siga.dp.dao.CpDao;
-import br.gov.jfrj.siga.tp.auth.AutorizacaoGI;
-import br.gov.jfrj.siga.tp.auth.annotation.RoleAdmin;
-import br.gov.jfrj.siga.tp.auth.annotation.RoleAdminFrota;
 import br.gov.jfrj.siga.tp.model.ItemMenu;
-import br.gov.jfrj.siga.tp.model.LotacaoVeiculo;
 import br.gov.jfrj.siga.tp.model.RelatorioDiario;
+import br.gov.jfrj.siga.tp.model.TpDao;
 import br.gov.jfrj.siga.tp.model.Veiculo;
 import br.gov.jfrj.siga.vraptor.SigaObjects;
 
@@ -28,9 +22,9 @@ import br.gov.jfrj.siga.vraptor.SigaObjects;
 @Path("/app/relatorioDiario/")
 public class RelatorioDiarioController extends TpController {
 	
-	public RelatorioDiarioController(HttpServletRequest request, Result result, CpDao dao, Localization localization, 
-			Validator validator, SigaObjects so, AutorizacaoGI dadosAutorizacao, EntityManager em) throws Exception {
-		super(request, result, dao, localization, validator, so, dadosAutorizacao, em);
+	public RelatorioDiarioController(HttpServletRequest request, Result result, Localization localization, 
+			Validator validator, SigaObjects so, EntityManager em) throws Exception {
+		super(request, result, TpDao.getInstance(), localization, validator, so, em);
 	}
 
 	@Path("/listar/{idVeiculo}")

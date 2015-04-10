@@ -6,6 +6,7 @@ import java.util.Locale;
 
 import play.templates.JavaExtensions;
 
+@Deprecated
 public class CustomJavaExtensions extends JavaExtensions {
 	public static String formataMoedaBrasileira(Number number) {
 		Locale defaultLocale = new Locale("pt", "BR", "BRL");

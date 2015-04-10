@@ -44,6 +44,7 @@ veiculo.anoFabricacao.maxSize=O ano de fabricacao excedeu o tamanho de 4 digitos
 veiculo.anoModelo.minSize=O ano do modelo deve ter o tamanho exato de 4 digitos.
 veiculo.anoModelo.maxSize=O ano do modelo excedeu o tamanho de 4 digito.
 renavamCheck.validation=Renavam Inv&aacute;lido.
+chassiCheck.validation=Chassi Inv&aacute;lido.
 missao.requisicoesTransporte.required=Inclua ao menos uma requisicao de transporte.
 andamentos.estadoRequisicao.jaCancelada.validation=Requisi&ccedil;&atilde;o j&aacute; foi cancelada.
 andamentos.estadoRequisicao.andamento.validation=Requisi&ccedil;&atilde;o n&atilde;o pode ser cancelada pois est&aacute; em andamento.

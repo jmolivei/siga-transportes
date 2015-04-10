@@ -27,11 +27,11 @@ import br.gov.jfrj.siga.vraptor.SigaObjects;
 public class AfastamentoController extends TpController {
 
 	public AfastamentoController(HttpServletRequest request, Result result, CpDao dao, Localization localization, Validator validator, SigaObjects so, EntityManager em) throws Exception {
-		super(request, result, TpDao.getInstance(), localization, validator, so, em);
+		super(request, result, TpDao.getInstance(), validator, so, em);
 	}
 
-	@Path("/app/afastamento/listar/{idCondutor}")
-	public void lista(Long idCondutor) throws Exception {
+	@Path("/app/afastamento/listarPorCondutor/{idCondutor}")
+	public void listarPorCondutor(Long idCondutor) throws Exception {
 		Condutor condutor = Condutor.AR.findById(idCondutor);
 		List<Afastamento> afastamentos = Afastamento.buscarTodosPorCondutor(condutor);
 		MenuMontador.instance(result).recuperarMenuCondutores(idCondutor, ItemMenu.AFASTAMENTOS);
@@ -97,7 +97,7 @@ public class AfastamentoController extends TpController {
 				result.redirectTo(this).edita(afastamento.getCondutor().getId(), afastamento.getId());
 			} else {
 				afastamento.save();
-				result.redirectTo(this).lista(afastamento.getCondutor().getId());
+				result.redirectTo(this).listarPorCondutor(afastamento.getCondutor().getId());
 			}
 		}
 	}
@@ -109,7 +109,7 @@ public class AfastamentoController extends TpController {
 	public void exclui(Long id) throws Exception {
 		Afastamento afastamento = Afastamento.AR.findById(id);
 		afastamento.delete();
-		result.redirectTo(this).lista(afastamento.getCondutor().getId());
+		result.redirectTo(this).listarPorCondutor(afastamento.getCondutor().getId());
 	}
 
 }

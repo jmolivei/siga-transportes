@@ -20,7 +20,6 @@ public class GenericCalendarConverter implements Converter<Calendar> {
 	private static final String[] PADROES = { 
 		"dd/MM/yyyy", 
 		DD_MM_YYYY_HH_MM
-
 	};
 
 	@Override
@@ -28,6 +27,8 @@ public class GenericCalendarConverter implements Converter<Calendar> {
 		if (dataPreenchida(value)) {
 			if (value.matches("\\d\\d:\\d\\d")) {
 				return converterQuandoApenasHorasMinutos(value);
+			} else if(value.matches("\\d:\\d\\d")) {
+				return converterQuandoApenasHorasMinutos("0" + value);
 			}
 			return converterUtilizandoPadroesAceitos(value);
 		}

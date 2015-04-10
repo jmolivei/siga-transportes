@@ -24,8 +24,8 @@
 							<tbody>
 							<c:forEach items="${escalas}" var="item">
 							   	<tr>
-						    	    <td>${item.dataVigenciaInicio}</td>
-						    		<td>${item.dataVigenciaFim}</td>
+						    	    <td><fmt:formatDate pattern="dd/MM/yyyy" value="${item.dataVigenciaInicio.time}" /></td>
+						    		<td><fmt:formatDate pattern="dd/MM/yyyy" value="${item.dataVigenciaFim.time}" /></td>
 						    		<td>
 						    			${item.condutor.telefoneInstitucional}
 						    			<br/>
@@ -42,14 +42,14 @@
 							    			<span style="color: red; font-weight: bolder;">
 							    		</c:if>
 							    		<c:if test="${null != item.condutor.dataVencimentoCNH}">
-								    		${item.condutor.formatDateDDMMYYYY(dataVencimentoCNH)}
+							    			<fmt:formatDate pattern="dd/MM/yyyy" value="${item.condutor.dataVencimentoCNH.time}" />
 							    		</c:if>
 							    		<c:if test="${item.condutor.vencimentoCNHExpirado}">
 							    			</span>
 							    		</c:if>
 						    		</td>
-						    		<td><a href="${linkTo[CondutorController].editar[item.id]}"><fmt:message key="views.botoes.editar" /></a></td>
-						    		<td><a href="${linkTo[CondutorController].excluir[item.id]}" onclick="javascript:return confirm('Tem certeza de que deseja excluir os dados deste condutor?');"><fmt:message key="views.botoes.excluir" /></a></td>
+						    		<td><a href="${linkTo[CondutorController].edita[item.id]}"><fmt:message key="views.botoes.editar" /></a></td>
+						    		<td><a href="${linkTo[CondutorController].exclui[item.id]}" onclick="javascript:return confirm('Tem certeza de que deseja excluir os dados deste condutor?');"><fmt:message key="views.botoes.excluir" /></a></td>
 								</tr>
 							</c:forEach>
 							</tbody>

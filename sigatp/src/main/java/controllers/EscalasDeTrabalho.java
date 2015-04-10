@@ -80,7 +80,7 @@ public class EscalasDeTrabalho extends Controller {
         List<EscalaDeTrabalho> escalas = EscalaDeTrabalho.buscarTodosPorCondutor(condutor);
         
         EscalaDeTrabalho escala = new EscalaDeTrabalho();
-        escala.setCondutor(condutor);;
+        escala.setCondutor(condutor);
     	DiaDaSemana diaSemana = DiaDaSemana.SEGUNDA;
     	escala.setDataVigenciaInicio(Calendar.getInstance());
     	DiaDeTrabalho diaTrabalho = new DiaDeTrabalho();
@@ -167,19 +167,21 @@ public class EscalasDeTrabalho extends Controller {
         }
         
         if (ehMesmoDia(escala.getDataVigenciaInicio(), Calendar.getInstance())) {
-        	if (escala.getId() > 0) { 
-        	 	DiaDeTrabalho.delete("escalaDeTrabalho", escala);
+        	if (escala.getId() > 0) {
+        		// TODO: Verificar como ficara apos migracao
+//        	 	DiaDeTrabalho.AR.delete("escalaDeTrabalho", escala);
         	} 
         	
         	escala.save();
     		
     		for (DiaDeTrabalho diaDeTrabalho : escala.getDiasDeTrabalho()) {
                 DiaDeTrabalho diaDeTrabalhoNovo = new DiaDeTrabalho();
-                diaDeTrabalhoNovo.diaEntrada = diaDeTrabalho.diaEntrada;
-                diaDeTrabalhoNovo.diaSaida = diaDeTrabalho.diaSaida;
-                diaDeTrabalhoNovo.horaEntrada = diaDeTrabalho.horaEntrada;
-                diaDeTrabalhoNovo.horaSaida = diaDeTrabalho.horaSaida;
-                diaDeTrabalhoNovo.escalaDeTrabalho = escala;
+                diaDeTrabalhoNovo.setDiaEntrada(diaDeTrabalho.getDiaEntrada());
+                diaDeTrabalhoNovo.setDiaSaida(diaDeTrabalho.getDiaSaida());;
+                diaDeTrabalhoNovo.setHoraEntrada(diaDeTrabalho.getHoraEntrada());
+                diaDeTrabalhoNovo.setHoraSaida(diaDeTrabalho.getHoraSaida());
+                diaDeTrabalhoNovo.setEscalaDeTrabalho(escala);
+                
                 diaDeTrabalhoNovo.save();
     		}
     		
@@ -189,6 +191,7 @@ public class EscalasDeTrabalho extends Controller {
         	escala.getDataVigenciaFim().set(Calendar.HOUR_OF_DAY, 23);
         	escala.getDataVigenciaFim().set(Calendar.MINUTE, 59);
         	escala.getDataVigenciaFim().set(Calendar.SECOND, 59);
+        	
            	escala.save();
             JPA.em().detach(escala);
 
@@ -199,15 +202,17 @@ public class EscalasDeTrabalho extends Controller {
         	novaEscala.getDataVigenciaInicio().set(Calendar.MINUTE, 0);
         	novaEscala.getDataVigenciaInicio().set(Calendar.SECOND, 0);
         	novaEscala.setDiasDeTrabalho(escala.getDiasDeTrabalho());
+        	
         	novaEscala.save();
         	
     		for (DiaDeTrabalho diaDeTrabalho : novaEscala.getDiasDeTrabalho()) {
                 DiaDeTrabalho diaDeTrabalhoNovo = new DiaDeTrabalho();
-                diaDeTrabalhoNovo.diaEntrada = diaDeTrabalho.diaEntrada;
-                diaDeTrabalhoNovo.diaSaida = diaDeTrabalho.diaSaida;
-                diaDeTrabalhoNovo.horaEntrada = diaDeTrabalho.horaEntrada;
-                diaDeTrabalhoNovo.horaSaida = diaDeTrabalho.horaSaida;
-                diaDeTrabalhoNovo.escalaDeTrabalho = novaEscala;
+                diaDeTrabalhoNovo.setDiaEntrada(diaDeTrabalho.getDiaEntrada());
+                diaDeTrabalhoNovo.setDiaSaida(diaDeTrabalho.getDiaSaida());
+                diaDeTrabalhoNovo.setHoraEntrada(diaDeTrabalho.getHoraEntrada());
+                diaDeTrabalhoNovo.setHoraSaida(diaDeTrabalho.getHoraSaida());
+                diaDeTrabalhoNovo.setEscalaDeTrabalho(novaEscala);
+                
                 diaDeTrabalhoNovo.save();
     		}
 
@@ -254,19 +259,19 @@ public class EscalasDeTrabalho extends Controller {
 		Collections.sort(diasDeTrabalho);
 		ArrayList<String> periodosDeTrabalho = new ArrayList<String>();
 		for (DiaDeTrabalho diaDeTrabalho : diasDeTrabalho) {
-			if (diaDeTrabalho.diaEntrada.getOrdem() > diaDeTrabalho.diaSaida.getOrdem()) {
+			if (diaDeTrabalho.getDiaEntrada().getOrdem() > diaDeTrabalho.getDiaSaida().getOrdem()) {
 				Validation.addError("diasDeTrabalho", "escalasDeTrabalho.diaEntrada.validation");
 				return false;
 			}
 			
-			if (diaDeTrabalho.horaEntrada.after(diaDeTrabalho.horaSaida) &&
-				diaDeTrabalho.diaEntrada.getOrdem() == diaDeTrabalho.diaSaida.getOrdem() ) {
+			if (diaDeTrabalho.getHoraEntrada().after(diaDeTrabalho.getHoraSaida()) &&
+				diaDeTrabalho.getDiaEntrada().getOrdem() == diaDeTrabalho.getDiaSaida().getOrdem() ) {
 				Validation.addError("diasDeTrabalho", "escalasDeTrabalho.horaEntrada.validation");
 				return false;
 			}
 
-			periodosDeTrabalho.add(diaDeTrabalho.diaEntrada.getOrdem() + diaDeTrabalho.getHoraEntradaFormatada("HHmm"));
-			periodosDeTrabalho.add(diaDeTrabalho.diaSaida.getOrdem() + diaDeTrabalho.getHoraSaidaFormatada("HHmm"));
+			periodosDeTrabalho.add(diaDeTrabalho.getDiaEntrada().getOrdem() + diaDeTrabalho.getHoraEntradaFormatada("HHmm"));
+			periodosDeTrabalho.add(diaDeTrabalho.getDiaSaida().getOrdem() + diaDeTrabalho.getHoraSaidaFormatada("HHmm"));
 		}
 		
 		for (int i = 0; i < periodosDeTrabalho.size(); i++) {
