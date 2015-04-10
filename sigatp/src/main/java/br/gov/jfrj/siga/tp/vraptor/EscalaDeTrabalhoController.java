@@ -8,14 +8,15 @@ import java.util.List;
 
 import javax.persistence.EntityManager;
 import javax.servlet.http.HttpServletRequest;
+import javax.validation.Valid;
 
-import play.data.validation.Valid;
-import play.data.validation.Validation;
 import br.com.caelum.vraptor.Path;
 import br.com.caelum.vraptor.Resource;
 import br.com.caelum.vraptor.Result;
 import br.com.caelum.vraptor.Validator;
 import br.com.caelum.vraptor.core.Localization;
+import br.com.caelum.vraptor.validator.I18nMessage;
+import br.com.caelum.vraptor.view.Results;
 import br.gov.jfrj.siga.dp.dao.CpDao;
 import br.gov.jfrj.siga.tp.auth.annotation.RoleAdmin;
 import br.gov.jfrj.siga.tp.auth.annotation.RoleAdminMissao;
@@ -92,17 +93,16 @@ public class EscalaDeTrabalhoController extends TpController {
 		listarPorCondutor(escala.getCondutor().getId());
 	}
     
-	@RoleAdmin
-	@RoleAdminMissao
-	@RoleAdminMissaoComplexo
+//	@RoleAdmin
+//	@RoleAdminMissao
+//	@RoleAdminMissaoComplexo
 	@Path("/app/escalaDeTrabalho/salvar")
 	public void salvar(EscalaDeTrabalho escala, EscalaDeTrabalho novaEscala) throws Exception {
-		
-        if(! Validation.hasErrors()) {
-//        	String diaDaSemana = (String) params.get("novaEscala.diasDeTrabalho[0].diaEntrada", String.class);
+        if(!validator.hasErrors()) {
         	String diaDaSemana = novaEscala.getDiasDeTrabalho().get(0).getDiaEntrada().toString();
+        	
         	if (diaDaSemana == null) {
-        		Validation.addError("diasDeTrabalho", "escalasDeTrabalho.diaDaSemana.validation");
+        		validator.add(new I18nMessage("diasDeTrabalho", "escalasDeTrabalho.diaDaSemana.validation"));
         		novaEscala.setDiasDeTrabalho(null);
         	}	
         }
@@ -112,20 +112,20 @@ public class EscalaDeTrabalhoController extends TpController {
         escalaAntiga.getDiasDeTrabalho().addAll(escala.getDiasDeTrabalho());
         escalaAntiga.setId(escala.getId());
 
-        if(! Validation.hasErrors()) {
+        if(!validator.hasErrors()) {
 	        escala.setDiasDeTrabalho(new ArrayList<DiaDeTrabalho>());
 	        escala.getDiasDeTrabalho().addAll(novaEscala.getDiasDeTrabalho());
         }
         
-        if(! Validation.hasErrors()) {
+        if(!validator.hasErrors()) {
         	validarEscala(escala.getDiasDeTrabalho());
         }
         
-        if(! Validation.hasErrors()) {
+        if(!validator.hasErrors()) {
         	validarMissoesParaNovaEscala(escala);
         }
         
-        if(Validation.hasErrors()) {
+        if(validator.hasErrors()) {
         	MenuMontador.instance(result).recuperarMenuCondutores(escala.getCondutor().getId(), ItemMenu.ESCALASDETRABALHO);
         	
             Condutor condutor = escala.getCondutor();
@@ -144,10 +144,11 @@ public class EscalaDeTrabalhoController extends TpController {
             result.include("condutor", condutor);
             result.include("escala", escala);
             result.include("diaSemana", diaSemana);
-        	
-            result.redirectTo("WEB-INF/page/escalaDeTrabalho/listarPorCondutor");
+            
+            validator.onErrorUse(Results.logic()).forwardTo(EscalaDeTrabalhoController.class).listarPorCondutor(condutor.getId());
         }
         
+        escala.setDataVigenciaInicio(Calendar.getInstance());
         if (ehMesmoDia(escala.getDataVigenciaInicio(), Calendar.getInstance())) {
         	if (escala.getId() > 0) {
         		Object[] escalas = new Object[1];
@@ -209,17 +210,30 @@ public class EscalaDeTrabalhoController extends TpController {
 	}
 	
 	private boolean validarEscala(List<DiaDeTrabalho> diasDeTrabalho) {
+		for (DiaDeTrabalho diaDeTrabalho : diasDeTrabalho) {
+			if(null == diaDeTrabalho.getHoraEntrada()) {
+				validator.add(new I18nMessage("diasDeTrabalho", "escalasDeTrabalho.horaEntrada.vazia.validation"));
+				return false;
+			}
+			
+			if(null == diaDeTrabalho.getHoraSaida()) {
+				validator.add(new I18nMessage("diasDeTrabalho", "escalasDeTrabalho.horaSaida.vazia.validation"));
+				return false;
+			}
+		}
+		
 		Collections.sort(diasDeTrabalho);
 		ArrayList<String> periodosDeTrabalho = new ArrayList<String>();
 		for (DiaDeTrabalho diaDeTrabalho : diasDeTrabalho) {
+
 			if (diaDeTrabalho.getDiaEntrada().getOrdem() > diaDeTrabalho.getDiaSaida().getOrdem()) {
-				Validation.addError("diasDeTrabalho", "escalasDeTrabalho.diaEntrada.validation");
+				validator.add(new I18nMessage("diasDeTrabalho", "escalasDeTrabalho.diaEntrada.validation"));
 				return false;
 			}
 			
 			if (diaDeTrabalho.getHoraEntrada().after(diaDeTrabalho.getHoraSaida()) &&
 				diaDeTrabalho.getDiaEntrada().getOrdem() == diaDeTrabalho.getDiaSaida().getOrdem() ) {
-				Validation.addError("diasDeTrabalho", "escalasDeTrabalho.horaEntrada.validation");
+				validator.add(new I18nMessage("diasDeTrabalho", "escalasDeTrabalho.horaEntrada.validation"));
 				return false;
 			}
 
@@ -232,7 +246,7 @@ public class EscalaDeTrabalhoController extends TpController {
 				int intervalo1 = Integer.parseInt(periodosDeTrabalho.get(i));
 				int intervalo2 = Integer.parseInt(periodosDeTrabalho.get(i+1));
 				if (intervalo1 > intervalo2) {
-					Validation.addError("diasDeTrabalho", "escalasDeTrabalho.periodosDeTrabalho.validation");
+					validator.add(new I18nMessage("diasDeTrabalho", "escalasDeTrabalho.periodosDeTrabalho.validation"));
 					return false;
 				}
 			}
@@ -263,7 +277,7 @@ public class EscalaDeTrabalhoController extends TpController {
 				}
 			} 
 			if (! valido) {
-				Validation.addError("LinkErroEscalaDeTrabalho", listaMissoes);
+				validator.add(new I18nMessage("LinkErroEscalaDeTrabalho", listaMissoes));
 			}
 		}
 		return valido;
