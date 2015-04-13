@@ -30,22 +30,62 @@ import br.gov.jfrj.siga.tp.model.Missao;
 import br.gov.jfrj.siga.tp.model.TpDao;
 import br.gov.jfrj.siga.vraptor.SigaObjects;
 
-//@With(AutorizacaoGIAntigo.class)
 @Resource
+@Path("/app/escalaDeTrabalho/")
 public class EscalaDeTrabalhoController extends TpController {
+	
+	private static final String ACTION = "action";
+	private static final String ACTION_EDITAR = "views.botoes.editar";
+	private static final String ACTION_INCLUIR = "views.botoes.incluir";
 
 	public EscalaDeTrabalhoController(HttpServletRequest request, Result result, CpDao dao, Localization localization, Validator validator, SigaObjects so, EntityManager em) throws Exception {
 		super(request, result, TpDao.getInstance(), validator, so, em);
 	}
 
-	@Path("/app/escalaDeTrabalho/listar")
+	@Path("/listar")
 	public void listar() {
     	List<EscalaDeTrabalho> escalas = EscalaDeTrabalho.buscarTodasVigentes();
         
         result.include("escalas", escalas);
     }
 	
-	@Path("/app/escalaDeTrabalho/listarPorCondutor/{id}")
+	@RoleAdmin
+	@RoleAdminMissao
+	@RoleAdminMissaoComplexo
+	@Path("/incluir/{idCondutor}")
+    public void incluir(Long idCondutor) throws Exception {
+		MenuMontador.instance(result).recuperarMenuCondutores(idCondutor, ItemMenu.ESCALASDETRABALHO);
+    	Condutor condutor = Condutor.AR.findById(idCondutor);
+    	
+    	EscalaDeTrabalho escala = new EscalaDeTrabalho();
+    	escala.setCondutor(condutor);
+        
+    	DiaDaSemana diaSemana = DiaDaSemana.SEGUNDA;
+    	DiaDeTrabalho diaTrabalho = new DiaDeTrabalho();
+    	escala.getDiasDeTrabalho().add(diaTrabalho);
+    	
+    	result.include(ACTION, ACTION_INCLUIR);
+    	result.include("escala", escala);
+    	result.include("diaSemana", diaSemana);
+    	
+    	result.use(Results.page()).of(EscalaDeTrabalhoController.class).editar(null);
+	}
+	
+	@RoleAdmin
+	@RoleAdminMissao
+	@RoleAdminMissaoComplexo
+	@Path("/editar/{id}")
+    public void editar(final Long id) throws Exception {
+		EscalaDeTrabalho escala = EscalaDeTrabalho.AR.findById(id);
+    	MenuMontador.instance(result).recuperarMenuCondutores(escala.getCondutor().getId(), ItemMenu.ESCALASDETRABALHO);
+    	DiaDaSemana diaSemana = DiaDaSemana.SEGUNDA;
+    	
+    	result.include(ACTION, ACTION_EDITAR);
+    	result.include("escala", escala);
+    	result.include("diaSemana", diaSemana);
+    }
+	
+	@Path("/listarPorCondutor/{id}")
 	public void listarPorCondutor(Long id) throws Exception {
     	MenuMontador.instance(result).recuperarMenuCondutores(id, ItemMenu.ESCALASDETRABALHO);
         Condutor condutor = Condutor.AR.findById(id);
@@ -72,17 +112,9 @@ public class EscalaDeTrabalhoController extends TpController {
      }
 	
 	@RoleAdmin
-	@RoleAdminMissao   
-	@RoleAdminMissaoComplexo
-	@Path("/app/escalaDeTrabalho/editar/{id}")
-	public void editar(final Long id) {
-		
-	}
-	
-	@RoleAdmin
 	@RoleAdminMissao
 	@RoleAdminMissaoComplexo
-	@Path("/app/escalaDeTrabalho/finalizar")
+	@Path("/finalizar")
     public void finalizar(@Valid EscalaDeTrabalho escala) throws Exception { 
 		escala.setDataVigenciaFim(Calendar.getInstance());
     	escala.getDataVigenciaFim().set(Calendar.HOUR_OF_DAY, 23);
@@ -90,13 +122,13 @@ public class EscalaDeTrabalhoController extends TpController {
     	escala.getDataVigenciaFim().set(Calendar.SECOND, 59);
 		escala.save();
 		
-		listarPorCondutor(escala.getCondutor().getId());
+		result.redirectTo(this).listarPorCondutor(escala.getCondutor().getId());
 	}
     
-//	@RoleAdmin
-//	@RoleAdminMissao
-//	@RoleAdminMissaoComplexo
-	@Path("/app/escalaDeTrabalho/salvar")
+	@RoleAdmin
+	@RoleAdminMissao
+	@RoleAdminMissaoComplexo
+	@Path("/salvar")
 	public void salvar(EscalaDeTrabalho escala, EscalaDeTrabalho novaEscala) throws Exception {
         if(!validator.hasErrors()) {
         	String diaDaSemana = novaEscala.getDiasDeTrabalho().get(0).getDiaEntrada().toString();
@@ -201,6 +233,18 @@ public class EscalaDeTrabalhoController extends TpController {
         result.redirectTo(CondutorController.class).lista();
     }
 	
+	@RoleAdmin
+	@RoleAdminMissao
+	@RoleAdminMissaoComplexo
+	@Path("/excluir{id}")
+	public void excluir(final Long id) throws Exception {
+    	EscalaDeTrabalho escala = EscalaDeTrabalho.AR.findById(id);
+    	Long idCondutor = escala.getCondutor().getId();
+    	escala.delete();
+    	
+    	result.redirectTo(this).listarPorCondutor(idCondutor);
+    }
+	
 	private boolean  ehMesmoDia(Calendar cal1, Calendar cal2) {
 	    if (cal1 == null || cal2 == null)
 	        return false;
@@ -256,8 +300,6 @@ public class EscalaDeTrabalhoController extends TpController {
 	}
 
 	private boolean validarMissoesParaNovaEscala(EscalaDeTrabalho escala) throws Exception {
-		// TODO Auto-generated method stub
-		
 		List<Missao> missoes = MissaoController.buscarPorCondutoreseEscala(escala);
 		SimpleDateFormat formatar = new SimpleDateFormat("dd/MM/yyyy HH:mm");
 		boolean valido = true;
