@@ -27,7 +27,7 @@ import controllers.AutorizacaoGIAntigo;
 @Entity
 @Audited
 @Table(name="FinalidadeRequisicao", schema = "SIGATP")
-@Unique(message = "{finalidadeRequisicao.descricao.unique}", field = "descricao")
+//@Unique(message = "{finalidadeRequisicao.descricao.unique}", field = "descricao")
 public class FinalidadeRequisicao extends TpModel {
 	
 	private static final long _ID_DA_FINALIDADE_OUTRA = -1;
