@@ -9,7 +9,6 @@
 <sigatp:erros/>
 
 <form id="formVeiculos" action="${linkTo[VeiculoController].salvar[veiculo]}" method="post" enctype="multipart/form-data">
-	<input type="hidden" name="veiculo.id" value="${veiculo.id}">
 	<input type="hidden" name="veiculo" value="${veiculo.id}">
 	
 	<h3>Dados de Identifica&ccedil;&atilde;o</h3>

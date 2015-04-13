@@ -15,6 +15,8 @@ import br.com.caelum.vraptor.view.Results;
 import br.gov.jfrj.siga.cp.model.DpLotacaoSelecao;
 import br.gov.jfrj.siga.dp.CpOrgaoUsuario;
 import br.gov.jfrj.siga.dp.DpLotacao;
+import br.gov.jfrj.siga.tp.auth.annotation.RoleAdmin;
+import br.gov.jfrj.siga.tp.auth.annotation.RoleAdminFrota;
 import br.gov.jfrj.siga.tp.model.CategoriaCNH;
 import br.gov.jfrj.siga.tp.model.Grupo;
 import br.gov.jfrj.siga.tp.model.ItemMenu;
@@ -47,38 +49,40 @@ public class VeiculoController extends TpController {
 		result.include("veiculos", Veiculo.listarTodos(cpOrgaoUsuario));
 	}
 
-//	@RoleAdmin
-//	@RoleAdminFrota
+	@RoleAdmin
+	@RoleAdminFrota
 	@Path("/salvar")
 	public void salvar(final Veiculo veiculo, DpLotacaoSelecao lotacaoAtualSel) throws Exception {
-		validarAntesDeSalvar(veiculo.comAtualSelecionada(lotacaoAtualSel));
+		if (lotacaoAtualSel.getId() != null){
+			DpLotacao dpLotacao = DpLotacao.AR.findById(lotacaoAtualSel.getId());
+			veiculo.setLotacaoAtual(dpLotacao);
+		}
+		validarAntesDeSalvar(veiculo);
 		redirecionarSeErroAoSalvar(veiculo);
 
 		veiculo.setCpOrgaoUsuario(getTitular().getOrgaoUsuario());
 		veiculo.save();
 
-		em.getTransaction().isActive();
-		
 		if (lotacaoDoVeiculoMudou(veiculo)) {
 			LotacaoVeiculo.atualizarDataFimLotacaoAnterior(veiculo);
 		}
 
 		if (veiculoNaoTemLotacaoCadastrada(veiculo) || lotacaoDoVeiculoMudou(veiculo)) {
-			LotacaoVeiculo novalotacao = new LotacaoVeiculo(null, veiculo, veiculo.comAtualSelecionada(lotacaoAtualSel).getLotacaoAtual(), Calendar.getInstance(), null, veiculo.getOdometroEmKmAtual());
+			LotacaoVeiculo novalotacao = new LotacaoVeiculo(null, veiculo, veiculo.getLotacaoAtual(), Calendar.getInstance(), null, veiculo.getOdometroEmKmAtual());
 			novalotacao.save();
 		}
 		result.redirectTo(this).listar();
 	}
 
-//	@RoleAdmin
-//	@RoleAdminFrota
+	@RoleAdmin
+	@RoleAdminFrota
 	@Path("/incluir")
 	public void incluir() throws Exception {
 		result.forwardTo(this).editar(null);
 	}
 
-//	@RoleAdmin
-//	@RoleAdminFrota
+	@RoleAdmin
+	@RoleAdminFrota
 	@Path("/editar/{id}")
 	public void editar(Long id) throws Exception {
 		Veiculo veiculo = obterVeiculo(id);
@@ -88,8 +92,8 @@ public class VeiculoController extends TpController {
 
 	}
 
-//	@RoleAdmin
-//	@RoleAdminFrota
+	@RoleAdmin
+	@RoleAdminFrota
 	@Path("/excluir/{id}")
 	public void excluir(Long id) throws Exception {
 		Veiculo veiculo = Veiculo.AR.findById(id);

@@ -900,17 +900,6 @@ public class Veiculo extends TpModel implements Comparable<Veiculo> {
 		this.relatoriosdiarios = relatoriosdiarios;
 	}
 
-	public Veiculo comAtualSelecionada(DpLotacaoSelecao lotacaoAtualSel) {
-		if (lotacaoAtualSel.getId() != null) {
-			DpLotacao dpLotacao = new DpLotacao();
-			dpLotacao.setId(lotacaoAtualSel.getId());
-			this.lotacaoAtual = dpLotacao;
-		} else {
-			this.lotacaoAtual = null;
-		}
-		return this;
-	}
-
 	public DpLotacaoSelecao getLotacaoAtualSel() {
 		DpLotacaoSelecao selecao = new DpLotacaoSelecao();
 		if (lotacaoAtual != null) {
