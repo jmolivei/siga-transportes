@@ -9,16 +9,15 @@ import org.slf4j.LoggerFactory;
 
 import br.com.caelum.vraptor.InterceptionException;
 import br.com.caelum.vraptor.Intercepts;
-import br.com.caelum.vraptor.Result;
 import br.com.caelum.vraptor.core.InterceptorStack;
 import br.com.caelum.vraptor.core.Localization;
 import br.com.caelum.vraptor.interceptor.ApplicationLogicException;
 import br.com.caelum.vraptor.interceptor.Interceptor;
 import br.com.caelum.vraptor.ioc.RequestScoped;
 import br.com.caelum.vraptor.resource.ResourceMethod;
+import br.com.caelum.vraptor.util.jpa.JPATransactionInterceptor;
 import br.gov.jfrj.siga.dp.DpLotacao;
 import br.gov.jfrj.siga.dp.DpPessoa;
-import br.gov.jfrj.siga.vraptor.SigaController;
 import br.gov.jfrj.siga.vraptor.SigaObjects;
 
 /**
@@ -28,18 +27,16 @@ import br.gov.jfrj.siga.vraptor.SigaObjects;
  *
  */
 @RequestScoped
-@Intercepts(before = PreencherAutorizacaoGIInterceptor.class)
+@Intercepts(before = JPATransactionInterceptor.class)
 public class ExceptionHandlerInterceptor implements Interceptor {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(ExceptionHandlerInterceptor.class);
-	private Result result;
 	private SigaObjects so;
 	private Localization localization;
 	private HttpServletRequest request;
 
-	public ExceptionHandlerInterceptor(Localization localization, SigaObjects so, HttpServletRequest request, Result result) {
+	public ExceptionHandlerInterceptor(Localization localization, SigaObjects so, HttpServletRequest request) {
 		this.so = so;
-		this.result = result;
 		this.request = request;
 		this.localization = localization;
 	}
@@ -70,10 +67,8 @@ public class ExceptionHandlerInterceptor implements Interceptor {
 	}
 
 	private void redirecionarParaErro(Throwable e) {
-		if (!result.used()) {
-			request.setAttribute("exception", traduzir(e));
-			result.forwardTo(SigaController.class).appexception();
-		}
+		request.setAttribute("exception", traduzir(e));
+		throw new InterceptionException(e);
 	}
 
 	private Throwable traduzir(Throwable e) {

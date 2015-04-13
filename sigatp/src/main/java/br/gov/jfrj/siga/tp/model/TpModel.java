@@ -11,7 +11,7 @@ import br.gov.jfrj.siga.model.Objeto;
 public abstract class TpModel extends Objeto {
 
 	private static final long serialVersionUID = -3265658962532346951L;
-	public static final Long VAZIO = 0L;
+	public static final Long ID_VAZIO = 0L;
 
 	@Override
 	public void save() {
@@ -19,7 +19,11 @@ public abstract class TpModel extends Objeto {
 	}
 
 	public boolean ehNovo() {
-		return getId() == null || VAZIO.equals(getId());
+		return getId() == null || ID_VAZIO.equals(getId());
+	}
+
+	public static boolean existe(Long id) {
+		return id != null && !ID_VAZIO.equals(id);
 	}
 
 	public abstract Long getId();

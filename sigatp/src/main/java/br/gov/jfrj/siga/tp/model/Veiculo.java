@@ -85,9 +85,6 @@ public class Veiculo extends TpModel implements Comparable<Veiculo> {
 	private List<LotacaoVeiculo> lotacoes;
 
 	@Transient
-	private DpLotacao lotacaoAtual;
-
-	@Transient
 	private Double odometroEmKmAtual;
 
 	@Enumerated(EnumType.STRING)
@@ -191,13 +188,11 @@ public class Veiculo extends TpModel implements Comparable<Veiculo> {
 	@UpperCase
 	private String outros;
 
-	// @As(lang = { "*" }, value = { "dd/MM/yyyy" })
 	@ValidarAnoData(descricaoCampo = "Data de Aquisicao")
 	private Calendar dataAquisicao;
 
 	private Double valorAquisicao;
 
-	// @As(lang = { "*" }, value = { "dd/MM/yyyy" })
 	@ValidarAnoData(descricaoCampo = "Data de Garantia")
 	private Calendar dataGarantia;
 
@@ -206,17 +201,14 @@ public class Veiculo extends TpModel implements Comparable<Veiculo> {
 
 	private String numeroCartaoAbastecimento;
 
-	// @As(lang = { "*" }, value = { "dd/MM/yyyy" })
 	@ValidarAnoData(descricaoCampo = "Validade do Cartao de Abastecimento")
 	private Calendar validadeCartaoAbastecimento;
 
 	private String numeroCartaoSeguro;
 
-	// @As(lang = { "*" }, value = { "dd/MM/yyyy" })
 	@ValidarAnoData(intervalo = 10, descricaoCampo = "Validade do Cartao de Seguro")
 	private Calendar validadeCartaoSeguro;
 
-	// @As(lang = { "*" }, value = { "dd/MM/yyyy HH:mm" })
 	@ValidarAnoData(descricaoCampo = "Data de Alienacao")
 	private Calendar dataAlienacao;
 
@@ -295,9 +287,9 @@ public class Veiculo extends TpModel implements Comparable<Veiculo> {
 		this.processoAlienacao = "";
 	}
 
-	public Veiculo(DpLotacao dpLotacao) {
-		this.setLotacaoAtual(dpLotacao);
-	}
+//	public Veiculo(DpLotacao dpLotacao) {
+//		this.setLotacaoAtual(dpLotacao);
+//	}
 
 	public String getDadosParaExibicao() {
 		if (ehNovo()) {
@@ -318,6 +310,7 @@ public class Veiculo extends TpModel implements Comparable<Veiculo> {
 		Double retorno = (double) 0;
 
 		if (lotacoes != null && !lotacoes.isEmpty() && lotacoes.get(0).getOdometroEmKm() != null) {
+			Collections.sort(lotacoes, LotacaoVeiculo.comparator());
 			retorno = lotacoes.get(0).getOdometroEmKm();
 		}
 
@@ -328,10 +321,12 @@ public class Veiculo extends TpModel implements Comparable<Veiculo> {
 		DpLotacao retorno = null;
 
 		if (lotacoes != null && !lotacoes.isEmpty()) {
+			Collections.sort(lotacoes, LotacaoVeiculo.comparator());
 			retorno = lotacoes.get(0).getLotacao();
 		}
 		return retorno;
 	}
+	
 
 	@SuppressWarnings("unchecked")
 	public static List<Veiculo> listarDisponiveis(String dataSaida, Long idMissao, Long idOrgao) {
@@ -391,16 +386,11 @@ public class Veiculo extends TpModel implements Comparable<Veiculo> {
 		return veiculos;
 	}
 
-	public void configurarLotacaoAtual() {
-		this.lotacaoAtual = this.getDpLotacaoVigente();
-	}
-
 	public void configurarOdometroParaMudancaDeLotacao() {
 		this.odometroEmKmAtual = this.getUltimoOdometroDeLotacao();
 	}
 
 	public DpLotacao getUltimaLotacao() {
-
 		return this.getDpLotacaoVigente();
 	}
 
@@ -453,19 +443,13 @@ public class Veiculo extends TpModel implements Comparable<Veiculo> {
 	}
 
 	public List<LotacaoVeiculo> getLotacoes() {
+		if (lotacoes != null)
+			Collections.sort(lotacoes, LotacaoVeiculo.comparator());
 		return lotacoes;
 	}
 
 	public void setLotacoes(List<LotacaoVeiculo> lotacoes) {
 		this.lotacoes = lotacoes;
-	}
-
-	public DpLotacao getLotacaoAtual() {
-		return lotacaoAtual;
-	}
-
-	public void setLotacaoAtual(DpLotacao lotacaoAtual) {
-		this.lotacaoAtual = lotacaoAtual;
 	}
 
 	public Double getOdometroEmKmAtual() {
@@ -902,10 +886,12 @@ public class Veiculo extends TpModel implements Comparable<Veiculo> {
 
 	public DpLotacaoSelecao getLotacaoAtualSel() {
 		DpLotacaoSelecao selecao = new DpLotacaoSelecao();
-		if (lotacaoAtual != null) {
-			selecao.setId(lotacaoAtual.getId());
-			selecao.setSigla(lotacaoAtual.getSigla());
-			selecao.setDescricao(lotacaoAtual.getDescricao());
+		DpLotacao dpLotacaoVigente = getDpLotacaoVigente();
+
+		if (dpLotacaoVigente != null) {
+			selecao.setId(dpLotacaoVigente.getId());
+			selecao.setSigla(dpLotacaoVigente.getSigla());
+			selecao.setDescricao(dpLotacaoVigente.getDescricao());
 		}
 		return selecao;
 	}

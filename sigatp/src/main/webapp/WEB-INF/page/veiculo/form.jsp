@@ -40,7 +40,7 @@
 		       	<siga:select name="veiculo.grupo.id" list="grupos" listKey="id" listValue="dadosParaExibicao" value="${veiculo.grupo.id}"/>
 		       	
 		       	<label for= "veiculo.lotacaoAtual"> Lota&ccedil;&atilde;o</label>
-		       	<siga:selecao propriedade="lotacaoAtual" tema="simple" modulo="siga"/>
+		       	<siga:selecao propriedade="lotacaoAtual" tema="simple" modulo="siga" onchange="mostrarCampoOdometro()"/>
 			</div>
 		</div>
        	<div id="grupoOdometro" class="coluna">

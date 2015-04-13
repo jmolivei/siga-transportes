@@ -12,13 +12,20 @@ import br.gov.jfrj.siga.tp.model.TpModel;
 public class TpModelConverter implements Converter<TpModel> {
 
 	@Override
-	public TpModel convert(String id, Class<? extends TpModel> type, ResourceBundle bundle) {
-		if (id != null) {
-			return ContextoPersistencia
-					.em()
-					.find(type, Long.valueOf(id));
+	public TpModel convert(String idString, Class<? extends TpModel> type, ResourceBundle bundle) {
+		if (idString != null) {
+			Long id = Long.valueOf(idString);
+
+			if (TpModel.existe(id))
+				return buscarRegistro(type, id);
 		}
 		return novaInstancia(type);
+	}
+
+	private TpModel buscarRegistro(Class<? extends TpModel> type, Long id) {
+		return ContextoPersistencia
+					.em()
+					.find(type, Long.valueOf(id));
 	}
 
 	private TpModel novaInstancia(Class<? extends TpModel> type) {
