@@ -28,9 +28,9 @@ function verificaCampos(){
 <siga:pagina titulo="Transportes">
 	<div class="gt-bd clearfix">
 		<div class="gt-content clearfix">
-			<h2>${plantao.condutor.dadosParaExibicao} - ${plantao.id > 0 ? "Editar": "Inserir" } Plant&atilde;o</h2>
-			<sigatp:erros/>
+			<h2>${plantao.condutor.dadosParaExibicao} - ${plantao.id > 0 ? "Editar": "Incluir" } Plant&atilde;o</h2>
 			<jsp:include page="../veiculo/menu.jsp"/>
+			<sigatp:erros/>
 			<br>
 			<form name="formPlantoes" id="formPlantoes" action="${linkTo[PlantaoController].salvar}" method="post" cssClass="form">
 				<input type="hidden" name="plantao.id" value="${plantao.id}" />
@@ -45,7 +45,7 @@ function verificaCampos(){
 				</div>
 				<span class="alerta menor">* Preenchimento obrigat&oacute;rio</span>
 				<div class="gt-table-buttons">
-	<!-- 			<input type="submit" value="Salvar" class="gt-btn-medium gt-btn-left" onClick="return verificaCampos()" /> -->
+<!-- 				<input type="submit" value="Salvar" class="gt-btn-medium gt-btn-left" onClick="return verificaCampos()" /> -->
 			 		<input type="submit" value="<fmt:message key="views.botoes.salvar"/>" class="gt-btn-medium gt-btn-left" />
 					<input type="button" value="<fmt:message key="views.botoes.cancelar"/>" onClick="javascript:window.location = '${linkTo[PlantaoController].listarPorCondutor[plantao.condutor.id]}'" class="gt-btn-medium gt-btn-left" />
 				</div>

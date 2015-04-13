@@ -40,7 +40,7 @@ public class PlantaoController extends TpController {
 		MenuMontador.instance(result).recuperarMenuCondutores(idCondutor, ItemMenu.PLANTOES);
 		
 		result.include("plantoes", plantoes);
-		result.include("idCond", idCondutor);
+		result.include("condutor", condutor);
 	}
 
 	@RoleAdmin
@@ -150,8 +150,7 @@ public class PlantaoController extends TpController {
 	public void excluir(Long id) throws Exception {
 		Plantao plantao = Plantao.AR.findById(id);
 
-		List<Missao> missoes = retornarMissoesCondutorPlantao(plantao, null,
-				null);
+		List<Missao> missoes = retornarMissoesCondutorPlantao(plantao, null, null);
 		String listaMissoes = "";
 		String delimitador = "";
 

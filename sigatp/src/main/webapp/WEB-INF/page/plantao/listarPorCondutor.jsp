@@ -46,7 +46,7 @@
 				</c:otherwise>
 			</c:choose>
 			<div class="gt-table-buttons">
-				<a href="${linkTo[PlantaoController].incluir[idCond]}" class="gt-btn-medium gt-btn-left">
+				<a href="${linkTo[PlantaoController].incluir[condutor.id]}" class="gt-btn-medium gt-btn-left">
 					<fmt:message key="views.botoes.incluir"/>
 				</a>
 			</div>
