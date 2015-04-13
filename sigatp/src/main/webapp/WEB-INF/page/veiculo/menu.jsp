@@ -7,7 +7,7 @@
 		style="margin-right: 5px;">Dados Cadastrais</a>&nbsp;&nbsp;&nbsp;
 	</c:if>
 	<c:if test="${menuVeiculosEditar}"> <a class="once"
-		href="@{Veiculos.editar(idVeiculo)}"> <img
+		href="${linkTo[VeiculoController].editar[idVeiculo]}"> <img
 		src="/sigatp/public/images/editaricon.png"
 		style="margin-right: 5px;">Dados Cadastrais</a>&nbsp;&nbsp;&nbsp;
 	</c:if>
