@@ -20,7 +20,7 @@
 	<c:if test="${menuRelatoriosdiarios}"> <a class="once"
 		href="@{RelatoriosDiarios.listarPorVeiculo(idVeiculo)}"> <img
 		src="/sigatp/public/images/relatoriosicon.png"
-		style="margin-right: 5px;">Relat&oacute;ios Di&aacute;rios</a>&nbsp;&nbsp;&nbsp;
+		style="margin-right: 5px;">Relat&oacute;rios Di&aacute;rios</a>&nbsp;&nbsp;&nbsp;
 	</c:if>
 	<c:if test="${menuAgenda}"> <a class="once"
 		href="@{Agendas.listarPorVeiculo(idVeiculo)}"> <img
@@ -33,7 +33,7 @@
 		style="margin-right: 5px;">Abastecimentos</a>&nbsp;&nbsp;&nbsp;
 	</c:if>
 	<c:if test="${menuAutosdeinfracoes}"> <a class="once"
-		href="@{AutosDeInfracao.listarPorVeiculo(idVeiculo)}"> <img
+		href="${linkTo[AutoDeInfracaoController].listarPorVeiculo[idVeiculo]}"> <img
 		src="/sigatp/public/images/infracoesicon.png"
 		style="margin-right: 5px;">Acess&oacute;rios</a>&nbsp;&nbsp;&nbsp;
 	</c:if>	

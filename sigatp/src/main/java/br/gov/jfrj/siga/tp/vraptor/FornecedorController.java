@@ -27,7 +27,7 @@ import controllers.AutorizacaoGIAntigo;
 public class FornecedorController extends TpController {
 
 	public FornecedorController(HttpServletRequest request, Result result, CpDao dao, Localization localization, Validator validator, SigaObjects so, /*AutorizacaoGIAntigo dadosAutorizacao,*/ EntityManager em) throws Exception {
-		super(request, result, TpDao.getInstance(), localization, validator, so, /*dadosAutorizacao,*/ em);
+		super(request, result, TpDao.getInstance(), validator, so, /*dadosAutorizacao,*/ em);
 	}
 
 	@Path("/app/fornecedor/listar")

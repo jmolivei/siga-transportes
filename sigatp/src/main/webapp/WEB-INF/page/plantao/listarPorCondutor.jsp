@@ -5,14 +5,13 @@
 <%@ taglib prefix="siga" uri="http://localhost/jeetags"%>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 
-<jsp:include page="../tags/calendario.jsp" />
-
 <siga:pagina titulo="Transportes">
 	<div class="gt-bd clearfix">
 		<div class="gt-content clearfix">
 			<h2>${condutor.dadosParaExibicao}</h2>
 			<h3>Plant&otilde;es</h3>
-
+			<jsp:include page="../condutor/menu.jsp"></jsp:include>
+	
 			<c:choose>
 				<c:when test="${plantoes.size()>0}">
 					<div class="gt-content-box gt-for-table">
@@ -47,8 +46,9 @@
 				</c:otherwise>
 			</c:choose>
 			<div class="gt-table-buttons">
-				<a href="${linkTo[PlantaoController].incluir[idCond]}"
-					class="gt-btn-medium gt-btn-left"><fmt:message key="views.botoes.incluir"/></a>
+				<a href="${linkTo[PlantaoController].incluir[condutor.id]}" class="gt-btn-medium gt-btn-left">
+					<fmt:message key="views.botoes.incluir"/>
+				</a>
 			</div>
 		</div>
 	</div>
