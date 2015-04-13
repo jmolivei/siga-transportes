@@ -5,7 +5,7 @@
 <siga:pagina titulo="Transportes">
 	<div class="gt-bd clearfix">
 		<div class="gt-content clearfix">
-			<h2>${escala.condutor.dadosParaExibicao} - <fmt:message key="${action}" /> <fmt:message key="escalaDeTrabalho" /></h2>
+			<h2>${escala.condutor.dadosParaExibicao} - <fmt:message key="${modo}" /> <fmt:message key="escalaDeTrabalho" /></h2>
 			<jsp:include page="form.jsp" />
 		</div>
 	</div>
