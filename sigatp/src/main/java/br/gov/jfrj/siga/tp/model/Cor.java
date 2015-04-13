@@ -10,13 +10,12 @@ import javax.persistence.Table;
 import org.hibernate.envers.Audited;
 
 import play.data.validation.Required;
-import play.db.jpa.GenericModel;
 
 @Entity
 // @Table(name = "COR_2", schema="SIGAOR")
 @Audited
 @Table(schema = "SIGATP")
-public class Cor extends GenericModel {
+public class Cor extends TpModel {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "hibernate_sequence_generator")
@@ -30,7 +29,7 @@ public class Cor extends GenericModel {
 		this.nome = "";
 	}
 
-	public long getId() {
+	public Long getId() {
 		return id;
 	}
 
