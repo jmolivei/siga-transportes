@@ -28,7 +28,7 @@ import br.gov.jfrj.siga.vraptor.SigaObjects;
 public class CondutorController extends TpController {
 	
 	public CondutorController(HttpServletRequest request, Result result, CpDao dao, Localization localization, Validator validator, SigaObjects so, EntityManager em) throws Exception {
-		super(request, result, TpDao.getInstance(), localization, validator, so, em);
+		super(request, result, TpDao.getInstance(), validator, so, em);
 	}
 
 	private static Logger logger = Logger.getLogger(CondutorController.class);

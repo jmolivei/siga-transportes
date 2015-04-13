@@ -37,7 +37,7 @@ import com.google.common.base.Optional;
 public class VeiculoController extends TpController {
 
 	public VeiculoController(HttpServletRequest request, Result result, Localization localization, Validator validator, SigaObjects so, EntityManager em) throws Exception {
-		super(request, result, TpDao.getInstance(), localization, validator, so, em);
+		super(request, result, TpDao.getInstance(), validator, so, em);
 	}
 
 	@Path("/listar")

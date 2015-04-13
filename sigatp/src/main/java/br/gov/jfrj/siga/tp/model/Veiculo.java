@@ -60,7 +60,6 @@ public class Veiculo extends TpModel implements Comparable<Veiculo> {
 
 	@NotEmpty
 	@Size(max = 8, message = "{veiculo.placa.maxSize}")
-	// @Unique(message = "{veiculo.placa.unique}")
 	@UpperCase
 	private String placa;
 

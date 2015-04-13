@@ -6,7 +6,7 @@
 <%@ taglib prefix="siga" uri="http://localhost/jeetags"%>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 
-<siga:pagina titulo="Transportess">
+<siga:pagina titulo="Transportes">
 	<div class="gt-bd clearfix">
 		<div class="gt-content clearfix">
 			<h2>Lista de Autos de Infra&ccedil;&atilde;o</h2>

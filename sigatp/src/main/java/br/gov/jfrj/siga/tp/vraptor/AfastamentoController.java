@@ -27,7 +27,7 @@ import br.gov.jfrj.siga.vraptor.SigaObjects;
 public class AfastamentoController extends TpController {
 
 	public AfastamentoController(HttpServletRequest request, Result result, CpDao dao, Localization localization, Validator validator, SigaObjects so, EntityManager em) throws Exception {
-		super(request, result, TpDao.getInstance(), localization, validator, so, em);
+		super(request, result, TpDao.getInstance(), validator, so, em);
 	}
 
 	@Path("/app/afastamento/listarPorCondutor/{idCondutor}")

@@ -30,7 +30,7 @@ public class FinalidadeController extends TpController {
 	private static final String ACTION_INCLUIR = "views.botoes.incluir";
 
 	public FinalidadeController(HttpServletRequest request, Result result, CpDao dao, Localization localization, Validator validator, SigaObjects so, EntityManager em) throws Exception {
-		super(request, result, TpDao.getInstance(), localization, validator, so, em);
+		super(request, result, TpDao.getInstance(), validator, so, em);
 	}
 
 	@Path("/app/finalidade/listar")

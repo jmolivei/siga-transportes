@@ -12,7 +12,7 @@
 			<h2>${condutor.dadosParaExibicao}</h2>
 			<h3>Autos de Infra&ccedil;&atilde;o</h3>
 
-			<%-- #{include 'Condutores/menu.html' /} --%>
+			<jsp:include page="../condutor/menu.jsp"></jsp:include>
 
 			<c:choose>
 				<c:when test="${autosDeInfracao.size() > 0}">

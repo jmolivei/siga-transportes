@@ -14,12 +14,9 @@ import javax.persistence.NoResultException;
 import javax.persistence.Query;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
+import javax.validation.constraints.NotNull;
 import org.hibernate.envers.Audited;
-import play.data.binding.As;
-import play.db.jpa.JPA;
-import play.modules.br.jus.jfrj.siga.uteis.validadores.validarAnoData.ValidarAnoData;
 import br.gov.jfrj.siga.model.ActiveRecord;
-
 
 @SuppressWarnings("serial")
 @Entity
@@ -33,19 +30,14 @@ public class Plantao extends TpModel implements Comparable<Plantao> {
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "hibernate_sequence_generator") @SequenceGenerator(name = "hibernate_sequence_generator", sequenceName="SIGATP.hibernate_sequence") 
 	public Long id;
 		
-//	@Required
 	@ManyToOne(cascade=CascadeType.ALL)
-//	@NotNull
+	@NotNull
 	public Condutor condutor;
 	
-//	@Required
-	@As(lang={"*"}, value={"dd/MM/yyyy HH:mm"})
-	@ValidarAnoData(descricaoCampo="Data/Hora Inicio")
+	@NotNull
 	public Calendar dataHoraInicio;
 	
-//	@Required
-	@As(lang={"*"}, value={"dd/MM/yyyy HH:mm"})
-	@ValidarAnoData(descricaoCampo="Data/Hora Fim")
+	@NotNull
 	public Calendar dataHoraFim;
 	
 	public Plantao(){
@@ -71,16 +63,54 @@ public class Plantao extends TpModel implements Comparable<Plantao> {
 		this.dataHoraInicio = dataHoraInicio;
 		this.dataHoraFim = dataHoraFim;
 	}
+
+	public Long getId() {
+		return id;
+	}
+
+	public void setId(Long id) {
+		this.id = id;
+	}
+
+	public Calendar getDataHoraInicio() {
+		return dataHoraInicio;
+	}
+
+	public void setDataHoraInicio(Calendar dataHoraInicio) {
+		this.dataHoraInicio = dataHoraInicio;
+	}
+
+	public Calendar getDataHoraFim() {
+		return dataHoraFim;
+	}
+
+	public void setDataHoraFim(Calendar dataHoraFim) {
+		this.dataHoraFim = dataHoraFim;
+	}
+
+	public Condutor getCondutor() {
+		return condutor;
+	}
+
+	public void setCondutor(Condutor condutor) {
+		this.condutor = condutor;
+	}
+
+	public String getReferencia() {
+		return referencia;
+	}
+
+	public void setReferencia(String referencia) {
+		this.referencia = referencia;
+	}
 	
 	public static List<Plantao> buscarTodosPorCondutor(Condutor condutor){
 		return Plantao.AR.find("CONDUTOR_ID = ? ORDER BY DATAHORAINICIO DESC", condutor.getId()).fetch();
 	}
 	
-	
 	public static List<Plantao> buscarPorCondutor(Long IdCondutor, Calendar dataHoraInicio){
 		return Plantao.AR.find("condutor.id = ? AND dataHoraInicio <= ? AND (dataHoraFim is null OR dataHoraFim >= ?) order by dataHoraInicio", IdCondutor, dataHoraInicio, dataHoraInicio).fetch(); 
 	}
-	
 	
 	public boolean ordemDeDatasCorreta(){
 		return this.dataHoraInicio.before(this.dataHoraFim);
@@ -89,7 +119,7 @@ public class Plantao extends TpModel implements Comparable<Plantao> {
 	@SuppressWarnings("unchecked")
 	private static List<Plantao> retornarLista(String qrl) throws NoResultException {
 		List<Plantao> plantoes;
-		Query qry = JPA.em().createQuery(qrl);
+		Query qry = AR.em().createQuery(qrl);
 		try {
 			plantoes = (List<Plantao>) qry.getResultList();
 		} catch(NoResultException ex) {
@@ -147,7 +177,7 @@ public class Plantao extends TpModel implements Comparable<Plantao> {
 		//TODO ordenar
 		/*SELECT p.referencia FROM Plantao p
 WHERE p.timestamp = (SELECT MAX(ee.timestamp) FROM Entity ee WHERE ee.entityId = e.entityId)*/
-		Query qry = JPA.em().createQuery("select p from Plantao p "
+		Query qry = AR.em().createQuery("select p from Plantao p "
 										+ "where p.referencia is not null "
 										+ "and p.dataHoraInicio = (select max(pp.dataHoraInicio) from Plantao pp where pp.referencia = p.referencia) "
 										+ "and p.condutor.cpOrgaoUsuario = " + orgaoUsuario + " "
@@ -168,7 +198,7 @@ WHERE p.timestamp = (SELECT MAX(ee.timestamp) FROM Entity ee WHERE ee.entityId =
 	
 	public static List<Plantao> getPlantoesPorReferencia(String referencia) {
 		List<Plantao> retorno;
-		Query qry = JPA.em().createQuery(
+		Query qry = AR.em().createQuery(
 				"select p "
 				+ "from Plantao p "
 				+ "where p.referencia = '" + referencia + "' "
@@ -183,7 +213,7 @@ WHERE p.timestamp = (SELECT MAX(ee.timestamp) FROM Entity ee WHERE ee.entityId =
 
 	public static boolean plantaoMensalJaExiste(String referencia) {
 		List<Plantao> plantoes;
-		Query qry = JPA.em().createQuery(
+		Query qry = AR.em().createQuery(
 				"select p "
 				+ "from Plantao p "
 				+ "where p.referencia = '" + referencia + "'");
@@ -204,46 +234,6 @@ WHERE p.timestamp = (SELECT MAX(ee.timestamp) FROM Entity ee WHERE ee.entityId =
 		retorno = Plantao.AR.find("referencia", referencia).fetch();
 		
 		return retorno;
-	}
-
-	public Long getId() {
-		return id;
-	}
-
-	public void setId(Long id) {
-		this.id = id;
-	}
-
-	public Calendar getDataHoraInicio() {
-		return dataHoraInicio;
-	}
-
-	public void setDataHoraInicio(Calendar dataHoraInicio) {
-		this.dataHoraInicio = dataHoraInicio;
-	}
-
-	public Calendar getDataHoraFim() {
-		return dataHoraFim;
-	}
-
-	public void setDataHoraFim(Calendar dataHoraFim) {
-		this.dataHoraFim = dataHoraFim;
-	}
-
-	public Condutor getCondutor() {
-		return condutor;
-	}
-
-	public void setCondutor(Condutor condutor) {
-		this.condutor = condutor;
-	}
-
-	public String getReferencia() {
-		return referencia;
-	}
-
-	public void setReferencia(String referencia) {
-		this.referencia = referencia;
 	}
 	
 }
