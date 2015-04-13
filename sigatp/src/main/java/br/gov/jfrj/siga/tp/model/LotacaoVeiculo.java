@@ -16,13 +16,9 @@ import javax.validation.constraints.NotNull;
 import org.hibernate.envers.Audited;
 import org.hibernate.envers.RelationTargetAuditMode;
 
-import play.data.binding.As;
-import play.data.validation.Required;
 import play.modules.br.jus.jfrj.siga.uteis.validadores.validarAnoData.ValidarAnoData;
-import br.com.caelum.vraptor.Convert;
 import br.gov.jfrj.siga.dp.DpLotacao;
 import br.gov.jfrj.siga.model.ActiveRecord;
-import br.gov.jfrj.siga.tp.binder.DoubleConverter;
 import br.gov.jfrj.siga.tp.util.MessagesBundle;
 
 @Entity
@@ -62,12 +58,11 @@ public class LotacaoVeiculo extends TpModel {
 	@JoinColumn(name = "ID_LOTA_SOLICITANTE")
 	private DpLotacao lotacao;
 
-	@Required
 	@NotNull
 	@ValidarAnoData(descricaoCampo = "Data/Hora Inicio")
 	private Calendar dataHoraInicio;
 
-	@As(lang = { "*" }, value = { "dd/MM/yyyy HH:mm" })
+//	@As(lang = { "*" }, value = { "dd/MM/yyyy HH:mm" })
 	@ValidarAnoData(descricaoCampo = "Data/Hora Fim")
 	private Calendar dataHoraFim;
 

@@ -15,8 +15,6 @@ import br.com.caelum.vraptor.view.Results;
 import br.gov.jfrj.siga.cp.model.DpLotacaoSelecao;
 import br.gov.jfrj.siga.dp.CpOrgaoUsuario;
 import br.gov.jfrj.siga.dp.DpLotacao;
-import br.gov.jfrj.siga.tp.auth.annotation.RoleAdmin;
-import br.gov.jfrj.siga.tp.auth.annotation.RoleAdminFrota;
 import br.gov.jfrj.siga.tp.model.CategoriaCNH;
 import br.gov.jfrj.siga.tp.model.Grupo;
 import br.gov.jfrj.siga.tp.model.ItemMenu;
@@ -36,8 +34,11 @@ import com.google.common.base.Optional;
 @Path("/app/veiculos/")
 public class VeiculoController extends TpController {
 
+	private EntityManager em;
+
 	public VeiculoController(HttpServletRequest request, Result result, Localization localization, Validator validator, SigaObjects so, EntityManager em) throws Exception {
 		super(request, result, TpDao.getInstance(), validator, so, em);
+		this.em = em;
 	}
 
 	@Path("/listar")
@@ -56,6 +57,8 @@ public class VeiculoController extends TpController {
 		veiculo.setCpOrgaoUsuario(getTitular().getOrgaoUsuario());
 		veiculo.save();
 
+		em.getTransaction().isActive();
+		
 		if (lotacaoDoVeiculoMudou(veiculo)) {
 			LotacaoVeiculo.atualizarDataFimLotacaoAnterior(veiculo);
 		}
@@ -79,14 +82,14 @@ public class VeiculoController extends TpController {
 	@Path("/editar/{id}")
 	public void editar(Long id) throws Exception {
 		Veiculo veiculo = obterVeiculo(id);
-		preencherResultComDadosPadrao(id);
+		preencherResultComDadosPadrao(veiculo);
 		result.include("veiculo", veiculo);
 		result.include("mostrarCampoOdometro", Boolean.FALSE);
 
 	}
 
-	@RoleAdmin
-	@RoleAdminFrota
+//	@RoleAdmin
+//	@RoleAdminFrota
 	@Path("/excluir/{id}")
 	public void excluir(Long id) throws Exception {
 		Veiculo veiculo = Veiculo.AR.findById(id);
@@ -98,7 +101,7 @@ public class VeiculoController extends TpController {
 	public void ler(Long id) throws Exception {
 		Veiculo veiculo = obterVeiculo(id);
 		veiculo.configurarOdometroParaMudancaDeLotacao();
-		preencherResultComDadosPadrao(id);
+		preencherResultComDadosPadrao(veiculo);
 		result.include("veiculo", veiculo);
 	}
 
@@ -141,7 +144,7 @@ public class VeiculoController extends TpController {
 
 	private void redirecionarSeErroAoSalvar(Veiculo veiculo) throws Exception {
 		if (validator.hasErrors()) {
-			preencherResultComDadosPadrao(veiculo.getId());
+			preencherResultComDadosPadrao(veiculo);
 			result.include("veiculo", veiculo);
 			result.include("mostrarCampoOdometro", deveMostrarCampoOdometro(veiculo));
 
@@ -153,18 +156,18 @@ public class VeiculoController extends TpController {
 		}
 	}
 
-	private void preencherResultComDadosPadrao(Long id) throws Exception {
+	private void preencherResultComDadosPadrao(Veiculo veiculo) throws Exception {
 		Combo.montar(result, Combo.Cor, Combo.Fornecedor);
 
 		result.include(Combo.Grupo.getDescricao(), Grupo.listarTodos());
 		result.include("dpLotacoes", buscarDpLotacoes());
 		result.include("situacoes", Situacao.values());
 		result.include("respostasSimNao", PerguntaSimNao.values());
-		result.include("lotacaoAtualSel", new DpLotacaoSelecao());
+		result.include("lotacaoAtualSel", veiculo.getLotacaoAtualSel());
 		result.include("tiposDeCombustivel", TipoDeCombustivel.values());
 		result.include("categoriasCNH", CategoriaCNH.values());
-
-		MenuMontador.instance(result).recuperarMenuVeiculos(id, ItemMenu.DADOSCADASTRAIS);
+		
+		MenuMontador.instance(result).recuperarMenuVeiculos(veiculo.getId(), ItemMenu.DADOSCADASTRAIS);
 	}
 
 	private Veiculo obterVeiculo(Long id) throws Exception {

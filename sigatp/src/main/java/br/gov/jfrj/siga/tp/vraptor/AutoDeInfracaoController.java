@@ -65,27 +65,27 @@ public class AutoDeInfracaoController extends TpController{
 	@RoleAdminMissaoComplexo
 	@Path("/app/autoDeInfracao/incluir/{notificacao}")
 	public void incluir(String notificacao) throws Exception {
-		List<Veiculo> veiculos = Veiculo.listarTodos(getTitular().getOrgaoUsuario());
-		List<Condutor> condutores = Condutor.listarTodos(getTitular().getOrgaoUsuario());
-		AutoDeInfracao autoDeInfracao = new AutoDeInfracao();
-		TipoDeNotificacao tipoNotificacao = TipoDeNotificacao.valueOf(notificacao);
-		
-		result.include("autoDeInfracao", autoDeInfracao);
-		result.include("veiculos", veiculos);
-		result.include("condutores", condutores);
-		result.include("tipoNotificacao", tipoNotificacao);
+		result.forwardTo(this).editar(0L, notificacao);
 	}
 
 	@RoleAdmin
 	@RoleAdminMissao
 	@RoleAdminMissaoComplexo
 	@Path("/app/autoDeInfracao/editar/{id}")
-	public void editar(Long id) throws Exception {
+	public void editar(Long id, String notificacao) throws Exception {
 		List<Veiculo> veiculos = Veiculo.listarTodos(getTitular().getOrgaoUsuario());
 		List<Condutor> condutores = Condutor.listarTodos(getTitular().getOrgaoUsuario());
-		AutoDeInfracao autoDeInfracao = AutoDeInfracao.AR.findById(id);
-		TipoDeNotificacao tipoNotificacao = autoDeInfracao.codigoDaAutuacao != null ? TipoDeNotificacao.AUTUACAO
+		AutoDeInfracao autoDeInfracao;
+		TipoDeNotificacao tipoNotificacao;
+		
+		if(id >0) {
+			autoDeInfracao = AutoDeInfracao.AR.findById(id);
+			tipoNotificacao = autoDeInfracao.codigoDaAutuacao != null ? TipoDeNotificacao.AUTUACAO
 				: TipoDeNotificacao.PENALIDADE;
+		} else {
+			autoDeInfracao = new AutoDeInfracao();
+			tipoNotificacao = TipoDeNotificacao.valueOf(notificacao);
+		}
 		
 		result.include("autoDeInfracao", autoDeInfracao);
 		result.include("veiculos", veiculos);
@@ -116,7 +116,7 @@ public class AutoDeInfracaoController extends TpController{
 			result.include("tipoNotificacao", tipoNotificacao);
 				
 			if(autoDeInfracao.id  > 0)
-				validator.onErrorUse(Results.logic()).forwardTo(AutoDeInfracaoController.class).editar(autoDeInfracao.id);
+				validator.onErrorUse(Results.logic()).forwardTo(AutoDeInfracaoController.class).editar(autoDeInfracao.id, null);
 			else
 				validator.onErrorUse(Results.logic()).forwardTo(AutoDeInfracaoController.class).incluir(tipoNotificacao.getDescricao());
 			
