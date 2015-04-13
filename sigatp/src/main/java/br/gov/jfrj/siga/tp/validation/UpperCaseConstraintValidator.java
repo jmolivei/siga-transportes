@@ -2,7 +2,7 @@ package br.gov.jfrj.siga.tp.validation;
 
 import java.lang.reflect.Field;
 
-import play.modules.br.jus.jfrj.siga.uteis.validadores.upperCase.UpperCase;
+import br.gov.jfrj.siga.tp.validation.annotation.UpperCase;
 import net.sf.oval.Validator;
 import net.sf.oval.configuration.annotation.AbstractAnnotationCheck;
 import net.sf.oval.context.FieldContext;
@@ -10,7 +10,7 @@ import net.sf.oval.context.OValContext;
 import net.sf.oval.exception.OValException;
 
 @SuppressWarnings("serial")
-public class UpperCaseCheck extends AbstractAnnotationCheck<UpperCase> {
+public class UpperCaseConstraintValidator extends AbstractAnnotationCheck<UpperCase> {
 	@Override
 	public boolean isSatisfied(Object validatedObject, Object value, OValContext context, Validator validator) throws OValException {
 
