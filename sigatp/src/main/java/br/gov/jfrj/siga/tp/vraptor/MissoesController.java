@@ -10,6 +10,10 @@ import br.com.caelum.vraptor.Validator;
 import br.com.caelum.vraptor.core.Localization;
 import br.com.caelum.vraptor.view.Results;
 import br.gov.jfrj.siga.dp.dao.CpDao;
+import br.gov.jfrj.siga.tp.auth.annotation.RoleAdmin;
+import br.gov.jfrj.siga.tp.auth.annotation.RoleAdminMissao;
+import br.gov.jfrj.siga.tp.auth.annotation.RoleAdminMissaoComplexo;
+import br.gov.jfrj.siga.tp.auth.annotation.RoleAgente;
 import br.gov.jfrj.siga.tp.model.TpDao;
 import br.gov.jfrj.siga.vraptor.SigaObjects;
 
@@ -29,10 +33,10 @@ public class MissoesController extends TpController {
 		super(request, result, TpDao.getInstance(), validator, so, em);
 	}
 
-	// @RoleAdmin
-	// @RoleAdminMissao
-	// @RoleAdminMissaoComplexo
-	// @RoleAgente
+	@RoleAdmin
+	@RoleAdminMissao
+	@RoleAdminMissaoComplexo
+	@RoleAgente
 	@Path("/buscarPelaSequenceAposErro/{sequence}")
 	public void buscarPelaSequenceAposErro(String sequence) throws Exception {
 		// String sequence = "parse";

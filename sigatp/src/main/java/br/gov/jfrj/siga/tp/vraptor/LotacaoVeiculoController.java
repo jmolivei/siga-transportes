@@ -15,6 +15,7 @@ import br.gov.jfrj.siga.tp.util.MenuMontador;
 import br.gov.jfrj.siga.vraptor.SigaObjects;
 
 @Resource
+@Path("/app/lotacaoVeiculo/")
 public class LotacaoVeiculoController extends TpController {
 
 	public LotacaoVeiculoController(HttpServletRequest request, Result result, CpDao dao,
@@ -23,7 +24,7 @@ public class LotacaoVeiculoController extends TpController {
 		super(request, result, dao, validator, so, em);
 	}
 	
-	@Path("/app/lotacaoVeiculo/listarPorVeiculo/{idVeiculo}")
+	@Path("/listarPorVeiculo/{idVeiculo}")
 	public void listarPorVeiculo(Long idVeiculo) throws Exception {
 		Veiculo veiculo = Veiculo.AR.findById(idVeiculo);
 		List<LotacaoVeiculo> lotacoesVeiculo = LotacaoVeiculo.buscarTodosPorVeiculo(veiculo);

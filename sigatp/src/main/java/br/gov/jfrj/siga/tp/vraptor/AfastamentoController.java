@@ -104,7 +104,7 @@ public class AfastamentoController extends TpController {
 	@RoleAdminMissao
 	@RoleAdminMissaoComplexo
 	@Path("/excluir/{id}")
-	public void exclui(Long id) throws Exception {
+	public void excluir(Long id) throws Exception {
 		Afastamento afastamento = Afastamento.AR.findById(id);
 		afastamento.delete();
 		result.redirectTo(this).listarPorCondutor(afastamento.getCondutor().getId());

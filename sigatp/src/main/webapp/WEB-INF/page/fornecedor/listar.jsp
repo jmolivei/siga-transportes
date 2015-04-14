@@ -38,7 +38,7 @@
 											href="${linkTo[FornecedorController].editar[item.id]}"><fmt:message key="views.botoes.editar"/></a>
 										</td>
 										<td><a
-											href="${linkTo[FornecedorController].exclui[item.id]}"
+											href="${linkTo[FornecedorController].excluir[item.id]}"
 											onclick="javascript:return confirm('Tem certeza de que deseja excluir este fornecedor?');"><fmt:message key="views.botoes.excluir"/></a>
 										</td>
 									</tr>
@@ -50,7 +50,7 @@
 				</c:when>
 			</c:choose>
 			<div class="gt-table-buttons">
-				<a href="${linkTo[FornecedorController].inclui}" id="botaoIncluirFornecedor"
+				<a href="${linkTo[FornecedorController].incluir}" id="botaoIncluirFornecedor"
 					class="gt-btn-medium gt-btn-left"><fmt:message key="views.botoes.incluir"/></a>					
 			</div>
 		</div>

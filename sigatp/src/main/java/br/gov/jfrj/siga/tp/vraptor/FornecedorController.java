@@ -5,7 +5,6 @@ import java.util.List;
 import javax.persistence.EntityManager;
 import javax.servlet.http.HttpServletRequest;
 
-import play.mvc.With;
 import br.com.caelum.vraptor.Path;
 import br.com.caelum.vraptor.Resource;
 import br.com.caelum.vraptor.Result;
@@ -13,47 +12,48 @@ import br.com.caelum.vraptor.Validator;
 import br.com.caelum.vraptor.core.Localization;
 import br.gov.jfrj.siga.dp.CpUF;
 import br.gov.jfrj.siga.dp.dao.CpDao;
+import br.gov.jfrj.siga.tp.auth.annotation.RoleAdmin;
+import br.gov.jfrj.siga.tp.auth.annotation.RoleAdminFrota;
+import br.gov.jfrj.siga.tp.auth.annotation.RoleAdminGabinete;
+import br.gov.jfrj.siga.tp.auth.annotation.RoleAdminMissao;
+import br.gov.jfrj.siga.tp.auth.annotation.RoleGabinete;
 import br.gov.jfrj.siga.tp.model.Fornecedor;
 import br.gov.jfrj.siga.tp.model.TpDao;
 import br.gov.jfrj.siga.tp.model.Uf;
 import br.gov.jfrj.siga.vraptor.SigaObjects;
-import controllers.AutorizacaoGIAntigo;
-//import controllers.AutorizacaoGIAntigo.RoleAdmin;
-//import controllers.AutorizacaoGIAntigo.RoleAdminFrota;
-//import controllers.AutorizacaoGIAntigo.RoleAdminMissao;
 
-@With(AutorizacaoGIAntigo.class)
 @Resource
+@Path("/app/fornecedor")
 public class FornecedorController extends TpController {
 
 	public FornecedorController(HttpServletRequest request, Result result, CpDao dao, Localization localization, Validator validator, SigaObjects so, /*AutorizacaoGIAntigo dadosAutorizacao,*/ EntityManager em) throws Exception {
 		super(request, result, TpDao.getInstance(), validator, so, /*dadosAutorizacao,*/ em);
 	}
 
-	@Path("/app/fornecedor/listar")
+	@Path("/listar")
 	public void listar() {
 		result.include("fornecedores", getFornecedores());
 	}
 
-//	@RoleAdmin
-//	@RoleAdminFrota
-//	@RoleAdminMissao	
-//	@AutorizacaoGIAntigo.RoleAdminGabinete
-//	@AutorizacaoGIAntigo.RoleGabinete
-	@Path("/app/fornecedor/incluir")
-	public void inclui() {
+	@RoleAdmin
+	@RoleAdminFrota
+	@RoleAdminMissao	
+	@RoleAdminGabinete
+	@RoleGabinete
+	@Path("/incluir")
+	public void incluir() {
 		Fornecedor fornecedor = new Fornecedor();
 		List<CpUF> listaUf = Uf.listarTodos();
 		result.include("fornecedor", fornecedor);
 		result.include("listaUF", listaUf);
 	}
 
-//	@RoleAdmin
-//	@RoleAdminFrota
-//	@RoleAdminMissao
-//	@AutorizacaoGIAntigo.RoleAdminGabinete
-//	@AutorizacaoGIAntigo.RoleGabinete
-	@Path("/app/fornecedor/editar/{id}")
+	@RoleAdmin
+	@RoleAdminFrota
+	@RoleAdminMissao
+	@RoleAdminGabinete
+	@RoleGabinete
+	@Path("/editar/{id}")
 	public void editar(Long id) throws Exception {
 		Fornecedor fornecedor = Fornecedor.AR.findById(id);
 		List<CpUF> listaUf = Uf.listarTodos();
@@ -61,11 +61,12 @@ public class FornecedorController extends TpController {
 		result.include("listaUF", listaUf);
 	}
 	
-//	@RoleAdmin
-//	@RoleAdminFrota
-//	@RoleAdminMissao
-////	@AutorizacaoGI.RoleAdminGabinete
-////	@AutorizacaoGI.RoleGabinete
+	@RoleAdmin
+	@RoleAdminFrota
+	@RoleAdminMissao
+	@RoleAdminGabinete
+	@RoleGabinete
+	@Path("/salvar/{fornecedor}")
 	public void salvar(Fornecedor fornecedor) {
 		if (validator.hasErrors()) {
 			String template = fornecedor.getId() > 0 ? "/app/fornecedor/editar"
@@ -78,11 +79,11 @@ public class FornecedorController extends TpController {
 		}
 	}
 
-//	@RoleAdmin
-//	@RoleAdminFrota
-//	@RoleAdminMissao
-	@Path("/app/fornecedor/excluir/{id}")
-	public void exclui(Long id) throws Exception {
+	@RoleAdmin
+	@RoleAdminFrota
+	@RoleAdminMissao
+	@Path("/excluir/{id}")
+	public void excluir(Long id) throws Exception {
 		Fornecedor fornecedor = Fornecedor.AR.findById(id);
 		fornecedor.delete();
 		result.redirectTo(this).listar();

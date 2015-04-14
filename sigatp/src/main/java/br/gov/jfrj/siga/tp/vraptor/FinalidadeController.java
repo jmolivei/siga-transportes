@@ -8,7 +8,6 @@ import javax.persistence.PersistenceException;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 
-import play.data.validation.Validation;
 import br.com.caelum.vraptor.Path;
 import br.com.caelum.vraptor.Resource;
 import br.com.caelum.vraptor.Result;
@@ -39,11 +38,7 @@ public class FinalidadeController extends TpController {
 	public void listar(String mensagem) {
     	MenuMontador.instance(result).recuperarMenuFinalidades(true);
     	List<FinalidadeRequisicao> finalidades = FinalidadeRequisicao.listarTodos(getTitular().getOrgaoUsuario());
-   		
-    	if(null != mensagem){
-    		Validation.addError("finalidade", mensagem);
-    		result.include("erros", mensagem);
-    	}
+    	error(null != mensagem, "finalidade", mensagem);
     	
     	result.include("finalidades", finalidades);
     }

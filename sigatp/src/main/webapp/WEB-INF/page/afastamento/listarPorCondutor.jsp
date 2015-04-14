@@ -32,7 +32,7 @@
 				    	    <td><fmt:formatDate pattern="dd/MM/yyyy HH:mm" value="${afastamento.dataHoraFim.time}" /></td>
 				    		<td><a href="${linkTo[AfastamentoController].editar[afastamento.condutor.id][afastamento.id]}"><fmt:message key="views.botoes.editar"/></a></td>
 				    		<td>
-				    			<a href="${linkTo[AfastamentoController].exclui[afastamento.id]}" 
+				    			<a href="${linkTo[AfastamentoController].excluir[afastamento.id]}" 
 				    				onclick="javascript:return confirm('Tem certeza de que deseja excluir este afastamento?');">
 				    				<fmt:message key="views.botoes.excluir"/></a>
 				    		</td>

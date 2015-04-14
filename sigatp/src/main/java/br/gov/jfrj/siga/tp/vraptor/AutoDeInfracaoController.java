@@ -23,6 +23,7 @@ import br.gov.jfrj.siga.tp.model.Veiculo;
 import br.gov.jfrj.siga.vraptor.SigaObjects;
 
 @Resource
+@Path("/app/autoDeInfracao")
 public class AutoDeInfracaoController extends TpController{
 
 	public AutoDeInfracaoController(HttpServletRequest request, Result result,
@@ -31,7 +32,7 @@ public class AutoDeInfracaoController extends TpController{
 		super(request, result, TpDao.getInstance(), validator, so, em);
 	}
 
-	@Path("/app/autoDeInfracao/listarPorVeiculo/{idVeiculo}")
+	@Path("/listarPorVeiculo/{idVeiculo}")
 	public void listarPorVeiculo(Long idVeiculo) throws Exception {
 		Veiculo veiculo = Veiculo.AR.findById(idVeiculo);
 		List<AutoDeInfracao> autosDeInfracao = AutoDeInfracao
@@ -43,7 +44,7 @@ public class AutoDeInfracaoController extends TpController{
 		result.include("veiculo", veiculo);
 	}
 
-	@Path("/app/autoDeInfracao/listarPorCondutor/{idCondutor}")
+	@Path("/listarPorCondutor/{idCondutor}")
 	public void listarPorCondutor(Long idCondutor) throws Exception {
 		Condutor condutor = Condutor.AR.findById(idCondutor);
 		List<AutoDeInfracao> autosDeInfracao = AutoDeInfracao
@@ -54,7 +55,7 @@ public class AutoDeInfracaoController extends TpController{
 		result.include("condutor", condutor);
 	}
 
-	@Path("/app/autoDeInfracao/listar")
+	@Path("/listar")
 	public void listar() {
 		List<AutoDeInfracao> autosDeInfracao = AutoDeInfracao.listarOrdenado();
 		result.include("autosDeInfracao", autosDeInfracao);
@@ -63,7 +64,7 @@ public class AutoDeInfracaoController extends TpController{
 	@RoleAdmin
 	@RoleAdminMissao
 	@RoleAdminMissaoComplexo
-	@Path("/app/autoDeInfracao/incluir/{notificacao}")
+	@Path("/incluir/{notificacao}")
 	public void incluir(String notificacao) throws Exception {
 		result.forwardTo(this).editar(0L, notificacao);
 	}
@@ -71,7 +72,7 @@ public class AutoDeInfracaoController extends TpController{
 	@RoleAdmin
 	@RoleAdminMissao
 	@RoleAdminMissaoComplexo
-	@Path("/app/autoDeInfracao/editar/{id}")
+	@Path("/editar/{id}")
 	public void editar(Long id, String notificacao) throws Exception {
 		List<Veiculo> veiculos = Veiculo.listarTodos(getTitular().getOrgaoUsuario());
 		List<Condutor> condutores = Condutor.listarTodos(getTitular().getOrgaoUsuario());
@@ -96,6 +97,7 @@ public class AutoDeInfracaoController extends TpController{
 	@RoleAdmin
 	@RoleAdminMissao
 	@RoleAdminMissaoComplexo
+	@Path("/salvar/{autoDeInfracao}")
 	public void salvar(@Valid AutoDeInfracao autoDeInfracao) throws Exception {
 		autoDeInfracao.setCondutor(Condutor.AR.findById(autoDeInfracao.getCondutor().getId()));
 		autoDeInfracao.setVeiculo(Veiculo.AR.findById(autoDeInfracao.getVeiculo().getId()));
@@ -129,7 +131,7 @@ public class AutoDeInfracaoController extends TpController{
 	@RoleAdmin
 	@RoleAdminMissao
 	@RoleAdminMissaoComplexo
-	@Path("/app/autoDeInfracao/excluir/{id}")
+	@Path("/excluir/{id}")
 	public void excluir(Long id) throws Exception {
 		AutoDeInfracao autoDeInfracao = AutoDeInfracao.AR.findById(id);
 		autoDeInfracao.delete();
