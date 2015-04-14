@@ -54,7 +54,7 @@ public class FornecedorController extends TpController {
 //	@AutorizacaoGIAntigo.RoleAdminGabinete
 //	@AutorizacaoGIAntigo.RoleGabinete
 	@Path("/app/fornecedor/editar/{id}")
-	public void edita(Long id) throws Exception {
+	public void editar(Long id) throws Exception {
 		Fornecedor fornecedor = Fornecedor.AR.findById(id);
 		List<CpUF> listaUf = Uf.listarTodos();
 		result.include("fornecedor", fornecedor);

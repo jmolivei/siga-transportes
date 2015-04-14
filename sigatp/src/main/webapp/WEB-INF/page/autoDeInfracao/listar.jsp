@@ -39,8 +39,8 @@
 									<td>${autoDeInfracao.numeroDoProcesso}</td>
 									<td>${autoDeInfracao.foiPago().descricao}</td>
 									<td>${autoDeInfracao.foiRecebido.descricao}</td>
-									<td><a href="${linkTo[AutoDeInfracaoController].editar[autoDeInfracao.id]}">Editar</a></td>
-									<td><a href="${linkTo[AutoDeInfracaoController].excluir[autoDeInfracao.id]}">Excluir</a></td>
+									<td><a href="${linkTo[AutoDeInfracaoController].editar[autoDeInfracao.id]}"><fmt:message key="views.botoes.editar"/></a></td>
+									<td><a href="${linkTo[AutoDeInfracaoController].excluir[autoDeInfracao.id]}"><fmt:message key="views.botoes.excluir"/></a></td>
 								</tr>
 							</c:forEach>
 						</tbody>

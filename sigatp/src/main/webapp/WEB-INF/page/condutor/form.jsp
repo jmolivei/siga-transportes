@@ -123,7 +123,7 @@ function carregarDadosDpPessoa() {
 		class="gt-btn-medium gt-btn-left" /> 
 	<input type="button"
 		value="<fmt:message key="views.botoes.cancelar"/>" class="gt-btn-medium gt-btn-left"
-		onclick="javascript:window.location = '${linkTo[CondutorController].lista}';" />
+		onclick="javascript:window.location = '${linkTo[CondutorController].listar}';" />
 </div>
 
 

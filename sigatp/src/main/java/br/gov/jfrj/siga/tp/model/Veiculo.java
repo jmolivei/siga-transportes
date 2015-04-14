@@ -29,7 +29,6 @@ import org.hibernate.envers.Audited;
 import org.hibernate.envers.RelationTargetAuditMode;
 import org.hibernate.validator.constraints.NotEmpty;
 
-import play.db.jpa.JPA;
 import play.modules.br.jus.jfrj.siga.uteis.validadores.validarAnoData.ValidarAnoData;
 import br.gov.jfrj.siga.cp.model.DpLotacaoSelecao;
 import br.gov.jfrj.siga.dp.CpOrgaoUsuario;
@@ -40,7 +39,6 @@ import br.gov.jfrj.siga.tp.util.PerguntaSimNao;
 import br.gov.jfrj.siga.tp.util.Situacao;
 import br.gov.jfrj.siga.tp.validation.annotation.Chassi;
 import br.gov.jfrj.siga.tp.validation.annotation.Renavam;
-import br.gov.jfrj.siga.tp.validation.annotation.Unique;
 import br.gov.jfrj.siga.tp.validation.annotation.UpperCase;
 
 @Entity
@@ -335,7 +333,7 @@ public class Veiculo extends TpModel implements Comparable<Veiculo> {
 				+ "(SELECT a.veiculo.id FROM Avaria a" + " WHERE a.podeCircular = '" + PerguntaSimNao.NAO + "'" + " AND a.dataDeRegistro <= " + dataFormatadaOracle + " AND (a.dataDeSolucao = NULL "
 				+ " OR a.dataDeSolucao >= " + dataFormatadaOracle + "))" + " ORDER BY v.marca, v.modelo";
 
-		Query qry = JPA.em().createQuery(qrl);
+		Query qry = AR.em().createQuery(qrl);
 		try {
 			veiculos = (List<Veiculo>) qry.getResultList();
 		} catch (NoResultException ex) {
@@ -371,7 +369,7 @@ public class Veiculo extends TpModel implements Comparable<Veiculo> {
 		String qrl = "SELECT v FROM Veiculo v WHERE " + "  v.cpOrgaoUsuario.id = " + orgaoUsuario.getId() + " AND v.id in (SELECT L.veiculo.id FROM LotacaoVeiculo L " + " where L.veiculo.id = v.id "
 				+ " AND L.lotacao.idLotacaoIni = " + lotacao.getIdLotacaoIni() + " AND L.dataHoraFim IS NULL)" + " ORDER BY v.marca, v.modelo";
 
-		Query qry = JPA.em().createQuery(qrl);
+		Query qry = AR.em().createQuery(qrl);
 		try {
 			veiculos = (List<Veiculo>) qry.getResultList();
 		} catch (NoResultException ex) {

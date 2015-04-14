@@ -35,11 +35,11 @@
 										<td><c:if test="${not empty item.ramoAtividadeDescricao}">${item.ramoAtividadeDescricao}</c:if></td>
 										<td><c:if test="${not empty item.nomeContato}">${item.nomeContato}</c:if></td>
 										<td><a
-											href="${linkTo[FornecedorController].edita[item.id]}">Editar</a>
+											href="${linkTo[FornecedorController].editar[item.id]}"><fmt:message key="views.botoes.editar"/></a>
 										</td>
 										<td><a
 											href="${linkTo[FornecedorController].exclui[item.id]}"
-											onclick="javascript:return confirm('Tem certeza de que deseja excluir este fornecedor?');">Excluir</a>
+											onclick="javascript:return confirm('Tem certeza de que deseja excluir este fornecedor?');"><fmt:message key="views.botoes.excluir"/></a>
 										</td>
 									</tr>
 								</c:forEach>
