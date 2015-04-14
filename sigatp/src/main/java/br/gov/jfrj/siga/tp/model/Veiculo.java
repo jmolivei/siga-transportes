@@ -40,13 +40,14 @@ import br.gov.jfrj.siga.tp.util.PerguntaSimNao;
 import br.gov.jfrj.siga.tp.util.Situacao;
 import br.gov.jfrj.siga.tp.validation.annotation.Chassi;
 import br.gov.jfrj.siga.tp.validation.annotation.Renavam;
+import br.gov.jfrj.siga.tp.validation.annotation.Unique;
 import br.gov.jfrj.siga.tp.validation.annotation.UpperCase;
 
 @Entity
 // @Table(name = "VEICULO_2", schema="SIGAOR")
 @Audited
 @Table(schema = "SIGATP")
-//@Unique(message = "{veiculo.placa.unique}", field = "placa")
+@Unique(message = "{veiculo.placa.unique}", field = "placa")
 public class Veiculo extends TpModel implements Comparable<Veiculo> {
 
 	private static final long serialVersionUID = -3602265045747814797L;
@@ -287,10 +288,6 @@ public class Veiculo extends TpModel implements Comparable<Veiculo> {
 		this.processoAlienacao = "";
 	}
 
-//	public Veiculo(DpLotacao dpLotacao) {
-//		this.setLotacaoAtual(dpLotacao);
-//	}
-
 	public String getDadosParaExibicao() {
 		if (ehNovo()) {
 			return MessagesBundle.getMessage("veiculo.cadastro");
@@ -298,9 +295,6 @@ public class Veiculo extends TpModel implements Comparable<Veiculo> {
 		return this.marca + " " + this.modelo + " - " + this.placa;
 	}
 
-	/*
-	 * @Override public int compareTo(Veiculo o) { return (this.situacao + this.placa).compareTo(o.situacao + o.placa); }
-	 */
 	@Override
 	public int compareTo(Veiculo o) {
 		return (this.situacao + this.marca + this.modelo).compareTo(o.situacao + o.marca + o.modelo);
