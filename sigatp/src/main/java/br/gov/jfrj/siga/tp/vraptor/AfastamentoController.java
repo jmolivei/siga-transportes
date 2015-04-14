@@ -60,14 +60,14 @@ public class AfastamentoController extends TpController {
 	@RoleAdminMissao
 	@RoleAdminMissaoComplexo
 	@Path("/salvar")
-	public void salvar(/*@Valid*/ Afastamento afastamento) throws Exception {
+	public void salvar(@Valid final Afastamento afastamento) throws Exception {
 		if ((afastamento.getDataHoraInicio() != null ) && (afastamento.getDataHoraFim() != null) && (!afastamento.getDescricao().equals(""))) {
 			if (!afastamento.ordemDeDatasCorreta()) {
 				validator.add(new I18nMessage("afastamentos.dataHoraInicio.validation", "dataHoraInicio"));
 			}
 		}
 		
-		if (!validator.getErrors().isEmpty()) {
+		if (validator.hasErrors()) {
 			List<Condutor> condutores = Condutor.listarTodos(getTitular().getOrgaoUsuario());
 			
 			result.include("afastamento", afastamento);
