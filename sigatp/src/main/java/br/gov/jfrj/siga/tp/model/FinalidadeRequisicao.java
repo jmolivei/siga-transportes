@@ -99,6 +99,7 @@ public class FinalidadeRequisicao extends TpModel {
 		return FinalidadeRequisicao.AR.find("cpOrgaoOrigem = ? and id <> ?", orgaoUsuario, _ID_DA_FINALIDADE_OUTRA).fetch();
 	}
 
+	@SuppressWarnings("unchecked")
 	public static List<FinalidadeRequisicao> listarTodos() {
 		return FinalidadeRequisicao.AR.findAll();
 	}
