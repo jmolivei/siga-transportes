@@ -104,7 +104,7 @@
 			       	<label for= "veiculo." class= "obrigatorio"> Tipo combust&iacute;vel</label>
 			       	<select name="veiculo.tipoDeCombustivel">
 			       		<c:forEach items="${tiposDeCombustivel}" var="tipoDeCombustivel">
-			       			<option value="${tipoDeCombustivel}">${tipoDeCombustivel.descricao}</option>
+			       			<option value="${tipoDeCombustivel}" ${veiculo.tipoDeCombustivel == tipoDeCombustivel ? 'selected' : ''}>${tipoDeCombustivel.descricao}</option>
 			       		</c:forEach>
 			       	</select>
 				</div>
@@ -112,7 +112,7 @@
 					<label for= "veiculo.licenciamentoAnual" class= "obrigatorio">Lic.anual</label>
 					<select name="veiculo.licenciamentoAnual">
 			       		<c:forEach items="${respostasSimNao}" var="respostaSimNao">
-			       			<option value="${respostaSimNao}">${respostaSimNao.descricao}</option>
+			       			<option value="${respostaSimNao}" ${veiculo.licenciamentoAnual == respostaSimNao ? 'selected' : ''}>${respostaSimNao.descricao}</option>
 			       		</c:forEach>
 			       	</select>
 			    </div>
@@ -120,7 +120,7 @@
 					<label for= "veiculo.dpvat" class= "obrigatorio">Dpvat</label>
 					<select name="veiculo.dpvat">
 			       		<c:forEach items="${respostasSimNao}" var="respostaSimNao">
-			       			<option value="${respostaSimNao}">${respostaSimNao.descricao}</option>
+			       			<option value="${respostaSimNao}" ${veiculo.dpvat == respostaSimNao ? 'selected' : ''}>${respostaSimNao.descricao}</option>
 			       		</c:forEach>
 			       	</select>
 			    </div>
@@ -128,7 +128,7 @@
 					<label for= "veiculo.categoriaCNH" class= "obrigatorio">Cat.cnh</label>
 				    <select name="veiculo.categoriaCNH">
 			       		<c:forEach items="${categoriasCNH}" var="categoriaCNH">
-			       			<option value="${categoriaCNH}">${categoriaCNH.descricao}</option>
+			       			<option value="${categoriaCNH}" ${veiculo.categoriaCNH == categoriaCNH ? 'selected' : ''}>${categoriaCNH.descricao}</option>
 			       		</c:forEach>
 			       	</select>
 			    </div>				 					       	

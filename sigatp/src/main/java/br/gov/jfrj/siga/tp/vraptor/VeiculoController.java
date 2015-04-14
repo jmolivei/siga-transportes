@@ -90,7 +90,7 @@ public class VeiculoController extends TpController {
 	public void excluir(Long id) throws Exception {
 		Veiculo veiculo = Veiculo.AR.findById(id);
 		veiculo.delete();
-		listar();
+		result.redirectTo(this).listar();
 	}
 
 	@Path("/ler/{id}")

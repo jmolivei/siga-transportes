@@ -47,7 +47,7 @@ import br.gov.jfrj.siga.tp.validation.annotation.UpperCase;
 // @Table(name = "VEICULO_2", schema="SIGAOR")
 @Audited
 @Table(schema = "SIGATP")
-@Unique(message = "{veiculo.placa.unique}", field = "placa")
+//@Unique(message = "{veiculo.placa.unique}", field = "placa")
 public class Veiculo extends TpModel implements Comparable<Veiculo> {
 
 	private static final long serialVersionUID = -3602265045747814797L;
