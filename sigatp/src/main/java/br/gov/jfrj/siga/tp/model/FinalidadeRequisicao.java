@@ -19,7 +19,6 @@ import org.hibernate.envers.RelationTargetAuditMode;
 import play.i18n.Messages;
 import br.gov.jfrj.siga.dp.CpOrgaoUsuario;
 import br.gov.jfrj.siga.model.ActiveRecord;
-import br.gov.jfrj.siga.tp.validation.annotation.Unique;
 import br.gov.jfrj.siga.tp.validation.annotation.UpperCase;
 import controllers.AutorizacaoGIAntigo;
 

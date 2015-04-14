@@ -240,7 +240,6 @@ public class Missao extends  TpModel implements Comparable<Missao>,SequenceMetho
 	}
 
 	public static Missao buscar(String sequence) throws Exception {
-		// TODO Auto-generated method stub
 		String[] partesDoCodigo=null;
 		Missao missao=new Missao();
 		try {

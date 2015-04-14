@@ -107,7 +107,7 @@ public class VeiculoController extends TpController {
 
 	@Path("/{idVeiculo}/avarias")
 	public void listarAvarias(Long idVeiculo) throws Exception {
-		result.redirectTo(AvariasController.class).listarPorVeiculo(idVeiculo);
+		result.redirectTo(AvariaController.class).listarPorVeiculo(idVeiculo);
 	}
 
 	private List<DpLotacao> buscarDpLotacoes() {

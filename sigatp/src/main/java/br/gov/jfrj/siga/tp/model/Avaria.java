@@ -17,43 +17,43 @@ import javax.validation.constraints.NotNull;
 
 import org.hibernate.envers.Audited;
 
-import play.data.binding.As;
-import play.data.validation.Required;
-import play.db.jpa.GenericModel;
 import play.modules.br.jus.jfrj.siga.uteis.validadores.validarAnoData.ValidarAnoData;
+import br.gov.jfrj.siga.model.ActiveRecord;
 import br.gov.jfrj.siga.tp.util.PerguntaSimNao;
 import br.jus.jfrj.siga.uteis.UpperCase;
 
 import com.google.gson.Gson;
 
 @Entity
-//@Table(name = "AVARIA_2", schema="SIGAOR")
 @Audited
 @Table(schema = "SIGATP")
-public class Avaria extends GenericModel implements Comparable<Avaria> {
+public class Avaria extends TpModel implements Comparable<Avaria> {
+	
+	private static final long serialVersionUID = 1L;
+	public static ActiveRecord<Avaria> AR = new ActiveRecord<>(Avaria.class);
+	
 	@Id
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "hibernate_sequence_generator") @SequenceGenerator(name = "hibernate_sequence_generator", sequenceName="SIGATP.hibernate_sequence") 
-	public Long id;
+	private Long id;
 	
 	@ManyToOne
 	@NotNull
-	public Veiculo veiculo;
+	private Veiculo veiculo;
 	
-	//TODO nao se registra a data em que aconteceu a avaria?
-
-	@Required
-	@As(lang={"*"}, value={"dd/MM/yyyy"})
+	@NotNull(message = "{avaria.data.registro}")
 	@ValidarAnoData(descricaoCampo="Data de Registro")
-	public Calendar dataDeRegistro;
+	private Calendar dataDeRegistro;
 	
-	//@As(lang={"*"}, value={"dd/MM/yyyy"})
-	@As(lang={"*"}, value={"dd/MM/yyyy HH:mm"})
 	@ValidarAnoData(descricaoCampo="Data de Solucao")
-	public Calendar dataDeSolucao;
+	private Calendar dataDeSolucao;
 	
-	@Required
+	@NotNull(message = "{avaria.descricao}")
 	@UpperCase
-	public String descricao;
+	private String descricao;
+	
+	@NotNull
+	@Enumerated(EnumType.STRING)
+	public PerguntaSimNao podeCircular;
 	
 	public Avaria() {
 		this.id = new Long(0);
@@ -64,30 +64,76 @@ public class Avaria extends GenericModel implements Comparable<Avaria> {
 		this.podeCircular = PerguntaSimNao.NAO;
 	}
 	
-	public Avaria(Veiculo veiculo, Calendar dataDeRegistro, Calendar dataDeSolucao,
-			String descricao, PerguntaSimNao podeCircular) {
+	public Avaria(Veiculo veiculo, Calendar dataDeRegistro, Calendar dataDeSolucao, String descricao, PerguntaSimNao podeCircular) {
 		super();
 		this.veiculo = veiculo;
 		this.dataDeRegistro = dataDeRegistro;
 		this.dataDeSolucao = dataDeSolucao;
 		this.descricao = descricao;
 		this.podeCircular = podeCircular;
-		//this.dataHoraInicio = dataHoraInicio;
-		//this.dataHoraFim = dataHoraFim;
 	}
 	
+	@Override
+	public Long getId() {
+		return this.id;
+	}
+	
+	public void setId(Long id) {
+		this.id = id;
+	}
+	
+	public Veiculo getVeiculo() {
+		return veiculo;
+	}
+
+	public void setVeiculo(Veiculo veiculo) {
+		this.veiculo = veiculo;
+	}
+
+	public Calendar getDataDeRegistro() {
+		return dataDeRegistro;
+	}
+
+	public void setDataDeRegistro(Calendar dataDeRegistro) {
+		this.dataDeRegistro = dataDeRegistro;
+	}
+
+	public Calendar getDataDeSolucao() {
+		return dataDeSolucao;
+	}
+
+	public void setDataDeSolucao(Calendar dataDeSolucao) {
+		this.dataDeSolucao = dataDeSolucao;
+	}
+
+	public String getDescricao() {
+		return descricao;
+	}
+
+	public void setDescricao(String descricao) {
+		this.descricao = descricao;
+	}
+	
+	public PerguntaSimNao getPodeCircular() {
+		return podeCircular;
+	}
+
+	public void setPodeCircular(PerguntaSimNao podeCircular) {
+		this.podeCircular = podeCircular;
+	}
+
 	public String toJson() {
 		return new Gson().toJson(this); 
 	}
 	
 	public static List<Avaria> buscarTodasPorVeiculo(Veiculo veiculo) {
-		List<Avaria> avarias = Avaria.find("veiculo", veiculo).fetch();
+		List<Avaria> avarias = Avaria.AR.find("veiculo", veiculo).fetch();
 		Collections.sort(avarias);
 		return avarias;
 	}
 
 	public static List<Avaria> buscarPendentesPorVeiculo(Veiculo veiculo) {
-		List<Avaria> avarias = Avaria.find("veiculo = ? AND dataDeSolucao is null ", veiculo).fetch();
+		List<Avaria> avarias = Avaria.AR.find("veiculo = ? AND dataDeSolucao is null ", veiculo).fetch();
 		Collections.sort(avarias);
 		return avarias;
 	}
@@ -97,18 +143,9 @@ public class Avaria extends GenericModel implements Comparable<Avaria> {
 		return this.veiculo.compareTo(o.veiculo);
 	}
 
-	/*@As(lang={"*"}, value={"dd/MM/yyyy HH:mm"})
-	public Calendar dataHoraInicio;
-	
-	@As(lang={"*"}, value={"dd/MM/yyyy HH:mm"})
-	public Calendar dataHoraFim;*/
-
-	@Required
-	@Enumerated(EnumType.STRING)
-	public PerguntaSimNao podeCircular;
-
+	@SuppressWarnings("unchecked")
 	public static List<Avaria> listarTodos() {
-		List<Avaria> avarias = Avaria.findAll();
+		List<Avaria> avarias = Avaria.AR.findAll();
 		Collections.sort(avarias);
 		return avarias;
 	}

@@ -17,7 +17,6 @@ public class testeCurrency {
 	 * @throws ParseException
 	 */
 	public static void main(String[] args) throws ParseException {
-		// TODO Auto-generated method stub
 
 		Locale defaultLocale = new Locale("pt", "BR", "BRL");
 		NumberFormat nf = NumberFormat.getCurrencyInstance(defaultLocale);

@@ -42,9 +42,9 @@ public class Avarias extends Controller {
 		boolean fixarVeiculo = false;
 		List<Veiculo> veiculos = Veiculo.listarTodos(AutorizacaoGIAntigo.titular().getOrgaoUsuario());
 		if (idVeiculo != null) {
-			avaria.veiculo = Veiculo.AR.findById(idVeiculo);
+			avaria.setVeiculo(Veiculo.AR.findById(idVeiculo));;
 			fixarVeiculo = true;
-			MenuMontador.instance().recuperarMenuVeiculos(avaria.veiculo.getId(), ItemMenu.AVARIAS);
+			MenuMontador.instance().recuperarMenuVeiculos(avaria.getVeiculo().getId(), ItemMenu.AVARIAS);
 		}
 		render(avaria, veiculos, fixarVeiculo);
 	}
@@ -52,13 +52,13 @@ public class Avarias extends Controller {
 	@RoleAdmin
 	@RoleAdminFrota
 	public static void editar(Long id, boolean fixarVeiculo) throws Exception {
-		Avaria avaria = Avaria.findById(id);
+		Avaria avaria = Avaria.AR.findById(id);
 		Veiculo veiculo = null;
 		if (fixarVeiculo) {
-			veiculo = avaria.veiculo;
+			veiculo = avaria.getVeiculo();
 		}
 		List<Veiculo> veiculos = Veiculo.listarTodos(AutorizacaoGIAntigo.titular().getOrgaoUsuario());
-		MenuMontador.instance().recuperarMenuVeiculos(avaria.veiculo.getId(), ItemMenu.AVARIAS);
+		MenuMontador.instance().recuperarMenuVeiculos(avaria.getVeiculo().getId(), ItemMenu.AVARIAS);
 		render(avaria, veiculos, veiculo, fixarVeiculo);
 	}
 
@@ -67,14 +67,14 @@ public class Avarias extends Controller {
 	public static void salvar(Avaria avaria, boolean fixarVeiculo) throws Exception {
 		validation.valid(avaria);
 		if (Validation.hasErrors()) {
-			MenuMontador.instance().recuperarMenuVeiculos(avaria.veiculo.getId(), ItemMenu.AVARIAS);
+			MenuMontador.instance().recuperarMenuVeiculos(avaria.getVeiculo().getId(), ItemMenu.AVARIAS);
 			List<Veiculo> veiculos = Veiculo.listarTodos(AutorizacaoGIAntigo.titular().getOrgaoUsuario());
-			Veiculo veiculo = Veiculo.AR.findById(avaria.veiculo.getId());
+			Veiculo veiculo = Veiculo.AR.findById(avaria.getVeiculo().getId());
 			renderTemplate(ACTION_EDITAR, avaria, veiculos, veiculo, fixarVeiculo);
 		}
 
 		if (avaria.podeCircular.equals(PerguntaSimNao.NAO)) {
-			List<Missao> missoes = Missao.retornarMissoes("veiculo.getId()", avaria.veiculo.getId(), avaria.veiculo.getCpOrgaoUsuario().getId(), avaria.dataDeRegistro, avaria.dataDeSolucao);
+			List<Missao> missoes = Missao.retornarMissoes("veiculo.getId()", avaria.getVeiculo().getId(), avaria.getVeiculo().getCpOrgaoUsuario().getId(), avaria.getDataDeRegistro(), avaria.getDataDeSolucao());
 			String listaMissoes = "";
 			String delimitador = "";
 
@@ -90,13 +90,13 @@ public class Avarias extends Controller {
 		}
 
 		if (Validation.hasErrors()) {
-			String template = avaria.id > 0 ? "Avarias/editar.html" : "Avarias/incluir.html";
+			String template = avaria.getId() > 0 ? "Avarias/editar.html" : "Avarias/incluir.html";
 			renderTemplate(template, avaria);
 		} else {
 			avaria.save();
 
 			if (fixarVeiculo) {
-				listarPorVeiculo(avaria.veiculo.getId());
+				listarPorVeiculo(avaria.getVeiculo().getId());
 			} else {
 				listar();
 			}
@@ -107,8 +107,8 @@ public class Avarias extends Controller {
 	@RoleAdminFrota
 	public static void excluir(Long id, boolean fixarVeiculo) throws Exception {
 		Avaria avaria;
-		avaria = Avaria.findById(id);
-		Veiculo veiculo = avaria.veiculo;
+		avaria = Avaria.AR.findById(id);
+		Veiculo veiculo = avaria.getVeiculo();
 		avaria.delete();
 		if (fixarVeiculo) {
 			listarPorVeiculo(veiculo.getId());

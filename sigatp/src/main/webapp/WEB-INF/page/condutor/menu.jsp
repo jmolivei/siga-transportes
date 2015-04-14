@@ -6,49 +6,49 @@
 	<c:if test="${menuCondutoresIncluir}">
 		<a class="once" href="${linkTo[CondutorController].inclui}">
 			<img src="/sigatp/public/images/editaricon.png" style="margin-right: 5px;">
-			<fmt:message key="menu.condutor.dados.cadastrais" />
+			<fmt:message key="dados.cadastrais" />
 		</a>&nbsp;&nbsp;&nbsp;
 	</c:if>
 	
 	<c:if test="${menuCondutoresEditar}">
 		<a class="once" href="${linkTo[CondutorController].edita[idCondutor]}">
 			<img src="/sigatp/public/images/editaricon.png" style="margin-right: 5px;">
-			<fmt:message key="menu.condutor.dados.cadastrais" />
+			<fmt:message key="dados.cadastrais" />
 		</a>&nbsp;&nbsp;&nbsp;
 	</c:if>
 	
 	<c:if test="${menuPlantoes}">
 		<a class="once" href="${linkTo[PlantaoController].listarPorCondutor[idCondutor]}">
 			<img src="/sigatp/public/images/plantaoicon.png" style="margin-right: 5px;">
-			<fmt:message key="menu.condutor.plantao" />
+			<fmt:message key="plantao" />
 		</a>&nbsp;&nbsp;&nbsp;
 	</c:if>
 	
 	<c:if test="${menuAfastamentos}">
 		<a class="once" href="${linkTo[AfastamentoController].listarPorCondutor[idCondutor]}">
 			<img src="/sigatp/public/images/afastamentoicon.png" style="margin-right: 5px;">
-			<fmt:message key="menu.condutor.afastamento" />
+			<fmt:message key="afastamentos" />
 		</a>&nbsp;&nbsp;&nbsp;
 	</c:if>
 	
 	<c:if test="${menuEscalasDeTrabalho}">
 		<a class="once" href="${linkTo[EscalaDeTrabalhoController].listarPorCondutor[idCondutor]}">
 		<img src="/sigatp/public/images/escalaicon.png" style="margin-right: 5px;">
-		<fmt:message key="menu.condutor.escala.trabalho" />
+		<fmt:message key="escala.trabalho" />
 	</a>&nbsp;&nbsp;&nbsp;
 	</c:if>
 	
 	<c:if test="${menuAgenda}">
 		<a class="once" href="${linkTo[AgendaController].listarPorCondutor[idCondutor]}">
 			<img src="/sigatp/public/images/agendaicon.png" style="margin-right: 5px;">
-			<fmt:message key="menu.condutor.agenda" />
+			<fmt:message key="agenda" />
 		</a>&nbsp;&nbsp;&nbsp;
 	</c:if>
 	
 	<c:if test="${menuInfracoes}">
 		<a class="once" href="${linkTo[AutoDeInfracaoController].listarPorCondutor[idCondutor]}">
 			<img src="/sigatp/public/images/infracoesicon.png" style="margin-right: 5px;">
-			<fmt:message key="menu.condutor.infracoes" />
+			<fmt:message key="infracoes" />
 		</a>&nbsp;&nbsp;&nbsp;
 	</c:if>
 	

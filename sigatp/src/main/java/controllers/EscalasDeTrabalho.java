@@ -221,7 +221,6 @@ public class EscalasDeTrabalho extends Controller {
     }
 	
 	private static boolean validarMissoesParaNovaEscala(EscalaDeTrabalho escala) throws Exception {
-		// TODO Auto-generated method stub
 		List<Missao> missoes = Missoes.buscarPorCondutoreseEscala(escala);
 		SimpleDateFormat formatar = new SimpleDateFormat("dd/MM/yyyy HH:mm");
 		boolean valido = true;
