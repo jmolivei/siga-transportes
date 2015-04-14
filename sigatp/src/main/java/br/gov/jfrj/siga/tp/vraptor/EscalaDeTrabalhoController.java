@@ -230,7 +230,7 @@ public class EscalaDeTrabalhoController extends TpController {
     		}
         }
         
-        result.redirectTo(CondutorController.class).lista();
+        result.redirectTo(CondutorController.class).listar();
     }
 	
 	@RoleAdmin

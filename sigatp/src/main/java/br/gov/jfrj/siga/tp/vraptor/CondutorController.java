@@ -34,7 +34,7 @@ public class CondutorController extends TpController {
 	private static Logger logger = Logger.getLogger(CondutorController.class);
 	
 	@Path("/app/condutor/listar")
-	public void lista() {
+	public void listar() {
 		result.include("condutores", getCondutores());
 	}
 
