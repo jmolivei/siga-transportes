@@ -86,6 +86,6 @@
 	<div class="gt-table-buttons">
 		<input type="submit" value="<fmt:message key="views.botoes.salvar"/>" class="gt-btn-medium gt-btn-left" /> 
 		<input type="button" value="<fmt:message key="views.botoes.cancelar"/>" class="gt-btn-medium gt-btn-left"
-			onclick="javascript:window.location = '${linkTo[FornecedorController].lista}';" />
+			onclick="javascript:window.location = '${linkTo[FornecedorController].listar}';" />
 	</div>
 </form>	

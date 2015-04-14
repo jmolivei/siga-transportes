@@ -31,7 +31,7 @@ public class FornecedorController extends TpController {
 	}
 
 	@Path("/app/fornecedor/listar")
-	public void lista() {
+	public void listar() {
 		result.include("fornecedores", getFornecedores());
 	}
 
@@ -54,7 +54,7 @@ public class FornecedorController extends TpController {
 //	@AutorizacaoGIAntigo.RoleAdminGabinete
 //	@AutorizacaoGIAntigo.RoleGabinete
 	@Path("/app/fornecedor/editar/{id}")
-	public void edita(Long id) throws Exception {
+	public void editar(Long id) throws Exception {
 		Fornecedor fornecedor = Fornecedor.AR.findById(id);
 		List<CpUF> listaUf = Uf.listarTodos();
 		result.include("fornecedor", fornecedor);
@@ -74,7 +74,7 @@ public class FornecedorController extends TpController {
 			result.include("fornecedor", fornecedor);
 		} else {
 			fornecedor.save();
-			result.redirectTo(this).lista();
+			result.redirectTo(this).listar();
 		}
 	}
 
@@ -85,7 +85,7 @@ public class FornecedorController extends TpController {
 	public void exclui(Long id) throws Exception {
 		Fornecedor fornecedor = Fornecedor.AR.findById(id);
 		fornecedor.delete();
-		result.redirectTo(this).lista();
+		result.redirectTo(this).listar();
 	}
 
 	private List<Fornecedor> getFornecedores() {

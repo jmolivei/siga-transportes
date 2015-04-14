@@ -15,9 +15,13 @@ import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 
+import net.sf.oval.constraint.NotEmpty;
+
 import org.hibernate.envers.Audited;
 
+import play.modules.br.jus.jfrj.siga.uteis.validadores.validarAnoData.ValidarAnoData;
 import br.gov.jfrj.siga.model.ActiveRecord;
+import br.gov.jfrj.siga.tp.validation.annotation.UpperCase;
 
 
 @SuppressWarnings("serial")
@@ -34,28 +38,23 @@ public class Afastamento extends TpModel  {
 	private Long id;
 		
 	
-	//@Required
 	@ManyToOne
 	@NotNull
 	@JoinColumn(name = "CONDUTOR_ID")
 	private Condutor condutor;	
 	
-	//@Required
-	//@UpperCase
+	@NotEmpty
+	@UpperCase
 	@NotNull
 	private String descricao;
 	
-	//@Required
-	//TODO Wlad @As(lang={"*"}, value={"dd/MM/yyyy HH:mm"})
 	@NotNull
-	//@ValidarAnoData(descricaoCampo="Data/Hora Inicio")
+	@ValidarAnoData(descricaoCampo="Data/Hora Inicio")
 	private Calendar dataHoraInicio;
 	
 	
-	//@Required
-	//TODO Wlad @As(lang={"*"}, value={"dd/MM/yyyy HH:mm"})
 	@NotNull
-	//@ValidarAnoData(descricaoCampo="Data/Hora Fim")
+	@ValidarAnoData(descricaoCampo="Data/Hora Fim")
 	private Calendar dataHoraFim;	
 	
 	

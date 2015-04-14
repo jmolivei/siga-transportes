@@ -22,4 +22,5 @@ public enum PerguntaSimNao {
 	public String getDescricao() {
 		return resposta;
 	}
+	
 }

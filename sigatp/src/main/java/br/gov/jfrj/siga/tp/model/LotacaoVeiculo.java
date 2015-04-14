@@ -1,6 +1,7 @@
 package br.gov.jfrj.siga.tp.model;
 
 import java.util.Calendar;
+import java.util.Comparator;
 import java.util.List;
 
 import javax.persistence.Entity;
@@ -75,7 +76,7 @@ public class LotacaoVeiculo extends TpModel {
 	 */
 	public static String atualizarDataFimLotacaoAnterior(Veiculo veiculo) throws Exception {
 		try {
-			List<LotacaoVeiculo> lotacoesVeiculo = LotacaoVeiculo.AR.find("id = ? and dataHoraFim is null order by dataHoraInicio DESC", veiculo.getId()).fetch();
+			List<LotacaoVeiculo> lotacoesVeiculo = LotacaoVeiculo.AR.find("veiculo.id = ? and dataHoraFim is null order by dataHoraInicio DESC", veiculo.getId()).fetch();
 			if (lotacoesVeiculo.size() == 1) {
 				lotacoesVeiculo.get(0).dataHoraFim = Calendar.getInstance();
 				lotacoesVeiculo.get(0).save();
@@ -87,7 +88,6 @@ public class LotacaoVeiculo extends TpModel {
 		} catch (Exception e) {
 			throw new Exception(MessagesBundle.getMessage("lotacaoVeiculo.lotacoesVeiculo.exception", e.getMessage()));
 		}
-
 		return "ok";
 	}
 
@@ -141,5 +141,14 @@ public class LotacaoVeiculo extends TpModel {
 
 	public void setOdometroEmKm(Double odometroEmKm) {
 		this.odometroEmKm = odometroEmKm;
+	}
+
+	public static Comparator<LotacaoVeiculo> comparator() {
+		return new Comparator<LotacaoVeiculo>() {
+			@Override
+			public int compare(LotacaoVeiculo o1, LotacaoVeiculo o2) {
+				return o2.dataHoraInicio.compareTo(o1.dataHoraInicio);
+			}
+		};
 	}
 }
