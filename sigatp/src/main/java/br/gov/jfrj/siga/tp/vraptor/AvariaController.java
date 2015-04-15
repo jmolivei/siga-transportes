@@ -92,7 +92,7 @@ public class AvariaController extends TpController {
 
 	@RoleAdmin
 	@RoleAdminFrota
-	@Path("/salvar/{avaria}/{fixarVeiculo}")
+	@Path("/salvar")
 	public void salvar(@Valid Avaria avaria, boolean fixarVeiculo) throws Exception {
 		if (validator.hasErrors()) {
 			MenuMontador.instance(result).recuperarMenuVeiculos(avaria.getVeiculo().getId(), ItemMenu.AVARIAS);

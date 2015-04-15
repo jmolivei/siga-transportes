@@ -16,7 +16,7 @@
 				<jsp:include page="../veiculo/menu.jsp" />
 			</c:if>
 			<sigatp:erros />
-			<form id="formAvarias" action="${linkTo[AvariaController].salvar[avaria][fixarVeiculo]}" enctype="multipart/form-data">
+			<form id="formAvarias" action="${linkTo[AvariaController].salvar}" method="post" enctype="multipart/form-data">
 				<div class="gt-content-box gt-form clearfix">
 					<c:choose>
 						<c:when test="${fixarVeiculo}">
@@ -45,7 +45,7 @@
        					</c:forEach>
        				</select>
        				
-        			<input type="hidden" name="avaria.id" value="${avaria.id}"/>
+        			<input type="hidden" name="avaria" value="${avaria.id}"/>
         			<input type="hidden" name="fixarVeiculo" value="${fixarVeiculo}"/>
 				</div>
 				<span class="alerta menor">* Preenchimento obrigat&oacute;rio</span>

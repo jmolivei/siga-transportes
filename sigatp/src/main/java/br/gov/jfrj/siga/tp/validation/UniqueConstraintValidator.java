@@ -1,7 +1,11 @@
 package br.gov.jfrj.siga.tp.validation;
 
+import java.sql.Connection;
+
+import javax.naming.InitialContext;
 import javax.persistence.EntityManager;
 import javax.persistence.Query;
+import javax.sql.DataSource;
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
 
@@ -28,6 +32,7 @@ public class UniqueConstraintValidator implements ConstraintValidator<Unique, Tp
 
 	@Override
 	public boolean isValid(TpModel tpModel, ConstraintValidatorContext context) {
+//		Connection connection = dataSource();
 		Query query = criarConsultaParaUnique(tpModel);
 		return contar(query, tpModel).equals(0L);
 	}
@@ -56,5 +61,14 @@ public class UniqueConstraintValidator implements ConstraintValidator<Unique, Tp
 			queryString += " AND t.id != :id ";
 		}
 		return em.createQuery(queryString);
+	}
+	
+	private Connection dataSource() {
+		try {
+			DataSource dataSource = (DataSource) new InitialContext().lookup("java:/jboss/datasources/SigaTpDS");
+			return dataSource.getConnection();
+		} catch (Exception e) {
+			throw new RuntimeException(e);
+		}
 	}
 }
