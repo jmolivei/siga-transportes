@@ -26,13 +26,14 @@ import br.gov.jfrj.siga.tp.model.TpDao;
 import br.gov.jfrj.siga.vraptor.SigaObjects;
 
 @Resource
+@Path("/app/plantao")
 public class PlantaoController extends TpController {
 
 	public PlantaoController(HttpServletRequest request, Result result, CpDao dao, Localization localization, Validator validator, SigaObjects so, EntityManager em) throws Exception {
 		super(request, result, TpDao.getInstance(), validator, so, em);
 	}
 
-	@Path("/app/plantao/listarPorCondutor/{idCondutor}")
+	@Path("/listarPorCondutor/{idCondutor}")
 	public void listarPorCondutor(Long idCondutor) throws Exception {
 		Condutor condutor = buscaCondutor(idCondutor);
 		List<Plantao> plantoes = Plantao.buscarTodosPorCondutor(condutor);
@@ -46,7 +47,7 @@ public class PlantaoController extends TpController {
 	@RoleAdmin
 	@RoleAdminMissao
 	@RoleAdminMissaoComplexo
-	@Path("/app/plantao/editar/{idCondutor}/{id}")
+	@Path("/editar/{idCondutor}/{id}")
 	public void editar(Long idCondutor, Long id) throws Exception {
 		Plantao plantao;
 		if (id > 0)
@@ -64,7 +65,7 @@ public class PlantaoController extends TpController {
 	@RoleAdmin
 	@RoleAdminMissao
 	@RoleAdminMissaoComplexo
-	@Path("/app/plantao/incluir/{idCondutor}")
+	@Path("/incluir/{idCondutor}")
 	public void incluir(Long idCondutor) throws Exception {
 		result.redirectTo(this).editar(idCondutor, 0L);
 	}
@@ -72,7 +73,7 @@ public class PlantaoController extends TpController {
 	@RoleAdmin
 	@RoleAdminMissao
 	@RoleAdminMissaoComplexo
-	@Path("/app/plantao/salvar")
+	@Path("/salvar")
 	public void salvar(@Valid Plantao plantao, Calendar dataHoraInicioNova, Calendar dataHoraFimNova)
 			throws Exception {
 		Long idCondutor = setaCondutor(plantao);
@@ -146,7 +147,7 @@ public class PlantaoController extends TpController {
 	@RoleAdmin
 	@RoleAdminMissao
 	@RoleAdminMissaoComplexo
-	@Path("/app/plantao/excluir/{id}")
+	@Path("/excluir/{id}")
 	public void excluir(Long id) throws Exception {
 		Plantao plantao = Plantao.AR.findById(id);
 

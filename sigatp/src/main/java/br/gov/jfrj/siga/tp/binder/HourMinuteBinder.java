@@ -21,7 +21,7 @@ public class HourMinuteBinder /* implements TypeBinder<Calendar> */{
 		Calendar data = Calendar.getInstance();
 		try {
 			data.setTime(formato.parse(dataHora));
-		} catch (ParseException e) { // TODO Auto-generated catch block
+		} catch (ParseException e) {
 			e.printStackTrace();
 		}
 		return data;

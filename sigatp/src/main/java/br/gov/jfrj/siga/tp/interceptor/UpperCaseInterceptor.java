@@ -33,7 +33,9 @@ public class UpperCaseInterceptor implements Interceptor{
 		Object[] parametros = methodInfo.getParameters();
 		if (parametros != null) {
 			for (int indiceDoParametro = 0; indiceDoParametro < parametros.length; indiceDoParametro++) {
+				if (parametros[indiceDoParametro] != null) {
 					validator.validate(parametros[indiceDoParametro]);
+				}
 			}
 		}
 		stack.next(method, resourceInstance); 

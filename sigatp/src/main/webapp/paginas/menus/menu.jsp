@@ -38,7 +38,7 @@
 	  	<ul>
 			<li><a id="menuGabAbastecimentos" class="" href="@{Abastecimentos.listar}">Abastecimentos</a></li>  	
 	 		<li><a id="menuGabinetesListar" class="" href="@{ControlesGabinete.listar()}">Controles de entrada / sa&iacute;da</a></li>
-	 		<li><a id="menuAdmFornecedores" class="" href="@{Fornecedores.listar}">Fornecedores</a></li>	
+	 		<li><a id="menuAdmFornecedores" class="" href="${linkTo[FornecedorController].listar}">Fornecedores</a></li>	
 		</ul>
 	</li>
 </c:if>
@@ -63,12 +63,12 @@
 		<li><a id="menuAdm" href="#">Administrar</a>  	
 			<ul>
 				<li><a id="menuAdmAbastecimentos" class="" href="@{Abastecimentos.listar}">Abastecimentos</a></li>
-				<li><a id="menuAdmInfracoes" class="" href="@{AutosDeInfracao.listar}">Autos de Infra&ccedil;&atilde;o</a></li>
+				<li><a id="menuAdmInfracoes" class="" href="${linkTo[AutoDeInfracaoController].listar}">Autos de Infra&ccedil;&atilde;o</a></li>
 				<!-- <li><a id="menuAdmCompras" class="" href="@{Application.emdesenvolvimento}">Compras de Materiais</a></li> -->
-				<li><a id="menuAdmCondutores" class="" href="@{Condutores.listar}">Condutores</a></li>
+				<li><a id="menuAdmCondutores" class="" href="${linkTo[CondutorController].listar}">Condutores</a></li>
 				<li><a id="menuAdmFinalidades" class="" href="${linkTo[FinalidadeController].listar}"><fmt:message key="finalidades" /></a></li>
 
-				<li><a id="menuAdmFornecedores" class="" href="@{Fornecedores.listar}">Fornecedores</a></li>
+				<li><a id="menuAdmFornecedores" class="" href="${linkTo[FornecedorController].listar}">Fornecedores</a></li>
 				<li><a id="menuAdmPenalidades" class="" href="@{penalidades.listar}">Penalidades</a></li>		
 				<li><a id="menuAdmPlantoes" class="" href="@{PlantoesMensais.listar}">Plant&otilde;es mensais</a></li>
 				<!-- <li><a id="menuAdmMateriais" class="" href="@{Application.emdesenvolvimento}">Materiais em Estoque</a></li> -->
@@ -91,7 +91,7 @@
 			<ul>
 				<li><a id="menuAdmAbastecimentos" class="" href="@{Abastecimentos.listar}">Abastecimentos</a></li>
 				<!-- <li><a id="menuAdmCompras" class="" href="@{Application.emdesenvolvimento}">Compras de Materiais</a></li> -->
-				<li><a id="menuAdmFornecedores" class="" href="@{Fornecedores.listar}">Fornecedores</a></li>
+				<li><a id="menuAdmFornecedores" class="" href="${linkTo[FornecedorController].listar}">Fornecedores</a></li>
 				<li><a id="menuAdmPenalidades" class="" href="@{penalidades.listar}">Penalidades</a></li>			
 				<!-- <li><a id="menuAdmMateriais" class="" href="@{Application.emdesenvolvimento}">Materiais em Estoque</a></li> -->
 				<li><a id="menuAdmRelat" class="" href="#">Relat&oacute;rios</a>
@@ -100,7 +100,7 @@
 					</ul>
 				</li>
 				<li><a id="menuAdmServicos" class="" href="@{ServicosVeiculo.listar}">Servi&ccedil;os</a></li>
-				<li><a id="menuAdmVeiculos" class="" href="@{Veiculos.listar}">Ve&iacute;culos</a></li>
+				<li><a id="menuAdmVeiculos" class="" href="${linkTo[VeiculoController].listar}">Ve&iacute;culos</a></li>
 			</ul>
 		</li> 
 	</c:when>
@@ -108,10 +108,10 @@
 		<li><a id="menuAdm" href="#">Administrar</a>  	
 			<ul>
 				<li><a id="menuAdmAbastecimentos" class="" href="@{Abastecimentos.listar}">Abastecimentos</a></li>
-				<li><a id="menuAdmInfracoes" class="" href="@{AutosDeInfracao.listar}">Autos de Infra&ccedil;&atilde;o</a></li>
-				<li><a id="menuAdmCondutores" class="" href="@{Condutores.listar}">Condutores</a></li>
-				<li><a id="menuAdmFinalidades" class="" href="@{Finalidades.listar}">Finalidades</a></li>
-				<li><a id="menuAdmFornecedores" class="" href="@{Fornecedores.listar}">Fornecedores</a></li>
+				<li><a id="menuAdmInfracoes" class="" href="${linkTo[AutoDeInfracaoController].listar}">Autos de Infra&ccedil;&atilde;o</a></li>
+				<li><a id="menuAdmCondutores" class="" href="${linkTo[CondutorController].listar}">Condutores</a></li>
+				<li><a id="menuAdmFinalidades" class="" href="${linkTo[FinalidadeController].listar}">Finalidades</a></li>
+				<li><a id="menuAdmFornecedores" class="" href="${linkTo[FornecedorController].listar}">Fornecedores</a></li>
 				<li><a id="menuAdmPlantoes" class="" href="@{PlantoesMensais.listar}">Plant&otilde;es mensais</a></li>
 				<!-- <li><a id="menuAdmMateriais" class="" href="@{Application.emdesenvolvimento}">Materiais em Estoque</a></li> -->
 				<li><a id="menuAdmRelat" class="" href="#">Relat&oacute;rios</a>

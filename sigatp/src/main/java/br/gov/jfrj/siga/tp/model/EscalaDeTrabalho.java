@@ -22,9 +22,6 @@ import javax.validation.constraints.NotNull;
 
 import org.hibernate.envers.Audited;
 
-import play.data.binding.As;
-import play.data.validation.Required;
-import play.db.jpa.JPA;
 import br.gov.jfrj.siga.model.ActiveRecord;
 
 @Entity
@@ -39,19 +36,16 @@ public class EscalaDeTrabalho extends TpModel {
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "hibernate_sequence_generator") @SequenceGenerator(name = "hibernate_sequence_generator", sequenceName="SIGATP.hibernate_sequence") 
 	private long id;
 		
-	@Required
-	@As(lang={"*"}, value={"dd/MM/yyyy"})
+	@NotNull
 	private Calendar dataVigenciaInicio;
 	
 	private Calendar dataVigenciaFim;
 	
-	@Required
 	@ManyToOne
 	@NotNull
 	private Condutor condutor;
 	
- 	@Required(message = "Inclua ao menos um dia de trabalho na escala")
- 	@NotNull
+	@NotNull(message = "Inclua ao menos um dia de trabalho na escala")
 	@OneToMany(mappedBy="escalaDeTrabalho")
  	private List<DiaDeTrabalho> diasDeTrabalho;
 	
@@ -160,6 +154,7 @@ public class EscalaDeTrabalho extends TpModel {
 		return false;
 	}
 	
+	@SuppressWarnings("unchecked")
 	public static List<EscalaDeTrabalho> buscarPorCondutores(Long IdCondutor,
 			String dataHoraInicio) {
 		
@@ -175,7 +170,7 @@ public class EscalaDeTrabalho extends TpModel {
 						" trunc(dataVigenciaInicio) <= trunc(" + dataFormatadaOracle + ")" +  	
 						" AND (dataVigenciaFim IS NULL OR trunc(dataVigenciaFim) >= trunc(" + dataFormatadaOracle + "))";
 
-		Query qry = JPA.em().createQuery(qrl);
+		Query qry = AR.em().createQuery(qrl);
 		try {
 			escalas = (List<EscalaDeTrabalho>) qry.getResultList();
 		} catch(NoResultException ex) {

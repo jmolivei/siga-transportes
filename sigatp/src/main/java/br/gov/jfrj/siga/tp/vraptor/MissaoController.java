@@ -50,9 +50,7 @@ public class MissaoController extends TpController {
 		" AND   (p.dataHoraSaida >= " + dataFormatadaInicioOracle +
 		" AND    p.dataHoraSaida <= " + dataFormatadaFimOracle + "))"; 
 
-		// TODO   Anderson: Quando a classe de modelo Missao for traduzida para VRaptor, utilidar
-		// Missao.AR.em().createQuery(qrl); ao invés do que está na linha abaixo
-		Query qry = EscalaDeTrabalho.AR.em().createQuery(qrl);
+		Query qry = Missao.AR.em().createQuery(qrl);
 		try {
 			missoes = (List<Missao>) qry.getResultList();
 		} catch (NoResultException ex) {

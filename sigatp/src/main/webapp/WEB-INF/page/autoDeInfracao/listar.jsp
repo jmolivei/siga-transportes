@@ -22,7 +22,7 @@
 								<th>Ve&iacute;culo</th>
 								<th>Condutor</th>
 								<th>Descri&ccedil;&atilde;o</th>
-								<th>NÂº Proc. Recurso</th>
+								<th>Nº Proc. Recurso</th>
 								<th>Pago?</th>
 								<th>Recebido?</th>
 								<th width="5%"></th>
@@ -39,8 +39,8 @@
 									<td>${autoDeInfracao.numeroDoProcesso}</td>
 									<td>${autoDeInfracao.foiPago().descricao}</td>
 									<td>${autoDeInfracao.foiRecebido.descricao}</td>
-									<td><a href="${linkTo[AutoDeInfracaoController].editar[autoDeInfracao.id]}">Editar</a></td>
-									<td><a href="${linkTo[AutoDeInfracaoController].excluir[autoDeInfracao.id]}">Excluir</a></td>
+									<td><a href="${linkTo[AutoDeInfracaoController].editar[autoDeInfracao.id]}"><fmt:message key="views.botoes.editar"/></a></td>
+									<td><a href="${linkTo[AutoDeInfracaoController].excluir[autoDeInfracao.id]}"><fmt:message key="views.botoes.excluir"/></a></td>
 								</tr>
 							</c:forEach>
 						</tbody>
@@ -51,9 +51,7 @@
 
 			<div class="gt-table-buttons">
 				<a href="${linkTo[AutoDeInfracaoController].incluir['AUTUACAO']}" class="gt-btn-medium gt-btn-left"><fmt:message key="views.botoes.incluirAutuacao"/></a>
-<%-- 				<a href="<!-- @{AutosDeInfracao.incluir('AUTUACAO')} -->" class="gt-btn-medium gt-btn-left"><fmt:message key="views.botoes.incluirAutuacao"/></a> --%>
 				<a href="${linkTo[AutoDeInfracaoController].incluir['PENALIDADE']}" class="gt-btn-medium gt-btn-left"><fmt:message key="views.botoes.incluirPenalidade"/></a>
-<%-- 				<a href="<!-- @{AutosDeInfracao.incluir('PENALIDADE')} -->" class="gt-btn-medium gt-btn-left"><fmt:message key="views.botoes.incluirPenalidade"/></a> --%>
 			</div>
 		</div>
 	</div>

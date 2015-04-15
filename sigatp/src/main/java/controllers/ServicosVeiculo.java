@@ -74,8 +74,8 @@ public class ServicosVeiculo extends Controller {
 		if (servico.situacaoServico == EstadoServico.REALIZADO) {
 			if (avarias != null && avarias.size() > 0) {
 				for (Avaria avaria : avarias) {
-					avaria = Avaria.findById(avaria.id);
-					avaria.dataDeSolucao = Calendar.getInstance();
+					avaria = Avaria.AR.findById(avaria.getId());
+					avaria.setDataDeSolucao(Calendar.getInstance());
 					avaria.save();
 					redirecionarSeErroAoSalvar(servico, template);
 				}

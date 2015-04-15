@@ -150,8 +150,8 @@ public class AutorizacaoGIAntigo extends SigaApplication {
 
 
 	/**
-	 * Recupera na configuração do GI o complexo padrão para usuário logado verificando Órgao e Lotação 
-	 * e o tipo de configurção "Utilizar Complexo"
+	 * Recupera na configuraï¿½ï¿½o do GI o complexo padrï¿½o para usuï¿½rio logado verificando ï¿½rgao e Lotaï¿½ï¿½o 
+	 * e o tipo de configurï¿½ï¿½o "Utilizar Complexo"
 	 * @return
 	 * @throws Exception
 	 */
@@ -167,14 +167,14 @@ public class AutorizacaoGIAntigo extends SigaApplication {
 		List<CpConfiguracao> configuracoes = null;
 		CpComplexo cpComplexo = null;
 
-		// Recuperando Configuração Pode para uma lotação específica
+		// Recuperando Configuraï¿½ï¿½o Pode para uma lotaï¿½ï¿½o especï¿½fica
 		Object[] parametros =  {dpPessoa.getLotacao().getIdLotacaoIni(), cpSituacaoConfiguracaoPode, dpPessoa.getOrgaoUsuario(),tpConf};
 		configuracoes = TpDao.find(CpConfiguracao.class, "((lotacao.idLotacaoIni = ? and cpSituacaoConfiguracao = ?) and orgaoUsuario = ?  and cpTipoConfiguracao = ? and hisIdcFim is null  )", parametros).fetch();
 		if (configuracoes != null && configuracoes.size() > 0) {
 			cpComplexo = configuracoes.get(0).getComplexo();
 		} else {
 		
-		// Recuperando Configuração default para um Órgão específico
+		// Recuperando Configuraï¿½ï¿½o default para um ï¿½rgï¿½o especï¿½fico
 		Object[] parametros1 =  {cpSituacaoConfiguracaoPadrao, dpPessoa.getOrgaoUsuario(),tpConf};
 		configuracoes = TpDao.find(CpConfiguracao.class, "((cpSituacaoConfiguracao = ?) and orgaoUsuario = ?  and cpTipoConfiguracao = ? and hisIdcFim is null  )", parametros1).fetch();
 		if (configuracoes != null && configuracoes.size() > 0) {
@@ -191,8 +191,8 @@ public class AutorizacaoGIAntigo extends SigaApplication {
 
 	
 	/**
-	 * Recupera na configuração do GI o complexo do perfil AdministradorPorComplexo para usuário logado verificando Órgao e Lotação 
-	 * e o tipo de configurção "Utilizar Complexo"
+	 * Recupera na configuraï¿½ï¿½o do GI o complexo do perfil AdministradorPorComplexo para usuï¿½rio logado verificando ï¿½rgao e Lotaï¿½ï¿½o 
+	 * e o tipo de configurï¿½ï¿½o "Utilizar Complexo"
 	 * @return
 	 * @throws Exception
 	 */
@@ -217,7 +217,7 @@ public class AutorizacaoGIAntigo extends SigaApplication {
 
 		if (cadastrante() != null)
 			Logger.error("Erro Siga-TP; Pessoa: " + cadastrante().getSigla()
-					+ "; Lotação: " + lotaTitular().getSigla(), e);
+					+ "; Lotaï¿½ï¿½o: " + lotaTitular().getSigla(), e);
 		if (JPA.em() != null && JPA.em().getTransaction() != null && JPA.em().getTransaction().isActive() )
 			JPA.em().getTransaction().rollback();
 		e.printStackTrace();
@@ -382,10 +382,10 @@ public class AutorizacaoGIAntigo extends SigaApplication {
 	}
 
 	/**
-	 *  Funciona junto a tag MotivoLog nos formulários Abastecimentos/listar e
-	 *  ControlesGabinete/listar, método de exclusão.
-	 *  Necessário incluir uma tag <form> com id="formulario".
-	 *  Incluir também a tag #{motivoLog /} antes de </form>
+	 *  Funciona junto a tag MotivoLog nos formulï¿½rios Abastecimentos/listar e
+	 *  ControlesGabinete/listar, mï¿½todo de exclusï¿½o.
+	 *  Necessï¿½rio incluir uma tag <form> com id="formulario".
+	 *  Incluir tambï¿½m a tag #{motivoLog /} antes de </form>
 	 */
 	@Before(priority=100)
 	static void motivoLog() throws Exception {
@@ -437,7 +437,6 @@ public class AutorizacaoGIAntigo extends SigaApplication {
 	}
 	
 	public static CpComplexo getComplexoAdministrado() {
-		// TODO Auto-generated method stub
 		return (CpComplexo) renderArgs.get("cpComplexoAdministrador");
 	}
 }

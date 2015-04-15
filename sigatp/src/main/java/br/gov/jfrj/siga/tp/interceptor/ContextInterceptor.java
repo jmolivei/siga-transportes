@@ -45,7 +45,6 @@ public class ContextInterceptor implements Interceptor {
 			TpDao.getInstance((Session) em.getDelegate(), ((Session) em.getDelegate()).getSessionFactory().openStatelessSession());
 			stack.next(method, resourceInstance);
 		} catch (Exception e) {
-			rollbackTransaction();
 			throw new InterceptionException(e);
 		} finally {
 			MessagesBundle.remove();
@@ -55,11 +54,5 @@ public class ContextInterceptor implements Interceptor {
 	@Override
 	public boolean accepts(ResourceMethod method) {
 		return Boolean.TRUE;
-	}
-
-	private void rollbackTransaction() {
-		EntityManager em = ContextoPersistencia.em();
-		if (em != null && em.getTransaction() != null && em.getTransaction().isActive())
-			em.getTransaction().rollback();
 	}
 }

@@ -5,7 +5,7 @@
 <%@ taglib uri="http://localhost/jeetags" prefix="siga"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt"%>
 
-<%-- #{erros /}  --%>
+<sigatp:erros/>
 <form action="${linkTo[AfastamentoController].salvar}" method="post" id="formAfastamentos">
 	<input type="hidden" name="afastamento.id" value="${afastamento.id}" />
 	<input type="hidden" name="afastamento.condutor.id" value="${afastamento.condutor.id}">

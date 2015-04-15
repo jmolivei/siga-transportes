@@ -5,7 +5,7 @@
 <siga:pagina titulo="Transportes">
 	<div class="gt-bd clearfix">
 		<div class="gt-content clearfix">
-			<h2><fmt:message key="${action}" /> <fmt:message key="finalidades" /></h2>
+			<h2><fmt:message key="${modo}" /> <fmt:message key="finalidades" /></h2>
 			<sigatp:erros/>
 			<form id="formFinalidade" action="${linkTo[FinalidadeController].salvar[finalidade]}" method="post" enctype="multipart/form-data">
 				<div class="gt-content-box gt-form"> 

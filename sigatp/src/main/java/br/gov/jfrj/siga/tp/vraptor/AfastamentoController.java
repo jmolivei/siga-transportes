@@ -4,13 +4,14 @@ import java.util.List;
 
 import javax.persistence.EntityManager;
 import javax.servlet.http.HttpServletRequest;
+import javax.validation.Valid;
 
 import br.com.caelum.vraptor.Path;
 import br.com.caelum.vraptor.Resource;
 import br.com.caelum.vraptor.Result;
 import br.com.caelum.vraptor.Validator;
 import br.com.caelum.vraptor.core.Localization;
-import br.com.caelum.vraptor.validator.ValidationMessage;
+import br.com.caelum.vraptor.validator.I18nMessage;
 import br.gov.jfrj.siga.dp.dao.CpDao;
 import br.gov.jfrj.siga.tp.auth.annotation.RoleAdmin;
 import br.gov.jfrj.siga.tp.auth.annotation.RoleAdminMissao;
@@ -22,15 +23,15 @@ import br.gov.jfrj.siga.tp.model.Missao;
 import br.gov.jfrj.siga.tp.model.TpDao;
 import br.gov.jfrj.siga.vraptor.SigaObjects;
 
-//@With(AutorizacaoGI.class)
 @Resource
+@Path("/app/afastamento/")
 public class AfastamentoController extends TpController {
 
 	public AfastamentoController(HttpServletRequest request, Result result, CpDao dao, Localization localization, Validator validator, SigaObjects so, EntityManager em) throws Exception {
 		super(request, result, TpDao.getInstance(), validator, so, em);
 	}
 
-	@Path("/app/afastamento/listarPorCondutor/{idCondutor}")
+	@Path("/listarPorCondutor/{idCondutor}")
 	public void listarPorCondutor(Long idCondutor) throws Exception {
 		Condutor condutor = Condutor.AR.findById(idCondutor);
 		List<Afastamento> afastamentos = Afastamento.buscarTodosPorCondutor(condutor);
@@ -42,8 +43,8 @@ public class AfastamentoController extends TpController {
 	@RoleAdmin
 	@RoleAdminMissao
 	@RoleAdminMissaoComplexo
-	@Path("/app/afastamento/editar/{idCondutor}/{id}")
-	public void edita(Long idCondutor, Long id) throws Exception {
+	@Path("/editar/{idCondutor}/{id}")
+	public void editar(Long idCondutor, Long id) throws Exception {
 		Afastamento afastamento;
 		if (id == null || id == 0){
 			afastamento = new Afastamento();
@@ -58,22 +59,20 @@ public class AfastamentoController extends TpController {
 	@RoleAdmin
 	@RoleAdminMissao
 	@RoleAdminMissaoComplexo
-	//TODO Wlad @Valid
-	@Path("/app/afastamento/salvar")
-	public void salvar(/*@Valid*/ Afastamento afastamento) throws Exception {
+	@Path("/salvar")
+	public void salvar(@Valid final Afastamento afastamento) throws Exception {
 		if ((afastamento.getDataHoraInicio() != null ) && (afastamento.getDataHoraFim() != null) && (!afastamento.getDescricao().equals(""))) {
 			if (!afastamento.ordemDeDatasCorreta()) {
-				//TODO Wlad Validation.addError("dataHoraInicio", "afastamentos.dataHoraInicio.validation");
-				validator.add(new ValidationMessage("afastamentos.dataHoraInicio.validation", "dataHoraInicio"));
+				validator.add(new I18nMessage("afastamentos.dataHoraInicio.validation", "dataHoraInicio"));
 			}
 		}
 		
-		if (!validator.getErrors().isEmpty()) {
+		if (validator.hasErrors()) {
 			List<Condutor> condutores = Condutor.listarTodos(getTitular().getOrgaoUsuario());
 			
 			result.include("afastamento", afastamento);
 			result.include("condutores", condutores);			
-			result.redirectTo(this).edita(afastamento.getCondutor().getId(), afastamento.getId());
+			result.redirectTo(this).editar(afastamento.getCondutor().getId(), afastamento.getId());
 		} else {
 			afastamento.setCondutor(Condutor.AR.findById(afastamento.getCondutor().getId()));
 			List<Missao> missoes = Missao.retornarMissoes("condutor.id",
@@ -90,11 +89,10 @@ public class AfastamentoController extends TpController {
 			}
 
 			if (missoes.size() > 0) {
-				//TODO Wlad Validation.addError("LinkErroCondutor", listaMissoes);
-				validator.add(new ValidationMessage(listaMissoes, "LinkErroCondutor"));
+				validator.add(new I18nMessage(listaMissoes, "LinkErroCondutor"));
 				
 				result.include("afastamento", afastamento);
-				result.redirectTo(this).edita(afastamento.getCondutor().getId(), afastamento.getId());
+				result.redirectTo(this).editar(afastamento.getCondutor().getId(), afastamento.getId());
 			} else {
 				afastamento.save();
 				result.redirectTo(this).listarPorCondutor(afastamento.getCondutor().getId());
@@ -105,8 +103,8 @@ public class AfastamentoController extends TpController {
 	@RoleAdmin
 	@RoleAdminMissao
 	@RoleAdminMissaoComplexo
-	@Path("/app/afastamento/excluir/{id}")
-	public void exclui(Long id) throws Exception {
+	@Path("/excluir/{id}")
+	public void excluir(Long id) throws Exception {
 		Afastamento afastamento = Afastamento.AR.findById(id);
 		afastamento.delete();
 		result.redirectTo(this).listarPorCondutor(afastamento.getCondutor().getId());

@@ -1,12 +1,10 @@
 package controllers;
 
-import java.util.Calendar;
 import java.util.List;
 
 import play.data.validation.Validation;
 import play.mvc.Before;
 import play.mvc.Controller;
-import play.mvc.Scope.RenderArgs;
 import play.mvc.With;
 import br.gov.jfrj.siga.dp.CpOrgaoUsuario;
 import br.gov.jfrj.siga.dp.DpLotacao;
@@ -36,7 +34,7 @@ public class Veiculos extends Controller {
 	@Before(priority = 200, only = { "incluir", "editar", "salvar" })
 	protected static void montarCombos() throws Exception {
 		// TODO: comentei
-//		renderArgs = Combo.montar(renderArgs, Combo.Cor, Combo.Fornecedor);
+		// renderArgs = Combo.montar(renderArgs, Combo.Cor, Combo.Fornecedor);
 
 		List<Grupo> grupos = Grupo.listarTodos();
 		renderArgs.put(Combo.Grupo.getDescricao(), grupos);
@@ -71,8 +69,8 @@ public class Veiculos extends Controller {
 		}
 
 		if (veiculoNaoTemLotacaoCadastrada(veiculo) || lotacaoDoVeiculoMudou(veiculo)) {
-			LotacaoVeiculo novalotacao = new LotacaoVeiculo(null, veiculo, veiculo.getLotacaoAtual(), Calendar.getInstance(), null, veiculo.getOdometroEmKmAtual());
-			novalotacao.save();
+			// LotacaoVeiculo novalotacao = new LotacaoVeiculo(null, veiculo, veiculo.getLotacaoAtual(), Calendar.getInstance(), null, veiculo.getOdometroEmKmAtual()); TODO: metodo refatorado
+			// novalotacao.save();
 		}
 
 		listar();
@@ -83,10 +81,11 @@ public class Veiculos extends Controller {
 	}
 
 	private static boolean lotacaoDoVeiculoMudou(Veiculo veiculo) {
-		if (veiculo.getLotacoes() == null) {
-			return true;
-		}
-		return (veiculo.getLotacoes().size() > 0) && (!veiculo.getLotacoes().get(0).getLotacao().equivale(veiculo.getLotacaoAtual()));
+		// TODO: metodo refatorado
+		// if (veiculo.getLotacoes() == null) {
+		return true;
+		// }
+		// return (veiculo.getLotacoes().size() > 0) && (!veiculo.getLotacoes().get(0).getLotacao().equivale(veiculo.getLotacaoAtual()));
 	}
 
 	private static void redirecionarSeErroAoSalvar(Veiculo veiculo) throws Exception {
@@ -94,25 +93,26 @@ public class Veiculos extends Controller {
 			montarCombos();
 			MenuMontador.instance().recuperarMenuVeiculos(veiculo.getId(), ItemMenu.DADOSCADASTRAIS);
 			String template = veiculo.getId() > 0 ? "@editar" : "@incluir";
-			if (veiculoNaoTemLotacaoCadastrada(veiculo) || veiculo.getLotacoes().isEmpty() || (!veiculo.getLotacoes().get(0).getLotacao().equivale(veiculo.getLotacaoAtual()))) {
-				RenderArgs.current().put("mostrarCampoOdometro", true);
-			}
-			renderTemplate(template, veiculo);
+			// TODO: metodo refatorado
+			// if (veiculoNaoTemLotacaoCadastrada(veiculo) || veiculo.getLotacoes().isEmpty() || (!veiculo.getLotacoes().get(0).getLotacao().equivale(veiculo.getLotacaoAtual()))) {
+			// RenderArgs.current().put("mostrarCampoOdometro", true);
 		}
+		// renderTemplate(template, veiculo);
+		// }
 	}
 
 	@RoleAdmin
 	@RoleAdminFrota
 	public static void incluir() {
 		Veiculo veiculo = new Veiculo();
-		veiculo.setLotacaoAtual(new DpLotacao());
+		// veiculo.setLotacaoAtual(new DpLotacao()); TODO: metodo refatorado
 		MenuMontador.instance().recuperarMenuVeiculos(new Long(0), ItemMenu.DADOSCADASTRAIS);
 		render(veiculo);
 	}
 
 	public static void buscarPeloId(Long Id) throws Exception {
 		Veiculo veiculo = Veiculo.AR.findById(Id);
-		veiculo.configurarLotacaoAtual();
+		// veiculo.configurarLotacaoAtual(); TODO: metodo refatorado
 		// veiculo.configurarOdometroParaMudancaDeLotacao();
 		montarCombos();
 		MenuMontador.instance().recuperarMenuVeiculos(Id, ItemMenu.DADOSCADASTRAIS);
@@ -123,7 +123,7 @@ public class Veiculos extends Controller {
 	@RoleAdminFrota
 	public static void editar(Long id) throws Exception {
 		Veiculo veiculo = Veiculo.AR.findById(id);
-		veiculo.configurarLotacaoAtual();
+		// veiculo.configurarLotacaoAtual(); // TODO: metodo refatorado
 		// veiculo.configurarOdometroParaMudancaDeLotacao();
 		MenuMontador.instance().recuperarMenuVeiculos(id, ItemMenu.DADOSCADASTRAIS);
 		render(veiculo);
