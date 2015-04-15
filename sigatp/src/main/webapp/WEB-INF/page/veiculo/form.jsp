@@ -90,7 +90,7 @@
 		<div class="coluna">    
 			<div class="coluna">
 		       	<label for= "veiculo.cor.id">Cor</label>
-		       	<siga:select name="veiculo.cor.id" list="cores" listKey="id" listValue="nome" value="${veiculo.cor.id}"/>
+		       	<siga:select name="veiculo.cor.id" list="cores" listKey="id" listValue="nome" headerKey="-1" headerValue="" value="${veiculo.cor.id}"/>
 		       		
 		       	<label for= "veiculo.tipoDeBlindagem">Tipo de blindagem</label>
 				<input type="text" name="veiculo.tipoDeBlindagem" value="${veiculo.tipoDeBlindagem}"/>
