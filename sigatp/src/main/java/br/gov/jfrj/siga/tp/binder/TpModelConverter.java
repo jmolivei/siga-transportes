@@ -13,7 +13,7 @@ public class TpModelConverter implements Converter<TpModel> {
 
 	@Override
 	public TpModel convert(String idString, Class<? extends TpModel> type, ResourceBundle bundle) {
-		if (idString != null) {
+		if (idString != null && !idString.isEmpty()) {
 			Long id = Long.valueOf(idString);
 
 			if (TpModel.existe(id))

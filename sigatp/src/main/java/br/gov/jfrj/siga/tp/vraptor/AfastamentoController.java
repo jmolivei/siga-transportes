@@ -12,6 +12,7 @@ import br.com.caelum.vraptor.Result;
 import br.com.caelum.vraptor.Validator;
 import br.com.caelum.vraptor.core.Localization;
 import br.com.caelum.vraptor.validator.I18nMessage;
+import br.com.caelum.vraptor.view.Results;
 import br.gov.jfrj.siga.dp.dao.CpDao;
 import br.gov.jfrj.siga.tp.auth.annotation.RoleAdmin;
 import br.gov.jfrj.siga.tp.auth.annotation.RoleAdminMissao;
@@ -71,8 +72,8 @@ public class AfastamentoController extends TpController {
 			List<Condutor> condutores = Condutor.listarTodos(getTitular().getOrgaoUsuario());
 			
 			result.include("afastamento", afastamento);
-			result.include("condutores", condutores);			
-			result.redirectTo(this).editar(afastamento.getCondutor().getId(), afastamento.getId());
+			result.include("condutores", condutores);
+			validator.onErrorUse(Results.page()).of(AfastamentoController.class).editar(afastamento.getCondutor().getId(), afastamento.getId());
 		} else {
 			afastamento.setCondutor(Condutor.AR.findById(afastamento.getCondutor().getId()));
 			List<Missao> missoes = Missao.retornarMissoes("condutor.id",
