@@ -66,7 +66,7 @@ public class FornecedorController extends TpController {
 	@RoleAdminMissao
 	@RoleAdminGabinete
 	@RoleGabinete
-	@Path("/salvar/{fornecedor}")
+	@Path("/salvar")
 	public void salvar(Fornecedor fornecedor) {
 		if (validator.hasErrors()) {
 			String template = fornecedor.getId() > 0 ? "/app/fornecedor/editar"

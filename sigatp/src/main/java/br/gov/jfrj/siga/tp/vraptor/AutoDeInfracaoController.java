@@ -97,7 +97,7 @@ public class AutoDeInfracaoController extends TpController{
 	@RoleAdmin
 	@RoleAdminMissao
 	@RoleAdminMissaoComplexo
-	@Path("/salvar/{autoDeInfracao}")
+	@Path("/salvar")
 	public void salvar(@Valid AutoDeInfracao autoDeInfracao) throws Exception {
 		autoDeInfracao.setCondutor(Condutor.AR.findById(autoDeInfracao.getCondutor().getId()));
 		autoDeInfracao.setVeiculo(Veiculo.AR.findById(autoDeInfracao.getVeiculo().getId()));

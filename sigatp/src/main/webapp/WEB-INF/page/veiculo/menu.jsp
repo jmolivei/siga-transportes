@@ -47,7 +47,7 @@
 	<c:if test="${menuAutosdeinfracoes}">
 		<a class="once" href="${linkTo[AutoDeInfracaoController].listarPorVeiculo[idVeiculo]}">
 			<img src="/sigatp/public/images/infracoesicon.png" style="margin-right: 5px;">
-			<fmt:message key="acessorios" />
+			<fmt:message key="infracoes" />
 		</a>&nbsp;&nbsp;&nbsp;
 	</c:if>
 	

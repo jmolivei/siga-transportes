@@ -39,7 +39,7 @@
 </script>
 
 <form action="${linkTo[FornecedorController].salvar}" enctype='multipart/form-data' method="post">
-	<input type="hidden" name="fornecedor.id" value="${fornecedor.id}" />
+	<input type="hidden" name="fornecedor" value="${fornecedor.id}" />
 	<div class="gt-content-box gt-form  clearfix">     
        	<label for="fornecedor.ramoDeAtividade" class= "obrigatorio">Ramo de Atividade</label>
 		<select name="fornecedor.ramoDeAtividade" >
