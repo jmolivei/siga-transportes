@@ -4,12 +4,14 @@ import java.util.List;
 
 import javax.persistence.EntityManager;
 import javax.servlet.http.HttpServletRequest;
+import javax.validation.Valid;
 
 import br.com.caelum.vraptor.Path;
 import br.com.caelum.vraptor.Resource;
 import br.com.caelum.vraptor.Result;
 import br.com.caelum.vraptor.Validator;
 import br.com.caelum.vraptor.core.Localization;
+import br.com.caelum.vraptor.view.Results;
 import br.gov.jfrj.siga.dp.CpUF;
 import br.gov.jfrj.siga.dp.dao.CpDao;
 import br.gov.jfrj.siga.tp.auth.annotation.RoleAdmin;
@@ -67,12 +69,12 @@ public class FornecedorController extends TpController {
 	@RoleAdminGabinete
 	@RoleGabinete
 	@Path("/salvar")
-	public void salvar(Fornecedor fornecedor) {
+	public void salvar(@Valid Fornecedor fornecedor) {
 		if (validator.hasErrors()) {
-			String template = fornecedor.getId() > 0 ? "/app/fornecedor/editar"
-					: "/app/fornecedor/incluir";
+			String template = fornecedor.getId() > 0 ? "/app/fornecedor/editar" : "/app/fornecedor/incluir";
 			result.include("template", template);
 			result.include("fornecedor", fornecedor);
+			validator.onErrorUse(Results.page()).of(FornecedorController.class).incluir();
 		} else {
 			fornecedor.save();
 			result.redirectTo(this).listar();
