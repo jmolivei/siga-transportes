@@ -36,8 +36,8 @@
 		       	</select>
 			</div>
 			<div class="coluna margemDireitaG">
-		       	<label for= "veiculo.grupo.id">Grupo</label>
-		       	<siga:select name="veiculo.grupo.id" list="grupos" listKey="id" listValue="dadosParaExibicao" value="${veiculo.grupo.id}"/>
+		       	<label for= "veiculo.grupo.id" class= "obrigatorio">Grupo</label>
+		       	<siga:select name="veiculo.grupo.id" list="grupos" listKey="id" listValue="dadosParaExibicao" headerKey="-1" headerValue="" value="${veiculo.grupo.id}"/>
 		       	
 		       	<label for= "veiculo.lotacaoAtual"> Lota&ccedil;&atilde;o</label>
 		       	<siga:selecao propriedade="lotacaoAtual" tema="simple" modulo="siga" onchange="mostrarCampoOdometro()"/>
@@ -205,7 +205,7 @@
   	<div class="gt-form gt-content-box clearfix">
 		<div class="coluna">
 			<label for="veiculo.fornecedor.id">Fornecedor</label>
-	       	<siga:select name="veiculo.fornecedor.id" list="fornecedores" listKey="id" listValue="razaoSocialECNPJ" value="${veiculo.fornecedor.id}"/>
+	       	<siga:select name="veiculo.fornecedor.id" list="fornecedores" listKey="id" listValue="razaoSocialECNPJ" headerKey="-1" headerValue="" value="${veiculo.fornecedor.id}"/>
 		</div>
 		<div class="coluna">
 			<div class="coluna">
