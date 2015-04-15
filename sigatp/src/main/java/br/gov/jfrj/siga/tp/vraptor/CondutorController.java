@@ -1,18 +1,21 @@
 package br.gov.jfrj.siga.tp.vraptor;
 
 import java.io.ByteArrayInputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityTransaction;
 import javax.persistence.PersistenceException;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
-import org.apache.log4j.Logger;
+import org.apache.commons.codec.binary.Base64;
 import br.com.caelum.vraptor.Path;
 import br.com.caelum.vraptor.Resource;
 import br.com.caelum.vraptor.Result;
 import br.com.caelum.vraptor.Validator;
 import br.com.caelum.vraptor.core.Localization;
+import br.com.caelum.vraptor.interceptor.multipart.UploadedFile;
 import br.com.caelum.vraptor.validator.I18nMessage;
 import br.com.caelum.vraptor.validator.ValidationMessage;
 import br.com.caelum.vraptor.view.Results;
@@ -33,8 +36,6 @@ public class CondutorController extends TpController {
 		super(request, result, TpDao.getInstance(), validator, so, em);
 	}
 
-	private static Logger logger = Logger.getLogger(CondutorController.class);
-	
 	@Path("/listar")
 	public void listar() throws Exception {
 		result.include("condutores", getCondutores());
@@ -62,8 +63,8 @@ public class CondutorController extends TpController {
 			
 			result.include("categoriaCNH", condutor.getCategoriaCNH().getDescricao());
 			
-			if(condutor.getConteudoimagemblob() != null)
-				result.include("imgArquivo", new ByteArrayInputStream(condutor.getConteudoimagemblob()));
+			if(condutor.getConteudoimagemblob() != null) 
+				result.include("imgArquivo", "data:image/jpg;base64," + Base64.encodeBase64String(condutor.getConteudoimagemblob()));
 			
 		} else 
 			condutor = new Condutor();
@@ -77,21 +78,19 @@ public class CondutorController extends TpController {
 //	@RoleAdminMissao
 //	@RoleAdminMissaoComplexo
 	@Path("/salvar")
-	public void salvar(@Valid Condutor condutor) throws Exception {
+	public void salvar(@Valid Condutor condutor, final UploadedFile arquivo) throws Exception {
 		condutor.setDpPessoa(DpPessoa.AR.findById(condutor.getDpPessoa().getId()));
-		if (condutor.getArquivo() != null) {
-			error(!Imagem.tamanhoImagemAceito(condutor.getArquivo().blob.length), "imagem", "condutor.tamanhoImagemAceito.validation");
-			// && !condutor.arquivo.nomeArquivo.contains("pdf")) {
-			error(!condutor.getArquivo().mime.startsWith("image"), "imagem", "condutores.arquivoImagem.validation");
-			condutor.setConteudoimagemblob(condutor.getArquivo().blob);
-		} else {
-			//TODO  HD verificar!
-//			if (condutor.getSituacaoImagem().equals("semimagem")) 
-//				condutor.setConteudoimagemblob(null);
-		}
+		if (arquivo != null) {
+			byte[] arquivoConteudo = toByteArray(arquivo);
+			error(!Imagem.tamanhoImagemAceito(arquivoConteudo.length), "imagem", "condutor.tamanhoImagemAceito.validation");
+			
+			error(!arquivo.getContentType().startsWith("image"), "imagem", "condutores.arquivoImagem.validation");
+			condutor.setConteudoimagemblob(arquivoConteudo);
+		} else 
+			if (condutor.getSituacaoImagem() != null && condutor.getSituacaoImagem().equals("semimagem")) 
+				condutor.setConteudoimagemblob(null);
 		
 		error(condutor.getDpPessoa() == null, "dpPessoa", "condutor.dppessoa.validation");
-		
 		condutor.setCpOrgaoUsuario(getTitular().getOrgaoUsuario());
 
 		if (validator.hasErrors()) {
@@ -102,13 +101,44 @@ public class CondutorController extends TpController {
 			
 			result.include("condutor", condutor);
 			if(condutor.getId() > 0) 
-				result.forwardTo(this).editar(condutor.getId());
+				validator.onErrorUse(Results.logic()).forwardTo(CondutorController.class).editar(condutor.getId());
 			else
-				result.forwardTo(this).incluir();
+				validator.onErrorUse(Results.logic()).forwardTo(CondutorController.class).incluir();
 		}
 
 		condutor.save();
 		result.forwardTo(this).listar();
+	}
+	
+	//TODO  HD refatorar para uma classe separada! método estatico
+	private byte[] toByteArray(final UploadedFile upload) throws IOException {
+		final InputStream is = upload.getFile();
+
+		// Get the size of the file
+		final long tamanho = upload.getSize();
+
+		// Não podemos criar um array usando o tipo long.
+		// é necessário usar o tipo int.
+		if (tamanho > Integer.MAX_VALUE)
+			throw new IOException("Arquivo muito grande");
+
+		// Create the byte array to hold the data
+		final byte[] meuByteArray = new byte[(int) tamanho];
+
+		// Read in the bytes
+		int offset = 0;
+		int numRead = 0;
+		while (offset < meuByteArray.length && (numRead = is.read(meuByteArray, offset, meuByteArray.length - offset)) >= 0) {
+			offset += numRead;
+		}
+
+		// Ensure all the bytes have been read in
+		if (offset < meuByteArray.length)
+			throw new IOException("Não foi possível ler o arquivo completamente " + upload.getFileName());
+
+		// Close the input stream and return bytes
+		is.close();
+		return meuByteArray;
 	}
 
 //	@RoleAdmin
@@ -128,23 +158,16 @@ public class CondutorController extends TpController {
 			result.forwardTo(this).listar();
 		} catch (PersistenceException ex) {
 			tx.rollback();
-			if (ex.getCause().getCause().getMessage().contains("restrição de integridade")) {
-				//TODO  HD mensagem!
-//				listarComMensagem("condutor.excluir.validation");
-//				result.forwardTo(this).listar();
+			if (ex.getCause().getCause().getMessage().contains("restrição de integridade")) 
 				validator.add(new I18nMessage("condutor", "condutor.excluir.validation"));
-			} else {
-				//TODO  HD mensagem!
-//				listarComMensagem(ex.getMessage());
+			else 
 				validator.add(new ValidationMessage(ex.getMessage(), "condutor"));
-			}
-			validator.onErrorUse(Results.logic()).forwardTo(CondutorController.class).listar();
+			
+			validator.onErrorForwardTo(CondutorController.class).listar();
 		} catch (Exception ex) {
 			tx.rollback();
-			//TODO  HD mensagem!
-//			listarComMensagem(ex.getMessage());
 			validator.add(new ValidationMessage(ex.getMessage(), "condutor"));
-			validator.onErrorUse(Results.logic()).forwardTo(CondutorController.class).listar();
+			validator.onErrorForwardTo(CondutorController.class).listar();
 		}
 		
 		result.forwardTo(this).listar();
@@ -193,6 +216,5 @@ public class CondutorController extends TpController {
 		DpPessoa pessoa = DpPessoa.AR.findById(idPessoa);
 		result.include("pessoa", pessoa);
 	}
-	
 
 }

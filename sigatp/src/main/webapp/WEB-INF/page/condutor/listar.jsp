@@ -13,6 +13,7 @@
 			<h2>Condutores</h2>
 		
 			<sigatp:erros />
+			<br />
 			
 			<c:choose>
 				<c:when test="${condutores.size() > 0}">

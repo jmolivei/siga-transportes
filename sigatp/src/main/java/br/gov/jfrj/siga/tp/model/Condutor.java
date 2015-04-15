@@ -69,6 +69,7 @@ public class Condutor extends TpModel implements Comparable<Condutor> {
 //	@ValidarAnoData(intervalo=5, descricaoCampo="Data de Vencimento da CNH")
 	
 	@Basic(optional = false)
+	@NotNull(message = "Data de vencimento da CHN deve ser preenchida")
 	private Calendar dataVencimentoCNH;
 
 	@Basic(optional = false)

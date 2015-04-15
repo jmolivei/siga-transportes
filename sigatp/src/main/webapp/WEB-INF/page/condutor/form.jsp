@@ -2,12 +2,14 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <%@ taglib uri="http://localhost/jeetags" prefix="siga"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt"%>
+<%@ taglib prefix="sigatp" tagdir="/WEB-INF/tags/" %>
 
 <jsp:include page="../tags/calendario.jsp" />
+<sigatp:telefone/>
 
 <form name="formCondutor" id="formCondutor"
 	action="${linkTo[CondutorController].salvar}" method="post"
-	cssClass="form">
+	cssClass="form" enctype="multipart/form-data">
 	<div class="gt-content-box gt-form">
 		<c:choose>
 			<c:when test="${condutor.id == 0}">
@@ -17,9 +19,8 @@
 
 				<label for="condutor.dpPessoa.id">Servidor: </label>
 
-				<siga:selecao tipo="pessoa" propriedade="pessoa" tema="simple" modulo="siga" idInicial="0"/>
+				<siga:selecao tipo="pessoa" propriedade="pessoa" tema="simple" modulo="siga" onchange="carregarDadosDpPessoa()"/>
 
-				<jsp:include page="ae.jsp"/>
 				<input type="hidden" name="condutor.dpPessoa.id" value="" />
 			</c:when>
 			<c:otherwise>
@@ -83,7 +84,7 @@
 		<textarea name="condutor.observacao" rows="4" cols="60">${condutor.observacao}</textarea>
 
 		<label>Anexar arquivo: </label> 
-		<input type="file" name="condutor.arquivo" size="30" id="arquivo" /> 
+		<input type="file" name="arquivo" size="30" id="arquivo" /> 
 		<img id="imgArquivo" class="thumb" src="${imgArquivo}" /> 
 		<br /> 
 		<input type="button" class="botaoImagem" id="exibirImagem" value="<fmt:message key="views.botoes.exibir"/>" /> 
@@ -91,8 +92,8 @@
 
 	</div>
 
-	<span class="alerta menor"><fmt:message
-			key="views.erro.preenchimentoObrigatorio" /></span>
+	<span class="alerta menor"><fmt:message key="views.erro.preenchimentoObrigatorio" /></span>
+	
 	<div class="gt-table-buttons">
 		<input type="submit" value="<fmt:message key="views.botoes.salvar"/>"
 			class="gt-btn-medium gt-btn-left" /> <input type="button"
@@ -101,19 +102,10 @@
 			onclick="javascript:window.location = '${linkTo[CondutorController].listar}';" />
 	</div>
 <script type="text/javascript">
-
-// 	$( "#formulario_pessoa_pessoaSel_sigla" ).load(function() {
-// 		document.getElementById("formulario_pessoa_pessoaSel_id").addEventListener("change", function(){
-// 			carregarDadosDpPessoa();
-// 		})
-// 	});
 	
 	$(document).ready(function() {
 		$('#imgArquivo').css('display','none');
 
-// 		$('#formulario_pessoa_pessoaSel_id').on('change', function() {
-// 			carregarDadosDpPessoa();
-// 			});		
 		$('#exibirImagem').click(function() {
 			var url = '';
 			
@@ -181,29 +173,29 @@
 		
 		$('#situacaoImagem').val('semimagem');
 		    $('#exibirImagem').attr('disabled',true);
-	 	 }
+	 	}
 
-// 	$(window).load(function() {
-// // 		var exibirImgArquivo = jsAction @Condutores.exibirImgArquivo(':id')
-// 		var exibirImgArquivo = 'fuck';
-// 	  	    $.get(
-// 	  	    	   exibirImgArquivo({id: $("input[name='condutor.id']").val()}), 
-// 		           function(carregouImagem) {
-//     					if (carregouImagem == "true") {   
-//     						$('#imgArquivo').css('display','block');
-//     						$('#excluirImagem').attr('disabled',false);
-//     						$('#exibirImagem').attr('disabled',false);
-//     						$('#situacaoImagem').val('nobanco');
-//     					}
-//     					else {
-//     						$('#imgArquivo').css('display','none');
-//         					$('#excluirImagem').attr('disabled',true);
-//         					$('#exibirImagem').attr('disabled',true);
-//     						$('#situacaoImagem').val('semimagem');
-//     					}
-//     			   }
-// 	  	);
-// 	});
+	$(window).load(function() {
+// 		var exibirImgArquivo = jsAction @Condutores.exibirImgArquivo(':id')
+		var exibirImgArquivo = 'fuck';
+	  	    $.get(
+	  	    	   exibirImgArquivo({id: $("input[name='condutor.id']").val()}), 
+		           function(carregouImagem) {
+    					if (carregouImagem == "true") {   
+    						$('#imgArquivo').css('display','block');
+    						$('#excluirImagem').attr('disabled',false);
+    						$('#exibirImagem').attr('disabled',false);
+    						$('#situacaoImagem').val('nobanco');
+    					}
+    					else {
+    						$('#imgArquivo').css('display','none');
+        					$('#excluirImagem').attr('disabled',true);
+        					$('#exibirImagem').attr('disabled',true);
+    						$('#situacaoImagem').val('semimagem');
+    					}
+    			   }
+	  	);
+	});
 </script>
 </form>
 
