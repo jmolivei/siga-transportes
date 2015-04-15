@@ -3,6 +3,7 @@
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%>
 <%@ taglib prefix="siga" uri="http://localhost/jeetags"%>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
+<%@ taglib prefix="sigatp" tagdir="/WEB-INF/tags/" %>
 
 <script>
 function verificaCampos(){

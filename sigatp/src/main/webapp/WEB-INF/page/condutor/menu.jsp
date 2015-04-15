@@ -4,14 +4,14 @@
 <p class="gt-table-action-list">
 
 	<c:if test="${menuCondutoresIncluir}">
-		<a class="once" href="${linkTo[CondutorController].inclui}">
+		<a class="once" href="${linkTo[CondutorController].incluir}">
 			<img src="/sigatp/public/images/editaricon.png" style="margin-right: 5px;">
 			<fmt:message key="menu.condutor.dados.cadastrais" />
 		</a>&nbsp;&nbsp;&nbsp;
 	</c:if>
 	
 	<c:if test="${menuCondutoresEditar}">
-		<a class="once" href="${linkTo[CondutorController].edita[idCondutor]}">
+		<a class="once" href="${linkTo[CondutorController].editar[idCondutor]}">
 			<img src="/sigatp/public/images/editaricon.png" style="margin-right: 5px;">
 			<fmt:message key="menu.condutor.dados.cadastrais" />
 		</a>&nbsp;&nbsp;&nbsp;

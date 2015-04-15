@@ -4,13 +4,16 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 <%@ taglib prefix="siga" uri="http://localhost/jeetags" %>
+<%@ taglib prefix="sigatp" tagdir="/WEB-INF/tags/" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 
 <siga:pagina titulo="Transportes">
 	<div class="gt-bd clearfix">
 		<div class="gt-content clearfix">
 			<h2>Condutores</h2>
-
+		
+			<sigatp:erros />
+			
 			<c:choose>
 				<c:when test="${condutores.size() > 0}">
 					<div class="gt-content-box gt-for-table">
@@ -43,10 +46,10 @@
 											</c:if>
 										</c:if></td>
 									<td>
-										<a href="${linkTo[CondutorController].edita[item.id]}">Editar</a>
+										<a href="${linkTo[CondutorController].editar[item.id]}">Editar</a>
 									</td>
 									<td>
-										<a href="${linkTo[CondutorController].exclui[item.id]}"
+										<a href="${linkTo[CondutorController].excluir[item.id]}"
 										   onclick="javascript:return confirm('Tem certeza de que deseja excluir os dados deste condutor?');">Excluir</a>
 									</td>
 								</tr>
@@ -60,8 +63,8 @@
 				</c:otherwise>
 			</c:choose>
 			<div class="gt-table-buttons">
-				<a href="${linkTo[CondutorController].inclui}" id="botaoIncluirCondutor"
-					class="gt-btn-medium gt-btn-left"><fmt:message key="views.botoes.salvar"/></a>
+				<a href="${linkTo[CondutorController].incluir}" id="botaoIncluirCondutor"
+					class="gt-btn-medium gt-btn-left"><fmt:message key="views.botoes.incluir"/></a>
 			</div>
 		</div>
 	</div>
