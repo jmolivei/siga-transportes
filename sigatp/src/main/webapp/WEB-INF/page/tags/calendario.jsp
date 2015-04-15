@@ -8,19 +8,27 @@
 <link rel="stylesheet" href="${pageContext.request.contextPath}/public/javascripts/jquery/jquery-ui-1.8.16.custom.css" type="text/css" media="screen">
 
 <script>
-   $(function() {
-     $.datepicker.setDefaults($.datepicker.regional['pt-BR']);
-     $( ".datePicker" ).datepicker({
-            inline: true,
-    	 	showOn: 'button', 
-			buttonText: 'Escolher data', 
-			buttonImageOnly: true, 
-			buttonImage: '/siga/css/famfamfam/icons/date.png', 
-			dateFormat: 'dd/mm/yy', 
-			constrainInput: true 
+	var carregarMascaraHora = function(){
+			$(".hora").mask('99:99');
+		};
+
+	var carregarMascaraData = function() {
+			$(".dataHora").mask('99/99/9999 99:99');
+		};
+		
+	$(function() {
+		$.datepicker.setDefaults($.datepicker.regional['pt-BR']);
+		$(".datePicker").datepicker({
+			inline : true,
+			showOn : 'button',
+			buttonText : 'Escolher data',
+			buttonImageOnly : true,
+			buttonImage : '/siga/css/famfamfam/icons/date.png',
+			dateFormat : 'dd/mm/yy',
+			constrainInput : true
 		}).mask('99/99/9999');
 
-     $( ".hora" ).mask('99:99');
-     $( ".dataHora" ).mask('99/99/9999 99:99');
-   });
+		carregarMascaraHora();
+		carregarMascaraData();
+	});
 </script>

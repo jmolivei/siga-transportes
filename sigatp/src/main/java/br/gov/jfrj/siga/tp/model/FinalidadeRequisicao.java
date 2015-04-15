@@ -19,6 +19,7 @@ import org.hibernate.envers.RelationTargetAuditMode;
 import play.i18n.Messages;
 import br.gov.jfrj.siga.dp.CpOrgaoUsuario;
 import br.gov.jfrj.siga.model.ActiveRecord;
+import br.gov.jfrj.siga.tp.validation.annotation.Unique;
 import br.gov.jfrj.siga.tp.validation.annotation.UpperCase;
 import controllers.AutorizacaoGIAntigo;
 
@@ -26,7 +27,7 @@ import controllers.AutorizacaoGIAntigo;
 @Entity
 @Audited
 @Table(name="FinalidadeRequisicao", schema = "SIGATP")
-//@Unique(message = "{finalidadeRequisicao.descricao.unique}", field = "descricao")
+@Unique(message = "{finalidadeRequisicao.descricao.unique}", field = "descricao")
 public class FinalidadeRequisicao extends TpModel {
 	
 	private static final long _ID_DA_FINALIDADE_OUTRA = -1;

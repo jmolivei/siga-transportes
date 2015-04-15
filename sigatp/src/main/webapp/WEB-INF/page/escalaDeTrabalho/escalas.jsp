@@ -37,7 +37,6 @@
 				var divrow = document.getElementById("rowDiasDeTrabalho");
 				var htmlNaoSelecionado = divrow.innerHTML;
 				var htmlSelecionado = htmlNaoSelecionado.replace(/naoSelecionado/g, "selecionado");
-				//var htmlSelecionado = replaceAll("naoSelecionado","selecionado",htmlNaoSelecionado);
 				var html = '<tr>';
 				html = html	+ '<th width="15%" class="obrigatorio">Dia Inicio / Fim :</th>';
 				html = html + '<td>';
@@ -47,6 +46,7 @@
 				html = html + '</tr>';
 	
 				$("#htmlgridDiasDeTrabalho tbody").append(html);
+				carregarMascaraHora();
 			});
 	};
 	
