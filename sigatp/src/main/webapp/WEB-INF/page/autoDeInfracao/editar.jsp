@@ -105,8 +105,8 @@ function verificaCampos(){
 						<input type="text" name="autoDeInfracao.valorComDesconto" value="${autoDeInfracao.valorComDesconto}" class="decimal"/>
 						<label for="autoDeInfracao.dataDePagamento">Pagamento</label>
 						<input type="text" name="autoDeInfracao.dataDePagamento" size="8" value="<fmt:formatDate pattern="dd/MM/yyyy" value="${autoDeInfracao.dataDePagamento.time}"/>" class="datePicker"/>
-					
-						<input type="hidden" name="autoDeInfracao.id" value="${autoDeInfracao.id}"/>
+						
+						<input type="hidden" name="autoDeInfracao" value="${autoDeInfracao.id}"/>
 					</div>
 				</div>
 				<span class="alerta menor"><fmt:message key="views.erro.preenchimentoObrigatorio"/></span>
