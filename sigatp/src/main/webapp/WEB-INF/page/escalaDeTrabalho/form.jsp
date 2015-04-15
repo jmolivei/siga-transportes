@@ -4,14 +4,14 @@
 <script type="text/javascript">
 	var urlSalvar = '<c:out value="${linkTo[EscalaDeTrabalhoController].salvar}" />';
 	var urlFinalizar = '<c:out value="${linkTo[EscalaDeTrabalhoController].finalizar}" />';
-	var urlCancelar = '<c:out value="${linkTo[CondutorController].lista}" />';
+	var urlCancelar = '<c:out value="${linkTo[CondutorController].listar}" />';
 </script>
 
 <form id="formEscalasDeTrabalho" method="post" onsubmit="return false;" enctype="multipart/form-data">
 	<div class="gt-content-box gt-for-table">
 		<h3>&nbsp;&nbsp;Escala de Trabalho Vigente</h3>
-		<input type="hidden" name="escala.dataVigenciaInicio" value='<fmt:formatDate pattern="dd/MM/yyyy HH:mm" value="${escala.dataVigenciaInicio.time}"/>' />
-		<input type="hidden" name="escala.id" value="${escala.id}" />
+		<input type="hidden" name="escalaDeTrabalho.dataVigenciaInicio" value='<fmt:formatDate pattern="dd/MM/yyyy HH:mm" value="${escala.dataVigenciaInicio.time}"/>' />
+		<input type="hidden" name="escalaDeTrabalho" value="${escala.id}" />
 		<table id="htmlgridDiasDeTrabalho" class="gt-table">
 			<tbody id="tbody">
 				<c:forEach items="${escala.diasDeTrabalho}" var="diaDeTrabalho">
@@ -41,23 +41,7 @@
 		<div id="btngridDiasDeTrabalho" class="gt-table-buttons">
 			<input type="button" id="btn-Incluir-DiasDeTrabalho" value='<fmt:message key="views.botoes.incluirNovoDia" />' class="gt-btn-medium gt-btn-left btnSelecao" />
 		</div>
-		<div id="rowDiasDeTrabalho" style="display: none">
-			<select name="diaEntrada" class="naoSelecionado">
-				<c:forEach items="${diaSemana.values()}" var="dia">
-					<option value="${dia}" ${dia == "SEGUNDA" ? 'selected' : ''}>${dia}</option>
-				</c:forEach>
-			</select>
-			<input type="text" name="horaEntrada" value="11:00" size="8" class="hora naoSelecionado" /> 
-			at&eacute;
-			<select name="diaSaida" class="naoSelecionado">
-				<c:forEach items="${diaSemana.values()}" var="dia">
-					<option value="${dia}" ${dia == "SEGUNDA" ? 'selected' : ''}>${dia}</option>
-				</c:forEach>
-			</select>
-			<input type="text" name="horaSaida" value="19:00" size="8" class="hora naoSelecionado" />
-			<input type="hidden" name="id" class="naoSelecionado" value="${escala.id}" />
-		</div>
-		<input type="hidden" name="escala.condutor.id" value="${escala.condutor.id}" />
+		<input type="hidden" name="escalaDeTrabalho.condutor.id" value="${escala.condutor.id}" />
 	</div>
 	<br />
 	<span style="color: red; font-weight: bolder; font-size: smaller;"><fmt:message key="views.erro.preenchimentoObrigatorio" /></span>
@@ -67,6 +51,23 @@
 		<input type="button" id="cancelar" value='<fmt:message key="views.botoes.cancelar" />' class="gt-btn-medium gt-btn-left" />
 	</div>
 </form>
+
+<div id="rowDiasDeTrabalho" style="display: none">
+	<select name="diaEntrada" class="naoSelecionado">
+		<c:forEach items="${diaSemana.values()}" var="dia">
+			<option value="${dia}" ${dia == "SEGUNDA" ? 'selected' : ''}>${dia}</option>
+		</c:forEach>
+	</select>
+	<input type="text" name="horaEntrada" value="11:00" size="8" class="hora naoSelecionado" /> 
+	at&eacute;
+	<select name="diaSaida" class="naoSelecionado">
+		<c:forEach items="${diaSemana.values()}" var="dia">
+			<option value="${dia}" ${dia == "SEGUNDA" ? 'selected' : ''}>${dia}</option>
+		</c:forEach>
+	</select>
+	<input type="text" name="horaSaida" value="19:00" size="8" class="hora naoSelecionado" />
+	<input type="hidden" name="id" class="naoSelecionado" value="${escala.id}" />
+</div>
 
 <jsp:include page="escalas.jsp"/>
 <jsp:include page="../tags/calendario.jsp"/>
