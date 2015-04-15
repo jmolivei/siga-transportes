@@ -6,6 +6,7 @@
 	<div class="gt-bd clearfix">
 		<div class="gt-content clearfix">
 			<h2>${veiculo.dadosParaExibicao}</h2>
+			<h3>${tipoCadastro}</h3>
 			
 			<jsp:include page="form.jsp" />
 		</div>

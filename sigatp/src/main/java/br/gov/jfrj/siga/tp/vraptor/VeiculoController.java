@@ -25,7 +25,7 @@ import br.gov.jfrj.siga.tp.model.TipoDeCombustivel;
 import br.gov.jfrj.siga.tp.model.TpDao;
 import br.gov.jfrj.siga.tp.model.Veiculo;
 import br.gov.jfrj.siga.tp.util.Combo;
-import br.gov.jfrj.siga.tp.util.MenuMontador;
+import br.gov.jfrj.siga.tp.util.MessagesBundle;
 import br.gov.jfrj.siga.tp.util.PerguntaSimNao;
 import br.gov.jfrj.siga.tp.util.Situacao;
 import br.gov.jfrj.siga.vraptor.SigaObjects;
@@ -77,6 +77,8 @@ public class VeiculoController extends TpController {
 	@RoleAdminFrota
 	@Path("/editar/{id}")
 	public void editar(Long id) throws Exception {
+		result.include("tipoCadastro", id != null?MessagesBundle.getMessage("views.cadastro.editar")
+												 :MessagesBundle.getMessage("views.cadastro.incluir"));
 		Veiculo veiculo = obterVeiculoParaEdicao(id);
 		preencherResultComDadosPadrao(veiculo);
 		result.include("veiculo", veiculo);
