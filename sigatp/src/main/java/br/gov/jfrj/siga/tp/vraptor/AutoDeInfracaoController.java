@@ -117,9 +117,9 @@ public class AutoDeInfracaoController extends TpController{
 			result.include("tipoNotificacao", tipoNotificacao);
 				
 			if(autoDeInfracao.id  > 0)
-				validator.onErrorUse(Results.logic()).forwardTo(AutoDeInfracaoController.class).editar(autoDeInfracao.id, null);
+				validator.onErrorUse(Results.page()).of(AutoDeInfracaoController.class).editar(autoDeInfracao.id, null);
 			else
-				validator.onErrorUse(Results.logic()).forwardTo(AutoDeInfracaoController.class).incluir(tipoNotificacao.getDescricao());
+				validator.onErrorUse(Results.page()).of(AutoDeInfracaoController.class).editar(null, null);
 			
 		} else {
 			autoDeInfracao.save();
