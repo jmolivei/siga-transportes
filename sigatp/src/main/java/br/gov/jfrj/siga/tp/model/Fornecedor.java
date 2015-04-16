@@ -15,16 +15,16 @@ import javax.persistence.Table;
 import org.hibernate.envers.Audited;
 import org.hibernate.validator.constraints.NotEmpty;
 
-import play.data.validation.Unique;
 import play.modules.br.jus.jfrj.siga.uteis.validadores.upperCase.UpperCase;
 import br.gov.jfrj.siga.model.ActiveRecord;
 import br.gov.jfrj.siga.validation.Email;
-//import br.gov.jfrj.siga.validation.Email;
 
 @SuppressWarnings("serial")
 @Entity
 @Audited
 @Table(schema = "SIGATP")
+//@Unique(message = "{fornecedor.cnpj.unique}", field = "cnpj")
+//@Unique(field = "email")
 public class Fornecedor extends TpModel implements Comparable<Fornecedor> {
 
 	public static ActiveRecord<Fornecedor> AR = new ActiveRecord<>(
@@ -39,7 +39,6 @@ public class Fornecedor extends TpModel implements Comparable<Fornecedor> {
 	private RamoDeAtividade ramoDeAtividade;
 
 	@NotEmpty
-	@Unique(message = "fornecedor.cnpj.unique")
 	private String cnpj;
 
 	@NotEmpty
@@ -53,7 +52,6 @@ public class Fornecedor extends TpModel implements Comparable<Fornecedor> {
 
 	private String fax;
 
-	@Unique
 	@Email(nullable = true)
 	private String eMail;
 
