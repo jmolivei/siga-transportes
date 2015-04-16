@@ -75,7 +75,9 @@ public class FinalidadeController extends TpController {
 	@RoleAdminMissao
 	@RoleAdminMissaoComplexo
 	@Path("/salvar")
-	public void salvar(@Valid final FinalidadeRequisicao finalidade) throws Exception {
+	public void salvar(final FinalidadeRequisicao finalidade) throws Exception {
+		
+		validator.validate(finalidade);
 		
 		error(null == finalidade.getDescricao(), "finalidade", "views.erro.campoObrigatorio");
 		FinalidadeRequisicao finalidadeBuscada = buscar(finalidade.getId());
