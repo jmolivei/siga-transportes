@@ -99,7 +99,6 @@ public class CondutorController extends TpController {
 				validator.onErrorUse(Results.logic()).forwardTo(CondutorController.class).incluir();
 		}
 
-		condutor.setDpPessoa(DpPessoa.AR.findById(condutor.getDpPessoa().getId()));
 		condutor.setCpOrgaoUsuario(getTitular().getOrgaoUsuario());
 		condutor.save();
 		result.forwardTo(this).listar();

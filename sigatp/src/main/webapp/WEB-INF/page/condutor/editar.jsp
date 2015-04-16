@@ -31,7 +31,7 @@ function carregouDadosDpPessoa(response, param){
 	$("input[name='condutor.dtNascimento']").val($("input[name='dataNascimento']").val()); 
 	$("input[name='condutor.lotacao']").val($("input[name='lotacao']").val()); 
 	$("input[name='condutor.emailInstitucional']").val($("input[name='emailInstitucional']").val()); 
-	$("input[name='condutor.dpPessoa.id']").val($("input[name='pessoa_pessoaSel.id']").val()); 
+	$("input[name='condutor.dpPessoa']").val($("input[name='pessoa_pessoaSel.id']").val()); 
 }
 
 </script>

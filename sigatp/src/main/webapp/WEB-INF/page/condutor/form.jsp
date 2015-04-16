@@ -21,14 +21,14 @@
 
 				<siga:selecao tipo="pessoa" propriedade="pessoa" tema="simple" modulo="siga" onchange="carregarDadosDpPessoa()"/>
 
-				<input type="hidden" name="condutor.dpPessoa.id" value="" />
+				<input type="hidden" name="condutor.dpPessoa" value="" />
 			</c:when>
 			<c:otherwise>
-				<input type="hidden" name="condutor.dpPessoa.id" value="${condutor.dpPessoa.id}" />
+				<input type="hidden" name="condutor.dpPessoa" value="${condutor.dpPessoa.id}" />
 			</c:otherwise>
 		</c:choose>
 
-		<input type="hidden" name="condutor.id" value="${condutor.id}"/>
+		<input type="hidden" name="condutor" value="${condutor.id}"/>
 		
 		<div class="clearfix">
 			<div class="coluna margemDireitaG">
