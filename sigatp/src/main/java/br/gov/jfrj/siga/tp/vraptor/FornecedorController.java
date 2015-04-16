@@ -72,8 +72,12 @@ public class FornecedorController extends TpController {
 	public void salvar(@Valid Fornecedor fornecedor) {
 		if (validator.hasErrors()) {
 			String template = fornecedor.getId() > 0 ? "/app/fornecedor/editar" : "/app/fornecedor/incluir";
+			List<CpUF> listaUf = Uf.listarTodos();
+			
+			result.include("listaUF", listaUf);
 			result.include("template", template);
 			result.include("fornecedor", fornecedor);
+			
 			validator.onErrorUse(Results.page()).of(FornecedorController.class).incluir();
 		} else {
 			fornecedor.save();
