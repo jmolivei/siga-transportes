@@ -21,7 +21,9 @@
 <script language="javascript">
 function carregarDadosDpPessoa(){
 	params = escape($('#formulario_pessoa_pessoaSel_id').val());
-	PassAjaxResponseToFunction('/sigatp/app/condutor/exibirDadosDpPessoa/' + params, 'carregouDadosDpPessoa', null, false, null);
+	
+	if(params != "")
+		PassAjaxResponseToFunction('/sigatp/app/condutor/exibirDadosDpPessoa/' + params, 'carregouDadosDpPessoa', null, false, null);
 }
 
 function carregouDadosDpPessoa(response, param){
@@ -31,11 +33,6 @@ function carregouDadosDpPessoa(response, param){
 	$("input[name='condutor.emailInstitucional']").val($("input[name='emailInstitucional']").val()); 
 	$("input[name='condutor.dpPessoa.id']").val($("input[name='pessoa_pessoaSel.id']").val()); 
 }
-// console.log(document.getElementById("formulario_pessoa_pessoaSel_id"));
-
-// document.getElementById("formulario_pessoa_pessoaSel_id").addEventListener("change", function(){
-// 	carregarDadosDpPessoa();
-// });
 
 </script>
 

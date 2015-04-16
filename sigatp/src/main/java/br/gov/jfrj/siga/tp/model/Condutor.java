@@ -6,7 +6,6 @@ import java.util.Calendar;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
-
 import javax.persistence.Basic;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
@@ -24,10 +23,8 @@ import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 import javax.validation.constraints.NotNull;
-
 import org.hibernate.envers.Audited;
 import org.hibernate.envers.RelationTargetAuditMode;
-
 import play.data.validation.Email;
 import play.db.jpa.JPA;
 import play.i18n.Messages;
@@ -37,6 +34,7 @@ import br.gov.jfrj.siga.dp.DpLotacao;
 import br.gov.jfrj.siga.dp.DpPessoa;
 import br.gov.jfrj.siga.model.ActiveRecord;
 import br.gov.jfrj.siga.tp.util.PerguntaSimNao;
+import br.gov.jfrj.siga.tp.validation.annotation.Unique;
 import br.jus.jfrj.siga.uteis.UpperCase;
 
 @SuppressWarnings("serial")
@@ -44,6 +42,7 @@ import br.jus.jfrj.siga.uteis.UpperCase;
 @Audited
 @Table(schema = "SIGATP")
 @SequenceGenerator(name = "hibernate_sequence_generator", sequenceName="SIGATP.hibernate_sequence")
+//@Unique(message="condutor.dppessoa.unique" ,field = "dpPessoa")
 public class Condutor extends TpModel implements Comparable<Condutor> {
 	
 	public static ActiveRecord<Condutor> AR = new ActiveRecord<>(Condutor.class);
@@ -56,17 +55,14 @@ public class Condutor extends TpModel implements Comparable<Condutor> {
 	@ManyToOne
 	@JoinColumn(name = "ID_ORGAO_USU")
  	private CpOrgaoUsuario cpOrgaoUsuario;
- 	
-//	@Unique(message="condutor.dppessoa.unique")
+	
  	@Audited(targetAuditMode = RelationTargetAuditMode.NOT_AUDITED)
 	@OneToOne(targetEntity = DpPessoa.class)
+ 	@NotNull
  	private DpPessoa dpPessoa;
 
 	@Enumerated(EnumType.STRING)
 	private CategoriaCNH categoriaCNH;
-	
-//	@As(lang={"*"}, value={"dd/MM/yyyy"})
-//	@ValidarAnoData(intervalo=5, descricaoCampo="Data de Vencimento da CNH")
 	
 	@Basic(optional = false)
 	@NotNull(message = "Data de vencimento da CHN deve ser preenchida")
