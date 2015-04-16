@@ -84,8 +84,8 @@
 		<textarea name="condutor.observacao" rows="4" cols="60">${condutor.observacao}</textarea>
 
 		<label>Anexar arquivo: </label> 
-		<input type="file" name="arquivo" size="30" id="arquivo" /> 
-		<img id="imgArquivo" class="thumb" src="${imgArquivo}" /> 
+		<input type="file" name="arquivo" size="30" id="arquivo"  /> 
+		<img id="imgArquivo" class="thumb" src="${imgArquivo}" />
 		<br /> 
 		<input type="button" class="botaoImagem" id="exibirImagem" value="<fmt:message key="views.botoes.exibir"/>" /> 
 		<input type="button" class="botaoImagem" id="excluirImagem" onclick="removerArquivo();" value="<fmt:message key="views.botoes.excluir"/>" />
@@ -101,102 +101,8 @@
 			class="gt-btn-medium gt-btn-left"
 			onclick="javascript:window.location = '${linkTo[CondutorController].listar}';" />
 	</div>
-<script type="text/javascript">
-	
-	$(document).ready(function() {
-		$('#imgArquivo').css('display','none');
 
-		$('#exibirImagem').click(function() {
-			var url = '';
-			
-			if($('#imgArquivo').css('display') == 'block') {
-				if ($('#situacaoImagem').val() == "nobanco") {
-						url = "@{Condutores.exibirImagem(condutor.id)}";
-				}
-				else if ($('#situacaoImagem').val() == "imagemnova") {
-					url = $('#arquivo').val();
-				}
-
-				var newwin = window.open(url,'miniwin','toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=0,resizable=0,width=800,height=800,top=100,left=100');
-				//newwin.document.close();
-			}
-		});
-		
-		$('#arquivo').change(function(evt) {
-			var arquivo; 
-			
-			if($('#arquivo').val() != "") {
-	        	if ( $.browser.msie ) {
-		        	$('#imgArquivo').attr('src',this.value);
-	                $('#exibirImagem').attr('disabled',false);
-				}
-				else { //chrome, mozilla
-					  var f = evt.target.files[0];
-				      var reader = new FileReader();
-				      reader.onload = (function(theFile) {
-				       	return function(e) {
-					        	$('#imgArquivo').attr('src',e.target.result);
-					        };
-				      })(f);
-				      reader.readAsDataURL(f);
-						  $('#exibirImagem').attr('disabled',false);
-				}
-
-				if ($('#imgArquivo').css('display') == 'none') {
-					$('#imgArquivo').css('display','block');
-					$('#excluirImagem').attr('disabled',false);
-					$('#situacaoImagem').val('imagemnova');
-				}
-			}
-		});
-
-		if ($('#imgArquivo').css('display') == 'none') {
-			$('#excluirImagem').attr('disabled',true);
-		}
-
-		else if($('#imgArquivo').css('display') == 'block') {
-			$('#excluirImagem').attr('disabled',false);
-		}
-		});
-
-	function removerArquivo() {
-			$('#imgArquivo').removeAttr('src');
-		$('#excluirImagem').attr('disabled',true);
-		$('#imgArquivo').css('display','none');
-
-		if ( $.browser.msie ) {
-			$("#arquivo").replaceWith($("#arquivo").clone(true));
-       	}
-		else { //chrome, mozilla
-			$('#arquivo').val("");
-		}
-		
-		$('#situacaoImagem').val('semimagem');
-		    $('#exibirImagem').attr('disabled',true);
-	 	}
-
-	$(window).load(function() {
-// 		var exibirImgArquivo = jsAction @Condutores.exibirImgArquivo(':id')
-		var exibirImgArquivo = 'fuck';
-	  	    $.get(
-	  	    	   exibirImgArquivo({id: $("input[name='condutor.id']").val()}), 
-		           function(carregouImagem) {
-    					if (carregouImagem == "true") {   
-    						$('#imgArquivo').css('display','block');
-    						$('#excluirImagem').attr('disabled',false);
-    						$('#exibirImagem').attr('disabled',false);
-    						$('#situacaoImagem').val('nobanco');
-    					}
-    					else {
-    						$('#imgArquivo').css('display','none');
-        					$('#excluirImagem').attr('disabled',true);
-        					$('#exibirImagem').attr('disabled',true);
-    						$('#situacaoImagem').val('semimagem');
-    					}
-    			   }
-	  	);
-	});
-</script>
+	<jsp:include page="formScript.jsp"/>
 </form>
 
 
