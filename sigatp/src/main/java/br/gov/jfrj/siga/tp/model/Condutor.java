@@ -44,9 +44,10 @@ import br.jus.jfrj.siga.uteis.UpperCase;
 @Audited
 @Table(schema = "SIGATP")
 @SequenceGenerator(name = "hibernate_sequence_generator", sequenceName="SIGATP.hibernate_sequence")
+//@Unique(message="condutor.dppessoa.unique" ,field = "dpPessoa")
 public class Condutor extends TpModel implements Comparable<Condutor> {
 	
-	public static ActiveRecord<Condutor> AR = new ActiveRecord<>(Condutor.class);
+	public static final ActiveRecord<Condutor> AR = new ActiveRecord<>(Condutor.class);
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "hibernate_sequence_generator") 
@@ -56,19 +57,17 @@ public class Condutor extends TpModel implements Comparable<Condutor> {
 	@ManyToOne
 	@JoinColumn(name = "ID_ORGAO_USU")
  	private CpOrgaoUsuario cpOrgaoUsuario;
- 	
-//	@Unique(message="condutor.dppessoa.unique")
+	
  	@Audited(targetAuditMode = RelationTargetAuditMode.NOT_AUDITED)
 	@OneToOne(targetEntity = DpPessoa.class)
+ 	@NotNull
  	private DpPessoa dpPessoa;
 
 	@Enumerated(EnumType.STRING)
 	private CategoriaCNH categoriaCNH;
 	
-//	@As(lang={"*"}, value={"dd/MM/yyyy"})
-//	@ValidarAnoData(intervalo=5, descricaoCampo="Data de Vencimento da CNH")
-	
 	@Basic(optional = false)
+	@NotNull(message = "Data de vencimento da CHN deve ser preenchida")
 	private Calendar dataVencimentoCNH;
 
 	@Basic(optional = false)
@@ -107,7 +106,7 @@ public class Condutor extends TpModel implements Comparable<Condutor> {
 
 	public Condutor() {
 		this.dpPessoa = new DpPessoa();
-		this.id = new Long(0);
+		this.id = 0L;
 		this.categoriaCNH = CategoriaCNH.D;
 		escala = new ArrayList<EscalaDeTrabalho>();
 	}
@@ -195,7 +194,7 @@ public class Condutor extends TpModel implements Comparable<Condutor> {
 			condutores = null;
 		}
 
-		if (condutores != null && condutores.size() > 0
+		if (condutores != null && condutores.isEmpty()
 				&& (!inicioRapido.equals(PerguntaSimNao.SIM))) {
 			for (Iterator<Condutor> iterator = condutores.iterator(); iterator
 					.hasNext();) {
@@ -266,7 +265,7 @@ public class Condutor extends TpModel implements Comparable<Condutor> {
 		Query qry = JPA.em().createQuery(qrl);
 		try {
 			plantoes = ((List<Plantao>) qry.getResultList());
-			if (plantoes != null && plantoes.size() > 0) {
+			if (plantoes != null && plantoes.isEmpty()) {
 				return true;
 			} else {
 				return false;
@@ -291,7 +290,7 @@ public class Condutor extends TpModel implements Comparable<Condutor> {
 		hqlVigentes.append(")) ");
 		hqlVigentes.append("order by dataVigenciaInicio desc ");
 		List<EscalaDeTrabalho> escalasDeTrabalho = EscalaDeTrabalho.AR.find(hqlVigentes.toString(),condutor).fetch();
-		if (escalasDeTrabalho.size() == 0) {
+		if (escalasDeTrabalho.isEmpty()) {
 			return false;
 		} 
 
@@ -315,20 +314,35 @@ public class Condutor extends TpModel implements Comparable<Condutor> {
 		return false;
 	}
 
-	@Override
-	public boolean equals(Object other) {
-		try {
-			Condutor outroCondutor = (Condutor) other;
-			return this.id.equals(outroCondutor.id);
-		} catch(Exception e) {
-			return false;
-		}
-	}
-
 	public static List<Condutor> listarTodos(CpOrgaoUsuario orgaoUsuario) throws Exception {
 		List<Condutor> condutores = Condutor.AR.find("cpOrgaoUsuario", orgaoUsuario).fetch();
 		Collections.sort(condutores);
 		return condutores;
+	}
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = super.hashCode();
+		result = prime * result + ((id == null) ? 0 : id.hashCode());
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (!super.equals(obj))
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		Condutor other = (Condutor) obj;
+		if (id == null) {
+			if (other.id != null)
+				return false;
+		} else if (!id.equals(other.id))
+			return false;
+		return true;
 	}
 
 	public static List<Condutor> listarFiltradoPor(CpOrgaoUsuario orgaoUsuario,
@@ -350,6 +364,7 @@ public class Condutor extends TpModel implements Comparable<Condutor> {
 		return CategoriaCNH.values();
 	}
 
+	@Override
 	public Long getId() {
 		return id;
 	}

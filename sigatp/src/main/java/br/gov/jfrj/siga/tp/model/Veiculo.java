@@ -29,7 +29,6 @@ import org.hibernate.envers.Audited;
 import org.hibernate.envers.RelationTargetAuditMode;
 import org.hibernate.validator.constraints.NotEmpty;
 
-import play.db.jpa.JPA;
 import play.modules.br.jus.jfrj.siga.uteis.validadores.validarAnoData.ValidarAnoData;
 import br.gov.jfrj.siga.cp.model.DpLotacaoSelecao;
 import br.gov.jfrj.siga.dp.CpOrgaoUsuario;
@@ -51,7 +50,7 @@ import br.gov.jfrj.siga.tp.validation.annotation.UpperCase;
 public class Veiculo extends TpModel implements Comparable<Veiculo> {
 
 	private static final long serialVersionUID = -3602265045747814797L;
-	public static ActiveRecord<Veiculo> AR = new ActiveRecord<>(Veiculo.class);
+	public static final ActiveRecord<Veiculo> AR = new ActiveRecord<>(Veiculo.class);
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "hibernate_sequence_generator")
@@ -84,9 +83,6 @@ public class Veiculo extends TpModel implements Comparable<Veiculo> {
 	// TODO: Verificar erro de Cast no token da Linha abaixo
 	// @OrderBy("dataHoraInicio DESC")
 	private List<LotacaoVeiculo> lotacoes;
-
-	@Transient
-	private DpLotacao lotacaoAtual;
 
 	@Transient
 	private Double odometroEmKmAtual;
@@ -192,13 +188,11 @@ public class Veiculo extends TpModel implements Comparable<Veiculo> {
 	@UpperCase
 	private String outros;
 
-	// @As(lang = { "*" }, value = { "dd/MM/yyyy" })
 	@ValidarAnoData(descricaoCampo = "Data de Aquisicao")
 	private Calendar dataAquisicao;
 
 	private Double valorAquisicao;
 
-	// @As(lang = { "*" }, value = { "dd/MM/yyyy" })
 	@ValidarAnoData(descricaoCampo = "Data de Garantia")
 	private Calendar dataGarantia;
 
@@ -207,17 +201,14 @@ public class Veiculo extends TpModel implements Comparable<Veiculo> {
 
 	private String numeroCartaoAbastecimento;
 
-	// @As(lang = { "*" }, value = { "dd/MM/yyyy" })
 	@ValidarAnoData(descricaoCampo = "Validade do Cartao de Abastecimento")
 	private Calendar validadeCartaoAbastecimento;
 
 	private String numeroCartaoSeguro;
 
-	// @As(lang = { "*" }, value = { "dd/MM/yyyy" })
 	@ValidarAnoData(intervalo = 10, descricaoCampo = "Validade do Cartao de Seguro")
 	private Calendar validadeCartaoSeguro;
 
-	// @As(lang = { "*" }, value = { "dd/MM/yyyy HH:mm" })
 	@ValidarAnoData(descricaoCampo = "Data de Alienacao")
 	private Calendar dataAlienacao;
 
@@ -296,10 +287,6 @@ public class Veiculo extends TpModel implements Comparable<Veiculo> {
 		this.processoAlienacao = "";
 	}
 
-	public Veiculo(DpLotacao dpLotacao) {
-		this.setLotacaoAtual(dpLotacao);
-	}
-
 	public String getDadosParaExibicao() {
 		if (ehNovo()) {
 			return MessagesBundle.getMessage("veiculo.cadastro");
@@ -307,9 +294,6 @@ public class Veiculo extends TpModel implements Comparable<Veiculo> {
 		return this.marca + " " + this.modelo + " - " + this.placa;
 	}
 
-	/*
-	 * @Override public int compareTo(Veiculo o) { return (this.situacao + this.placa).compareTo(o.situacao + o.placa); }
-	 */
 	@Override
 	public int compareTo(Veiculo o) {
 		return (this.situacao + this.marca + this.modelo).compareTo(o.situacao + o.marca + o.modelo);
@@ -319,6 +303,7 @@ public class Veiculo extends TpModel implements Comparable<Veiculo> {
 		Double retorno = (double) 0;
 
 		if (lotacoes != null && !lotacoes.isEmpty() && lotacoes.get(0).getOdometroEmKm() != null) {
+			Collections.sort(lotacoes, LotacaoVeiculo.comparator());
 			retorno = lotacoes.get(0).getOdometroEmKm();
 		}
 
@@ -329,10 +314,12 @@ public class Veiculo extends TpModel implements Comparable<Veiculo> {
 		DpLotacao retorno = null;
 
 		if (lotacoes != null && !lotacoes.isEmpty()) {
+			Collections.sort(lotacoes, LotacaoVeiculo.comparator());
 			retorno = lotacoes.get(0).getLotacao();
 		}
 		return retorno;
 	}
+	
 
 	@SuppressWarnings("unchecked")
 	public static List<Veiculo> listarDisponiveis(String dataSaida, Long idMissao, Long idOrgao) {
@@ -347,7 +334,7 @@ public class Veiculo extends TpModel implements Comparable<Veiculo> {
 				+ "(SELECT a.veiculo.id FROM Avaria a" + " WHERE a.podeCircular = '" + PerguntaSimNao.NAO + "'" + " AND a.dataDeRegistro <= " + dataFormatadaOracle + " AND (a.dataDeSolucao = NULL "
 				+ " OR a.dataDeSolucao >= " + dataFormatadaOracle + "))" + " ORDER BY v.marca, v.modelo";
 
-		Query qry = JPA.em().createQuery(qrl);
+		Query qry = AR.em().createQuery(qrl);
 		try {
 			veiculos = (List<Veiculo>) qry.getResultList();
 		} catch (NoResultException ex) {
@@ -383,7 +370,7 @@ public class Veiculo extends TpModel implements Comparable<Veiculo> {
 		String qrl = "SELECT v FROM Veiculo v WHERE " + "  v.cpOrgaoUsuario.id = " + orgaoUsuario.getId() + " AND v.id in (SELECT L.veiculo.id FROM LotacaoVeiculo L " + " where L.veiculo.id = v.id "
 				+ " AND L.lotacao.idLotacaoIni = " + lotacao.getIdLotacaoIni() + " AND L.dataHoraFim IS NULL)" + " ORDER BY v.marca, v.modelo";
 
-		Query qry = JPA.em().createQuery(qrl);
+		Query qry = AR.em().createQuery(qrl);
 		try {
 			veiculos = (List<Veiculo>) qry.getResultList();
 		} catch (NoResultException ex) {
@@ -392,19 +379,15 @@ public class Veiculo extends TpModel implements Comparable<Veiculo> {
 		return veiculos;
 	}
 
-	public void configurarLotacaoAtual() {
-		this.lotacaoAtual = this.getDpLotacaoVigente();
-	}
-
 	public void configurarOdometroParaMudancaDeLotacao() {
 		this.odometroEmKmAtual = this.getUltimoOdometroDeLotacao();
 	}
 
 	public DpLotacao getUltimaLotacao() {
-
 		return this.getDpLotacaoVigente();
 	}
 
+	@Override
 	public Long getId() {
 		return id;
 	}
@@ -454,19 +437,13 @@ public class Veiculo extends TpModel implements Comparable<Veiculo> {
 	}
 
 	public List<LotacaoVeiculo> getLotacoes() {
+		if (lotacoes != null)
+			Collections.sort(lotacoes, LotacaoVeiculo.comparator());
 		return lotacoes;
 	}
 
 	public void setLotacoes(List<LotacaoVeiculo> lotacoes) {
 		this.lotacoes = lotacoes;
-	}
-
-	public DpLotacao getLotacaoAtual() {
-		return lotacaoAtual;
-	}
-
-	public void setLotacaoAtual(DpLotacao lotacaoAtual) {
-		this.lotacaoAtual = lotacaoAtual;
 	}
 
 	public Double getOdometroEmKmAtual() {
@@ -901,12 +878,15 @@ public class Veiculo extends TpModel implements Comparable<Veiculo> {
 		this.relatoriosdiarios = relatoriosdiarios;
 	}
 
-	public Veiculo comAtualSelecionada(DpLotacaoSelecao lotacaoAtualSel) {
-		if (lotacaoAtualSel.getId() != null) {
-			DpLotacao dpLotacao = new DpLotacao();
-			dpLotacao.setId(lotacaoAtualSel.getId());
-			this.lotacaoAtual = dpLotacao;
+	public DpLotacaoSelecao getLotacaoAtualSel() {
+		DpLotacaoSelecao selecao = new DpLotacaoSelecao();
+		DpLotacao dpLotacaoVigente = getDpLotacaoVigente();
+
+		if (dpLotacaoVigente != null) {
+			selecao.setId(dpLotacaoVigente.getId());
+			selecao.setSigla(dpLotacaoVigente.getSigla());
+			selecao.setDescricao(dpLotacaoVigente.getDescricao());
 		}
-		return this;
+		return selecao;
 	}
 }

@@ -2,7 +2,6 @@ package br.gov.jfrj.siga.tp.model;
 
 import java.util.List;
 
-import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -16,17 +15,18 @@ import javax.validation.constraints.NotNull;
 import org.hibernate.envers.Audited;
 import org.hibernate.envers.RelationTargetAuditMode;
 
-import play.data.validation.Unique;
 import play.i18n.Messages;
-import play.modules.br.jus.jfrj.siga.uteis.validadores.upperCase.UpperCase;
 import br.gov.jfrj.siga.dp.CpOrgaoUsuario;
 import br.gov.jfrj.siga.model.ActiveRecord;
+import br.gov.jfrj.siga.tp.validation.annotation.Unique;
+import br.gov.jfrj.siga.tp.validation.annotation.UpperCase;
 import controllers.AutorizacaoGIAntigo;
 
 @SuppressWarnings("serial")
 @Entity
 @Audited
 @Table(name="FinalidadeRequisicao", schema = "SIGATP")
+@Unique(message = "{finalidadeRequisicao.descricao.unique}", field = "descricao")
 public class FinalidadeRequisicao extends TpModel {
 	
 	private static final long _ID_DA_FINALIDADE_OUTRA = -1;
@@ -38,8 +38,6 @@ public class FinalidadeRequisicao extends TpModel {
 	private Long id;
 	
 	@NotNull
-	@Unique(message="finalidadeRequisicao.descricao.unique")
-	@Column(unique=true)
 	@UpperCase
  	private String descricao;
 	
@@ -100,6 +98,7 @@ public class FinalidadeRequisicao extends TpModel {
 		return FinalidadeRequisicao.AR.find("cpOrgaoOrigem = ? and id <> ?", orgaoUsuario, _ID_DA_FINALIDADE_OUTRA).fetch();
 	}
 
+	@SuppressWarnings("unchecked")
 	public static List<FinalidadeRequisicao> listarTodos() {
 		return FinalidadeRequisicao.AR.findAll();
 	}

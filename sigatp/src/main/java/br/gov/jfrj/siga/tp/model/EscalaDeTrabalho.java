@@ -22,9 +22,6 @@ import javax.validation.constraints.NotNull;
 
 import org.hibernate.envers.Audited;
 
-import play.data.binding.As;
-import play.data.validation.Required;
-import play.db.jpa.JPA;
 import br.gov.jfrj.siga.model.ActiveRecord;
 
 @Entity
@@ -33,28 +30,31 @@ import br.gov.jfrj.siga.model.ActiveRecord;
 public class EscalaDeTrabalho extends TpModel {
 
 	private static final long serialVersionUID = 1L;
-	public static ActiveRecord<EscalaDeTrabalho> AR = new ActiveRecord<>(EscalaDeTrabalho.class);
+	public static final ActiveRecord<EscalaDeTrabalho> AR = new ActiveRecord<>(EscalaDeTrabalho.class);
 	
 	@Id
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "hibernate_sequence_generator") @SequenceGenerator(name = "hibernate_sequence_generator", sequenceName="SIGATP.hibernate_sequence") 
 	private long id;
 		
-	@Required
-	@As(lang={"*"}, value={"dd/MM/yyyy"})
+	@NotNull
 	private Calendar dataVigenciaInicio;
 	
 	private Calendar dataVigenciaFim;
 	
-	@Required
 	@ManyToOne
 	@NotNull
 	private Condutor condutor;
 	
- 	@Required(message = "Inclua ao menos um dia de trabalho na escala")
- 	@NotNull
+	@NotNull(message = "Inclua ao menos um dia de trabalho na escala")
 	@OneToMany(mappedBy="escalaDeTrabalho")
  	private List<DiaDeTrabalho> diasDeTrabalho;
 	
+	public EscalaDeTrabalho() {
+		this.id = 0;
+		diasDeTrabalho = new ArrayList<DiaDeTrabalho>();
+	}
+	
+	@Override
 	public Long getId() {
 		return id;
 	}
@@ -94,11 +94,6 @@ public class EscalaDeTrabalho extends TpModel {
 	public void setDiasDeTrabalho(List<DiaDeTrabalho> diasDeTrabalho) {
 		this.diasDeTrabalho = diasDeTrabalho;
 	}
-
-	public EscalaDeTrabalho() {
-		this.id = new Long(0);
-		diasDeTrabalho = new ArrayList<DiaDeTrabalho>();
-	}
 	
 	public void iniciarVigencia() {
 		this.dataVigenciaInicio = Calendar.getInstance();
@@ -117,8 +112,7 @@ public class EscalaDeTrabalho extends TpModel {
 		hqlVigentes.append("dataVigenciaInicio < current_date ");
 		hqlVigentes.append("and ((dataVigenciaFim is null) or (dataVigenciaFim > current_date)) ");
 		hqlVigentes.append("order by dataVigenciaInicio ");
-		List<EscalaDeTrabalho> retorno = EscalaDeTrabalho.AR.find(hqlVigentes.toString()).fetch();
-		return retorno;
+		return EscalaDeTrabalho.AR.find(hqlVigentes.toString()).<EscalaDeTrabalho>fetch();
 	}
 	
 	public String getEscalaParaExibicao() {
@@ -160,12 +154,13 @@ public class EscalaDeTrabalho extends TpModel {
 		return false;
 	}
 	
-	public static List<EscalaDeTrabalho> buscarPorCondutores(Long IdCondutor,
+	@SuppressWarnings("unchecked")
+	public static List<EscalaDeTrabalho> buscarPorCondutores(Long idCondutor,
 			String dataHoraInicio) {
 		
 		String filtroCondutor = "";
-		if (IdCondutor != null) {
-			filtroCondutor = "condutor.id = " + IdCondutor + " AND ";  
+		if (idCondutor != null) {
+			filtroCondutor = "condutor.id = " + idCondutor + " AND ";  
 		}
 		
 		String dataFormatadaOracle = "to_date('" + dataHoraInicio + "', 'DD/MM/YYYY')";
@@ -175,7 +170,7 @@ public class EscalaDeTrabalho extends TpModel {
 						" trunc(dataVigenciaInicio) <= trunc(" + dataFormatadaOracle + ")" +  	
 						" AND (dataVigenciaFim IS NULL OR trunc(dataVigenciaFim) >= trunc(" + dataFormatadaOracle + "))";
 
-		Query qry = JPA.em().createQuery(qrl);
+		Query qry = AR.em().createQuery(qrl);
 		try {
 			escalas = (List<EscalaDeTrabalho>) qry.getResultList();
 		} catch(NoResultException ex) {

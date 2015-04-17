@@ -4,12 +4,18 @@
 <%@ taglib uri="http://localhost/jeetags" prefix="siga" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
 
-<siga:pagina titulo="Transportes">
+<style>
+	 .imagem {
+	   height: 500px;
+	   border: 1px solid #000;
+	   margin: 10px 5px 0 0;
+	 }
+</style>
+
+<siga:pagina>
 	<div class="gt-bd clearfix">
 		<div class="gt-content clearfix">
-			<h2>${condutor.nomePessoaAI}</h2>
-			<h3>Editar Dados Cadastrais</h3>
-			<jsp:include page="form.jsp" />
+			<img id="imgArquivo" class="imagem" src="${imgArquivo}" />
 		</div>
 	</div>
 </siga:pagina>

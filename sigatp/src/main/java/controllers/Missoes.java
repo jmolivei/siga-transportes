@@ -59,7 +59,6 @@ public class Missoes extends Controller {
 	}
 
 	private static List<Missao> recuperarMissoes(String criterioBusca, Object[] parametros) throws Exception {
-		// TODO Auto-generated method stub
 
 		if (!AutorizacaoGIAntigo.ehAdministrador() && !AutorizacaoGIAntigo.ehAdministradorMissao() && !AutorizacaoGIAntigo.ehAdministradorMissaoPorComplexo()) {
 			Condutor condutorLogado = Condutor.recuperarLogado(AutorizacaoGIAntigo.titular(), AutorizacaoGIAntigo.titular().getOrgaoUsuario());
@@ -126,7 +125,7 @@ public class Missoes extends Controller {
 	}
 
 	protected static void validarListarParaCondutorEscalado(Condutor condutorEscalado) throws Exception {
-		/* Criada uma missão Fake somente passar o condutor */
+		/* Criada uma missï¿½o Fake somente passar o condutor */
 		Missao missao = new Missao();
 		missao.setId(-1L);
 		missao.condutor = condutorEscalado;
@@ -208,7 +207,7 @@ public class Missoes extends Controller {
 	 * private static void checarAcesso(Missao missao) throws Exception { if (! AutorizacaoGI.ehAdministrador() && ! AutorizacaoGI.ehAdministradorMissao()) { if (missao.getId() == 0) { throw new
 	 * Exception("Voce nao tem acesso para incluir Missao"); }
 	 * 
-	 * if (! AutorizacaoGI.titular().equivale(missao.condutor.dpPessoa)) { try { throw new Exception("Voce nao tem acesso a esta missão"); } catch (Exception e) { AutorizacaoGI.tratarExcecoes(e); } }
+	 * if (! AutorizacaoGI.titular().equivale(missao.condutor.dpPessoa)) { try { throw new Exception("Voce nao tem acesso a esta missï¿½o"); } catch (Exception e) { AutorizacaoGI.tratarExcecoes(e); } }
 	 * }
 	 * 
 	 * 
@@ -220,7 +219,7 @@ public class Missoes extends Controller {
 		Veiculo veiculoInicial = null;
 
 		for (Iterator<RequisicaoTransporte> iterator = missao.requisicoesTransporte.iterator(); iterator.hasNext();) {
-			RequisicaoTransporte req = (RequisicaoTransporte) iterator.next();
+			RequisicaoTransporte req = iterator.next();
 			req = RequisicaoTransporte.findById(req.id);
 
 			if (req.servicoVeiculo != null) {
@@ -591,7 +590,7 @@ public class Missoes extends Controller {
 			if (missao.dataHoraSaida != null) {
 				String dataHoraSaidaStr = JavaExtensions.format(missao.dataHoraSaida.getTime(), "dd/MM/yyyy HH:mm");
 				if (!AutorizacaoGIAntigo.ehAdministrador() && !AutorizacaoGIAntigo.ehAdministradorMissao() && !AutorizacaoGIAntigo.ehAdministradorMissaoPorComplexo()) {
-					/* Fixa combos quando o perfil do usuário logado é agente */
+					/* Fixa combos quando o perfil do usuï¿½rio logado ï¿½ agente */
 					List<Condutor> condutores = new ArrayList<Condutor>();
 					condutores.add(missao.condutor);
 					List<Veiculo> veiculos = new ArrayList<Veiculo>();
@@ -838,7 +837,7 @@ public class Missoes extends Controller {
 		listar();
 	}
 
-	/* Método AJAX */
+	/* Mï¿½todo AJAX */
 	@RoleAdmin
 	@RoleAdminMissao
 	@RoleAdminMissaoComplexo
@@ -850,7 +849,7 @@ public class Missoes extends Controller {
 		String opcaoSelecionada = " selected = 'selected'";
 		String selectDesabilitado = " disabled = 'disabled'";
 
-		List<Veiculo> veiculosDisponiveis = new ArrayList<Veiculo>();
+		List<Veiculo> veiculosDisponiveis = null;
 
 		if (veiculosDisp.equals("")) {
 			veiculosDisponiveis = listarVeiculosDisponiveis(idMissao, AutorizacaoGIAntigo.titular().getOrgaoUsuario().getId(), dataSaida);

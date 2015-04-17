@@ -15,16 +15,15 @@ import org.hibernate.envers.Audited;
 import play.data.validation.Required;
 import play.modules.br.jus.jfrj.siga.uteis.validadores.upperCase.UpperCase;
 import br.gov.jfrj.siga.model.ActiveRecord;
-import br.gov.jfrj.siga.model.Objeto;
 
 @Entity
 @Audited
 @Table(name = "GRUPOVEICULO", schema = "SIGATP")
-public class Grupo extends Objeto implements Comparable<Grupo> {
+public class Grupo extends TpModel implements Comparable<Grupo> {
 
 	private static final long serialVersionUID = -3681022838391034811L;
 
-	public static ActiveRecord<Grupo> AR = new ActiveRecord<>(Grupo.class);
+	public static final ActiveRecord<Grupo> AR = new ActiveRecord<>(Grupo.class);
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "hibernate_sequence_generator")
@@ -68,7 +67,8 @@ public class Grupo extends Objeto implements Comparable<Grupo> {
 		return grupos;
 	}
 
-	public long getId() {
+	@Override
+	public Long getId() {
 		return id;
 	}
 

@@ -1,18 +1,14 @@
 package br.gov.jfrj.siga.tp.vraptor;
 
 import java.util.List;
-
 import javax.persistence.EntityManager;
 import javax.persistence.EntityTransaction;
 import javax.persistence.PersistenceException;
 import javax.servlet.http.HttpServletRequest;
-
-import play.data.validation.Validation;
 import br.com.caelum.vraptor.Path;
 import br.com.caelum.vraptor.Resource;
 import br.com.caelum.vraptor.Result;
 import br.com.caelum.vraptor.Validator;
-import br.com.caelum.vraptor.core.Localization;
 import br.com.caelum.vraptor.view.Results;
 import br.gov.jfrj.siga.dp.dao.CpDao;
 import br.gov.jfrj.siga.tp.auth.annotation.RoleAdmin;
@@ -23,25 +19,22 @@ import br.gov.jfrj.siga.tp.model.TpDao;
 import br.gov.jfrj.siga.vraptor.SigaObjects;
 
 @Resource
+@Path("/app/finalidade")
 public class FinalidadeController extends TpController {
 	
-	private static final String ACTION = "action";
-	private static final String ACTION_EDITAR = "views.botoes.editar";
-	private static final String ACTION_INCLUIR = "views.botoes.incluir";
+	private static final String MODO = "modo";
+	private static final String BOTAO_EDITAR = "views.botoes.editar";
+	private static final String BOTAO_INCLUIR = "views.botoes.incluir";
 
-	public FinalidadeController(HttpServletRequest request, Result result, CpDao dao, Localization localization, Validator validator, SigaObjects so, EntityManager em) throws Exception {
+	public FinalidadeController(HttpServletRequest request, Result result, CpDao dao, Validator validator, SigaObjects so, EntityManager em) throws Exception {
 		super(request, result, TpDao.getInstance(), validator, so, em);
 	}
 
-	@Path("/app/finalidade/listar")
+	@Path("/listar")
 	public void listar(String mensagem) {
     	MenuMontador.instance(result).recuperarMenuFinalidades(true);
     	List<FinalidadeRequisicao> finalidades = FinalidadeRequisicao.listarTodos(getTitular().getOrgaoUsuario());
-   		
-    	if(null != mensagem){
-    		Validation.addError("finalidade", mensagem);
-    		result.include("erros", mensagem);
-    	}
+    	error(null != mensagem, "finalidade", mensagem);
     	
     	result.include("finalidades", finalidades);
     }
@@ -50,7 +43,7 @@ public class FinalidadeController extends TpController {
 		result.redirectTo(this).listar(null);
 	}
 	
-	@Path("/app/finalidade/listarTodas")
+	@Path("/listarTodas")
 	public void listarTodas() {
     	MenuMontador.instance(result).recuperarMenuFinalidades(false);
     	List<FinalidadeRequisicao> finalidades = FinalidadeRequisicao.listarTodos();
@@ -61,15 +54,15 @@ public class FinalidadeController extends TpController {
 	@RoleAdmin
 	@RoleAdminMissao
 	@RoleAdminMissaoComplexo
-	@Path("/app/finalidade/editar/{id}")
+	@Path("/editar/{id}")
 	public void editar(final Long id) throws Exception {
     	FinalidadeRequisicao finalidade = buscar(id);
     	
     	if(isUpdate(finalidade)) {
     		finalidade.checarProprietario(getTitular().getOrgaoUsuario());
-    		result.include(ACTION, ACTION_EDITAR);
+    		result.include(MODO, BOTAO_EDITAR);
     	} else
-    		result.include(ACTION, ACTION_INCLUIR);
+    		result.include(MODO, BOTAO_INCLUIR);
     	
     	result.include("finalidade", finalidade);
     }
@@ -77,8 +70,10 @@ public class FinalidadeController extends TpController {
 	@RoleAdmin
 	@RoleAdminMissao
 	@RoleAdminMissaoComplexo
-	@Path("/app/finalidade/salvar/{finalidade}")
+	@Path("/salvar")
 	public void salvar(final FinalidadeRequisicao finalidade) throws Exception {
+		
+		validator.validate(finalidade);
 		
 		error(null == finalidade.getDescricao(), "finalidade", "views.erro.campoObrigatorio");
 		FinalidadeRequisicao finalidadeBuscada = buscar(finalidade.getId());
@@ -105,7 +100,7 @@ public class FinalidadeController extends TpController {
 	@RoleAdmin
 	@RoleAdminMissao
 	@RoleAdminMissaoComplexo
-	@Path("/app/finalidade/excluir/{id}")
+	@Path("/excluir/{id}")
     public void excluir(final Long id) throws Exception  { 
         FinalidadeRequisicao finalidade = FinalidadeRequisicao.AR.findById(id);
         finalidade.checarProprietario(getTitular().getOrgaoUsuario());

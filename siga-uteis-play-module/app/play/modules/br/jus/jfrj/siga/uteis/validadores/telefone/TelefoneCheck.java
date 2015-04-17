@@ -11,7 +11,6 @@ public class TelefoneCheck extends Check {
 	}
 
 	private boolean validarFixo(String string) {
-		// TODO Auto-generated method stub
 		return true;
 	}
 }

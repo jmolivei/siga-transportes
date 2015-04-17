@@ -9,7 +9,7 @@
 <sigatp:erros/>
 
 <form id="formVeiculos" action="${linkTo[VeiculoController].salvar[veiculo]}" method="post" enctype="multipart/form-data">
-	<input type="hidden" name="veiculo.id" value="${veiculo.id}">
+	<input type="hidden" name="veiculo" value="${veiculo.id}">
 	
 	<h3>Dados de Identifica&ccedil;&atilde;o</h3>
   	<div class="gt-form gt-content-box clearfix" id="infbasicas">
@@ -36,11 +36,11 @@
 		       	</select>
 			</div>
 			<div class="coluna margemDireitaG">
-		       	<label for= "veiculo.grupo.id">Grupo</label>
-		       	<siga:select name="veiculo.grupo.id" list="grupos" listKey="id" listValue="dadosParaExibicao" value="${veiculo.grupo.id}"/>
+		       	<label for= "veiculo.grupo.id" class= "obrigatorio">Grupo</label>
+		       	<siga:select name="veiculo.grupo.id" list="grupos" listKey="id" listValue="dadosParaExibicao" headerKey="-1" headerValue="" value="${veiculo.grupo.id}"/>
 		       	
 		       	<label for= "veiculo.lotacaoAtual"> Lota&ccedil;&atilde;o</label>
-		       	<siga:selecao propriedade="lotacaoAtual" tema="simple" modulo="siga"/>
+		       	<siga:selecao propriedade="lotacaoAtual" tema="simple" modulo="siga" onchange="mostrarCampoOdometro()"/>
 			</div>
 		</div>
        	<div id="grupoOdometro" class="coluna">
@@ -90,7 +90,7 @@
 		<div class="coluna">    
 			<div class="coluna">
 		       	<label for= "veiculo.cor.id">Cor</label>
-		       	<siga:select name="veiculo.cor.id" list="cores" listKey="id" listValue="nome" value="${veiculo.cor.id}"/>
+		       	<siga:select name="veiculo.cor.id" list="cores" listKey="id" listValue="nome" headerKey="-1" headerValue="" value="${veiculo.cor.id}"/>
 		       		
 		       	<label for= "veiculo.tipoDeBlindagem">Tipo de blindagem</label>
 				<input type="text" name="veiculo.tipoDeBlindagem" value="${veiculo.tipoDeBlindagem}"/>
@@ -104,7 +104,7 @@
 			       	<label for= "veiculo." class= "obrigatorio"> Tipo combust&iacute;vel</label>
 			       	<select name="veiculo.tipoDeCombustivel">
 			       		<c:forEach items="${tiposDeCombustivel}" var="tipoDeCombustivel">
-			       			<option value="${tipoDeCombustivel}">${tipoDeCombustivel.descricao}</option>
+			       			<option value="${tipoDeCombustivel}" ${veiculo.tipoDeCombustivel == tipoDeCombustivel ? 'selected' : ''}>${tipoDeCombustivel.descricao}</option>
 			       		</c:forEach>
 			       	</select>
 				</div>
@@ -112,7 +112,7 @@
 					<label for= "veiculo.licenciamentoAnual" class= "obrigatorio">Lic.anual</label>
 					<select name="veiculo.licenciamentoAnual">
 			       		<c:forEach items="${respostasSimNao}" var="respostaSimNao">
-			       			<option value="${respostaSimNao}">${respostaSimNao.descricao}</option>
+			       			<option value="${respostaSimNao}" ${veiculo.licenciamentoAnual == respostaSimNao ? 'selected' : ''}>${respostaSimNao.descricao}</option>
 			       		</c:forEach>
 			       	</select>
 			    </div>
@@ -120,7 +120,7 @@
 					<label for= "veiculo.dpvat" class= "obrigatorio">Dpvat</label>
 					<select name="veiculo.dpvat">
 			       		<c:forEach items="${respostasSimNao}" var="respostaSimNao">
-			       			<option value="${respostaSimNao}">${respostaSimNao.descricao}</option>
+			       			<option value="${respostaSimNao}" ${veiculo.dpvat == respostaSimNao ? 'selected' : ''}>${respostaSimNao.descricao}</option>
 			       		</c:forEach>
 			       	</select>
 			    </div>
@@ -128,7 +128,7 @@
 					<label for= "veiculo.categoriaCNH" class= "obrigatorio">Cat.cnh</label>
 				    <select name="veiculo.categoriaCNH">
 			       		<c:forEach items="${categoriasCNH}" var="categoriaCNH">
-			       			<option value="${categoriaCNH}">${categoriaCNH.descricao}</option>
+			       			<option value="${categoriaCNH}" ${veiculo.categoriaCNH == categoriaCNH ? 'selected' : ''}>${categoriaCNH.descricao}</option>
 			       		</c:forEach>
 			       	</select>
 			    </div>				 					       	
@@ -205,7 +205,7 @@
   	<div class="gt-form gt-content-box clearfix">
 		<div class="coluna">
 			<label for="veiculo.fornecedor.id">Fornecedor</label>
-	       	<siga:select name="veiculo.fornecedor.id" list="fornecedores" listKey="id" listValue="razaoSocialECNPJ" value="${veiculo.fornecedor.id}"/>
+	       	<siga:select name="veiculo.fornecedor.id" list="fornecedores" listKey="id" listValue="razaoSocialECNPJ" headerKey="-1" headerValue="" value="${veiculo.fornecedor.id}"/>
 		</div>
 		<div class="coluna">
 			<div class="coluna">

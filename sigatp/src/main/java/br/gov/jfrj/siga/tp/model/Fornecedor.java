@@ -13,18 +13,18 @@ import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
 import org.hibernate.envers.Audited;
+import org.hibernate.validator.constraints.NotEmpty;
 
-import play.data.validation.Required;
-import play.data.validation.Unique;
-import play.db.jpa.GenericModel;
 import play.modules.br.jus.jfrj.siga.uteis.validadores.upperCase.UpperCase;
 import br.gov.jfrj.siga.model.ActiveRecord;
-//import br.gov.jfrj.siga.validation.Email;
+import br.gov.jfrj.siga.tp.validation.annotation.Unique;
+import br.gov.jfrj.siga.validation.Email;
 
 @SuppressWarnings("serial")
 @Entity
 @Audited
 @Table(schema = "SIGATP")
+@Unique.List(value={@Unique(message = "{fornecedor.cnpj.unique}", field = "cnpj"), @Unique(message = "{fornecedor.email.unique}", field = "eMail")})
 public class Fornecedor extends TpModel implements Comparable<Fornecedor> {
 
 	public static ActiveRecord<Fornecedor> AR = new ActiveRecord<>(
@@ -38,11 +38,10 @@ public class Fornecedor extends TpModel implements Comparable<Fornecedor> {
 	@Enumerated(EnumType.STRING)
 	private RamoDeAtividade ramoDeAtividade;
 
-	@Required
-	@Unique(message = "fornecedor.cnpj.unique")
+	@NotEmpty
 	private String cnpj;
 
-	@Required
+	@NotEmpty
 	@UpperCase
 	private String razaoSocial;
 
@@ -53,8 +52,7 @@ public class Fornecedor extends TpModel implements Comparable<Fornecedor> {
 
 	private String fax;
 
-	@Unique
-//	@Email(nullable=true)
+	@Email(nullable = true)
 	private String eMail;
 
 	@UpperCase

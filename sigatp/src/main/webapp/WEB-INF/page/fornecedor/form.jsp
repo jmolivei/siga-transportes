@@ -39,7 +39,7 @@
 </script>
 
 <form action="${linkTo[FornecedorController].salvar}" enctype='multipart/form-data' method="post">
-	<input type="hidden" name="fornecedor.id" value="${fornecedor.id}" />
+	<input type="hidden" name="fornecedor" value="${fornecedor.id}" />
 	<div class="gt-content-box gt-form  clearfix">     
        	<label for="fornecedor.ramoDeAtividade" class= "obrigatorio">Ramo de Atividade</label>
 		<select name="fornecedor.ramoDeAtividade" >
@@ -86,6 +86,6 @@
 	<div class="gt-table-buttons">
 		<input type="submit" value="<fmt:message key="views.botoes.salvar"/>" class="gt-btn-medium gt-btn-left" /> 
 		<input type="button" value="<fmt:message key="views.botoes.cancelar"/>" class="gt-btn-medium gt-btn-left"
-			onclick="javascript:window.location = '${linkTo[FornecedorController].lista}';" />
+			onclick="javascript:window.location = '${linkTo[FornecedorController].listar}';" />
 	</div>
 </form>	

@@ -1,6 +1,7 @@
 package br.gov.jfrj.siga.tp.model;
 
 import java.util.Calendar;
+import java.util.Comparator;
 import java.util.List;
 
 import javax.persistence.Entity;
@@ -16,13 +17,9 @@ import javax.validation.constraints.NotNull;
 import org.hibernate.envers.Audited;
 import org.hibernate.envers.RelationTargetAuditMode;
 
-import play.data.binding.As;
-import play.data.validation.Required;
 import play.modules.br.jus.jfrj.siga.uteis.validadores.validarAnoData.ValidarAnoData;
-import br.com.caelum.vraptor.Convert;
 import br.gov.jfrj.siga.dp.DpLotacao;
 import br.gov.jfrj.siga.model.ActiveRecord;
-import br.gov.jfrj.siga.tp.binder.DoubleConverter;
 import br.gov.jfrj.siga.tp.util.MessagesBundle;
 
 @Entity
@@ -30,22 +27,6 @@ import br.gov.jfrj.siga.tp.util.MessagesBundle;
 @Audited
 @Table(schema = "SIGATP")
 public class LotacaoVeiculo extends TpModel {
-
-	private static final long serialVersionUID = 1912137163976035054L;
-	public static ActiveRecord<LotacaoVeiculo> AR = new ActiveRecord<>(LotacaoVeiculo.class);
-
-	public LotacaoVeiculo() {
-	}
-
-	public LotacaoVeiculo(Long id, Veiculo veiculo, DpLotacao lotacao, Calendar dataHoraInicio, Calendar dataHoraFim, double odometroEmKm) {
-		super();
-		this.id = id;
-		this.veiculo = veiculo;
-		this.lotacao = lotacao;
-		this.dataHoraInicio = dataHoraInicio;
-		this.dataHoraFim = dataHoraFim;
-		this.odometroEmKm = odometroEmKm;
-	}
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "hibernate_sequence_generator")
@@ -62,17 +43,32 @@ public class LotacaoVeiculo extends TpModel {
 	@JoinColumn(name = "ID_LOTA_SOLICITANTE")
 	private DpLotacao lotacao;
 
-	@Required
 	@NotNull
 	@ValidarAnoData(descricaoCampo = "Data/Hora Inicio")
 	private Calendar dataHoraInicio;
 
-	@As(lang = { "*" }, value = { "dd/MM/yyyy HH:mm" })
 	@ValidarAnoData(descricaoCampo = "Data/Hora Fim")
 	private Calendar dataHoraFim;
 
 	private Double odometroEmKm;
 
+	private static final long serialVersionUID = 1912137163976035054L;
+	
+	public static final ActiveRecord<LotacaoVeiculo> AR = new ActiveRecord<>(LotacaoVeiculo.class);
+
+	public LotacaoVeiculo() {
+	}
+
+	public LotacaoVeiculo(Long id, Veiculo veiculo, DpLotacao lotacao, Calendar dataHoraInicio, Calendar dataHoraFim, double odometroEmKm) {
+		super();
+		this.id = id;
+		this.veiculo = veiculo;
+		this.lotacao = lotacao;
+		this.dataHoraInicio = dataHoraInicio;
+		this.dataHoraFim = dataHoraFim;
+		this.odometroEmKm = odometroEmKm;
+	}
+	
 	/**
 	 * Inclui a nova lotação do veículo e preenche a data fim da lotação anterior
 	 * 
@@ -80,7 +76,7 @@ public class LotacaoVeiculo extends TpModel {
 	 */
 	public static String atualizarDataFimLotacaoAnterior(Veiculo veiculo) throws Exception {
 		try {
-			List<LotacaoVeiculo> lotacoesVeiculo = LotacaoVeiculo.AR.find("id = ? and dataHoraFim is null order by dataHoraInicio DESC", veiculo.getId()).fetch();
+			List<LotacaoVeiculo> lotacoesVeiculo = LotacaoVeiculo.AR.find("veiculo.id = ? and dataHoraFim is null order by dataHoraInicio DESC", veiculo.getId()).fetch();
 			if (lotacoesVeiculo.size() == 1) {
 				lotacoesVeiculo.get(0).dataHoraFim = Calendar.getInstance();
 				lotacoesVeiculo.get(0).save();
@@ -92,7 +88,6 @@ public class LotacaoVeiculo extends TpModel {
 		} catch (Exception e) {
 			throw new Exception(MessagesBundle.getMessage("lotacaoVeiculo.lotacoesVeiculo.exception", e.getMessage()));
 		}
-
 		return "ok";
 	}
 
@@ -100,6 +95,7 @@ public class LotacaoVeiculo extends TpModel {
 		return LotacaoVeiculo.AR.find("veiculo = ? order by dataHoraInicio DESC", veiculo).fetch();
 	}
 
+	@Override
 	public Long getId() {
 		return id;
 	}
@@ -146,5 +142,14 @@ public class LotacaoVeiculo extends TpModel {
 
 	public void setOdometroEmKm(Double odometroEmKm) {
 		this.odometroEmKm = odometroEmKm;
+	}
+
+	public static Comparator<LotacaoVeiculo> comparator() {
+		return new Comparator<LotacaoVeiculo>() {
+			@Override
+			public int compare(LotacaoVeiculo o1, LotacaoVeiculo o2) {
+				return o2.dataHoraInicio.compareTo(o1.dataHoraInicio);
+			}
+		};
 	}
 }

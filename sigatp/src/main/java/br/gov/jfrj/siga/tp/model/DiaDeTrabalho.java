@@ -113,7 +113,6 @@ public class DiaDeTrabalho extends TpModel implements Comparable<DiaDeTrabalho> 
 			this.horaEntrada.setTime(formatar.parse("01/01/1900 11:00"));
 			this.horaSaida.setTime(formatar.parse("01/01/1900 19:00"));
 		} catch (ParseException e) {
-			// TODO Auto-generated catch block
 			throw new RuntimeException(Messages.get("diaDeTrabalho.inicializar.exception"),e);
 		}
 		escalaDeTrabalho = null;

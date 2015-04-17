@@ -34,8 +34,8 @@
 						    		<td style="white-space: pre;">${veiculo.grupo.nome}</td>
 						    		<td style="white-space: pre;">${veiculo.lotacoes[0].lotacao.descricaoAmpliada}</td>
 						    		<td style="white-space: pre;">${veiculo.situacao}</td>		    		
-						    		<td><a href="${linkTo[VeiculoController].editar[veiculo.id]}">Editar</a></td>
-						    		<td><a onclick="javascript:return confirm('Tem certeza de que deseja excluir este veiculo ?');" href="${linkTo[VeiculoController].excluir[veiculo.id]}">Excluir</a></td>
+						    		<td><a href="${linkTo[VeiculoController].editar[veiculo.id]}"><fmt:message key="views.botoes.editar"/></a></td>
+						    		<td><a onclick="javascript:return confirm('Tem certeza de que deseja excluir este veiculo ?');" href="${linkTo[VeiculoController].excluir[veiculo.id]}"><fmt:message key="views.botoes.excluir"/></a></td>
 								</tr>
 							</c:forEach>
 						</tbody>	

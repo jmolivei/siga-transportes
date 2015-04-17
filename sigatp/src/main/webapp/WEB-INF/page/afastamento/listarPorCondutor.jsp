@@ -30,9 +30,9 @@
 					   		<td>${afastamento.descricao}</td>
 				    	    <td><fmt:formatDate pattern="dd/MM/yyyy HH:mm" value="${afastamento.dataHoraInicio.time}" /></td>
 				    	    <td><fmt:formatDate pattern="dd/MM/yyyy HH:mm" value="${afastamento.dataHoraFim.time}" /></td>
-				    		<td><a href="${linkTo[AfastamentoController].edita[afastamento.condutor.id][afastamento.id]}"><fmt:message key="views.botoes.editar"/></a></td>
+				    		<td><a href="${linkTo[AfastamentoController].editar[afastamento.condutor.id][afastamento.id]}"><fmt:message key="views.botoes.editar"/></a></td>
 				    		<td>
-				    			<a href="${linkTo[AfastamentoController].exclui[afastamento.id]}" 
+				    			<a href="${linkTo[AfastamentoController].excluir[afastamento.id]}" 
 				    				onclick="javascript:return confirm('Tem certeza de que deseja excluir este afastamento?');">
 				    				<fmt:message key="views.botoes.excluir"/></a>
 				    		</td>
@@ -47,7 +47,7 @@
 		</c:otherwise>
 	</c:choose>
 	<div class="gt-table-buttons">
-		<a href="${linkTo[AfastamentoController].edita[condutor.id][0]}" id="botaoIncluirCondutor"
+		<a href="${linkTo[AfastamentoController].editar[condutor.id][0]}" id="botaoIncluirCondutor"
 					class="gt-btn-medium gt-btn-left"><fmt:message key="views.botoes.incluir"/></a>
 	</div>
 		</div>

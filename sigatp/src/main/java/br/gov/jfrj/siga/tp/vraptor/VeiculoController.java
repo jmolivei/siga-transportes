@@ -2,15 +2,12 @@ package br.gov.jfrj.siga.tp.vraptor;
 
 import java.util.Calendar;
 import java.util.List;
-
 import javax.persistence.EntityManager;
 import javax.servlet.http.HttpServletRequest;
-
 import br.com.caelum.vraptor.Path;
 import br.com.caelum.vraptor.Resource;
 import br.com.caelum.vraptor.Result;
 import br.com.caelum.vraptor.Validator;
-import br.com.caelum.vraptor.core.Localization;
 import br.com.caelum.vraptor.view.Results;
 import br.gov.jfrj.siga.cp.model.DpLotacaoSelecao;
 import br.gov.jfrj.siga.dp.CpOrgaoUsuario;
@@ -25,7 +22,7 @@ import br.gov.jfrj.siga.tp.model.TipoDeCombustivel;
 import br.gov.jfrj.siga.tp.model.TpDao;
 import br.gov.jfrj.siga.tp.model.Veiculo;
 import br.gov.jfrj.siga.tp.util.Combo;
-import br.gov.jfrj.siga.tp.util.MenuMontador;
+import br.gov.jfrj.siga.tp.util.MessagesBundle;
 import br.gov.jfrj.siga.tp.util.PerguntaSimNao;
 import br.gov.jfrj.siga.tp.util.Situacao;
 import br.gov.jfrj.siga.vraptor.SigaObjects;
@@ -36,7 +33,7 @@ import com.google.common.base.Optional;
 @Path("/app/veiculos/")
 public class VeiculoController extends TpController {
 
-	public VeiculoController(HttpServletRequest request, Result result, Localization localization, Validator validator, SigaObjects so, EntityManager em) throws Exception {
+	public VeiculoController(HttpServletRequest request, Result result, Validator validator, SigaObjects so, EntityManager em) throws Exception {
 		super(request, result, TpDao.getInstance(), validator, so, em);
 	}
 
@@ -46,40 +43,41 @@ public class VeiculoController extends TpController {
 		result.include("veiculos", Veiculo.listarTodos(cpOrgaoUsuario));
 	}
 
-//	@RoleAdmin
-//	@RoleAdminFrota
+	@RoleAdmin
+	@RoleAdminFrota
 	@Path("/salvar")
 	public void salvar(final Veiculo veiculo, DpLotacaoSelecao lotacaoAtualSel) throws Exception {
-		validarAntesDeSalvar(veiculo.comAtualSelecionada(lotacaoAtualSel));
-		redirecionarSeErroAoSalvar(veiculo);
-
+		DpLotacao lotacaoAtual = obterLotacaoAtual(lotacaoAtualSel);
+		validarAntesDeSalvar(veiculo, lotacaoAtual);
+		redirecionarSeErroAoSalvar(veiculo, lotacaoAtual);
 		veiculo.setCpOrgaoUsuario(getTitular().getOrgaoUsuario());
 		veiculo.save();
 
-		if (lotacaoDoVeiculoMudou(veiculo)) {
+		if (lotacaoDoVeiculoMudou(veiculo, lotacaoAtual)) {
 			LotacaoVeiculo.atualizarDataFimLotacaoAnterior(veiculo);
 		}
-
-		if (veiculoNaoTemLotacaoCadastrada(veiculo) || lotacaoDoVeiculoMudou(veiculo)) {
-			LotacaoVeiculo novalotacao = new LotacaoVeiculo(null, veiculo, veiculo.comAtualSelecionada(lotacaoAtualSel).getLotacaoAtual(), Calendar.getInstance(), null, veiculo.getOdometroEmKmAtual());
+		if (veiculoNaoTemLotacaoCadastrada(veiculo) || lotacaoDoVeiculoMudou(veiculo, lotacaoAtual)) {
+			LotacaoVeiculo novalotacao = new LotacaoVeiculo(null, veiculo, lotacaoAtual, Calendar.getInstance(), null, veiculo.getOdometroEmKmAtual());
 			novalotacao.save();
 		}
 		result.redirectTo(this).listar();
 	}
 
-//	@RoleAdmin
-//	@RoleAdminFrota
+	@RoleAdmin
+	@RoleAdminFrota
 	@Path("/incluir")
 	public void incluir() throws Exception {
 		result.forwardTo(this).editar(null);
 	}
 
-//	@RoleAdmin
-//	@RoleAdminFrota
+	@RoleAdmin
+	@RoleAdminFrota
 	@Path("/editar/{id}")
 	public void editar(Long id) throws Exception {
-		Veiculo veiculo = obterVeiculo(id);
-		preencherResultComDadosPadrao(id);
+		result.include("tipoCadastro", id != null?MessagesBundle.getMessage("views.cadastro.editar")
+												 :MessagesBundle.getMessage("views.cadastro.incluir"));
+		Veiculo veiculo = obterVeiculoParaEdicao(id);
+		preencherResultComDadosPadrao(veiculo);
 		result.include("veiculo", veiculo);
 		result.include("mostrarCampoOdometro", Boolean.FALSE);
 
@@ -91,20 +89,20 @@ public class VeiculoController extends TpController {
 	public void excluir(Long id) throws Exception {
 		Veiculo veiculo = Veiculo.AR.findById(id);
 		veiculo.delete();
-		listar();
+		result.redirectTo(this).listar();
 	}
 
 	@Path("/ler/{id}")
 	public void ler(Long id) throws Exception {
-		Veiculo veiculo = obterVeiculo(id);
+		Veiculo veiculo = obterVeiculoParaEdicao(id);
 		veiculo.configurarOdometroParaMudancaDeLotacao();
-		preencherResultComDadosPadrao(id);
+		preencherResultComDadosPadrao(veiculo);
 		result.include("veiculo", veiculo);
 	}
 
 	@Path("/{idVeiculo}/avarias")
 	public void listarAvarias(Long idVeiculo) throws Exception {
-		result.redirectTo(AvariasController.class).listarPorVeiculo(idVeiculo);
+		result.redirectTo(AvariaController.class).listarPorVeiculo(idVeiculo);
 	}
 
 	private List<DpLotacao> buscarDpLotacoes() {
@@ -114,18 +112,18 @@ public class VeiculoController extends TpController {
 	}
 
 	private boolean veiculoNaoTemLotacaoCadastrada(Veiculo veiculo) {
-		return veiculo.getLotacoes() == null;
+		return veiculo.getLotacoes() == null || veiculo.getLotacoes().isEmpty();
 	}
 
-	private boolean lotacaoDoVeiculoMudou(Veiculo veiculo) {
+	private boolean lotacaoDoVeiculoMudou(Veiculo veiculo, DpLotacao lotacaoAtual) {
 		if (veiculo.getLotacoes() == null) {
 			return true;
 		}
-		return (veiculo.getLotacoes().size() > 0) && (!veiculo.getLotacoes().get(0).getLotacao().equivale(veiculo.getLotacaoAtual()));
+		return (veiculo.getLotacoes().isEmpty()) && (!veiculo.getLotacoes().get(0).getLotacao().equivale(lotacaoAtual));
 	}
 
-	private void validarAntesDeSalvar(Veiculo veiculo) {
-		if (veiculoNaoTemLotacaoCadastrada(veiculo) || lotacaoDoVeiculoMudou(veiculo)) {
+	private void validarAntesDeSalvar(Veiculo veiculo, DpLotacao lotacaoAtual) {
+		if (veiculoNaoTemLotacaoCadastrada(veiculo) || lotacaoDoVeiculoMudou(veiculo, lotacaoAtual)) {
 			final Double odometroAnterior = veiculo.getUltimoOdometroDeLotacao();
 			final Double odometroEmKmAtual = Optional.fromNullable(veiculo.getOdometroEmKmAtual()).or(0D);
 
@@ -135,15 +133,15 @@ public class VeiculoController extends TpController {
 		validator.validate(veiculo);
 	}
 
-	private boolean deveMostrarCampoOdometro(Veiculo veiculo) {
-		return veiculoNaoTemLotacaoCadastrada(veiculo) || veiculo.getLotacoes().isEmpty() || (!veiculo.getLotacoes().get(0).getLotacao().equivale(veiculo.getLotacaoAtual()));
+	private boolean deveMostrarCampoOdometro(Veiculo veiculo, DpLotacao lotacaoAtual) {
+		return veiculoNaoTemLotacaoCadastrada(veiculo) || veiculo.getLotacoes().isEmpty() || (!veiculo.getLotacoes().get(0).getLotacao().equivale(lotacaoAtual));
 	}
 
-	private void redirecionarSeErroAoSalvar(Veiculo veiculo) throws Exception {
+	private void redirecionarSeErroAoSalvar(Veiculo veiculo, DpLotacao lotacaoAtual) throws Exception {
 		if (validator.hasErrors()) {
-			preencherResultComDadosPadrao(veiculo.getId());
+			preencherResultComDadosPadrao(veiculo);
 			result.include("veiculo", veiculo);
-			result.include("mostrarCampoOdometro", deveMostrarCampoOdometro(veiculo));
+			result.include("mostrarCampoOdometro", deveMostrarCampoOdometro(veiculo, lotacaoAtual));
 
 			if (veiculo.ehNovo()) {
 				validator.onErrorUse(Results.page()).of(VeiculoController.class).editar(null);
@@ -153,26 +151,31 @@ public class VeiculoController extends TpController {
 		}
 	}
 
-	private void preencherResultComDadosPadrao(Long id) throws Exception {
+	private void preencherResultComDadosPadrao(Veiculo veiculo) throws Exception {
 		Combo.montar(result, Combo.Cor, Combo.Fornecedor);
 
 		result.include(Combo.Grupo.getDescricao(), Grupo.listarTodos());
 		result.include("dpLotacoes", buscarDpLotacoes());
 		result.include("situacoes", Situacao.values());
 		result.include("respostasSimNao", PerguntaSimNao.values());
-		result.include("lotacaoAtualSel", new DpLotacaoSelecao());
+		result.include("lotacaoAtualSel", veiculo.getLotacaoAtualSel());
 		result.include("tiposDeCombustivel", TipoDeCombustivel.values());
 		result.include("categoriasCNH", CategoriaCNH.values());
 
-		MenuMontador.instance(result).recuperarMenuVeiculos(id, ItemMenu.DADOSCADASTRAIS);
+		MenuMontador.instance(result).recuperarMenuVeiculos(veiculo.getId(), ItemMenu.DADOSCADASTRAIS);
 	}
 
-	private Veiculo obterVeiculo(Long id) throws Exception {
+	private Veiculo obterVeiculoParaEdicao(Long id) throws Exception {
 		if (id != null) {
-			Veiculo veiculo = Veiculo.AR.findById(id);
-			veiculo.configurarLotacaoAtual();
-			return veiculo;
+			return Veiculo.AR.findById(id);
 		}
-		return new Veiculo(new DpLotacao());
+		return new Veiculo();
+	}
+
+	private DpLotacao obterLotacaoAtual(DpLotacaoSelecao lotacaoAtualSel) throws Exception {
+		if (lotacaoAtualSel.getId() != null) {
+			return DpLotacao.AR.findById(lotacaoAtualSel.getId());
+		}
+		return null;
 	}
 }

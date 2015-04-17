@@ -42,8 +42,8 @@ public enum DiaDaSemana {
 		return this.name();
 	}
 	
-	public boolean equals(DiaDaSemana dia) {
-		return this.getOrdem() == dia.getOrdem();
+	public boolean isEquals(DiaDaSemana dia) {
+		return this.getOrdem().equals(dia.getOrdem());
 	}
 	
 	public static DiaDaSemana getDiaDaSemana(String data) throws ParseException {
