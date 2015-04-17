@@ -1,5 +1,6 @@
 package br.gov.jfrj.siga.tp.vraptor;
 
+import java.util.ArrayList;
 import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityTransaction;
@@ -33,12 +34,14 @@ import br.gov.jfrj.siga.vraptor.SigaObjects;
 @Path("/app/condutor")
 public class CondutorController extends TpController {
 	
+	private static final String CONDUTOR = "condutor";
+
 	public CondutorController(HttpServletRequest request, Result result, CpDao dao, Localization localization, Validator validator, SigaObjects so, EntityManager em) throws Exception {
 		super(request, result, TpDao.getInstance(), validator, so, em);
 	}
 
 	@Path("/listar")
-	public void listar() throws Exception {
+	public void listar() {
 		result.include("condutores", getCondutores());
 	}
 	
@@ -65,7 +68,7 @@ public class CondutorController extends TpController {
 
 		MenuMontador.instance(result).recuperarMenuCondutores(id, ItemMenu.DADOSCADASTRAIS);
 		result.include("listCategorias", CategoriaCNH.values());
-		result.include("condutor", condutor);
+		result.include(CONDUTOR, condutor);
 	}
 
 	@RoleAdmin
@@ -91,7 +94,7 @@ public class CondutorController extends TpController {
 			else 
 				condutor.setDpPessoa(new DpPessoa());
 			
-			result.include("condutor", condutor);
+			result.include(CONDUTOR, condutor);
 			if(condutor.getId() > 0) 
 				validator.onErrorUse(Results.logic()).forwardTo(CondutorController.class).editar(condutor.getId());
 			else
@@ -121,14 +124,14 @@ public class CondutorController extends TpController {
 		} catch (PersistenceException ex) {
 			tx.rollback();
 			if (ex.getCause().getCause().getMessage().contains("restrição de integridade")) 
-				validator.add(new I18nMessage("condutor", "condutor.excluir.validation"));
+				validator.add(new I18nMessage(CONDUTOR, "condutor.excluir.validation"));
 			else 
-				validator.add(new ValidationMessage(ex.getMessage(), "condutor"));
+				validator.add(new ValidationMessage(ex.getMessage(), CONDUTOR));
 			
 			validator.onErrorForwardTo(CondutorController.class).listar();
 		} catch (Exception ex) {
 			tx.rollback();
-			validator.add(new ValidationMessage(ex.getMessage(), "condutor"));
+			validator.add(new ValidationMessage(ex.getMessage(), CONDUTOR));
 			validator.onErrorForwardTo(CondutorController.class).listar();
 		}
 		
@@ -151,12 +154,8 @@ public class CondutorController extends TpController {
 	
 	@Path("/exibirImagem/{id}")
 	public void exibirImagem(Long id) throws Exception {
-		/*s
-		 * if (file != null) { Imagem arq = Imagem.newInstance(file);
-		 * renderTemplate("@exibirImagem", arq.blob); }
-		 */
 		Condutor condutor = Condutor.AR.findById(id);
-		result.include("condutor", condutor);
+		result.include(CONDUTOR, condutor);
 		result.include("imgArquivo", "data:image/jpg;base64," + Base64.encodeBase64String(condutor.getConteudoimagemblob()));
 	}
 	
@@ -167,10 +166,9 @@ public class CondutorController extends TpController {
 
 	private List<Condutor> getCondutores() {
 		try {
-			List<Condutor> condutores = Condutor.listarTodos(getTitular().getOrgaoUsuario());
-			return condutores;
+			return Condutor.listarTodos(getTitular().getOrgaoUsuario());
 		} catch (Exception ignore) {
-			return null;
+			return new ArrayList<Condutor>();
 		}
 	}
 
