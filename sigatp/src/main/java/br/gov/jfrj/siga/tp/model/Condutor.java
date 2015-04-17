@@ -364,6 +364,7 @@ public class Condutor extends TpModel implements Comparable<Condutor> {
 		return CategoriaCNH.values();
 	}
 
+	@Override
 	public Long getId() {
 		return id;
 	}

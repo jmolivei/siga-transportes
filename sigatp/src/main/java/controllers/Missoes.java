@@ -219,7 +219,7 @@ public class Missoes extends Controller {
 		Veiculo veiculoInicial = null;
 
 		for (Iterator<RequisicaoTransporte> iterator = missao.requisicoesTransporte.iterator(); iterator.hasNext();) {
-			RequisicaoTransporte req = (RequisicaoTransporte) iterator.next();
+			RequisicaoTransporte req = iterator.next();
 			req = RequisicaoTransporte.findById(req.id);
 
 			if (req.servicoVeiculo != null) {
@@ -849,7 +849,7 @@ public class Missoes extends Controller {
 		String opcaoSelecionada = " selected = 'selected'";
 		String selectDesabilitado = " disabled = 'disabled'";
 
-		List<Veiculo> veiculosDisponiveis = new ArrayList<Veiculo>();
+		List<Veiculo> veiculosDisponiveis = null;
 
 		if (veiculosDisp.equals("")) {
 			veiculosDisponiveis = listarVeiculosDisponiveis(idMissao, AutorizacaoGIAntigo.titular().getOrgaoUsuario().getId(), dataSaida);

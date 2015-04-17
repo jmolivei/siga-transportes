@@ -50,7 +50,7 @@ import br.gov.jfrj.siga.tp.validation.annotation.UpperCase;
 public class Veiculo extends TpModel implements Comparable<Veiculo> {
 
 	private static final long serialVersionUID = -3602265045747814797L;
-	public final static ActiveRecord<Veiculo> AR = new ActiveRecord<>(Veiculo.class);
+	public static final ActiveRecord<Veiculo> AR = new ActiveRecord<>(Veiculo.class);
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "hibernate_sequence_generator")
@@ -387,6 +387,7 @@ public class Veiculo extends TpModel implements Comparable<Veiculo> {
 		return this.getDpLotacaoVigente();
 	}
 
+	@Override
 	public Long getId() {
 		return id;
 	}
