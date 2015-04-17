@@ -36,7 +36,7 @@ import com.google.common.base.Optional;
 @Path("/app/veiculos/")
 public class VeiculoController extends TpController {
 
-	public VeiculoController(HttpServletRequest request, Result result, Localization localization, Validator validator, SigaObjects so, EntityManager em) throws Exception {
+	public VeiculoController(HttpServletRequest request, Result result, Validator validator, SigaObjects so, EntityManager em) throws Exception {
 		super(request, result, TpDao.getInstance(), validator, so, em);
 	}
 
@@ -122,7 +122,7 @@ public class VeiculoController extends TpController {
 		if (veiculo.getLotacoes() == null) {
 			return true;
 		}
-		return (veiculo.getLotacoes().size() > 0) && (!veiculo.getLotacoes().get(0).getLotacao().equivale(lotacaoAtual));
+		return (veiculo.getLotacoes().isEmpty()) && (!veiculo.getLotacoes().get(0).getLotacao().equivale(lotacaoAtual));
 	}
 
 	private void validarAntesDeSalvar(Veiculo veiculo, DpLotacao lotacaoAtual) {

@@ -2,18 +2,15 @@ package br.gov.jfrj.siga.tp.vraptor;
 
 import java.util.ArrayList;
 import java.util.List;
-
 import javax.persistence.EntityManager;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
-
 import br.com.caelum.vraptor.Path;
 import br.com.caelum.vraptor.Resource;
 import br.com.caelum.vraptor.Result;
 import br.com.caelum.vraptor.Validator;
 import br.com.caelum.vraptor.core.Localization;
 import br.com.caelum.vraptor.view.Results;
-import br.gov.jfrj.siga.dp.CpUF;
 import br.gov.jfrj.siga.dp.dao.CpDao;
 import br.gov.jfrj.siga.tp.auth.annotation.RoleAdmin;
 import br.gov.jfrj.siga.tp.auth.annotation.RoleAdminFrota;
@@ -29,8 +26,8 @@ import br.gov.jfrj.siga.vraptor.SigaObjects;
 @Path("/app/fornecedor")
 public class FornecedorController extends TpController {
 
-	public FornecedorController(HttpServletRequest request, Result result, CpDao dao, Localization localization, Validator validator, SigaObjects so, /*AutorizacaoGIAntigo dadosAutorizacao,*/ EntityManager em) throws Exception {
-		super(request, result, TpDao.getInstance(), validator, so, /*dadosAutorizacao,*/ em);
+	public FornecedorController(HttpServletRequest request, Result result, CpDao dao, Validator validator, SigaObjects so, /*AutorizacaoGIAntigo dadosAutorizacao,*/ EntityManager em) throws Exception {
+		super(request, result, TpDao.getInstance(), validator, so, em);
 	}
 
 	@Path("/listar")

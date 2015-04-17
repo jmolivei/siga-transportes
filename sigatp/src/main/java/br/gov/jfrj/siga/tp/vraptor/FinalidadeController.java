@@ -1,13 +1,10 @@
 package br.gov.jfrj.siga.tp.vraptor;
 
 import java.util.List;
-
 import javax.persistence.EntityManager;
 import javax.persistence.EntityTransaction;
 import javax.persistence.PersistenceException;
 import javax.servlet.http.HttpServletRequest;
-import javax.validation.Valid;
-
 import br.com.caelum.vraptor.Path;
 import br.com.caelum.vraptor.Resource;
 import br.com.caelum.vraptor.Result;
@@ -27,10 +24,10 @@ import br.gov.jfrj.siga.vraptor.SigaObjects;
 public class FinalidadeController extends TpController {
 	
 	private static final String MODO = "modo";
-	private static final String EDITAR = "views.botoes.editar";
-	private static final String INCLUIR = "views.botoes.incluir";
+	private static final String BOTAO_EDITAR = "views.botoes.editar";
+	private static final String BOTAO_INCLUIR = "views.botoes.incluir";
 
-	public FinalidadeController(HttpServletRequest request, Result result, CpDao dao, Localization localization, Validator validator, SigaObjects so, EntityManager em) throws Exception {
+	public FinalidadeController(HttpServletRequest request, Result result, CpDao dao, Validator validator, SigaObjects so, EntityManager em) throws Exception {
 		super(request, result, TpDao.getInstance(), validator, so, em);
 	}
 
@@ -64,9 +61,9 @@ public class FinalidadeController extends TpController {
     	
     	if(isUpdate(finalidade)) {
     		finalidade.checarProprietario(getTitular().getOrgaoUsuario());
-    		result.include(MODO, EDITAR);
+    		result.include(MODO, BOTAO_EDITAR);
     	} else
-    		result.include(MODO, INCLUIR);
+    		result.include(MODO, BOTAO_INCLUIR);
     	
     	result.include("finalidade", finalidade);
     }
