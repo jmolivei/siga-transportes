@@ -3,8 +3,14 @@ package br.gov.jfrj.siga.tp.util;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Properties;
+import org.apache.log4j.Logger;
 
 public class SigaProperties {
+	
+	private static final Logger LOG = Logger.getLogger(SigaProperties.class); 
+	
+	private SigaProperties(){
+	}
 
 	public static String getValue(String key) {
 		Properties prop = new Properties();
@@ -15,7 +21,7 @@ public class SigaProperties {
 					"conf/config.properties");
 			prop.load(input);
 		} catch (IOException e) {
-			e.printStackTrace();
+			LOG.error("IOException: ", e);
 		}
 
 		return prop.getProperty(key);
