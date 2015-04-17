@@ -32,7 +32,7 @@ function verificaCampos(){
 <sigatp:erros/>
 <br>
 <form name="formPlantoes" id="formPlantoes" action="${linkTo[PlantaoController].salvar}" method="post" cssClass="form">
-	<input type="hidden" name="plantao.id" value="${plantao.id}" />
+	<input type="hidden" name="plantao" value="${plantao.id}" />
 	<input type="hidden" name="plantao.condutor.id" value="${plantao.condutor.id}">
 	<div class="gt-content-box gt-form clearfix">
 		<label for="plantao.dataHoraInicio" class= "obrigatorio">In&iacute;cio</label>
