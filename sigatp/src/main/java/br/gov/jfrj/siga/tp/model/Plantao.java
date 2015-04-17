@@ -24,7 +24,7 @@ import br.gov.jfrj.siga.model.ActiveRecord;
 @Table(schema = "SIGATP")
 public class Plantao extends TpModel implements Comparable<Plantao> {
 	
-	public static ActiveRecord<Plantao> AR = new ActiveRecord<>(Plantao.class);
+	public static final ActiveRecord<Plantao> AR = new ActiveRecord<>(Plantao.class);
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "hibernate_sequence_generator") @SequenceGenerator(name = "hibernate_sequence_generator", sequenceName="SIGATP.hibernate_sequence") 
