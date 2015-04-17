@@ -1,7 +1,6 @@
 package br.gov.jfrj.siga.tp.vraptor;
 
 import java.util.List;
-
 import javax.persistence.EntityManager;
 import javax.persistence.EntityTransaction;
 import javax.persistence.PersistenceException;
@@ -143,24 +142,7 @@ public class CondutorController extends TpController {
 	public void incluir() throws Exception {
 		result.forwardTo(this).editar(0L);
 	}
-
-	private DpPessoa recuperaPessoa(DpPessoa dpPessoa) throws Exception {
-		return 	DpPessoa.AR.find("idPessoaIni = ? and dataFimPessoa = null", 
-				dpPessoa.getIdInicial()).first();
-	}
-
-	private List<Condutor> getCondutores() {
-		try {
-			List<Condutor> condutores = Condutor.listarTodos(getTitular().getOrgaoUsuario());
-			return condutores;
-		} catch (Exception ignore) {
-			return null;
-		}
-	}
 	
-	@RoleAdmin
-	@RoleAdminMissao
-	@RoleAdminMissaoComplexo
 	@Path("/exibirDadosDpPessoa/{idPessoa}")
 	public void exibirDadosDpPessoa(Long idPessoa) throws Exception {
 		DpPessoa pessoa = DpPessoa.AR.findById(idPessoa);
@@ -176,6 +158,20 @@ public class CondutorController extends TpController {
 		Condutor condutor = Condutor.AR.findById(id);
 		result.include("condutor", condutor);
 		result.include("imgArquivo", "data:image/jpg;base64," + Base64.encodeBase64String(condutor.getConteudoimagemblob()));
+	}
+	
+	private DpPessoa recuperaPessoa(DpPessoa dpPessoa) throws Exception {
+		return 	DpPessoa.AR.find("idPessoaIni = ? and dataFimPessoa = null", 
+				dpPessoa.getIdInicial()).first();
+	}
+
+	private List<Condutor> getCondutores() {
+		try {
+			List<Condutor> condutores = Condutor.listarTodos(getTitular().getOrgaoUsuario());
+			return condutores;
+		} catch (Exception ignore) {
+			return null;
+		}
 	}
 
 }
