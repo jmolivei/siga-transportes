@@ -27,7 +27,7 @@ public class FinalidadeController extends TpController {
 	private static final String BOTAO_EDITAR = "views.botoes.editar";
 	private static final String BOTAO_INCLUIR = "views.botoes.incluir";
 
-	public FinalidadeController(HttpServletRequest request, Result result, CpDao dao, Localization localization, Validator validator, SigaObjects so, EntityManager em) throws Exception {
+	public FinalidadeController(HttpServletRequest request, Result result, CpDao dao, Validator validator, SigaObjects so, EntityManager em) throws Exception {
 		super(request, result, TpDao.getInstance(), validator, so, em);
 	}
 
