@@ -23,7 +23,7 @@ public class Grupo extends TpModel implements Comparable<Grupo> {
 
 	private static final long serialVersionUID = -3681022838391034811L;
 
-	public static ActiveRecord<Grupo> AR = new ActiveRecord<>(Grupo.class);
+	public final static ActiveRecord<Grupo> AR = new ActiveRecord<>(Grupo.class);
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "hibernate_sequence_generator")

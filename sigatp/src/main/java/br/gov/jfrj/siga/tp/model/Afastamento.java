@@ -30,7 +30,7 @@ import br.gov.jfrj.siga.tp.validation.annotation.UpperCase;
 @Table(schema = "SIGATP")
 public class Afastamento extends TpModel  {
 	
-	public static ActiveRecord<Afastamento> AR = new ActiveRecord<>(Afastamento.class);
+	public static final ActiveRecord<Afastamento> AR = new ActiveRecord<>(Afastamento.class);
 	
 	@Id
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "hibernate_sequence_generator")

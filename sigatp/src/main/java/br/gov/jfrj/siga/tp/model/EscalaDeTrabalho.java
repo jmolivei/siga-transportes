@@ -30,7 +30,7 @@ import br.gov.jfrj.siga.model.ActiveRecord;
 public class EscalaDeTrabalho extends TpModel {
 
 	private static final long serialVersionUID = 1L;
-	public static ActiveRecord<EscalaDeTrabalho> AR = new ActiveRecord<>(EscalaDeTrabalho.class);
+	public static final ActiveRecord<EscalaDeTrabalho> AR = new ActiveRecord<>(EscalaDeTrabalho.class);
 	
 	@Id
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "hibernate_sequence_generator") @SequenceGenerator(name = "hibernate_sequence_generator", sequenceName="SIGATP.hibernate_sequence") 

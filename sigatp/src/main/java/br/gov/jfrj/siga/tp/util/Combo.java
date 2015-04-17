@@ -46,7 +46,7 @@ public enum Combo {
 	}
 	
 	/**
-	 * Método responsável por renderizar as listas que serão exibidas aas combos dos forms.
+	 * Metodo responsável por renderizar as listas que serão exibidas aas combos dos forms.
 	 * Foi utilizado uma convenção abaixo:
 	 *     Passado o parâmetro Combo.Cor , é retornado o atributo cores que representa a 
 	 *     lista de cores.
