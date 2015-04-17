@@ -6,7 +6,6 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-import javax.naming.InitialContext;
 import javax.persistence.Column;
 import javax.persistence.Table;
 import javax.sql.DataSource;
@@ -14,6 +13,12 @@ import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
 
 import net.vidageek.mirror.dsl.Mirror;
+
+import org.hibernate.Session;
+import org.hibernate.internal.SessionFactoryImpl;
+import org.hibernate.service.jdbc.connections.internal.DatasourceConnectionProviderImpl;
+
+import br.gov.jfrj.siga.model.ContextoPersistencia;
 import br.gov.jfrj.siga.tp.model.TpModel;
 import br.gov.jfrj.siga.tp.validation.annotation.Unique;
 
@@ -25,8 +30,8 @@ import br.gov.jfrj.siga.tp.validation.annotation.Unique;
  *
  */
 public class UniqueConstraintValidator implements ConstraintValidator<Unique, TpModel> {
-	private static final String SIGA_TP_DS = "java:/jboss/datasources/SigaTpDS";
 	private static final String QUERY_TEMPLATE = "SELECT count(*) FROM [MODEL_CLASS] t WHERE t.[FIELD] = ?";
+	
 	private Unique unique;
 
 	@Override
@@ -36,7 +41,9 @@ public class UniqueConstraintValidator implements ConstraintValidator<Unique, Tp
 
 	@Override
 	public boolean isValid(TpModel tpModel, ConstraintValidatorContext context) {
-		Connection connection = dataBaseConnection();
+		
+		Connection connection = getConnection();
+		
 		try {
 			PreparedStatement statement = connection.prepareStatement(criarConsultaParaUnique(tpModel));
 			return contar(statement, tpModel).equals(0L);
@@ -93,12 +100,17 @@ public class UniqueConstraintValidator implements ConstraintValidator<Unique, Tp
 		}
 		return tpModel.getClass().getSimpleName();
 	}
-
-	private Connection dataBaseConnection() {
+	
+	private Connection getConnection() {
+		
+		Session session = ContextoPersistencia.em().unwrap(Session.class);
+		SessionFactoryImpl factory = (SessionFactoryImpl) session.getSessionFactory();
+		DatasourceConnectionProviderImpl provider = (DatasourceConnectionProviderImpl)factory.getConnectionProvider();
+		DataSource dataSource = provider.getDataSource();
+		
 		try {
-			DataSource dataSource = (DataSource) new InitialContext().lookup(SIGA_TP_DS);
 			return dataSource.getConnection();
-		} catch (Exception e) {
+		} catch (SQLException e) {
 			throw new RuntimeException(e);
 		}
 	}
