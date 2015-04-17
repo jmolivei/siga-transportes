@@ -34,8 +34,8 @@ import br.gov.jfrj.siga.vraptor.SigaObjects;
 public class EscalaDeTrabalhoController extends TpController {
 	
 	private static final String MODO = "modo";
-	private static final String EDITAR = "views.botoes.editar";
-	private static final String INCLUIR = "views.botoes.incluir";
+	private static final String BOTAO_EDITAR = "views.botoes.editar";
+	private static final String BOTAO_INCLUIR = "views.botoes.incluir";
 
 	public EscalaDeTrabalhoController(HttpServletRequest request, Result result, CpDao dao, Localization localization, Validator validator, SigaObjects so, EntityManager em) throws Exception {
 		super(request, result, TpDao.getInstance(), validator, so, em);
@@ -43,9 +43,7 @@ public class EscalaDeTrabalhoController extends TpController {
 
 	@Path("/listar")
 	public void listar() {
-    	List<EscalaDeTrabalho> escalas = EscalaDeTrabalho.buscarTodasVigentes();
-        
-        result.include("escalas", escalas);
+    	result.include("escalas", EscalaDeTrabalho.buscarTodasVigentes());
     }
 	
 	@RoleAdmin
@@ -63,7 +61,7 @@ public class EscalaDeTrabalhoController extends TpController {
     	DiaDeTrabalho diaTrabalho = new DiaDeTrabalho();
     	escala.getDiasDeTrabalho().add(diaTrabalho);
     	
-    	result.include(MODO, INCLUIR);
+    	result.include(MODO, BOTAO_INCLUIR);
     	result.include("escala", escala);
     	result.include("diaSemana", diaSemana);
     	
@@ -79,7 +77,7 @@ public class EscalaDeTrabalhoController extends TpController {
     	MenuMontador.instance(result).recuperarMenuCondutores(escala.getCondutor().getId(), ItemMenu.ESCALASDETRABALHO);
     	DiaDaSemana diaSemana = DiaDaSemana.SEGUNDA;
     	
-    	result.include(MODO, EDITAR);
+    	result.include(MODO, BOTAO_EDITAR);
     	result.include("escala", escala);
     	result.include("diaSemana", diaSemana);
     }
@@ -98,9 +96,9 @@ public class EscalaDeTrabalhoController extends TpController {
     	DiaDeTrabalho diaTrabalho = new DiaDeTrabalho();
     	escala.getDiasDeTrabalho().add(diaTrabalho);
        
-        if (escalas.size() > 0 && (escalas.get(0).getDataVigenciaFim() == null || escalas.get(0).getDataVigenciaFim().after(Calendar.getInstance()))) {
+        if (escalas.isEmpty() && (escalas.get(0).getDataVigenciaFim() == null || escalas.get(0).getDataVigenciaFim().after(Calendar.getInstance()))) {
         	 escala = escalas.get(0);
-        } else if (escalas.size() > 0 && ehMesmoDia(escalas.get(0).getDataVigenciaFim(),Calendar.getInstance())) {
+        } else if (escalas.isEmpty() && ehMesmoDia(escalas.get(0).getDataVigenciaFim(),Calendar.getInstance())) {
        		escalas.add(0,escala);
         }
         
@@ -160,7 +158,7 @@ public class EscalaDeTrabalhoController extends TpController {
         	List<EscalaDeTrabalho> escalas = EscalaDeTrabalho.buscarTodosPorCondutor(condutor);
         	
         	for (EscalaDeTrabalho escala : escalas) {
-        		if (escalaDeTrabalho.getId() == escala.getId()) {
+        		if (escalaDeTrabalho.getId().equals(escala.getId())) {
         			escala.setDiasDeTrabalho(escalaAntiga.getDiasDeTrabalho());
         		}
 			}
@@ -262,7 +260,7 @@ public class EscalaDeTrabalhoController extends TpController {
 		}
 		
 		Collections.sort(diasDeTrabalho);
-		ArrayList<String> periodosDeTrabalho = new ArrayList<String>();
+		List<String> periodosDeTrabalho = new ArrayList<String>();
 		for (DiaDeTrabalho diaDeTrabalho : diasDeTrabalho) {
 
 			if (diaDeTrabalho.getDiaEntrada().getOrdem() > diaDeTrabalho.getDiaSaida().getOrdem()) {
@@ -271,7 +269,7 @@ public class EscalaDeTrabalhoController extends TpController {
 			}
 			
 			if (diaDeTrabalho.getHoraEntrada().after(diaDeTrabalho.getHoraSaida()) &&
-				diaDeTrabalho.getDiaEntrada().getOrdem() == diaDeTrabalho.getDiaSaida().getOrdem() ) {
+				diaDeTrabalho.getDiaEntrada().getOrdem().equals(diaDeTrabalho.getDiaSaida().getOrdem())) {
 				validator.add(new I18nMessage("diasDeTrabalho", "escalasDeTrabalho.horaEntrada.validation"));
 				return false;
 			}
@@ -298,23 +296,22 @@ public class EscalaDeTrabalhoController extends TpController {
 		List<Missao> missoes = MissaoController.buscarPorCondutoreseEscala(escala);
 		SimpleDateFormat formatar = new SimpleDateFormat("dd/MM/yyyy HH:mm");
 		boolean valido = true;
-		String listaMissoes = "";
+		StringBuilder listaMissoes = new StringBuilder();
 		String delimitador="";
 
-		if (missoes != null && missoes.size() > 0) {
+		if (missoes != null && missoes.isEmpty()) {
 			for (Missao missao : missoes) {
 				String dataMissao = formatar.format(missao.dataHoraSaida.getTime());
 				String dataFormatadaOracle = "to_date('" + dataMissao + "', 'DD/MM/YYYY HH24:mi')";
 				if (! missao.condutor.estaEscalado(dataMissao) &&
 					! missao.condutor.estaDePlantao(dataFormatadaOracle)	) {
-					listaMissoes += delimitador;
-					listaMissoes += missao.getSequence();
+					listaMissoes.append(delimitador).append(missao.getSequence());
 					delimitador=",";
 					valido = false;	
 				}
 			} 
 			if (! valido) {
-				validator.add(new I18nMessage("LinkErroEscalaDeTrabalho", listaMissoes));
+				validator.add(new I18nMessage("LinkErroEscalaDeTrabalho", listaMissoes.toString()));
 			}
 		}
 		return valido;

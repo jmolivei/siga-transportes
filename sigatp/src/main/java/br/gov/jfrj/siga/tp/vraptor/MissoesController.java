@@ -39,9 +39,6 @@ public class MissoesController extends TpController {
 	@RoleAgente
 	@Path("/buscarPelaSequenceAposErro/{sequence}")
 	public void buscarPelaSequenceAposErro(String sequence) throws Exception {
-		// String sequence = "parse";
-		// boolean popUp = true;
-
 		result.use(Results.http()).body("TO DO");
 	}
 }

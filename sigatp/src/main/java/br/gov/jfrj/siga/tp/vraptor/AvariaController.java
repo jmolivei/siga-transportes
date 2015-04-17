@@ -26,8 +26,8 @@ import br.gov.jfrj.siga.vraptor.SigaObjects;
 public class AvariaController extends TpController {
 	
 	private static final String MODO = "modo";
-	private static final String EDITAR = "views.botoes.editar";
-	private static final String INCLUIR = "views.botoes.incluir";
+	private static final String BOTAO_EDITAR = "views.botoes.editar";
+	private static final String BOTAO_INCLUIR = "views.botoes.incluir";
 
 	public AvariaController(HttpServletRequest request, Result result, Validator validator, SigaObjects so, EntityManager em) throws Exception {
 		super(request, result, TpDao.getInstance(), validator, so, em);
@@ -64,7 +64,7 @@ public class AvariaController extends TpController {
 			MenuMontador.instance(result).recuperarMenuVeiculos(avaria.getVeiculo().getId(), ItemMenu.AVARIAS);
 		}
 		
-		result.include(MODO, INCLUIR);
+		result.include(MODO, BOTAO_INCLUIR);
 		result.include("avaria", avaria);
 		result.include("veiculos", veiculos);
 		result.include("fixarVeiculo", fixarVeiculo);
@@ -83,7 +83,7 @@ public class AvariaController extends TpController {
 		List<Veiculo> veiculos = Veiculo.listarTodos(getTitular().getOrgaoUsuario());
 		MenuMontador.instance(result).recuperarMenuVeiculos(avaria.getVeiculo().getId(), ItemMenu.AVARIAS);
 		
-		result.include(MODO, EDITAR);
+		result.include(MODO, BOTAO_EDITAR);
 		result.include("avaria", avaria);
 		result.include("veiculos", veiculos);
 		result.include("veiculo", veiculo);
@@ -100,9 +100,9 @@ public class AvariaController extends TpController {
 			Veiculo veiculo = Veiculo.AR.findById(avaria.getVeiculo().getId());
 
 			if(null == avaria.getId())
-				result.include(MODO, INCLUIR);
+				result.include(MODO, BOTAO_INCLUIR);
 			else
-				result.include(MODO, EDITAR);
+				result.include(MODO, BOTAO_EDITAR);
 			
 			result.include("avaria", avaria);
 			result.include("veiculos", veiculos);
@@ -115,22 +115,21 @@ public class AvariaController extends TpController {
 		if (avaria.podeCircular.equals(PerguntaSimNao.NAO)) {
 			avaria.setVeiculo(Veiculo.AR.findById(avaria.getVeiculo().getId()));
 			List<Missao> missoes = Missao.retornarMissoes("veiculo.id", avaria.getVeiculo().getId(), avaria.getVeiculo().getCpOrgaoUsuario().getId(), avaria.getDataDeRegistro(), avaria.getDataDeSolucao());
-			String listaMissoes = "";
+			StringBuilder listaMissoes = new StringBuilder();
 			String delimitador = "";
 
 			for (Missao item : missoes) {
-				listaMissoes += delimitador;
-				listaMissoes += item.getSequence();
+				listaMissoes.append(delimitador).append(item.getSequence());
 				delimitador = ",";
 			}
 			
-			error(missoes.size() > 0, "LinkErroVeiculo", listaMissoes);
+			error(missoes.isEmpty(), "LinkErroVeiculo", listaMissoes.toString());
 		}
 
 		if (validator.hasErrors()) {
 			result.include("avaria", avaria);
 			if(avaria.getId() > 0)
-				validator.onErrorUse(Results.page()).of(AvariaController.class).editar(null, null);
+				validator.onErrorUse(Results.page()).of(AvariaController.class).editar(avaria.getId(), true);
 			else
 				validator.onErrorUse(Results.page()).of(AvariaController.class).editar(null);
 		} else {

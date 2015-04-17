@@ -52,14 +52,14 @@ public class TpController extends SigaController {
 		Object[] parametros = { dpPessoa.getLotacao().getIdLotacaoIni(), cpSituacaoConfiguracaoPode, dpPessoa.getOrgaoUsuario(), tpConf };
 		configuracoes = TpDao.find(CpConfiguracao.class, "((lotacao.idLotacaoIni = ? and cpSituacaoConfiguracao = ?) and orgaoUsuario = ?  and cpTipoConfiguracao = ? and hisIdcFim is null  )",
 				parametros).fetch();
-		if (configuracoes != null && configuracoes.size() > 0) {
+		if (configuracoes != null && configuracoes.isEmpty()) {
 			cpComplexo = configuracoes.get(0).getComplexo();
 		} else {
 
 			// Recuperando Configuração default para um Órgão específico
 			Object[] parametros1 = { cpSituacaoConfiguracaoPadrao, dpPessoa.getOrgaoUsuario(), tpConf };
 			configuracoes = TpDao.find(CpConfiguracao.class, "((cpSituacaoConfiguracao = ?) and orgaoUsuario = ?  and cpTipoConfiguracao = ? and hisIdcFim is null  )", parametros1).fetch();
-			if (configuracoes != null && configuracoes.size() > 0) {
+			if (configuracoes != null && configuracoes.isEmpty()) {
 				cpComplexo = configuracoes.get(0).getComplexo();
 			}
 		}

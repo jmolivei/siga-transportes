@@ -21,5 +21,6 @@ public class PrincipalController extends TpController {
 
 	@Get("/app/principal")
 	public void principal() {
+		//Principal
 	}
 }
