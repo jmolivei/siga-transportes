@@ -6,6 +6,7 @@ import java.util.Calendar;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
+
 import javax.persistence.Basic;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
@@ -23,8 +24,10 @@ import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 import javax.validation.constraints.NotNull;
+
 import org.hibernate.envers.Audited;
 import org.hibernate.envers.RelationTargetAuditMode;
+
 import play.data.validation.Email;
 import play.db.jpa.JPA;
 import play.i18n.Messages;
@@ -34,7 +37,6 @@ import br.gov.jfrj.siga.dp.DpLotacao;
 import br.gov.jfrj.siga.dp.DpPessoa;
 import br.gov.jfrj.siga.model.ActiveRecord;
 import br.gov.jfrj.siga.tp.util.PerguntaSimNao;
-import br.gov.jfrj.siga.tp.validation.annotation.Unique;
 import br.jus.jfrj.siga.uteis.UpperCase;
 
 @SuppressWarnings("serial")
@@ -104,7 +106,7 @@ public class Condutor extends TpModel implements Comparable<Condutor> {
 
 	public Condutor() {
 		this.dpPessoa = new DpPessoa();
-		this.id = new Long(0);
+		this.id = 0L;
 		this.categoriaCNH = CategoriaCNH.D;
 		escala = new ArrayList<EscalaDeTrabalho>();
 	}
@@ -312,20 +314,35 @@ public class Condutor extends TpModel implements Comparable<Condutor> {
 		return false;
 	}
 
-	@Override
-	public boolean equals(Object other) {
-		try {
-			Condutor outroCondutor = (Condutor) other;
-			return this.id.equals(outroCondutor.id);
-		} catch(Exception e) {
-			return false;
-		}
-	}
-
 	public static List<Condutor> listarTodos(CpOrgaoUsuario orgaoUsuario) throws Exception {
 		List<Condutor> condutores = Condutor.AR.find("cpOrgaoUsuario", orgaoUsuario).fetch();
 		Collections.sort(condutores);
 		return condutores;
+	}
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = super.hashCode();
+		result = prime * result + ((id == null) ? 0 : id.hashCode());
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (!super.equals(obj))
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		Condutor other = (Condutor) obj;
+		if (id == null) {
+			if (other.id != null)
+				return false;
+		} else if (!id.equals(other.id))
+			return false;
+		return true;
 	}
 
 	public static List<Condutor> listarFiltradoPor(CpOrgaoUsuario orgaoUsuario,
