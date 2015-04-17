@@ -137,9 +137,9 @@ public class Relatorios extends Controller {
 			Calendar dataHoraFimTemp = recuperarDataEHora(escala.getDataVigenciaInicio(), HORA_FINAL_DIA, MINUTO_FINAL_DIA,SEGUNDO_FINAL_DIA);
 			
 			for (DiaDeTrabalho dia: escala.getDiasDeTrabalho()) {
-				if (diaDePesquisa.equals(dia.getDiaEntrada())) {
+				if (diaDePesquisa.isEquals(dia.getDiaEntrada())) {
 					dataHoraInicioTemp = recuperarDataEHora(dataHoraPesquisa,dia.getHoraEntrada().get(Calendar.HOUR_OF_DAY), dia.getHoraEntrada().get(Calendar.MINUTE),dia.getHoraEntrada().get(Calendar.SECOND));
-					if (diaDePesquisa.equals(dia.getDiaSaida())) {
+					if (diaDePesquisa.isEquals(dia.getDiaSaida())) {
 						dataHoraFimTemp = recuperarDataEHora(dataHoraPesquisa, dia.getHoraSaida().get(Calendar.HOUR_OF_DAY), dia.getHoraSaida().get(Calendar.MINUTE),dia.getHoraSaida().get(Calendar.SECOND));
 					} else {	
 						dataHoraFimTemp = recuperarDataEHora(dataHoraPesquisa, HORA_FINAL_EXPEDIENTE, MINUTO_FINAL_EXPEDIENTE,SEGUNDO_FINAL_EXPEDIENTE);

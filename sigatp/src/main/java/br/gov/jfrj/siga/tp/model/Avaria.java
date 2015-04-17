@@ -30,7 +30,7 @@ import com.google.gson.Gson;
 public class Avaria extends TpModel implements Comparable<Avaria> {
 	
 	private static final long serialVersionUID = 1L;
-	public static ActiveRecord<Avaria> AR = new ActiveRecord<>(Avaria.class);
+	public static final ActiveRecord<Avaria> AR = new ActiveRecord<>(Avaria.class);
 	
 	@Id
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "hibernate_sequence_generator") @SequenceGenerator(name = "hibernate_sequence_generator", sequenceName="SIGATP.hibernate_sequence") 

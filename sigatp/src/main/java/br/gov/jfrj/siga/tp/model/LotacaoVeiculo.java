@@ -28,22 +28,6 @@ import br.gov.jfrj.siga.tp.util.MessagesBundle;
 @Table(schema = "SIGATP")
 public class LotacaoVeiculo extends TpModel {
 
-	private static final long serialVersionUID = 1912137163976035054L;
-	public static ActiveRecord<LotacaoVeiculo> AR = new ActiveRecord<>(LotacaoVeiculo.class);
-
-	public LotacaoVeiculo() {
-	}
-
-	public LotacaoVeiculo(Long id, Veiculo veiculo, DpLotacao lotacao, Calendar dataHoraInicio, Calendar dataHoraFim, double odometroEmKm) {
-		super();
-		this.id = id;
-		this.veiculo = veiculo;
-		this.lotacao = lotacao;
-		this.dataHoraInicio = dataHoraInicio;
-		this.dataHoraFim = dataHoraFim;
-		this.odometroEmKm = odometroEmKm;
-	}
-
 	@Id
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "hibernate_sequence_generator")
 	@SequenceGenerator(name = "hibernate_sequence_generator", sequenceName = "SIGATP.hibernate_sequence")
@@ -63,12 +47,28 @@ public class LotacaoVeiculo extends TpModel {
 	@ValidarAnoData(descricaoCampo = "Data/Hora Inicio")
 	private Calendar dataHoraInicio;
 
-//	@As(lang = { "*" }, value = { "dd/MM/yyyy HH:mm" })
 	@ValidarAnoData(descricaoCampo = "Data/Hora Fim")
 	private Calendar dataHoraFim;
 
 	private Double odometroEmKm;
 
+	private static final long serialVersionUID = 1912137163976035054L;
+	
+	public static final ActiveRecord<LotacaoVeiculo> AR = new ActiveRecord<>(LotacaoVeiculo.class);
+
+	public LotacaoVeiculo() {
+	}
+
+	public LotacaoVeiculo(Long id, Veiculo veiculo, DpLotacao lotacao, Calendar dataHoraInicio, Calendar dataHoraFim, double odometroEmKm) {
+		super();
+		this.id = id;
+		this.veiculo = veiculo;
+		this.lotacao = lotacao;
+		this.dataHoraInicio = dataHoraInicio;
+		this.dataHoraFim = dataHoraFim;
+		this.odometroEmKm = odometroEmKm;
+	}
+	
 	/**
 	 * Inclui a nova lotação do veículo e preenche a data fim da lotação anterior
 	 * 
@@ -95,6 +95,7 @@ public class LotacaoVeiculo extends TpModel {
 		return LotacaoVeiculo.AR.find("veiculo = ? order by dataHoraInicio DESC", veiculo).fetch();
 	}
 
+	@Override
 	public Long getId() {
 		return id;
 	}

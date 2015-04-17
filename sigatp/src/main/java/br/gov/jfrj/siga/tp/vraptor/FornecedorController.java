@@ -1,5 +1,6 @@
 package br.gov.jfrj.siga.tp.vraptor;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.persistence.EntityManager;
@@ -45,9 +46,8 @@ public class FornecedorController extends TpController {
 	@Path("/incluir")
 	public void incluir() {
 		Fornecedor fornecedor = new Fornecedor();
-		List<CpUF> listaUf = Uf.listarTodos();
 		result.include("fornecedor", fornecedor);
-		result.include("listaUF", listaUf);
+		result.include("listaUF", Uf.listarTodos());
 	}
 
 	@RoleAdmin
@@ -57,10 +57,8 @@ public class FornecedorController extends TpController {
 	@RoleGabinete
 	@Path("/editar/{id}")
 	public void editar(Long id) throws Exception {
-		Fornecedor fornecedor = Fornecedor.AR.findById(id);
-		List<CpUF> listaUf = Uf.listarTodos();
-		result.include("fornecedor", fornecedor);
-		result.include("listaUF", listaUf);
+		result.include("fornecedor", Fornecedor.AR.findById(id));
+		result.include("listaUF", Uf.listarTodos());
 	}
 	
 	@RoleAdmin
@@ -72,9 +70,8 @@ public class FornecedorController extends TpController {
 	public void salvar(@Valid Fornecedor fornecedor) {
 		if (validator.hasErrors()) {
 			String template = fornecedor.getId() > 0 ? "/app/fornecedor/editar" : "/app/fornecedor/incluir";
-			List<CpUF> listaUf = Uf.listarTodos();
 			
-			result.include("listaUF", listaUf);
+			result.include("listaUF", Uf.listarTodos());
 			result.include("template", template);
 			result.include("fornecedor", fornecedor);
 			
@@ -97,11 +94,9 @@ public class FornecedorController extends TpController {
 
 	private List<Fornecedor> getFornecedores() {
 		try {
-			List<Fornecedor> fornecedores = Fornecedor.listarTodos(); 
-			return fornecedores;
-
+			return Fornecedor.listarTodos();
 		} catch (Exception ignore) {
-			return null;
+			return new ArrayList<Fornecedor>();
 		}
 	}
 }

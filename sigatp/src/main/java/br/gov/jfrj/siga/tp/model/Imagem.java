@@ -1,61 +1,37 @@
 package br.gov.jfrj.siga.tp.model;
 
 import java.io.File;
-import java.util.Calendar;
 import java.io.FileInputStream;
 import java.io.IOException;
-
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.SequenceGenerator;
-
+import java.util.Calendar;
 import org.apache.commons.io.IOUtils;
+import br.gov.jfrj.siga.tp.util.SigaProperties;
 
-import play.Play;
-import play.data.binding.As;
-import play.modules.br.jus.jfrj.siga.uteis.validadores.validarAnoData.ValidarAnoData;
 
-/*import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.Table;
-
-import org.hibernate.envers.Audited;
-import org.hibernate.validator.NotNull;
-
-import play.data.validation.Required;
-import play.db.jpa.GenericModel;
-*/
-
-//@SuppressWarnings("serial")
 //@Entity
 //@Audited
 //@Table(schema = "SIGATP")
-public class Imagem { //extends GenericModel {
-	//@Id
-	//@GeneratedValue
+public class Imagem /*extends TpModel implements Comparable<Condutor>*/ {
+
+//	@Id
+//	@GeneratedValue
 	//@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "hibernate_sequence_generator") @SequenceGenerator(name = "hibernate_sequence_generator", sequenceName="SIGATP.hibernate_sequence") 
-	//public Long id;
+	public Long id;
 	
-	//@Required
-	@As(lang={"*"}, value={"dd/MM/yyyy HH:mm"})
-	@ValidarAnoData(descricaoCampo="Data/Hora")
+//	@NotNull
 	public Calendar dataHora;
 	
-	//@Required
-	//@NotNull
+//	@NotNull
 	public byte[] blob;
 	
-	//@Required
-	//@NotNull
+//	@NotNull
 	public String nomeArquivo;
 
-	//@Required
-	//@NotNull
+//	@NotNull
 	public String mime;
 	
 	public Imagem() {
-		//this.id = new Long(0);
+		this.id = new Long(0);
 	}
 	
 	public Imagem(File file, Calendar dataHora) {
@@ -81,7 +57,7 @@ public class Imagem { //extends GenericModel {
 	}
 	
 	public static boolean tamanhoImagemAceito(int tamanho) {
-		int valorMaxMBConfigurado = Integer.parseInt(Play.configuration.getProperty("imagem.filesize").toString());
+		int valorMaxMBConfigurado = Integer.parseInt(SigaProperties.getValue("imagem.filesize"));
 		final int valor1MB = 1048576;  
 		int valorMaximo = valorMaxMBConfigurado * valor1MB;
 		
@@ -91,4 +67,5 @@ public class Imagem { //extends GenericModel {
 		
 		return false;
 	}
+
 }

@@ -30,7 +30,7 @@ import br.gov.jfrj.siga.model.ActiveRecord;
 public class EscalaDeTrabalho extends TpModel {
 
 	private static final long serialVersionUID = 1L;
-	public static ActiveRecord<EscalaDeTrabalho> AR = new ActiveRecord<>(EscalaDeTrabalho.class);
+	public static final ActiveRecord<EscalaDeTrabalho> AR = new ActiveRecord<>(EscalaDeTrabalho.class);
 	
 	@Id
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "hibernate_sequence_generator") @SequenceGenerator(name = "hibernate_sequence_generator", sequenceName="SIGATP.hibernate_sequence") 
@@ -49,6 +49,12 @@ public class EscalaDeTrabalho extends TpModel {
 	@OneToMany(mappedBy="escalaDeTrabalho")
  	private List<DiaDeTrabalho> diasDeTrabalho;
 	
+	public EscalaDeTrabalho() {
+		this.id = 0;
+		diasDeTrabalho = new ArrayList<DiaDeTrabalho>();
+	}
+	
+	@Override
 	public Long getId() {
 		return id;
 	}
@@ -88,11 +94,6 @@ public class EscalaDeTrabalho extends TpModel {
 	public void setDiasDeTrabalho(List<DiaDeTrabalho> diasDeTrabalho) {
 		this.diasDeTrabalho = diasDeTrabalho;
 	}
-
-	public EscalaDeTrabalho() {
-		this.id = new Long(0);
-		diasDeTrabalho = new ArrayList<DiaDeTrabalho>();
-	}
 	
 	public void iniciarVigencia() {
 		this.dataVigenciaInicio = Calendar.getInstance();
@@ -111,8 +112,7 @@ public class EscalaDeTrabalho extends TpModel {
 		hqlVigentes.append("dataVigenciaInicio < current_date ");
 		hqlVigentes.append("and ((dataVigenciaFim is null) or (dataVigenciaFim > current_date)) ");
 		hqlVigentes.append("order by dataVigenciaInicio ");
-		List<EscalaDeTrabalho> retorno = EscalaDeTrabalho.AR.find(hqlVigentes.toString()).fetch();
-		return retorno;
+		return EscalaDeTrabalho.AR.find(hqlVigentes.toString()).<EscalaDeTrabalho>fetch();
 	}
 	
 	public String getEscalaParaExibicao() {
@@ -155,12 +155,12 @@ public class EscalaDeTrabalho extends TpModel {
 	}
 	
 	@SuppressWarnings("unchecked")
-	public static List<EscalaDeTrabalho> buscarPorCondutores(Long IdCondutor,
+	public static List<EscalaDeTrabalho> buscarPorCondutores(Long idCondutor,
 			String dataHoraInicio) {
 		
 		String filtroCondutor = "";
-		if (IdCondutor != null) {
-			filtroCondutor = "condutor.id = " + IdCondutor + " AND ";  
+		if (idCondutor != null) {
+			filtroCondutor = "condutor.id = " + idCondutor + " AND ";  
 		}
 		
 		String dataFormatadaOracle = "to_date('" + dataHoraInicio + "', 'DD/MM/YYYY')";

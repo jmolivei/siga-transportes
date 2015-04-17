@@ -26,7 +26,7 @@ import br.jus.jfrj.siga.uteis.UpperCase;
 @Table(schema = "SIGATP")
 public class AutoDeInfracao extends TpModel implements Comparable<AutoDeInfracao> {
 	
-	public static ActiveRecord<AutoDeInfracao> AR = new ActiveRecord<>(AutoDeInfracao.class);
+	public static final ActiveRecord<AutoDeInfracao> AR = new ActiveRecord<>(AutoDeInfracao.class);
 	
 	@Id
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "hibernate_sequence_generator") @SequenceGenerator(name = "hibernate_sequence_generator", sequenceName="SIGATP.hibernate_sequence") 

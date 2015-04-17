@@ -30,7 +30,7 @@ import br.gov.jfrj.siga.tp.validation.annotation.UpperCase;
 @Table(schema = "SIGATP")
 public class Afastamento extends TpModel  {
 	
-	public static ActiveRecord<Afastamento> AR = new ActiveRecord<>(Afastamento.class);
+	public static final ActiveRecord<Afastamento> AR = new ActiveRecord<>(Afastamento.class);
 	
 	@Id
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "hibernate_sequence_generator")
@@ -57,66 +57,9 @@ public class Afastamento extends TpModel  {
 	@ValidarAnoData(descricaoCampo="Data/Hora Fim")
 	private Calendar dataHoraFim;	
 	
-	
-	public Long getId() {
-		return id;
-	}
-
-
-	public void setId(Long id) {
-		this.id = id;
-	}
-
-
-	public Condutor getCondutor() {
-		return condutor;
-	}
-
-
-	public void setCondutor(Condutor condutor) {
-		this.condutor = condutor;
-	}
-
-
-	public String getDescricao() {
-		return descricao;
-	}
-
-
-	public void setDescricao(String descricao) {
-		this.descricao = descricao;
-	}
-
-
-	public Calendar getDataHoraInicio() {
-		return dataHoraInicio;
-	}
-
-
-	public void setDataHoraInicio(Calendar dataHoraInicio) {
-		this.dataHoraInicio = dataHoraInicio;
-	}
-
-
-	public Calendar getDataHoraFim() {
-		return dataHoraFim;
-	}
-
-
-	public void setDataHoraFim(Calendar dataHoraFim) {
-		this.dataHoraFim = dataHoraFim;
-	}
-	
-	
-	public static List<Afastamento> buscarTodosPorCondutor(Condutor condutor){
-		return Afastamento.AR.find("condutor", condutor).fetch();
-	}
-	
-	
 	public Afastamento(){
 		
 	}
-
 
 	public Afastamento(long id, Condutor condutor, String descricao,
 			Calendar dataHoraInicio, Calendar dataHoraFim) {
@@ -128,8 +71,54 @@ public class Afastamento extends TpModel  {
 		this.dataHoraFim = dataHoraFim;
 	}
 	
+	@Override
+	public Long getId() {
+		return id;
+	}
+
+	public void setId(Long id) {
+		this.id = id;
+	}
+
+	public Condutor getCondutor() {
+		return condutor;
+	}
+
+	public void setCondutor(Condutor condutor) {
+		this.condutor = condutor;
+	}
+
+	public String getDescricao() {
+		return descricao;
+	}
+
+	public void setDescricao(String descricao) {
+		this.descricao = descricao;
+	}
+
+	public Calendar getDataHoraInicio() {
+		return dataHoraInicio;
+	}
+
+	public void setDataHoraInicio(Calendar dataHoraInicio) {
+		this.dataHoraInicio = dataHoraInicio;
+	}
+
+	public Calendar getDataHoraFim() {
+		return dataHoraFim;
+	}
+
+	public void setDataHoraFim(Calendar dataHoraFim) {
+		this.dataHoraFim = dataHoraFim;
+	}
+	
+	public static List<Afastamento> buscarTodosPorCondutor(Condutor condutor){
+		return Afastamento.AR.find("condutor", condutor).fetch();
+	}
+
+	
 	@SuppressWarnings("unchecked")
-	private static List<Afastamento> retornarLista(String qrl) throws NoResultException {
+	private static List<Afastamento> retornarLista(String qrl) {
 		List<Afastamento> afastamentos;
 		Query qry = AR.em().createQuery(qrl);
 		try {
@@ -140,12 +129,12 @@ public class Afastamento extends TpModel  {
 		return afastamentos; 
 	}
 	
-	public static List<Afastamento> buscarPorCondutores(Long IdCondutor, String dataHoraInicio){
+	public static List<Afastamento> buscarPorCondutores(Long idCondutor, String dataHoraInicio){
 		String dataFormatadaOracle = "to_date('" + dataHoraInicio + "', 'DD/MM/YYYY')";
 		String filtroCondutor = "";
 
-		if (IdCondutor != null) {
-			filtroCondutor = "condutor.id = " + IdCondutor + " AND ";  
+		if (idCondutor != null) {
+			filtroCondutor = "condutor.id = " + idCondutor + " AND ";  
 		}
 		
 		String qrl = 	"SELECT a FROM Afastamento a " +
@@ -156,13 +145,13 @@ public class Afastamento extends TpModel  {
 		return retornarLista(qrl); 
 	}
 	
-	public static List<Afastamento> buscarPorCondutores(Long IdCondutor, String dataHoraInicio, String dataHoraFim){
+	public static List<Afastamento> buscarPorCondutores(Long idCondutor, String dataHoraInicio, String dataHoraFim){
 		String dataFormatadaOracleInicio = "to_date('" + dataHoraInicio + "', 'DD/MM/YYYY')";
 		String dataFormatadaOracleFim = "to_date('" + dataHoraFim + "', 'DD/MM/YYYY')";
 		String filtroCondutor = "";
 
-		if (IdCondutor != null) {
-			filtroCondutor = "condutor.id = " + IdCondutor + " AND ";  
+		if (idCondutor != null) {
+			filtroCondutor = "condutor.id = " + idCondutor + " AND ";  
 		}
 		
 		String qrl = 	"SELECT a FROM Afastamento a " +
@@ -176,7 +165,8 @@ public class Afastamento extends TpModel  {
 	}
 
 	public static List<Afastamento> buscarPorCondutores(Condutor condutor, Calendar dataHoraInicio, Calendar dataHoraFim){
-		List<Afastamento> retorno = Afastamento.AR.find(
+		List<Afastamento> retorno = null;
+		retorno = Afastamento.AR.find(
 				"condutor.id = ? "
 				+ "and "
 					+ "((dataHoraInicio <= ? and (dataHoraFim = null or dataHoraFim >= ?)) "
@@ -190,11 +180,9 @@ public class Afastamento extends TpModel  {
 		
 		return retorno;
 	}
-
 	
 	public boolean ordemDeDatasCorreta(){
 		return this.dataHoraInicio.before(this.dataHoraFim);
 	}
-
 	
 }
