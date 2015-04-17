@@ -10,7 +10,7 @@
 				<c:if test="${fixarVeiculo}">
 					${avaria.veiculo.dadosParaExibicao} - 
 				</c:if>
-				${modo} <fmt:message key="avaria" />
+				<fmt:message key="${modo}" /> <fmt:message key="avaria" />
 			</h2>
 			<jsp:include page="form.jsp" />
 		</div>
