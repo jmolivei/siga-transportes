@@ -35,14 +35,14 @@ public class Imagem /*extends TpModel implements Comparable<Condutor>*/ {
 	}
 	
 	public Imagem(File file, Calendar dataHora) {
-		try {
-			//this.id = id;
-			this.dataHora = dataHora;
-			this.blob = IOUtils.toByteArray(new FileInputStream(file));
-			this.nomeArquivo = file.getName();
-			this.mime = new javax.activation.MimetypesFileTypeMap().getContentType(file);
-		} catch (IOException ioe) {
-		}
+//		try {
+//			//this.id = id;
+//			this.dataHora = dataHora;
+//			this.blob = IOUtils.toByteArray(new FileInputStream(file));
+//			this.nomeArquivo = file.getName();
+//			this.mime = new javax.activation.MimetypesFileTypeMap().getContentType(file);
+//		} catch (IOException ioe) {
+//		}
 	}
 	
 	/* Garante que a Imagem não seja instanciada sem que tenha sido
