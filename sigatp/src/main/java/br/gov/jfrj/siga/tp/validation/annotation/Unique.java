@@ -14,11 +14,17 @@ import br.gov.jfrj.siga.tp.validation.UniqueConstraintValidator;
 @Target(ElementType.TYPE)
 @Constraint(validatedBy = UniqueConstraintValidator.class)
 public @interface Unique {
-	String message() default "{unique.validation}";
-
 	Class<?>[] groups() default {};
 
 	Class<? extends Payload>[] payload() default {};
-
+	
+	String message() default "{unique.validation}";
+	
 	String field();
+	
+	@Target(ElementType.TYPE)
+    @Retention(RetentionPolicy.RUNTIME)
+    @interface List {
+        Unique[] value();
+    }
 }

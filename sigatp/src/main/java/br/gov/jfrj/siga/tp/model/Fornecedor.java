@@ -17,14 +17,14 @@ import org.hibernate.validator.constraints.NotEmpty;
 
 import play.modules.br.jus.jfrj.siga.uteis.validadores.upperCase.UpperCase;
 import br.gov.jfrj.siga.model.ActiveRecord;
+import br.gov.jfrj.siga.tp.validation.annotation.Unique;
 import br.gov.jfrj.siga.validation.Email;
 
 @SuppressWarnings("serial")
 @Entity
 @Audited
 @Table(schema = "SIGATP")
-//@Unique(message = "{fornecedor.cnpj.unique}", field = "cnpj")
-//@Unique(field = "email")
+@Unique.List(value={@Unique(message = "{fornecedor.cnpj.unique}", field = "cnpj"), @Unique(message = "{fornecedor.email.unique}", field = "eMail")})
 public class Fornecedor extends TpModel implements Comparable<Fornecedor> {
 
 	public static ActiveRecord<Fornecedor> AR = new ActiveRecord<>(
