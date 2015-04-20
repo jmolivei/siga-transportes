@@ -28,11 +28,8 @@ import play.data.validation.Required;
 import play.db.jpa.GenericModel;
 import play.db.jpa.JPA;
 import play.modules.br.jus.jfrj.siga.uteis.validadores.validarAnoData.ValidarAnoData;
-import br.com.caelum.vraptor.Convert;
 import br.gov.jfrj.siga.dp.CpOrgaoUsuario;
 import br.gov.jfrj.siga.dp.DpPessoa;
-import br.gov.jfrj.siga.tp.binder.DoubleConverter;
-import br.gov.jfrj.siga.tp.binder.PriceBinder;
 
 @SuppressWarnings("serial")
 @Entity

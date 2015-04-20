@@ -22,47 +22,44 @@ import org.hibernate.envers.Audited;
 import play.modules.br.jus.jfrj.siga.uteis.validadores.validarAnoData.ValidarAnoData;
 import br.gov.jfrj.siga.model.ActiveRecord;
 import br.gov.jfrj.siga.tp.validation.annotation.UpperCase;
-
+import br.gov.jfrj.siga.tp.vraptor.ConvertableEntity;
 
 @SuppressWarnings("serial")
 @Entity
 @Audited
 @Table(schema = "SIGATP")
-public class Afastamento extends TpModel  {
-	
+public class Afastamento extends TpModel implements ConvertableEntity {
+
 	public static final ActiveRecord<Afastamento> AR = new ActiveRecord<>(Afastamento.class);
-	
+
 	@Id
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "hibernate_sequence_generator")
-	@SequenceGenerator(name = "hibernate_sequence_generator", sequenceName="SIGATP.hibernate_sequence")	 
+	@SequenceGenerator(name = "hibernate_sequence_generator", sequenceName = "SIGATP.hibernate_sequence")
 	private Long id;
-		
-	
+
 	@ManyToOne
 	@NotNull
 	@JoinColumn(name = "CONDUTOR_ID")
-	private Condutor condutor;	
-	
+	private Condutor condutor;
+
 	@NotEmpty
 	@UpperCase
 	@NotNull
 	private String descricao;
-	
+
 	@NotNull
-	@ValidarAnoData(descricaoCampo="Data/Hora Inicio")
+	@ValidarAnoData(descricaoCampo = "Data/Hora Inicio")
 	private Calendar dataHoraInicio;
-	
-	
+
 	@NotNull
-	@ValidarAnoData(descricaoCampo="Data/Hora Fim")
-	private Calendar dataHoraFim;	
-	
-	public Afastamento(){
-		
+	@ValidarAnoData(descricaoCampo = "Data/Hora Fim")
+	private Calendar dataHoraFim;
+
+	public Afastamento() {
+
 	}
 
-	public Afastamento(long id, Condutor condutor, String descricao,
-			Calendar dataHoraInicio, Calendar dataHoraFim) {
+	public Afastamento(long id, Condutor condutor, String descricao, Calendar dataHoraInicio, Calendar dataHoraFim) {
 		super();
 		this.id = id;
 		this.condutor = condutor;
@@ -70,7 +67,7 @@ public class Afastamento extends TpModel  {
 		this.dataHoraInicio = dataHoraInicio;
 		this.dataHoraFim = dataHoraFim;
 	}
-	
+
 	@Override
 	public Long getId() {
 		return id;
@@ -111,78 +108,65 @@ public class Afastamento extends TpModel  {
 	public void setDataHoraFim(Calendar dataHoraFim) {
 		this.dataHoraFim = dataHoraFim;
 	}
-	
-	public static List<Afastamento> buscarTodosPorCondutor(Condutor condutor){
+
+	public static List<Afastamento> buscarTodosPorCondutor(Condutor condutor) {
 		return Afastamento.AR.find("condutor", condutor).fetch();
 	}
 
-	
 	@SuppressWarnings("unchecked")
 	private static List<Afastamento> retornarLista(String qrl) {
 		List<Afastamento> afastamentos;
 		Query qry = AR.em().createQuery(qrl);
 		try {
 			afastamentos = (List<Afastamento>) qry.getResultList();
-		} catch(NoResultException ex) {
+		} catch (NoResultException ex) {
 			afastamentos = null;
 		}
-		return afastamentos; 
+		return afastamentos;
 	}
-	
-	public static List<Afastamento> buscarPorCondutores(Long idCondutor, String dataHoraInicio){
+
+	public static List<Afastamento> buscarPorCondutores(Long idCondutor, String dataHoraInicio) {
 		String dataFormatadaOracle = "to_date('" + dataHoraInicio + "', 'DD/MM/YYYY')";
 		String filtroCondutor = "";
 
 		if (idCondutor != null) {
-			filtroCondutor = "condutor.id = " + idCondutor + " AND ";  
+			filtroCondutor = "condutor.id = " + idCondutor + " AND ";
 		}
-		
-		String qrl = 	"SELECT a FROM Afastamento a " +
-		                " WHERE " + filtroCondutor +
-						" trunc(dataHoraInicio) <= trunc(" + dataFormatadaOracle + ")" +  	
-						" AND (dataHoraFim IS NULL OR trunc(dataHoraFim) >= trunc(" + dataFormatadaOracle + "))";
 
-		return retornarLista(qrl); 
+		String qrl = "SELECT a FROM Afastamento a " + " WHERE " + filtroCondutor + " trunc(dataHoraInicio) <= trunc(" + dataFormatadaOracle + ")"
+				+ " AND (dataHoraFim IS NULL OR trunc(dataHoraFim) >= trunc(" + dataFormatadaOracle + "))";
+
+		return retornarLista(qrl);
 	}
-	
-	public static List<Afastamento> buscarPorCondutores(Long idCondutor, String dataHoraInicio, String dataHoraFim){
+
+	public static List<Afastamento> buscarPorCondutores(Long idCondutor, String dataHoraInicio, String dataHoraFim) {
 		String dataFormatadaOracleInicio = "to_date('" + dataHoraInicio + "', 'DD/MM/YYYY')";
 		String dataFormatadaOracleFim = "to_date('" + dataHoraFim + "', 'DD/MM/YYYY')";
 		String filtroCondutor = "";
 
 		if (idCondutor != null) {
-			filtroCondutor = "condutor.id = " + idCondutor + " AND ";  
+			filtroCondutor = "condutor.id = " + idCondutor + " AND ";
 		}
-		
-		String qrl = 	"SELECT a FROM Afastamento a " +
-		                " WHERE " + filtroCondutor +
-						" ((trunc(dataHoraInicio) <= trunc(" + dataFormatadaOracleInicio + ")" +  	
-						" AND (dataHoraFim IS NULL OR trunc(dataHoraFim) >= trunc(" + dataFormatadaOracleInicio + ")))" +
-						" OR (trunc(dataHoraInicio) <= trunc(" + dataFormatadaOracleFim + ")" +  	
-						" AND (dataHoraFim IS NULL OR trunc(dataHoraFim) >= trunc(" + dataFormatadaOracleFim + "))))";
 
-		return retornarLista(qrl); 
+		String qrl = "SELECT a FROM Afastamento a " + " WHERE " + filtroCondutor + " ((trunc(dataHoraInicio) <= trunc(" + dataFormatadaOracleInicio + ")"
+				+ " AND (dataHoraFim IS NULL OR trunc(dataHoraFim) >= trunc(" + dataFormatadaOracleInicio + ")))" + " OR (trunc(dataHoraInicio) <= trunc(" + dataFormatadaOracleFim + ")"
+				+ " AND (dataHoraFim IS NULL OR trunc(dataHoraFim) >= trunc(" + dataFormatadaOracleFim + "))))";
+
+		return retornarLista(qrl);
 	}
 
-	public static List<Afastamento> buscarPorCondutores(Condutor condutor, Calendar dataHoraInicio, Calendar dataHoraFim){
+	public static List<Afastamento> buscarPorCondutores(Condutor condutor, Calendar dataHoraInicio, Calendar dataHoraFim) {
 		List<Afastamento> retorno = null;
 		retorno = Afastamento.AR.find(
-				"condutor.id = ? "
-				+ "and "
-					+ "((dataHoraInicio <= ? and (dataHoraFim = null or dataHoraFim >= ?)) "
-				+ "or "
-					+ "(dataHoraInicio <= ? and (dataHoraFim = null or dataHoraFim >= ?)))", 
-					
-					condutor.getId(), 
-					dataHoraInicio, dataHoraInicio, 
-					dataHoraFim, dataHoraFim)
-				.fetch();
-		
+				"condutor.id = ? " + "and " + "((dataHoraInicio <= ? and (dataHoraFim = null or dataHoraFim >= ?)) " + "or " + "(dataHoraInicio <= ? and (dataHoraFim = null or dataHoraFim >= ?)))",
+
+				condutor.getId(), dataHoraInicio, dataHoraInicio, dataHoraFim, dataHoraFim).fetch();
+
 		return retorno;
 	}
-	
-	public boolean ordemDeDatasCorreta(){
+
+	public boolean ordemDeDatasCorreta() {
 		return this.dataHoraInicio.before(this.dataHoraFim);
 	}
-	
+
 }

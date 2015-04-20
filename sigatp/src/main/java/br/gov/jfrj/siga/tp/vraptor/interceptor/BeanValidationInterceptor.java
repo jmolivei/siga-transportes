@@ -1,4 +1,4 @@
-package br.gov.jfrj.siga.tp.interceptor;
+package br.gov.jfrj.siga.tp.vraptor.interceptor;
 
 import java.lang.annotation.Annotation;
 

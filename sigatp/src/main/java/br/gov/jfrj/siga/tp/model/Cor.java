@@ -10,12 +10,13 @@ import javax.persistence.Table;
 import org.hibernate.envers.Audited;
 
 import play.data.validation.Required;
+import br.gov.jfrj.siga.tp.vraptor.ConvertableEntity;
 
 @Entity
 // @Table(name = "COR_2", schema="SIGAOR")
 @Audited
 @Table(schema = "SIGATP")
-public class Cor extends TpModel {
+public class Cor extends TpModel implements ConvertableEntity {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "hibernate_sequence_generator")

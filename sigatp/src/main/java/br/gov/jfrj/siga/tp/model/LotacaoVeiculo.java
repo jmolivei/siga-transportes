@@ -20,13 +20,14 @@ import org.hibernate.envers.RelationTargetAuditMode;
 import play.modules.br.jus.jfrj.siga.uteis.validadores.validarAnoData.ValidarAnoData;
 import br.gov.jfrj.siga.dp.DpLotacao;
 import br.gov.jfrj.siga.model.ActiveRecord;
-import br.gov.jfrj.siga.tp.util.MessagesBundle;
+import br.gov.jfrj.siga.tp.vraptor.ConvertableEntity;
+import br.gov.jfrj.siga.tp.vraptor.i18n.MessagesBundle;
 
 @Entity
 // @Table(name = "LOTACAO_VEICULO_2", schema="SIGAOR")
 @Audited
 @Table(schema = "SIGATP")
-public class LotacaoVeiculo extends TpModel {
+public class LotacaoVeiculo extends TpModel implements ConvertableEntity {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "hibernate_sequence_generator")
@@ -53,7 +54,7 @@ public class LotacaoVeiculo extends TpModel {
 	private Double odometroEmKm;
 
 	private static final long serialVersionUID = 1912137163976035054L;
-	
+
 	public static final ActiveRecord<LotacaoVeiculo> AR = new ActiveRecord<>(LotacaoVeiculo.class);
 
 	public LotacaoVeiculo() {
@@ -68,7 +69,7 @@ public class LotacaoVeiculo extends TpModel {
 		this.dataHoraFim = dataHoraFim;
 		this.odometroEmKm = odometroEmKm;
 	}
-	
+
 	/**
 	 * Inclui a nova lotação do veículo e preenche a data fim da lotação anterior
 	 * 

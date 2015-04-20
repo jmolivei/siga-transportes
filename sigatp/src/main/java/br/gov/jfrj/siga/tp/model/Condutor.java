@@ -37,35 +37,36 @@ import br.gov.jfrj.siga.dp.DpLotacao;
 import br.gov.jfrj.siga.dp.DpPessoa;
 import br.gov.jfrj.siga.model.ActiveRecord;
 import br.gov.jfrj.siga.tp.util.PerguntaSimNao;
+import br.gov.jfrj.siga.tp.vraptor.ConvertableEntity;
 import br.jus.jfrj.siga.uteis.UpperCase;
 
 @SuppressWarnings("serial")
 @Entity
 @Audited
 @Table(schema = "SIGATP")
-@SequenceGenerator(name = "hibernate_sequence_generator", sequenceName="SIGATP.hibernate_sequence")
-//@Unique(message="condutor.dppessoa.unique" ,field = "dpPessoa")
-public class Condutor extends TpModel implements Comparable<Condutor> {
-	
+@SequenceGenerator(name = "hibernate_sequence_generator", sequenceName = "SIGATP.hibernate_sequence")
+// @Unique(message="condutor.dppessoa.unique" ,field = "dpPessoa")
+public class Condutor extends TpModel implements ConvertableEntity, Comparable<Condutor> {
+
 	public static final ActiveRecord<Condutor> AR = new ActiveRecord<>(Condutor.class);
 
 	@Id
-	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "hibernate_sequence_generator") 
+	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "hibernate_sequence_generator")
 	private Long id;
 
- 	@Audited(targetAuditMode = RelationTargetAuditMode.NOT_AUDITED)
+	@Audited(targetAuditMode = RelationTargetAuditMode.NOT_AUDITED)
 	@ManyToOne
 	@JoinColumn(name = "ID_ORGAO_USU")
- 	private CpOrgaoUsuario cpOrgaoUsuario;
-	
- 	@Audited(targetAuditMode = RelationTargetAuditMode.NOT_AUDITED)
+	private CpOrgaoUsuario cpOrgaoUsuario;
+
+	@Audited(targetAuditMode = RelationTargetAuditMode.NOT_AUDITED)
 	@OneToOne(targetEntity = DpPessoa.class)
- 	@NotNull
- 	private DpPessoa dpPessoa;
+	@NotNull
+	private DpPessoa dpPessoa;
 
 	@Enumerated(EnumType.STRING)
 	private CategoriaCNH categoriaCNH;
-	
+
 	@Basic(optional = false)
 	@NotNull(message = "Data de vencimento da CHN deve ser preenchida")
 	private Calendar dataVencimentoCNH;
@@ -78,10 +79,10 @@ public class Condutor extends TpModel implements Comparable<Condutor> {
 	@NotNull(message = "Telefone Institucional deve ser preenchido")
 	private String telefoneInstitucional;
 
-	@OneToMany(mappedBy="condutor")
+	@OneToMany(mappedBy = "condutor")
 	private List<EscalaDeTrabalho> escala;
 
-	@Email(message="Email invalido")
+	@Email(message = "Email invalido")
 	private String emailPessoal;
 
 	private String telefonePessoal;
@@ -98,11 +99,10 @@ public class Condutor extends TpModel implements Comparable<Condutor> {
 	private String observacao;
 
 	@Transient
-	private Imagem arquivo; 
+	private Imagem arquivo;
 
 	@Transient
 	private String situacaoImagem;
-
 
 	public Condutor() {
 		this.dpPessoa = new DpPessoa();
@@ -122,7 +122,7 @@ public class Condutor extends TpModel implements Comparable<Condutor> {
 		for (LotacaoAtdRequisicao lotacaoAtdRequisicao : lotacoesAtdRequisicao) {
 			lotacoes.add(lotacaoAtdRequisicao.dpLotacao);
 		}
-		
+
 		List<DpPessoa> possiveisCondutores = DpPessoa.AR.find("lotacao in (?)", lotacoes.toArray()).fetch();
 		return possiveisCondutores;
 	}
@@ -134,12 +134,12 @@ public class Condutor extends TpModel implements Comparable<Condutor> {
 	public String getNomePessoaAI() {
 		return this.dpPessoa.getNomePessoaAI();
 	}
-	
+
 	public boolean getVencimentoCNHExpirado() {
-		if(this.dataVencimentoCNH == null) {
+		if (this.dataVencimentoCNH == null) {
 			return false;
 		}
-		if(this.dataVencimentoCNH.compareTo(Calendar.getInstance()) > 0 ) {
+		if (this.dataVencimentoCNH.compareTo(Calendar.getInstance()) > 0) {
 			return false;
 		}
 		return true;
@@ -154,38 +154,22 @@ public class Condutor extends TpModel implements Comparable<Condutor> {
 	}
 
 	@SuppressWarnings("unchecked")
-	public static List<Condutor> listarDisponiveis(String dataSaida,
-			Long idMissao, Long idOrgao, PerguntaSimNao inicioRapido)
-			throws Exception {
+	public static List<Condutor> listarDisponiveis(String dataSaida, Long idMissao, Long idOrgao, PerguntaSimNao inicioRapido) throws Exception {
 		List<Condutor> condutores;
 		if (inicioRapido == null) {
 			inicioRapido = PerguntaSimNao.NAO;
 		}
-		String dataFormatadaOracle = "to_date('" + dataSaida
-				+ "', 'DD/MM/YYYY HH24:mi')";
+		String dataFormatadaOracle = "to_date('" + dataSaida + "', 'DD/MM/YYYY HH24:mi')";
 
-		String qrl = "SELECT c FROM Condutor c "
-				+ " WHERE trunc(c.dataVencimentoCNH) > trunc("
-				+ dataFormatadaOracle + ")" + "  AND c.cpOrgaoUsuario.id in  "
-				+ "(SELECT cp.id FROM CpOrgaoUsuario cp" + " WHERE  cp.id = "
-				+ idOrgao + ")" + " AND c.id not in ";
+		String qrl = "SELECT c FROM Condutor c " + " WHERE trunc(c.dataVencimentoCNH) > trunc(" + dataFormatadaOracle + ")" + "  AND c.cpOrgaoUsuario.id in  " + "(SELECT cp.id FROM CpOrgaoUsuario cp"
+				+ " WHERE  cp.id = " + idOrgao + ")" + " AND c.id not in ";
 		if (!inicioRapido.equals(PerguntaSimNao.SIM)) {
-			qrl = qrl + "(SELECT a.condutor.id FROM Afastamento a"
-					+ " WHERE  a.condutor.id = c.id"
-					+ " AND   a.dataHoraInicio < " + dataFormatadaOracle
-					+ " AND    (a.dataHoraFim = NULL "
-					+ " OR    a.dataHoraFim > " + dataFormatadaOracle + "))"
-					+ " AND c.id not in";
+			qrl = qrl + "(SELECT a.condutor.id FROM Afastamento a" + " WHERE  a.condutor.id = c.id" + " AND   a.dataHoraInicio < " + dataFormatadaOracle + " AND    (a.dataHoraFim = NULL "
+					+ " OR    a.dataHoraFim > " + dataFormatadaOracle + "))" + " AND c.id not in";
 		}
-		qrl = qrl + "(SELECT m.condutor.id FROM Missao m"
-				+ " WHERE  m.condutor.id = c.id"
-				+ " AND    m.estadoMissao != '" + EstadoMissao.CANCELADA + "'"
-				+ " AND    m.estadoMissao != '" + EstadoMissao.FINALIZADA + "'"
-				+ " AND    m.estadoMissao != '" + EstadoMissao.PROGRAMADA + "'"
-				+ " AND    m.id != " + idMissao + " AND   m.dataHoraSaida < "
-				+ dataFormatadaOracle + " AND    (m.dataHoraRetorno = NULL "
-				+ " OR    m.dataHoraRetorno > " + dataFormatadaOracle + "))"
-				+ " ORDER BY c.dpPessoa.nomePessoa";
+		qrl = qrl + "(SELECT m.condutor.id FROM Missao m" + " WHERE  m.condutor.id = c.id" + " AND    m.estadoMissao != '" + EstadoMissao.CANCELADA + "'" + " AND    m.estadoMissao != '"
+				+ EstadoMissao.FINALIZADA + "'" + " AND    m.estadoMissao != '" + EstadoMissao.PROGRAMADA + "'" + " AND    m.id != " + idMissao + " AND   m.dataHoraSaida < " + dataFormatadaOracle
+				+ " AND    (m.dataHoraRetorno = NULL " + " OR    m.dataHoraRetorno > " + dataFormatadaOracle + "))" + " ORDER BY c.dpPessoa.nomePessoa";
 
 		Query qry = JPA.em().createQuery(qrl);
 		try {
@@ -194,10 +178,8 @@ public class Condutor extends TpModel implements Comparable<Condutor> {
 			condutores = null;
 		}
 
-		if (condutores != null && condutores.isEmpty()
-				&& (!inicioRapido.equals(PerguntaSimNao.SIM))) {
-			for (Iterator<Condutor> iterator = condutores.iterator(); iterator
-					.hasNext();) {
+		if (condutores != null && condutores.isEmpty() && (!inicioRapido.equals(PerguntaSimNao.SIM))) {
+			for (Iterator<Condutor> iterator = condutores.iterator(); iterator.hasNext();) {
 				Condutor condutor = (Condutor) iterator.next();
 
 				if (condutor.estaDePlantao(dataFormatadaOracle)) {
@@ -211,15 +193,13 @@ public class Condutor extends TpModel implements Comparable<Condutor> {
 		}
 		return condutores;
 	}
-	
+
 	public static List<Condutor> listarEscalados(boolean mostrarCanceladosEFinalizados, CpOrgaoUsuario cpOrgaoUsuario) throws Exception {
-		return listarEscaladosDoComplexo(mostrarCanceladosEFinalizados,null, cpOrgaoUsuario);
+		return listarEscaladosDoComplexo(mostrarCanceladosEFinalizados, null, cpOrgaoUsuario);
 	}
 
 	@SuppressWarnings("unchecked")
-	public static List<Condutor> listarEscaladosDoComplexo(
-			boolean mostrarCanceladosEFinalizados, CpComplexo cpComplexo,
-			CpOrgaoUsuario cpOrgaoUsuario) throws Exception {
+	public static List<Condutor> listarEscaladosDoComplexo(boolean mostrarCanceladosEFinalizados, CpComplexo cpComplexo, CpOrgaoUsuario cpOrgaoUsuario) throws Exception {
 
 		List<Condutor> condutores;
 
@@ -229,38 +209,34 @@ public class Condutor extends TpModel implements Comparable<Condutor> {
 		query.append(" WHERE c.id in ");
 		query.append("(SELECT m.condutor.id FROM Missao m");
 		query.append(" WHERE  m.condutor.id = c.id");
-		query.append(" AND    c.dpPessoa.idPessoaIni in (select d.idPessoaIni from DpPessoa d where d.orgaoUsuario.idOrgaoUsu = "
-				+ cpOrgaoUsuario.getIdOrgaoUsu()
-				+ " AND DATA_FIM_PESSOA IS NULL)");
+		query.append(" AND    c.dpPessoa.idPessoaIni in (select d.idPessoaIni from DpPessoa d where d.orgaoUsuario.idOrgaoUsu = " + cpOrgaoUsuario.getIdOrgaoUsu() + " AND DATA_FIM_PESSOA IS NULL)");
 
-		if(!mostrarCanceladosEFinalizados) {
+		if (!mostrarCanceladosEFinalizados) {
 			query.append(" AND    m.estadoMissao != '" + EstadoMissao.CANCELADA + "'");
 			query.append(" AND    m.estadoMissao != '" + EstadoMissao.FINALIZADA + "'");
 		}
-		if(cpComplexo != null) {
+		if (cpComplexo != null) {
 			query.append(" AND    m.cpComplexo.idComplexo = " + cpComplexo.getIdComplexo());
 		}
-	 	query.append(")"); 
+		query.append(")");
 
 		Query qry = JPA.em().createQuery(query.toString());
 
 		try {
 			condutores = ((List<Condutor>) qry.getResultList());
 			Collections.sort(condutores);
-		} catch(NoResultException ex) {
-			condutores =null;
+		} catch (NoResultException ex) {
+			condutores = null;
 		}
 		return condutores;
 	}
-	
+
 	@SuppressWarnings("unchecked")
 	public boolean estaDePlantao(String dataFormatadaOracle) {
-		List<Plantao> plantoes=null;
+		List<Plantao> plantoes = null;
 
-		String qrl = "SELECT p.condutor.id FROM Plantao p" +
-					 " WHERE  p.condutor.id = " + this.id +
-					 " AND   (p.dataHoraInicio <= " + dataFormatadaOracle +
-					 " AND   ( p.dataHoraFim = NULL OR p.dataHoraFim >= " + dataFormatadaOracle + "))"; 
+		String qrl = "SELECT p.condutor.id FROM Plantao p" + " WHERE  p.condutor.id = " + this.id + " AND   (p.dataHoraInicio <= " + dataFormatadaOracle
+				+ " AND   ( p.dataHoraFim = NULL OR p.dataHoraFim >= " + dataFormatadaOracle + "))";
 
 		Query qry = JPA.em().createQuery(qrl);
 		try {
@@ -270,9 +246,9 @@ public class Condutor extends TpModel implements Comparable<Condutor> {
 			} else {
 				return false;
 			}
-	
-		} catch(NoResultException ex) {
-			plantoes =null;
+
+		} catch (NoResultException ex) {
+			plantoes = null;
 		}
 		return false;
 	}
@@ -289,13 +265,13 @@ public class Condutor extends TpModel implements Comparable<Condutor> {
 		hqlVigentes.append(dataFormatadaOracle);
 		hqlVigentes.append(")) ");
 		hqlVigentes.append("order by dataVigenciaInicio desc ");
-		List<EscalaDeTrabalho> escalasDeTrabalho = EscalaDeTrabalho.AR.find(hqlVigentes.toString(),condutor).fetch();
+		List<EscalaDeTrabalho> escalasDeTrabalho = EscalaDeTrabalho.AR.find(hqlVigentes.toString(), condutor).fetch();
 		if (escalasDeTrabalho.isEmpty()) {
 			return false;
-		} 
+		}
 
 		escalaVigente = escalasDeTrabalho.get(0);
-		
+
 		if (escalasDeTrabalho.size() > 1) {
 			throw new Exception(Messages.get("condutor.escalasDeTrabalho.exception", escalasDeTrabalho.get(0).getCondutor().id));
 		}
@@ -307,8 +283,8 @@ public class Condutor extends TpModel implements Comparable<Condutor> {
 		SimpleDateFormat formatar = new SimpleDateFormat("dd/MM/yyyy HH:mm");
 		String dataHoraSaidaStr = formatar.format(m.dataHoraSaida.getTime());
 		List<Condutor> condutores = listarDisponiveis(dataHoraSaidaStr, m.getId(), m.cpOrgaoUsuario.getId(), m.inicioRapido);
-		
-		if(condutores.contains(m.condutor)) {
+
+		if (condutores.contains(m.condutor)) {
 			return true;
 		}
 		return false;
@@ -345,19 +321,15 @@ public class Condutor extends TpModel implements Comparable<Condutor> {
 		return true;
 	}
 
-	public static List<Condutor> listarFiltradoPor(CpOrgaoUsuario orgaoUsuario,
-			DpLotacao lotacao) throws Exception  {
-		List<Condutor> condutores = Condutor.AR.find(
-				"cpOrgaoUsuario=? and dpPessoa.lotacao.idLotacaoIni = ?",
-				orgaoUsuario, lotacao.getIdInicial()).fetch();
+	public static List<Condutor> listarFiltradoPor(CpOrgaoUsuario orgaoUsuario, DpLotacao lotacao) throws Exception {
+		List<Condutor> condutores = Condutor.AR.find("cpOrgaoUsuario=? and dpPessoa.lotacao.idLotacaoIni = ?", orgaoUsuario, lotacao.getIdInicial()).fetch();
 
 		Collections.sort(condutores);
 		return condutores;
 	}
 
 	public static Condutor recuperarLogado(DpPessoa titular, CpOrgaoUsuario orgaoUsuario) {
-		return Condutor.AR.find("dpPessoa.idPessoaIni=? and cpOrgaoUsuario=?",
-				titular.getIdInicial(), orgaoUsuario).first(); 
+		return Condutor.AR.find("dpPessoa.idPessoaIni=? and cpOrgaoUsuario=?", titular.getIdInicial(), orgaoUsuario).first();
 	}
 
 	public CategoriaCNH[] getCategorias() {
@@ -500,7 +472,7 @@ public class Condutor extends TpModel implements Comparable<Condutor> {
 	public void setConteudoimagemblob(byte[] conteudoimagemblob) {
 		this.conteudoimagemblob = conteudoimagemblob;
 	}
-	
+
 	public String formatDateDDMMYYYY(Calendar cal) {
 		return new SimpleDateFormat("dd/MM/yyyy").format(cal.getTime());
 	}

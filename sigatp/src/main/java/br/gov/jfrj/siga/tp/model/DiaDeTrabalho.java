@@ -29,31 +29,32 @@ public class DiaDeTrabalho extends TpModel implements Comparable<DiaDeTrabalho> 
 	public static ActiveRecord<DiaDeTrabalho> AR = new ActiveRecord<>(DiaDeTrabalho.class);
 
 	@Id
-	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "hibernate_sequence_generator") @SequenceGenerator(name = "hibernate_sequence_generator", sequenceName="SIGATP.hibernate_sequence") 
+	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "hibernate_sequence_generator")
+	@SequenceGenerator(name = "hibernate_sequence_generator", sequenceName = "SIGATP.hibernate_sequence")
 	private Long id;
-	
+
 	@Enumerated(EnumType.STRING)
 	private DiaDaSemana diaEntrada;
-	
+
 	@NotNull
-//	@As(binder=HourMinuteBinder.class)
+	// @As(binder=HourMinuteBinder.class)
 	public Calendar horaEntrada;
-	
+
 	@Enumerated(EnumType.STRING)
 	private DiaDaSemana diaSaida;
-	
+
 	@NotNull
-//	@As(binder=HourMinuteBinder.class)
+	// @As(binder=HourMinuteBinder.class)
 	public Calendar horaSaida;
-	
+
 	@NotNull
 	@ManyToOne
 	private EscalaDeTrabalho escalaDeTrabalho;
-	
+
 	public DiaDeTrabalho() {
 		Inicializar();
 	}
-	
+
 	public Long getId() {
 		return id;
 	}
@@ -113,53 +114,52 @@ public class DiaDeTrabalho extends TpModel implements Comparable<DiaDeTrabalho> 
 			this.horaEntrada.setTime(formatar.parse("01/01/1900 11:00"));
 			this.horaSaida.setTime(formatar.parse("01/01/1900 19:00"));
 		} catch (ParseException e) {
-			throw new RuntimeException(Messages.get("diaDeTrabalho.inicializar.exception"),e);
+			throw new RuntimeException(Messages.get("diaDeTrabalho.inicializar.exception"), e);
 		}
 		escalaDeTrabalho = null;
-		
+
 	}
 
 	public DiaDeTrabalho(EscalaDeTrabalho escala) {
 		Inicializar();
 		escalaDeTrabalho = escala;
 	}
-	
+
 	public String getHoraEntradaFormatada() {
 		SimpleDateFormat formatar = new SimpleDateFormat("HH:mm");
 		return formatar.format(horaEntrada.getTime());
 	}
-	
+
 	public String getHoraSaidaFormatada() {
 		SimpleDateFormat formatar = new SimpleDateFormat("HH:mm");
 		return formatar.format(horaSaida.getTime());
 	}
-	
+
 	public String getHoraEntradaFormatada(String formato) {
 		SimpleDateFormat formatar = new SimpleDateFormat(formato);
 		return formatar.format(horaEntrada.getTime());
 	}
-	
+
 	public String getHoraSaidaFormatada(String formato) {
 		SimpleDateFormat formatar = new SimpleDateFormat(formato);
 		return formatar.format(horaSaida.getTime());
 	}
-	
+
 	@Override
 	public int compareTo(DiaDeTrabalho o) {
-		return (this.diaEntrada.getOrdem() + this.getHoraEntradaFormatada("HH:mm")).compareTo((o.diaEntrada.getOrdem() +  o.getHoraSaidaFormatada("HH:mm")));
+		return (this.diaEntrada.getOrdem() + this.getHoraEntradaFormatada("HH:mm")).compareTo((o.diaEntrada.getOrdem() + o.getHoraSaidaFormatada("HH:mm")));
 	}
-	
+
 	@Override
 	public String toString() {
 		StringBuffer saida = new StringBuffer();
 		saida.append(diaEntrada.getNomeAbreviado() + " " + getHoraEntradaFormatada() + " / ");
-		if(!diaEntrada.equals(diaSaida))
-		{
+		if (!diaEntrada.equals(diaSaida)) {
 			saida.append(diaSaida.getNomeAbreviado() + " ");
 		}
-		
+
 		saida.append(getHoraSaidaFormatada());
 		return saida.toString();
 	}
-	
+
 }

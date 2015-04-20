@@ -1,4 +1,4 @@
-package br.gov.jfrj.siga.tp.util;
+package br.gov.jfrj.siga.tp.vraptor.i18n;
 
 import br.com.caelum.vraptor.core.Localization;
 

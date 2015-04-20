@@ -1,4 +1,4 @@
-package br.gov.jfrj.siga.tp.binder;
+package br.gov.jfrj.siga.tp.vraptor.converter;
 
 import java.util.ResourceBundle;
 

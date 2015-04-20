@@ -34,20 +34,21 @@ import br.gov.jfrj.siga.cp.model.DpLotacaoSelecao;
 import br.gov.jfrj.siga.dp.CpOrgaoUsuario;
 import br.gov.jfrj.siga.dp.DpLotacao;
 import br.gov.jfrj.siga.model.ActiveRecord;
-import br.gov.jfrj.siga.tp.util.MessagesBundle;
 import br.gov.jfrj.siga.tp.util.PerguntaSimNao;
 import br.gov.jfrj.siga.tp.util.Situacao;
 import br.gov.jfrj.siga.tp.validation.annotation.Chassi;
 import br.gov.jfrj.siga.tp.validation.annotation.Renavam;
 import br.gov.jfrj.siga.tp.validation.annotation.Unique;
 import br.gov.jfrj.siga.tp.validation.annotation.UpperCase;
+import br.gov.jfrj.siga.tp.vraptor.ConvertableEntity;
+import br.gov.jfrj.siga.tp.vraptor.i18n.MessagesBundle;
 
 @Entity
 // @Table(name = "VEICULO_2", schema="SIGAOR")
 @Audited
 @Table(schema = "SIGATP")
 @Unique(message = "{veiculo.placa.unique}", field = "placa")
-public class Veiculo extends TpModel implements Comparable<Veiculo> {
+public class Veiculo extends TpModel implements ConvertableEntity, Comparable<Veiculo> {
 
 	private static final long serialVersionUID = -3602265045747814797L;
 	public static final ActiveRecord<Veiculo> AR = new ActiveRecord<>(Veiculo.class);
@@ -319,7 +320,6 @@ public class Veiculo extends TpModel implements Comparable<Veiculo> {
 		}
 		return retorno;
 	}
-	
 
 	@SuppressWarnings("unchecked")
 	public static List<Veiculo> listarDisponiveis(String dataSaida, Long idMissao, Long idOrgao) {

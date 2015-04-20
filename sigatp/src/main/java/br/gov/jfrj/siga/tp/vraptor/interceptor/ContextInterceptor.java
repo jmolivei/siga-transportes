@@ -1,4 +1,4 @@
-package br.gov.jfrj.siga.tp.interceptor;
+package br.gov.jfrj.siga.tp.vraptor.interceptor;
 
 import javax.persistence.EntityManager;
 
@@ -15,7 +15,7 @@ import br.com.caelum.vraptor.util.jpa.extra.ParameterLoaderInterceptor;
 import br.gov.jfrj.siga.model.ActiveRecord;
 import br.gov.jfrj.siga.model.ContextoPersistencia;
 import br.gov.jfrj.siga.tp.model.TpDao;
-import br.gov.jfrj.siga.tp.util.MessagesBundle;
+import br.gov.jfrj.siga.tp.vraptor.i18n.MessagesBundle;
 import br.gov.jfrj.siga.vraptor.ParameterOptionalLoaderInterceptor;
 
 /**

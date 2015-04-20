@@ -65,7 +65,7 @@
 				nome = $(inputsDiaDeTrabalho[i]).parent()[idxSelect].name;
 			}
 			x = ~~(i / 5); 
-			var nomeCompleto = "novaEscala.diasDeTrabalho[" + x + "]." + nome;
+			var nomeCompleto = (nome == "id") ? "diasDeTrabalho[" + x + "]" : "diasDeTrabalho[" + x + "]." + nome;
 			
 			if(isSelect) {
 				isSelect = false;

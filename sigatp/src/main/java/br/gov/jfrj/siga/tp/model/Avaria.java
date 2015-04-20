@@ -20,6 +20,7 @@ import org.hibernate.envers.Audited;
 import play.modules.br.jus.jfrj.siga.uteis.validadores.validarAnoData.ValidarAnoData;
 import br.gov.jfrj.siga.model.ActiveRecord;
 import br.gov.jfrj.siga.tp.util.PerguntaSimNao;
+import br.gov.jfrj.siga.tp.vraptor.ConvertableEntity;
 import br.jus.jfrj.siga.uteis.UpperCase;
 
 import com.google.gson.Gson;
@@ -27,43 +28,44 @@ import com.google.gson.Gson;
 @Entity
 @Audited
 @Table(schema = "SIGATP")
-public class Avaria extends TpModel implements Comparable<Avaria> {
-	
+public class Avaria extends TpModel implements ConvertableEntity, Comparable<Avaria> {
+
 	private static final long serialVersionUID = 1L;
 	public static final ActiveRecord<Avaria> AR = new ActiveRecord<>(Avaria.class);
-	
+
 	@Id
-	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "hibernate_sequence_generator") @SequenceGenerator(name = "hibernate_sequence_generator", sequenceName="SIGATP.hibernate_sequence") 
+	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "hibernate_sequence_generator")
+	@SequenceGenerator(name = "hibernate_sequence_generator", sequenceName = "SIGATP.hibernate_sequence")
 	private Long id;
-	
+
 	@ManyToOne
 	@NotNull
 	private Veiculo veiculo;
-	
+
 	@NotNull(message = "{avaria.data.registro}")
-	@ValidarAnoData(descricaoCampo="Data de Registro")
+	@ValidarAnoData(descricaoCampo = "Data de Registro")
 	private Calendar dataDeRegistro;
-	
-	@ValidarAnoData(descricaoCampo="Data de Solucao")
+
+	@ValidarAnoData(descricaoCampo = "Data de Solucao")
 	private Calendar dataDeSolucao;
-	
+
 	@NotNull(message = "{avaria.descricao}")
 	@UpperCase
 	private String descricao;
-	
+
 	@NotNull
 	@Enumerated(EnumType.STRING)
 	public PerguntaSimNao podeCircular;
-	
+
 	public Avaria() {
 		this.id = new Long(0);
-		this.veiculo = null; 
+		this.veiculo = null;
 		this.dataDeRegistro = Calendar.getInstance();
 		this.dataDeSolucao = null;
 		this.descricao = "";
 		this.podeCircular = PerguntaSimNao.NAO;
 	}
-	
+
 	public Avaria(Veiculo veiculo, Calendar dataDeRegistro, Calendar dataDeSolucao, String descricao, PerguntaSimNao podeCircular) {
 		super();
 		this.veiculo = veiculo;
@@ -72,16 +74,16 @@ public class Avaria extends TpModel implements Comparable<Avaria> {
 		this.descricao = descricao;
 		this.podeCircular = podeCircular;
 	}
-	
+
 	@Override
 	public Long getId() {
 		return this.id;
 	}
-	
+
 	public void setId(Long id) {
 		this.id = id;
 	}
-	
+
 	public Veiculo getVeiculo() {
 		return veiculo;
 	}
@@ -113,7 +115,7 @@ public class Avaria extends TpModel implements Comparable<Avaria> {
 	public void setDescricao(String descricao) {
 		this.descricao = descricao;
 	}
-	
+
 	public PerguntaSimNao getPodeCircular() {
 		return podeCircular;
 	}
@@ -123,9 +125,9 @@ public class Avaria extends TpModel implements Comparable<Avaria> {
 	}
 
 	public String toJson() {
-		return new Gson().toJson(this); 
+		return new Gson().toJson(this);
 	}
-	
+
 	public static List<Avaria> buscarTodasPorVeiculo(Veiculo veiculo) {
 		List<Avaria> avarias = Avaria.AR.find("veiculo", veiculo).fetch();
 		Collections.sort(avarias);
@@ -137,7 +139,7 @@ public class Avaria extends TpModel implements Comparable<Avaria> {
 		Collections.sort(avarias);
 		return avarias;
 	}
-	
+
 	@Override
 	public int compareTo(Avaria o) {
 		return this.veiculo.compareTo(o.veiculo);

@@ -3,6 +3,7 @@ package br.gov.jfrj.siga.tp.model;
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.List;
+
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
@@ -14,93 +15,97 @@ import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 import javax.validation.constraints.NotNull;
+
 import org.hibernate.envers.Audited;
+
 import br.com.caelum.vraptor.Convert;
 import br.gov.jfrj.siga.model.ActiveRecord;
-import br.gov.jfrj.siga.tp.binder.DoubleConverter;
 import br.gov.jfrj.siga.tp.util.PerguntaSimNao;
+import br.gov.jfrj.siga.tp.vraptor.ConvertableEntity;
+import br.gov.jfrj.siga.tp.vraptor.converter.DoubleConverter;
 import br.jus.jfrj.siga.uteis.UpperCase;
 
 @Entity
 @Audited
 @Table(schema = "SIGATP")
-public class AutoDeInfracao extends TpModel implements Comparable<AutoDeInfracao> {
-	
+public class AutoDeInfracao extends TpModel implements ConvertableEntity, Comparable<AutoDeInfracao> {
+
 	public static final ActiveRecord<AutoDeInfracao> AR = new ActiveRecord<>(AutoDeInfracao.class);
-	
+
 	@Id
-	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "hibernate_sequence_generator") @SequenceGenerator(name = "hibernate_sequence_generator", sequenceName="SIGATP.hibernate_sequence") 
+	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "hibernate_sequence_generator")
+	@SequenceGenerator(name = "hibernate_sequence_generator", sequenceName = "SIGATP.hibernate_sequence")
 	public Long id;
-	
+
 	@NotNull
 	public Calendar dataHora;
-	
+
 	@ManyToOne
 	@NotNull
-	public Veiculo veiculo;	
-	
+	public Veiculo veiculo;
+
 	@NotNull
 	public String codigoDaAutuacao;
-	
+
 	@NotNull
 	public String codigoDaPenalidade;
-	
+
 	@NotNull
 	@UpperCase
 	public String descricao;
-	
+
 	@NotNull
 	@Enumerated(EnumType.STRING)
 	public Gravidade gravidade;
-	
+
 	@NotNull
 	@UpperCase
 	public String enquadramento;
-	
+
 	@NotNull
 	@UpperCase
 	public String local;
-	
+
 	@NotNull
 	@Enumerated(EnumType.STRING)
 	public PerguntaSimNao foiRecebido;
-	
+
 	@NotNull
 	@Convert(DoubleConverter.class)
 	public double valor;
-	
+
 	public double valorComDesconto;
-	
+
 	@NotNull
 	public int quantidadeDePontos;
-	
+
 	@NotNull
 	public Calendar dataDeVencimento;
-	
+
 	public Calendar dataDePagamento;
-	
-	//@Required
-	//public Requisicao requisicao;
-	
+
+	// @Required
+	// public Requisicao requisicao;
+
 	@ManyToOne
 	@NotNull
 	public Condutor condutor;
-	
+
 	public Calendar dataLimiteApresentacao;
-	
+
 	@UpperCase
 	public String memorando;
-	
+
 	public Calendar dataDoProcesso;
-	
+
 	@UpperCase
 	public String numeroDoProcesso;
-	
+
 	@Transient
-	public PerguntaSimNao foiPago(){
+	public PerguntaSimNao foiPago() {
 		return dataDePagamento != null ? PerguntaSimNao.SIM : PerguntaSimNao.NAO;
 	}
-	
+
 	public Calendar getDataHora() {
 		return dataHora;
 	}
@@ -261,22 +266,16 @@ public class AutoDeInfracao extends TpModel implements Comparable<AutoDeInfracao
 	public Long getId() {
 		return this.id;
 	}
-	
-	public AutoDeInfracao(){
+
+	public AutoDeInfracao() {
 		this.id = new Long(0);
 		this.gravidade = Gravidade.LEVE;
 		this.foiRecebido = PerguntaSimNao.NAO;
 	}
-	
-		
-	public AutoDeInfracao(Long id, Calendar dataHora, Veiculo veiculo,
-			String codigoDaAutuacao, String codigoDaPenalidade,
-			String descricao, Gravidade gravidade, String enquadramento,
-			String local, PerguntaSimNao foiRecebido, double valor,
-			int quantidadeDePontos, double valorComDesconto,
-			Calendar dataDeVencimento, Calendar dataDePagamento, Condutor condutor,
-			Calendar dataLimiteApresentacao, String memorando,
-			Calendar dataDoProcesso, String numeroDoProcesso) {
+
+	public AutoDeInfracao(Long id, Calendar dataHora, Veiculo veiculo, String codigoDaAutuacao, String codigoDaPenalidade, String descricao, Gravidade gravidade, String enquadramento, String local,
+			PerguntaSimNao foiRecebido, double valor, int quantidadeDePontos, double valorComDesconto, Calendar dataDeVencimento, Calendar dataDePagamento, Condutor condutor,
+			Calendar dataLimiteApresentacao, String memorando, Calendar dataDoProcesso, String numeroDoProcesso) {
 		super();
 		this.id = id;
 		this.dataHora = dataHora;
@@ -300,32 +299,31 @@ public class AutoDeInfracao extends TpModel implements Comparable<AutoDeInfracao
 		this.numeroDoProcesso = numeroDoProcesso;
 	}
 
-
 	public static List<AutoDeInfracao> buscarAutosDeInfracaoPorVeiculo(Veiculo veiculo) {
 		List<AutoDeInfracao> autosDeInfracao = AutoDeInfracao.AR.find("veiculo", veiculo).fetch();
-  		Collections.sort(autosDeInfracao, Collections.reverseOrder());
+		Collections.sort(autosDeInfracao, Collections.reverseOrder());
 		return autosDeInfracao;
 	}
 
 	public static List<AutoDeInfracao> buscarAutosDeInfracaoPorCondutor(Condutor condutor) {
 		List<AutoDeInfracao> autosDeInfracao = AutoDeInfracao.AR.find("condutor", condutor).fetch();
-  		Collections.sort(autosDeInfracao, Collections.reverseOrder());
+		Collections.sort(autosDeInfracao, Collections.reverseOrder());
 		return autosDeInfracao;
 	}
-	
+
 	@Override
 	public int compareTo(AutoDeInfracao o) {
-        return this.dataHora.compareTo(o.dataHora);
-	}		
+		return this.dataHora.compareTo(o.dataHora);
+	}
 
-	public boolean dataPosteriorDataCorrente(Calendar dataDePagamento){
+	public boolean dataPosteriorDataCorrente(Calendar dataDePagamento) {
 		return dataDePagamento.after(Calendar.getInstance());
 	}
 
 	public static List<AutoDeInfracao> listarOrdenado() {
 		List<AutoDeInfracao> autosDeInfracao = AutoDeInfracao.AR.findAll();
-  		Collections.sort(autosDeInfracao, Collections.reverseOrder());
+		Collections.sort(autosDeInfracao, Collections.reverseOrder());
 		return autosDeInfracao;
 	}
-	
+
 }

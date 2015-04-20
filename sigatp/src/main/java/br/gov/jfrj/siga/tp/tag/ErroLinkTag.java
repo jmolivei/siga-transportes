@@ -7,7 +7,7 @@ import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.JspWriter;
 import javax.servlet.jsp.tagext.TagSupport;
 
-import br.gov.jfrj.siga.tp.util.MessagesBundle;
+import br.gov.jfrj.siga.tp.vraptor.i18n.MessagesBundle;
 
 /**
  * Tag responsavel por gerar o link de erro na tela.

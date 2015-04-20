@@ -1,4 +1,4 @@
-package br.gov.jfrj.siga.tp.binder;
+package br.gov.jfrj.siga.tp.vraptor.converter;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
