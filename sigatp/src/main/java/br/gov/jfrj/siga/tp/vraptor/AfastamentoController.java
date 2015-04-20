@@ -27,6 +27,10 @@ import br.gov.jfrj.siga.vraptor.SigaObjects;
 @Resource
 @Path("/app/afastamento/")
 public class AfastamentoController extends TpController {
+	
+	private static final String MODO = "modo";
+	private static final String EDITAR = "views.botoes.editar";
+	private static final String INCLUIR = "views.botoes.incluir";
 
 	public AfastamentoController(HttpServletRequest request, Result result, CpDao dao, Localization localization, Validator validator, SigaObjects so, EntityManager em) throws Exception {
 		super(request, result, TpDao.getInstance(), validator, so, em);
@@ -51,7 +55,9 @@ public class AfastamentoController extends TpController {
 			afastamento = new Afastamento();
 			Condutor condutor = Condutor.AR.findById(idCondutor);
 			afastamento.setCondutor(condutor);	
+			result.include(MODO, INCLUIR);
 		}else{
+			result.include(MODO, EDITAR);
 			afastamento = Afastamento.AR.findById(id);
 		}
 		result.include("afastamento", afastamento);
