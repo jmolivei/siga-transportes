@@ -9,7 +9,7 @@
 <sigatp:decimal/>
 <sigatp:erros/>
 
-<form id="formRelatoriosDiarios" action="/sigatp/app/relatorioDiario/salvar" method="post" enctype="multipart/form-data">
+<form id="formRelatoriosDiarios" action="${linkTo[RelatorioDiarioController].salvar}" method="post" enctype="multipart/form-data">
 	<input type="hidden" name="relatorioDiario" value="${relatorioDiario.id}" />
 	<div class="gt-content-box gt-form clearfix">
 		<div class="clearfix">
@@ -48,6 +48,6 @@
 	<span class="alerta menor"><fmt:message key="views.erro.preenchimentoObrigatorio"/></span>
 	<div class="gt-table-buttons">
 		<input type="submit" class="gt-btn-medium gt-btn-left" value="<fmt:message key="views.botoes.salvar"/>"/>
-		<input type="button" onClick="javascript:location.href='/sigatp/app/relatorioDiario/listar/${relatorioDiario.veiculo.id}'" class="gt-btn-medium gt-btn-left" value="<fmt:message key="views.botoes.cancelar"/>"/>
+		<input type="button" onClick="javascript:location.href='${linkTo[RelatorioDiarioController].listarPorVeiculo[relatorioDiario.veiculo.id]}'" class="gt-btn-medium gt-btn-left" value="<fmt:message key="views.botoes.cancelar"/>"/>
 	</div>
 </form>
