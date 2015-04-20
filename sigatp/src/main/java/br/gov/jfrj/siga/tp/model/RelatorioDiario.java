@@ -16,13 +16,12 @@ import javax.validation.constraints.NotNull;
 
 import org.hibernate.envers.Audited;
 
-import play.data.binding.As;
 import play.modules.br.jus.jfrj.siga.uteis.validadores.validarAnoData.ValidarAnoData;
 import br.com.caelum.vraptor.Convert;
+import br.com.caelum.vraptor.converter.DoubleConverter;
 import br.gov.jfrj.siga.model.ActiveRecord;
-import br.gov.jfrj.siga.tp.binder.DoubleConverter;
 import br.gov.jfrj.siga.tp.util.PerguntaSimNao;
-import br.jus.jfrj.siga.uteis.UpperCase;
+import br.gov.jfrj.siga.tp.validation.annotation.UpperCase;
 
 @SuppressWarnings("serial")
 @Entity
@@ -37,7 +36,6 @@ public class RelatorioDiario extends TpModel {
 	private Long id;
 	
 	@NotNull
-	@As(lang={"*"}, value={"dd/MM/yyyy"})
 	@ValidarAnoData(descricaoCampo="Data")
 	private Calendar data;
 	
@@ -47,7 +45,7 @@ public class RelatorioDiario extends TpModel {
 	
 	@NotNull
 	@Convert(DoubleConverter.class)
-	public double odometroEmKm;
+	private double odometroEmKm;
 	
 	@NotNull
 	@Enumerated(EnumType.STRING)

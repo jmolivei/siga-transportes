@@ -24,7 +24,7 @@
 	</c:if>
 	
 	<c:if test="${menuRelatoriosdiarios}">
-		<a class="once" href="@{RelatoriosDiarios.listarPorVeiculo(idVeiculo)}">
+		<a class="once" href="${linkTo[RelatorioDiarioController].listarPorVeiculo[idVeiculo]}">
 			<img src="/sigatp/public/images/relatoriosicon.png" style="margin-right: 5px;">
 			<fmt:message key="relatorios.diarios" />
 		</a>&nbsp;&nbsp;&nbsp;

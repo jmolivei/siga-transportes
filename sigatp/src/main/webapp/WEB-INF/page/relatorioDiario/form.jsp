@@ -13,7 +13,7 @@
 	<div class="gt-content-box gt-form clearfix">
 		<div class="clearfix">
 			<div class="coluna margemDireitaG">	
-		 		<input type="hidden" name="relatorioDiario.veiculo.id" value="${relatorioDiario.veiculo.id}">
+		 		<input type="hidden" name="relatorioDiario.veiculo" value="${relatorioDiario.veiculo.id}">
 		      	<label for="relatorioDiario.data" class= "obrigatorio">Data</label>
 	     		<input type="text" name="relatorioDiario.data" value="<fmt:formatDate value="${relatorioDiario.data.time}" pattern="dd/MM/yyyy"/>" size="12" class="datePicker"></input>
 		      	<label for="relatorioDiario.odometroEmKm" class= "obrigatorio">Od&ocirc;metro</label>
