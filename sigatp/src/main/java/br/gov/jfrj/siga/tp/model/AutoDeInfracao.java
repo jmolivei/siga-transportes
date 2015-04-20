@@ -18,11 +18,9 @@ import javax.validation.constraints.NotNull;
 
 import org.hibernate.envers.Audited;
 
-import br.com.caelum.vraptor.Convert;
 import br.gov.jfrj.siga.model.ActiveRecord;
 import br.gov.jfrj.siga.tp.util.PerguntaSimNao;
 import br.gov.jfrj.siga.tp.vraptor.ConvertableEntity;
-import br.gov.jfrj.siga.tp.vraptor.converter.DoubleConverter;
 import br.jus.jfrj.siga.uteis.UpperCase;
 
 @Entity
@@ -35,71 +33,67 @@ public class AutoDeInfracao extends TpModel implements ConvertableEntity, Compar
 	@Id
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "hibernate_sequence_generator")
 	@SequenceGenerator(name = "hibernate_sequence_generator", sequenceName = "SIGATP.hibernate_sequence")
-	public Long id;
+	private Long id;
 
 	@NotNull
-	public Calendar dataHora;
+	private Calendar dataHora;
 
 	@ManyToOne
 	@NotNull
-	public Veiculo veiculo;
+	private Veiculo veiculo;
 
 	@NotNull
-	public String codigoDaAutuacao;
+	private String codigoDaAutuacao;
 
 	@NotNull
-	public String codigoDaPenalidade;
+	private String codigoDaPenalidade;
 
 	@NotNull
 	@UpperCase
-	public String descricao;
+	private String descricao;
 
 	@NotNull
 	@Enumerated(EnumType.STRING)
-	public Gravidade gravidade;
+	private Gravidade gravidade;
 
 	@NotNull
 	@UpperCase
-	public String enquadramento;
+	private String enquadramento;
 
 	@NotNull
 	@UpperCase
-	public String local;
+	private String local;
 
 	@NotNull
 	@Enumerated(EnumType.STRING)
-	public PerguntaSimNao foiRecebido;
+	private PerguntaSimNao foiRecebido;
 
 	@NotNull
-	@Convert(DoubleConverter.class)
-	public double valor;
+	private Double valor;
 
-	public double valorComDesconto;
-
-	@NotNull
-	public int quantidadeDePontos;
+	private Double valorComDesconto;
 
 	@NotNull
-	public Calendar dataDeVencimento;
+	private Integer quantidadeDePontos;
 
-	public Calendar dataDePagamento;
+	@NotNull
+	private Calendar dataDeVencimento;
 
-	// @Required
-	// public Requisicao requisicao;
+	private Calendar dataDePagamento;
 
 	@ManyToOne
 	@NotNull
-	public Condutor condutor;
+	private Condutor condutor;
 
-	public Calendar dataLimiteApresentacao;
-
-	@UpperCase
-	public String memorando;
-
-	public Calendar dataDoProcesso;
+	private Calendar dataLimiteApresentacao;
 
 	@UpperCase
-	public String numeroDoProcesso;
+	private String memorando;
+
+	private Calendar dataDoProcesso;
+
+	@UpperCase
+	private String numeroDoProcesso;
 
 	@Transient
 	public PerguntaSimNao foiPago() {
@@ -178,27 +172,27 @@ public class AutoDeInfracao extends TpModel implements ConvertableEntity, Compar
 		this.foiRecebido = foiRecebido;
 	}
 
-	public double getValor() {
+	public Double getValor() {
 		return valor;
 	}
 
-	public void setValor(double valor) {
+	public void setValor(Double valor) {
 		this.valor = valor;
 	}
 
-	public double getValorComDesconto() {
+	public Double getValorComDesconto() {
 		return valorComDesconto;
 	}
 
-	public void setValorComDesconto(double valorComDesconto) {
+	public void setValorComDesconto(Double valorComDesconto) {
 		this.valorComDesconto = valorComDesconto;
 	}
 
-	public int getQuantidadeDePontos() {
+	public Integer getQuantidadeDePontos() {
 		return quantidadeDePontos;
 	}
 
-	public void setQuantidadeDePontos(int quantidadeDePontos) {
+	public void setQuantidadeDePontos(Integer quantidadeDePontos) {
 		this.quantidadeDePontos = quantidadeDePontos;
 	}
 
@@ -274,7 +268,7 @@ public class AutoDeInfracao extends TpModel implements ConvertableEntity, Compar
 	}
 
 	public AutoDeInfracao(Long id, Calendar dataHora, Veiculo veiculo, String codigoDaAutuacao, String codigoDaPenalidade, String descricao, Gravidade gravidade, String enquadramento, String local,
-			PerguntaSimNao foiRecebido, double valor, int quantidadeDePontos, double valorComDesconto, Calendar dataDeVencimento, Calendar dataDePagamento, Condutor condutor,
+			PerguntaSimNao foiRecebido, Double valor, int quantidadeDePontos, Double valorComDesconto, Calendar dataDeVencimento, Calendar dataDePagamento, Condutor condutor,
 			Calendar dataLimiteApresentacao, String memorando, Calendar dataDoProcesso, String numeroDoProcesso) {
 		super();
 		this.id = id;

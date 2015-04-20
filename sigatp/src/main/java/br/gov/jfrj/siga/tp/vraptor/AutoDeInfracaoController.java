@@ -83,7 +83,7 @@ public class AutoDeInfracaoController extends TpController{
 		
 		if(id >0) {
 			autoDeInfracao = AutoDeInfracao.AR.findById(id);
-			tipoNotificacao = autoDeInfracao.codigoDaAutuacao != null ? TipoDeNotificacao.AUTUACAO
+			tipoNotificacao = autoDeInfracao.getCodigoDaAutuacao() != null ? TipoDeNotificacao.AUTUACAO
 				: TipoDeNotificacao.PENALIDADE;
 		} else {
 			autoDeInfracao = new AutoDeInfracao();
@@ -101,10 +101,10 @@ public class AutoDeInfracaoController extends TpController{
 	@RoleAdminMissaoComplexo
 	@Path("/salvar")
 	public void salvar(@Valid AutoDeInfracao autoDeInfracao) throws Exception {
-		TipoDeNotificacao tipoNotificacao = autoDeInfracao.codigoDaAutuacao != null ? 
+		TipoDeNotificacao tipoNotificacao = autoDeInfracao.getCodigoDaAutuacao() != null ? 
 				TipoDeNotificacao.AUTUACAO : TipoDeNotificacao.PENALIDADE;
 
- 		error(autoDeInfracao.dataDePagamento != null && autoDeInfracao.dataPosteriorDataCorrente(autoDeInfracao.dataDePagamento)
+ 		error(autoDeInfracao.getDataDePagamento() != null && autoDeInfracao.dataPosteriorDataCorrente(autoDeInfracao.getDataDePagamento())
  				, "dataPagamento", "veiculo.autosDeInfracao.dataDePagamento.validation");
 
 		if (validator.hasErrors()) {
@@ -116,8 +116,8 @@ public class AutoDeInfracaoController extends TpController{
 			result.include("condutores", condutores);
 			result.include("tipoNotificacao", tipoNotificacao);
 				
-			if(autoDeInfracao.id  > 0)
-				validator.onErrorUse(Results.page()).of(AutoDeInfracaoController.class).editar(autoDeInfracao.id, null);
+			if(autoDeInfracao.getId()  > 0)
+				validator.onErrorUse(Results.page()).of(AutoDeInfracaoController.class).editar(autoDeInfracao.getId(), null);
 			else
 				validator.onErrorUse(Results.page()).of(AutoDeInfracaoController.class).editar(null, null);
 			

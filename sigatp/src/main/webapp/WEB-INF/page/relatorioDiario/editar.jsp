@@ -2,7 +2,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" buffer="64kb"%>
 <%@ taglib prefix="siga" uri="http://localhost/jeetags"%>
 
-<jsp:include page="../tags/calendario.jsp" />
 
 <siga:pagina titulo="Transportes">
 	<div class="gt-bd clearfix">

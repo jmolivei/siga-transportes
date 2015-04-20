@@ -3,17 +3,18 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ taglib prefix="siga" uri="http://localhost/jeetags"%>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
+<%@ taglib prefix="sigatp" tagdir="/WEB-INF/tags/" %>
 
-<jsp:include page="../tags/calendario.jsp" />
-<jsp:include page="../tags/decimal.jsp" />
-<jsp:include page="../tags/erros.jsp" />
+<sigatp:calendario/>
+<sigatp:decimal/>
+<sigatp:erros/>
 
 <form id="formRelatoriosDiarios" action="/sigatp/app/relatorioDiario/salvar" method="post" enctype="multipart/form-data">
-	<input type="hidden" name="relatorioDiario.id" value="${relatorioDiario.id}" />
+	<input type="hidden" name="relatorioDiario" value="${relatorioDiario.id}" />
 	<div class="gt-content-box gt-form clearfix">
 		<div class="clearfix">
 			<div class="coluna margemDireitaG">	
-		 		<input type="hidden" name="relatorioDiario.veiculo" value="${relatorioDiario.veiculo.id}">
+		 		<input type="hidden" name="relatorioDiario.veiculo" value="${relatorioDiario.veiculo.id}">20/04/2015
 		      	<label for="relatorioDiario.data" class= "obrigatorio">Data</label>
 	     		<input type="text" name="relatorioDiario.data" value="<fmt:formatDate value="${relatorioDiario.data.time}" pattern="dd/MM/yyyy"/>" size="12" class="datePicker"></input>
 		      	<label for="relatorioDiario.odometroEmKm" class= "obrigatorio">Od&ocirc;metro</label>
@@ -21,7 +22,7 @@
 		      	<label for="relatorioDiario.nivelDeCombustivel" class= "obrigatorio">N&iacute;vel de Combust&iacute;vel</label>
 				<select name="relatorioDiario.nivelDeCombustivel">
 				    <c:forEach var="nivel" items="${relatorioDiario.nivelDeCombustivel.values()}">
-				        <option value="${relatorioDiario.nivelDeCombustivel}" ${nivel.descricao == relatorioDiario.nivelDeCombustivel.descricao ? 'selected="selected"' : ''}>${nivel.descricao}</option>
+				        <option value="${nivel}" ${nivel == relatorioDiario.nivelDeCombustivel ? 'selected="selected"' : ''}>${nivel.descricao}</option>
 				    </c:forEach>
 				</select>
 			</div>
@@ -29,14 +30,14 @@
 		      	<label for="relatorioDiario.equipamentoObrigatorio" class= "obrigatorio">Equipamento Obrigat&oacute;rio</label>
 		      	<select name="relatorioDiario.equipamentoObrigatorio">
 				    <c:forEach var="equip" items="${relatorioDiario.equipamentoObrigatorio.values()}">
-				        <option value="${relatorioDiario.equipamentoObrigatorio}" ${equip.descricao == relatorioDiario.equipamentoObrigatorio.descricao ? 'selected="selected"' : ''}>${equip.descricao}</option>
+				        <option value="${equip}" ${equip == relatorioDiario.equipamentoObrigatorio ? 'selected="selected"' : ''}>${equip.descricao}</option>
 				    </c:forEach>
 				</select>
 		      	<label for="relatorioDiario.cartoes" class= "obrigatorio">Cart&otilde;es</label>
 		      	
 		      	<select name="relatorioDiario.cartoes">
 				    <c:forEach var="cartao" items="${relatorioDiario.cartoes.values()}">
-				        <option value="${relatorioDiario.cartoes}" ${cartao.descricao == relatorioDiario.cartoes.descricao ? 'selected="selected"' : ''}>${cartao.descricao}</option>
+				        <option value="${cartao}" ${cartao == relatorioDiario.cartoes ? 'selected="selected"' : ''}>${cartao.descricao}</option>
 				    </c:forEach>
 				</select>
 			</div>

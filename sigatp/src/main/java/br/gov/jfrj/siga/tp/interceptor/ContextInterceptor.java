@@ -1,4 +1,4 @@
-package br.gov.jfrj.siga.tp.vraptor.interceptor;
+package br.gov.jfrj.siga.tp.interceptor;
 
 import javax.persistence.EntityManager;
 

@@ -17,17 +17,16 @@ import javax.validation.constraints.NotNull;
 import org.hibernate.envers.Audited;
 
 import play.modules.br.jus.jfrj.siga.uteis.validadores.validarAnoData.ValidarAnoData;
-import br.com.caelum.vraptor.Convert;
-import br.com.caelum.vraptor.converter.DoubleConverter;
 import br.gov.jfrj.siga.model.ActiveRecord;
 import br.gov.jfrj.siga.tp.util.PerguntaSimNao;
 import br.gov.jfrj.siga.tp.validation.annotation.UpperCase;
+import br.gov.jfrj.siga.tp.vraptor.ConvertableEntity;
 
 @SuppressWarnings("serial")
 @Entity
 @Audited
 @Table(schema = "SIGATP")
-public class RelatorioDiario extends TpModel {
+public class RelatorioDiario extends TpModel implements ConvertableEntity {
 	
 	public static ActiveRecord<RelatorioDiario> AR = new ActiveRecord<>(RelatorioDiario.class);
 	
@@ -44,8 +43,7 @@ public class RelatorioDiario extends TpModel {
 	private Veiculo veiculo;	
 	
 	@NotNull
-	@Convert(DoubleConverter.class)
-	private double odometroEmKm;
+	private Double odometroEmKm;
 	
 	@NotNull
 	@Enumerated(EnumType.STRING)
@@ -73,7 +71,7 @@ public class RelatorioDiario extends TpModel {
 	
 	public RelatorioDiario(Long id, Calendar data,
 			NivelDeCombustivel nivelDeCombustivel,
-			double odometroEmKm, PerguntaSimNao equipamentoObrigatorio,  PerguntaSimNao cartoes,
+			Double odometroEmKm, PerguntaSimNao equipamentoObrigatorio,  PerguntaSimNao cartoes,
 			String observacao) {
 		super();
 		this.id = id;
@@ -109,11 +107,11 @@ public class RelatorioDiario extends TpModel {
 		this.veiculo = veiculo;
 	}
 
-	public double getOdometroEmKm() {
+	public Double getOdometroEmKm() {
 		return odometroEmKm;
 	}
 
-	public void setOdometroEmKm(double odometroEmKm) {
+	public void setOdometroEmKm(Double odometroEmKm) {
 		this.odometroEmKm = odometroEmKm;
 	}
 
