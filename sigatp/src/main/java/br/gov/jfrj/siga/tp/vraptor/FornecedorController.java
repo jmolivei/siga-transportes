@@ -2,9 +2,11 @@ package br.gov.jfrj.siga.tp.vraptor;
 
 import java.util.ArrayList;
 import java.util.List;
+
 import javax.persistence.EntityManager;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
+
 import br.com.caelum.vraptor.Path;
 import br.com.caelum.vraptor.Resource;
 import br.com.caelum.vraptor.Result;
@@ -24,6 +26,10 @@ import br.gov.jfrj.siga.vraptor.SigaObjects;
 @Resource
 @Path("/app/fornecedor")
 public class FornecedorController extends TpController {
+	
+	private static final String MODO = "modo";
+	private static final String LABEL_EDITAR = "views.label.editar";
+	private static final String LABEL_INCLUIR = "views.label.incluir";
 
 	public FornecedorController(HttpServletRequest request, Result result, CpDao dao, Validator validator, SigaObjects so, EntityManager em) {
 		super(request, result, TpDao.getInstance(), validator, so, em);
@@ -40,10 +46,8 @@ public class FornecedorController extends TpController {
 	@RoleAdminGabinete
 	@RoleGabinete
 	@Path("/incluir")
-	public void incluir() {
-		Fornecedor fornecedor = new Fornecedor();
-		result.include("fornecedor", fornecedor);
-		result.include("listaUF", Uf.listarTodos());
+	public void incluir() throws Exception {
+		result.forwardTo(this).editar(null);
 	}
 
 	@RoleAdmin
@@ -53,7 +57,16 @@ public class FornecedorController extends TpController {
 	@RoleGabinete
 	@Path("/editar/{id}")
 	public void editar(Long id) throws Exception {
-		result.include("fornecedor", Fornecedor.AR.findById(id));
+		Fornecedor fornecedor = new Fornecedor();
+		
+		if(null == id)
+			result.include(MODO, LABEL_INCLUIR);
+		else {
+			fornecedor = Fornecedor.AR.findById(id);
+			result.include(MODO, LABEL_EDITAR);
+		}
+		
+		result.include("fornecedor", fornecedor);
 		result.include("listaUF", Uf.listarTodos());
 	}
 	
@@ -63,7 +76,7 @@ public class FornecedorController extends TpController {
 	@RoleAdminGabinete
 	@RoleGabinete
 	@Path("/salvar")
-	public void salvar(@Valid Fornecedor fornecedor) {
+	public void salvar(@Valid Fornecedor fornecedor) throws Exception {
 		if (validator.hasErrors()) {
 			String template = fornecedor.getId() > 0 ? "/app/fornecedor/editar" : "/app/fornecedor/incluir";
 			
@@ -71,7 +84,13 @@ public class FornecedorController extends TpController {
 			result.include("template", template);
 			result.include("fornecedor", fornecedor);
 			
-			validator.onErrorUse(Results.page()).of(FornecedorController.class).incluir();
+			if(fornecedor.getId() == 0){
+				result.include(MODO, LABEL_INCLUIR);
+				validator.onErrorUse(Results.page()).of(FornecedorController.class).incluir();
+			} else {
+				result.include(MODO, LABEL_EDITAR);
+				validator.onErrorUse(Results.page()).of(FornecedorController.class).editar(fornecedor.getId());
+			}
 		} else {
 			fornecedor.save();
 			result.redirectTo(this).listar();
