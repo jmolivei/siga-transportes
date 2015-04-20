@@ -47,7 +47,7 @@ import br.jus.jfrj.siga.uteis.UpperCase;
 //@Unique(message="condutor.dppessoa.unique" ,field = "dpPessoa")
 public class Condutor extends TpModel implements Comparable<Condutor> {
 	
-	public static ActiveRecord<Condutor> AR = new ActiveRecord<>(Condutor.class);
+	public static final ActiveRecord<Condutor> AR = new ActiveRecord<>(Condutor.class);
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "hibernate_sequence_generator") 
@@ -194,7 +194,7 @@ public class Condutor extends TpModel implements Comparable<Condutor> {
 			condutores = null;
 		}
 
-		if (condutores != null && condutores.size() > 0
+		if (condutores != null && condutores.isEmpty()
 				&& (!inicioRapido.equals(PerguntaSimNao.SIM))) {
 			for (Iterator<Condutor> iterator = condutores.iterator(); iterator
 					.hasNext();) {
@@ -265,7 +265,7 @@ public class Condutor extends TpModel implements Comparable<Condutor> {
 		Query qry = JPA.em().createQuery(qrl);
 		try {
 			plantoes = ((List<Plantao>) qry.getResultList());
-			if (plantoes != null && plantoes.size() > 0) {
+			if (plantoes != null && plantoes.isEmpty()) {
 				return true;
 			} else {
 				return false;
@@ -290,7 +290,7 @@ public class Condutor extends TpModel implements Comparable<Condutor> {
 		hqlVigentes.append(")) ");
 		hqlVigentes.append("order by dataVigenciaInicio desc ");
 		List<EscalaDeTrabalho> escalasDeTrabalho = EscalaDeTrabalho.AR.find(hqlVigentes.toString(),condutor).fetch();
-		if (escalasDeTrabalho.size() == 0) {
+		if (escalasDeTrabalho.isEmpty()) {
 			return false;
 		} 
 

@@ -28,14 +28,14 @@ public class RelatoriosDiarios extends Controller {
 	public static void incluir(Long idVeiculo) throws Exception {
 		Veiculo veiculo = Veiculo.AR.findById(idVeiculo);
 		RelatorioDiario relatorioDiario = new RelatorioDiario();
-		relatorioDiario.veiculo = veiculo;
+		relatorioDiario.setVeiculo(veiculo);
 		render(relatorioDiario);
 	}
 
 	@RoleAdmin
 	@RoleAdminFrota
-	public static void editar(Long id) {
-		RelatorioDiario relatorioDiario = RelatorioDiario.findById(id);
+	public static void editar(Long id) throws Exception {
+		RelatorioDiario relatorioDiario = RelatorioDiario.AR.findById(id);
 		render(relatorioDiario);
 	}
 
@@ -45,20 +45,20 @@ public class RelatoriosDiarios extends Controller {
 		if (Validation.hasErrors()) {
 			List<Veiculo> veiculos = Veiculo.listarTodos(AutorizacaoGIAntigo.titular().getOrgaoUsuario());
 			String template;
-			template = relatorioDiario.id > 0 ? "@editar" : "@incluir";
+			template = relatorioDiario.getId() > 0 ? "@editar" : "@incluir";
 			renderTemplate(template, relatorioDiario, veiculos);
 		} else {
 			relatorioDiario.save();
-			listarPorVeiculo(relatorioDiario.veiculo.getId());
+			listarPorVeiculo(relatorioDiario.getVeiculo().getId());
 		}
 	}
 
 	@RoleAdmin
 	@RoleAdminFrota
 	public static void excluir(Long id) throws Exception {
-		RelatorioDiario relatorioDiario = RelatorioDiario.findById(id);
+		RelatorioDiario relatorioDiario = RelatorioDiario.AR.findById(id);
 		relatorioDiario.delete();
-		listarPorVeiculo(relatorioDiario.veiculo.getId());
+		listarPorVeiculo(relatorioDiario.getVeiculo().getId());
 	}
 
 }

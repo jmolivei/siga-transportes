@@ -17,49 +17,53 @@ import javax.validation.constraints.NotNull;
 import org.hibernate.envers.Audited;
 
 import play.data.binding.As;
-import play.data.validation.Required;
-import play.db.jpa.GenericModel;
 import play.modules.br.jus.jfrj.siga.uteis.validadores.validarAnoData.ValidarAnoData;
+import br.com.caelum.vraptor.Convert;
+import br.gov.jfrj.siga.model.ActiveRecord;
+import br.gov.jfrj.siga.tp.binder.DoubleConverter;
 import br.gov.jfrj.siga.tp.util.PerguntaSimNao;
 import br.jus.jfrj.siga.uteis.UpperCase;
 
+@SuppressWarnings("serial")
 @Entity
 @Audited
 @Table(schema = "SIGATP")
-public class RelatorioDiario extends GenericModel {
+public class RelatorioDiario extends TpModel {
+	
+	public static ActiveRecord<RelatorioDiario> AR = new ActiveRecord<>(RelatorioDiario.class);
 	
 	@Id
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "hibernate_sequence_generator") @SequenceGenerator(name = "hibernate_sequence_generator", sequenceName="SIGATP.hibernate_sequence") 
-	public Long id;
+	private Long id;
 	
-	@Required
+	@NotNull
 	@As(lang={"*"}, value={"dd/MM/yyyy"})
 	@ValidarAnoData(descricaoCampo="Data")
-	public Calendar data;
+	private Calendar data;
 	
-	@Required
 	@ManyToOne
 	@NotNull
-	public Veiculo veiculo;	
+	private Veiculo veiculo;	
 	
-	@Required
+	@NotNull
+	@Convert(DoubleConverter.class)
 	public double odometroEmKm;
 	
-	@Required
+	@NotNull
 	@Enumerated(EnumType.STRING)
-	public NivelDeCombustivel nivelDeCombustivel;
+	private NivelDeCombustivel nivelDeCombustivel;
 	
 	@Enumerated(EnumType.STRING)
-	public PerguntaSimNao equipamentoObrigatorio;
+	private PerguntaSimNao equipamentoObrigatorio;
 	
 	@Enumerated(EnumType.STRING)
-	public PerguntaSimNao cartoes;
+	private PerguntaSimNao cartoes;
 	
 	@UpperCase
-	public String observacao;
+	private String observacao;
 	
 	public static List<RelatorioDiario> buscarTodosPorVeiculo(Veiculo veiculo){
-		return RelatorioDiario.find("veiculo", veiculo).fetch();
+		return RelatorioDiario.AR.find("veiculo", veiculo).fetch();
 	}
 	
 	public RelatorioDiario(){
@@ -83,6 +87,68 @@ public class RelatorioDiario extends GenericModel {
 		this.observacao = observacao;
 	}
 
-	
+	public Long getId() {
+		return id;
+	}
+
+	public void setId(Long id) {
+		this.id = id;
+	}
+
+	public Calendar getData() {
+		return data;
+	}
+
+	public void setData(Calendar data) {
+		this.data = data;
+	}
+
+	public Veiculo getVeiculo() {
+		return veiculo;
+	}
+
+	public void setVeiculo(Veiculo veiculo) {
+		this.veiculo = veiculo;
+	}
+
+	public double getOdometroEmKm() {
+		return odometroEmKm;
+	}
+
+	public void setOdometroEmKm(double odometroEmKm) {
+		this.odometroEmKm = odometroEmKm;
+	}
+
+	public NivelDeCombustivel getNivelDeCombustivel() {
+		return nivelDeCombustivel;
+	}
+
+	public void setNivelDeCombustivel(NivelDeCombustivel nivelDeCombustivel) {
+		this.nivelDeCombustivel = nivelDeCombustivel;
+	}
+
+	public PerguntaSimNao getEquipamentoObrigatorio() {
+		return equipamentoObrigatorio;
+	}
+
+	public void setEquipamentoObrigatorio(PerguntaSimNao equipamentoObrigatorio) {
+		this.equipamentoObrigatorio = equipamentoObrigatorio;
+	}
+
+	public PerguntaSimNao getCartoes() {
+		return cartoes;
+	}
+
+	public void setCartoes(PerguntaSimNao cartoes) {
+		this.cartoes = cartoes;
+	}
+
+	public String getObservacao() {
+		return observacao;
+	}
+
+	public void setObservacao(String observacao) {
+		this.observacao = observacao;
+	}
 
 }
