@@ -9,7 +9,6 @@ import br.com.caelum.vraptor.Path;
 import br.com.caelum.vraptor.Resource;
 import br.com.caelum.vraptor.Result;
 import br.com.caelum.vraptor.Validator;
-import br.com.caelum.vraptor.core.Localization;
 import br.com.caelum.vraptor.validator.I18nMessage;
 import br.com.caelum.vraptor.view.Results;
 import br.gov.jfrj.siga.dp.dao.CpDao;
@@ -28,8 +27,8 @@ import br.gov.jfrj.siga.vraptor.SigaObjects;
 public class AfastamentoController extends TpController {
 	
 	private static final String MODO = "modo";
-	private static final String BOTAO_EDITAR = "views.botoes.editar";
-	private static final String BOTAO_INCLUIR = "views.botoes.incluir";
+	private static final String LABEL_EDITAR = "views.label.editar";
+	private static final String LABEL_INCLUIR = "views.label.incluir";
 
 	public AfastamentoController(HttpServletRequest request, Result result, CpDao dao, Validator validator, SigaObjects so, EntityManager em) throws Exception {
 		super(request, result, TpDao.getInstance(), validator, so, em);
@@ -54,9 +53,9 @@ public class AfastamentoController extends TpController {
 			afastamento = new Afastamento();
 			Condutor condutor = Condutor.AR.findById(idCondutor);
 			afastamento.setCondutor(condutor);	
-			result.include(MODO, BOTAO_INCLUIR);
+			result.include(MODO, LABEL_INCLUIR);
 		}else{
-			result.include(MODO, BOTAO_EDITAR);
+			result.include(MODO, LABEL_EDITAR);
 			afastamento = Afastamento.AR.findById(id);
 		}
 		result.include("afastamento", afastamento);
@@ -80,7 +79,7 @@ public class AfastamentoController extends TpController {
 			
 			result.include("afastamento", afastamento);
 			result.include("condutores", condutores);
-			result.include(MODO, null == afastamento.getId() ? INCLUIR : EDITAR);
+			result.include(MODO, null == afastamento.getId() ? LABEL_INCLUIR : LABEL_EDITAR);
 			validator.onErrorUse(Results.page()).of(AfastamentoController.class).editar(afastamento.getCondutor().getId(), afastamento.getId());
 		} else {
 			afastamento.setCondutor(Condutor.AR.findById(afastamento.getCondutor().getId()));

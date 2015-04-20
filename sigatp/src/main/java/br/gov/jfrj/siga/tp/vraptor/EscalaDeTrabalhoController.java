@@ -31,8 +31,8 @@ import br.gov.jfrj.siga.vraptor.SigaObjects;
 public class EscalaDeTrabalhoController extends TpController {
 	
 	private static final String MODO = "modo";
-	private static final String BOTAO_EDITAR = "views.botoes.editar";
-	private static final String BOTAO_INCLUIR = "views.botoes.incluir";
+	private static final String LABEL_EDITAR = "views.label.editar";
+	private static final String LABEL_INCLUIR = "views.label.incluir";
 
 	public EscalaDeTrabalhoController(HttpServletRequest request, Result result, CpDao dao, Validator validator, SigaObjects so, EntityManager em) throws Exception {
 		super(request, result, TpDao.getInstance(), validator, so, em);
@@ -58,7 +58,7 @@ public class EscalaDeTrabalhoController extends TpController {
     	DiaDeTrabalho diaTrabalho = new DiaDeTrabalho();
     	escala.getDiasDeTrabalho().add(diaTrabalho);
     	
-    	result.include(MODO, BOTAO_INCLUIR);
+    	result.include(MODO, LABEL_INCLUIR);
     	result.include("escala", escala);
     	result.include("diaSemana", diaSemana);
     	
@@ -74,7 +74,7 @@ public class EscalaDeTrabalhoController extends TpController {
     	MenuMontador.instance(result).recuperarMenuCondutores(escala.getCondutor().getId(), ItemMenu.ESCALASDETRABALHO);
     	DiaDaSemana diaSemana = DiaDaSemana.SEGUNDA;
     	
-    	result.include(MODO, BOTAO_EDITAR);
+    	result.include(MODO, LABEL_EDITAR);
     	result.include("escala", escala);
     	result.include("diaSemana", diaSemana);
     }
