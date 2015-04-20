@@ -9,7 +9,7 @@
 <siga:pagina titulo="Transportes">
 	<div class="gt-bd clearfix">
 		<div class="gt-content clearfix">
-			<h2>${afastamento.condutor.dadosParaExibicao} - Editar Afastamento</h2>
+			<h2>${afastamento.condutor.dadosParaExibicao} - <fmt:message key="${modo}" /> <fmt:message key="afastamento" /></h2>
 			<jsp:include page="form.jsp" />
 		</div>
 	</div>
