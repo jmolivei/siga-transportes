@@ -2,7 +2,7 @@ package br.gov.jfrj.siga.tp.util;
 
 public enum PerguntaSimNao {
 	
-	SIM("Sim"), NAO("NÃ£o");
+	SIM("Sim"), NAO("Não");
 	
 	private String resposta;
 	
