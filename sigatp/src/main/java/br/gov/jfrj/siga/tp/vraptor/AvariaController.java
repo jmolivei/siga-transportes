@@ -29,7 +29,7 @@ public class AvariaController extends TpController {
 	private static final String LABEL_EDITAR = "views.label.editar";
 	private static final String LABEL_INCLUIR = "views.label.incluir";
 
-	public AvariaController(HttpServletRequest request, Result result, Validator validator, SigaObjects so, EntityManager em) throws Exception {
+	public AvariaController(HttpServletRequest request, Result result, Validator validator, SigaObjects so, EntityManager em){
 		super(request, result, TpDao.getInstance(), validator, so, em);
 	}
 

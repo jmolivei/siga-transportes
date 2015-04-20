@@ -30,7 +30,7 @@ public class AutoDeInfracaoController extends TpController{
 
 	public AutoDeInfracaoController(HttpServletRequest request, Result result,
 			CpDao dao, Localization localization, Validator validator,
-			SigaObjects so, EntityManager em) throws Exception {
+			SigaObjects so, EntityManager em){
 		super(request, result, TpDao.getInstance(), validator, so, em);
 	}
 

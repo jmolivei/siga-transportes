@@ -123,7 +123,7 @@ public class EscalaDeTrabalhoController extends TpController {
 	@RoleAdminMissao
 	@RoleAdminMissaoComplexo
 	@Path("/salvar")
-	public void salvar(EscalaDeTrabalho escalaDeTrabalho, List<DiaDeTrabalho> diasDeTrabalho) throws Exception {
+	public void salvar(EscalaDeTrabalho escalaDeTrabalho, List<DiaDeTrabalho> diasDeTrabalho) {
        
 		if(!validator.hasErrors()) {
         	error(diasDeTrabalho.isEmpty(), "diasDeTrabalho", "escalasDeTrabalho.diaDaSemana.validation");
