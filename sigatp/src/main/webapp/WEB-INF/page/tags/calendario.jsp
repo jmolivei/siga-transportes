@@ -12,7 +12,7 @@
 		};
 
 	var carregarMascaraData = function() {
-			$(".dataHora").mask('99/99/9999 99:99');
+			$(".dataHora").unmask('99/99/9999 99:99').mask('99/99/9999 99:99');
 		};
 		
 	$(function() {
