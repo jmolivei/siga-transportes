@@ -34,7 +34,7 @@ public class EscalaDeTrabalhoController extends TpController {
 	private static final String LABEL_EDITAR = "views.label.editar";
 	private static final String LABEL_INCLUIR = "views.label.incluir";
 
-	public EscalaDeTrabalhoController(HttpServletRequest request, Result result, CpDao dao, Validator validator, SigaObjects so, EntityManager em) throws Exception {
+	public EscalaDeTrabalhoController(HttpServletRequest request, Result result, CpDao dao, Validator validator, SigaObjects so, EntityManager em) {
 		super(request, result, TpDao.getInstance(), validator, so, em);
 	}
 
@@ -123,7 +123,7 @@ public class EscalaDeTrabalhoController extends TpController {
 	@RoleAdminMissao
 	@RoleAdminMissaoComplexo
 	@Path("/salvar")
-	public void salvar(EscalaDeTrabalho escalaDeTrabalho, List<DiaDeTrabalho> diasDeTrabalho) {
+	public void salvar(EscalaDeTrabalho escalaDeTrabalho, List<DiaDeTrabalho> diasDeTrabalho) throws Exception {
        
 		if(!validator.hasErrors()) {
         	error(diasDeTrabalho.isEmpty(), "diasDeTrabalho", "escalasDeTrabalho.diaDaSemana.validation");
