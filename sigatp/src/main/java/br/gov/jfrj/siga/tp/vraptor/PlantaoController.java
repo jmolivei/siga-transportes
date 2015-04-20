@@ -129,7 +129,7 @@ public class PlantaoController extends TpController {
 						listaMissoes += listaMissoes == "" ? "" : ",";
 						listaMissoes += item.getSequence();
 					}
-					error(missoes.size() > 0, "LinkErroCondutor", listaMissoes);
+					error(missoes.isEmpty(), "LinkErroCondutor", listaMissoes);
 				}
 			}
 
@@ -151,16 +151,15 @@ public class PlantaoController extends TpController {
 		Plantao plantao = Plantao.AR.findById(id);
 
 		List<Missao> missoes = retornarMissoesCondutorPlantao(plantao, null, null);
-		String listaMissoes = "";
+		StringBuilder listaMissoes = new StringBuilder();
 		String delimitador = "";
 
 		for (Missao item : missoes) {
-			listaMissoes += delimitador;
-			listaMissoes += item.getSequence();
+			listaMissoes.append(delimitador).append(item.getSequence());
 			delimitador = ",";
 		}
 
-		error(missoes.size() > 0, "LinkErroCondutor", listaMissoes);
+		error(missoes.isEmpty(), "LinkErroCondutor", listaMissoes.toString());
 
 		if (validator.hasErrors())
 			redirecionaPaginaCasoOcorraErros(plantao.condutor.getId(), id);

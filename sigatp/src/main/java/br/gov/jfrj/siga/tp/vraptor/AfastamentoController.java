@@ -80,17 +80,16 @@ public class AfastamentoController extends TpController {
 					afastamento.getCondutor().getId(),
 					afastamento.getCondutor().getCpOrgaoUsuario().getId(),
 					afastamento.getDataHoraInicio(), afastamento.getDataHoraFim());
-			String listaMissoes = "";
+			StringBuilder listaMissoes = new StringBuilder();
 			String delimitador = "";
 
 			for (Missao item : missoes) {
-				listaMissoes += delimitador;
-				listaMissoes += item.getSequence();
+				listaMissoes.append(delimitador).append(item.getSequence());
 				delimitador = ",";
 			}
 
 			if (missoes.size() > 0) {
-				validator.add(new I18nMessage(listaMissoes, "LinkErroCondutor"));
+				validator.add(new I18nMessage(listaMissoes.toString(), "LinkErroCondutor"));
 				
 				result.include("afastamento", afastamento);
 				result.redirectTo(this).editar(afastamento.getCondutor().getId(), afastamento.getId());
