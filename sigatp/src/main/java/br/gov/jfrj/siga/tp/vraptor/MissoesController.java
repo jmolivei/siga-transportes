@@ -27,7 +27,7 @@ import br.gov.jfrj.siga.vraptor.SigaObjects;
 @Path("/app/missoes")
 public class MissoesController extends TpController {
 
-	public MissoesController(HttpServletRequest request, Result result, CpDao dao, Validator validator, SigaObjects so, EntityManager em) throws Exception {
+	public MissoesController(HttpServletRequest request, Result result, CpDao dao, Validator validator, SigaObjects so, EntityManager em) {
 		super(request, result, TpDao.getInstance(), validator, so, em);
 	}
 

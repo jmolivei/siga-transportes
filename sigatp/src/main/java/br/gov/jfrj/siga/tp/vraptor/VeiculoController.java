@@ -35,7 +35,7 @@ import com.google.common.base.Optional;
 @Path("/app/veiculos/")
 public class VeiculoController extends TpController {
 
-	public VeiculoController(HttpServletRequest request, Result result, Validator validator, SigaObjects so, EntityManager em) throws Exception {
+	public VeiculoController(HttpServletRequest request, Result result, Validator validator, SigaObjects so, EntityManager em) {
 		super(request, result, TpDao.getInstance(), validator, so, em);
 	}
 

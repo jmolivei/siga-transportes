@@ -26,10 +26,10 @@ import br.gov.jfrj.siga.vraptor.SigaObjects;
 public class AvariaController extends TpController {
 	
 	private static final String MODO = "modo";
-	private static final String EDITAR = "views.botoes.editar";
-	private static final String INCLUIR = "views.botoes.incluir";
+	private static final String LABEL_EDITAR = "views.label.editar";
+	private static final String LABEL_INCLUIR = "views.label.incluir";
 
-	public AvariaController(HttpServletRequest request, Result result, Validator validator, SigaObjects so, EntityManager em) throws Exception {
+	public AvariaController(HttpServletRequest request, Result result, Validator validator, SigaObjects so, EntityManager em){
 		super(request, result, TpDao.getInstance(), validator, so, em);
 	}
 
@@ -64,7 +64,7 @@ public class AvariaController extends TpController {
 			MenuMontador.instance(result).recuperarMenuVeiculos(avaria.getVeiculo().getId(), ItemMenu.AVARIAS);
 		}
 		
-		result.include(MODO, INCLUIR);
+		result.include(MODO, LABEL_INCLUIR);
 		result.include("avaria", avaria);
 		result.include("veiculos", veiculos);
 		result.include("fixarVeiculo", fixarVeiculo);
@@ -83,7 +83,7 @@ public class AvariaController extends TpController {
 		List<Veiculo> veiculos = Veiculo.listarTodos(getTitular().getOrgaoUsuario());
 		MenuMontador.instance(result).recuperarMenuVeiculos(avaria.getVeiculo().getId(), ItemMenu.AVARIAS);
 		
-		result.include(MODO, EDITAR);
+		result.include(MODO, LABEL_EDITAR);
 		result.include("avaria", avaria);
 		result.include("veiculos", veiculos);
 		result.include("veiculo", veiculo);
@@ -100,9 +100,9 @@ public class AvariaController extends TpController {
 			Veiculo veiculo = Veiculo.AR.findById(avaria.getVeiculo().getId());
 
 			if(null == avaria.getId())
-				result.include(MODO, INCLUIR);
+				result.include(MODO, LABEL_INCLUIR);
 			else
-				result.include(MODO, EDITAR);
+				result.include(MODO, LABEL_EDITAR);
 			
 			result.include("avaria", avaria);
 			result.include("veiculos", veiculos);

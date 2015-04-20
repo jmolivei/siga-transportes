@@ -23,7 +23,7 @@ import br.gov.jfrj.siga.vraptor.SigaObjects;
 @Resource
 public class MissaoController extends TpController {
 
-	public MissaoController(HttpServletRequest request, Result result, CpDao dao, Localization localization, Validator validator, SigaObjects so, EntityManager em) throws Exception {
+	public MissaoController(HttpServletRequest request, Result result, CpDao dao, Localization localization, Validator validator, SigaObjects so, EntityManager em){
 		super(request, result, TpDao.getInstance(), validator, so, em);
 	}
 

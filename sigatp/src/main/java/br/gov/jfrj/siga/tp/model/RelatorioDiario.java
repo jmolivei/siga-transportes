@@ -16,66 +16,65 @@ import javax.validation.constraints.NotNull;
 
 import org.hibernate.envers.Audited;
 
-import play.data.binding.As;
 import play.modules.br.jus.jfrj.siga.uteis.validadores.validarAnoData.ValidarAnoData;
 import br.com.caelum.vraptor.Convert;
+import br.com.caelum.vraptor.converter.DoubleConverter;
 import br.gov.jfrj.siga.model.ActiveRecord;
 import br.gov.jfrj.siga.tp.util.PerguntaSimNao;
-import br.gov.jfrj.siga.tp.vraptor.ConvertableEntity;
-import br.gov.jfrj.siga.tp.vraptor.converter.DoubleConverter;
-import br.jus.jfrj.siga.uteis.UpperCase;
+import br.gov.jfrj.siga.tp.validation.annotation.UpperCase;
 
 @SuppressWarnings("serial")
 @Entity
 @Audited
 @Table(schema = "SIGATP")
-public class RelatorioDiario extends TpModel implements ConvertableEntity {
-
+public class RelatorioDiario extends TpModel {
+	
 	public static ActiveRecord<RelatorioDiario> AR = new ActiveRecord<>(RelatorioDiario.class);
-
+	
 	@Id
-	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "hibernate_sequence_generator")
-	@SequenceGenerator(name = "hibernate_sequence_generator", sequenceName = "SIGATP.hibernate_sequence")
+	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "hibernate_sequence_generator") @SequenceGenerator(name = "hibernate_sequence_generator", sequenceName="SIGATP.hibernate_sequence") 
 	private Long id;
-
+	
 	@NotNull
-	@As(lang = { "*" }, value = { "dd/MM/yyyy" })
-	@ValidarAnoData(descricaoCampo = "Data")
+	@ValidarAnoData(descricaoCampo="Data")
 	private Calendar data;
-
+	
 	@ManyToOne
 	@NotNull
-	private Veiculo veiculo;
-
+	private Veiculo veiculo;	
+	
 	@NotNull
 	@Convert(DoubleConverter.class)
-	public double odometroEmKm;
-
+	private double odometroEmKm;
+	
 	@NotNull
 	@Enumerated(EnumType.STRING)
 	private NivelDeCombustivel nivelDeCombustivel;
-
+	
 	@Enumerated(EnumType.STRING)
 	private PerguntaSimNao equipamentoObrigatorio;
-
+	
 	@Enumerated(EnumType.STRING)
 	private PerguntaSimNao cartoes;
-
+	
 	@UpperCase
 	private String observacao;
-
-	public static List<RelatorioDiario> buscarTodosPorVeiculo(Veiculo veiculo) {
+	
+	public static List<RelatorioDiario> buscarTodosPorVeiculo(Veiculo veiculo){
 		return RelatorioDiario.AR.find("veiculo", veiculo).fetch();
 	}
-
-	public RelatorioDiario() {
+	
+	public RelatorioDiario(){
 		this.id = new Long(0);
 		this.nivelDeCombustivel = NivelDeCombustivel.I;
 		this.equipamentoObrigatorio = PerguntaSimNao.SIM;
 		this.cartoes = PerguntaSimNao.SIM;
 	}
-
-	public RelatorioDiario(Long id, Calendar data, NivelDeCombustivel nivelDeCombustivel, double odometroEmKm, PerguntaSimNao equipamentoObrigatorio, PerguntaSimNao cartoes, String observacao) {
+	
+	public RelatorioDiario(Long id, Calendar data,
+			NivelDeCombustivel nivelDeCombustivel,
+			double odometroEmKm, PerguntaSimNao equipamentoObrigatorio,  PerguntaSimNao cartoes,
+			String observacao) {
 		super();
 		this.id = id;
 		this.data = data;

@@ -20,8 +20,7 @@ import br.gov.jfrj.siga.vraptor.SigaObjects;
 public class LotacaoVeiculoController extends TpController {
 
 	public LotacaoVeiculoController(HttpServletRequest request, Result result, CpDao dao,
-			Validator validator, SigaObjects so, EntityManager em)
-			throws Exception {
+			Validator validator, SigaObjects so, EntityManager em) {
 		super(request, result, dao, validator, so, em);
 	}
 	

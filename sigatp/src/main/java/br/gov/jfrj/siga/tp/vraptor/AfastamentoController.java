@@ -4,13 +4,11 @@ import java.util.List;
 
 import javax.persistence.EntityManager;
 import javax.servlet.http.HttpServletRequest;
-import javax.validation.Valid;
 
 import br.com.caelum.vraptor.Path;
 import br.com.caelum.vraptor.Resource;
 import br.com.caelum.vraptor.Result;
 import br.com.caelum.vraptor.Validator;
-import br.com.caelum.vraptor.core.Localization;
 import br.com.caelum.vraptor.validator.I18nMessage;
 import br.com.caelum.vraptor.view.Results;
 import br.gov.jfrj.siga.dp.dao.CpDao;
@@ -29,10 +27,10 @@ import br.gov.jfrj.siga.vraptor.SigaObjects;
 public class AfastamentoController extends TpController {
 	
 	private static final String MODO = "modo";
-	private static final String EDITAR = "views.botoes.editar";
-	private static final String INCLUIR = "views.botoes.incluir";
+	private static final String LABEL_EDITAR = "views.label.editar";
+	private static final String LABEL_INCLUIR = "views.label.incluir";
 
-	public AfastamentoController(HttpServletRequest request, Result result, CpDao dao, Localization localization, Validator validator, SigaObjects so, EntityManager em) throws Exception {
+	public AfastamentoController(HttpServletRequest request, Result result, CpDao dao, Validator validator, SigaObjects so, EntityManager em) {
 		super(request, result, TpDao.getInstance(), validator, so, em);
 	}
 
@@ -55,9 +53,9 @@ public class AfastamentoController extends TpController {
 			afastamento = new Afastamento();
 			Condutor condutor = Condutor.AR.findById(idCondutor);
 			afastamento.setCondutor(condutor);	
-			result.include(MODO, INCLUIR);
+			result.include(MODO, LABEL_INCLUIR);
 		}else{
-			result.include(MODO, EDITAR);
+			result.include(MODO, LABEL_EDITAR);
 			afastamento = Afastamento.AR.findById(id);
 		}
 		result.include("afastamento", afastamento);
@@ -67,8 +65,10 @@ public class AfastamentoController extends TpController {
 	@RoleAdminMissao
 	@RoleAdminMissaoComplexo
 	@Path("/salvar")
-	public void salvar(@Valid final Afastamento afastamento) throws Exception {
-		if ((afastamento.getDataHoraInicio() != null ) && (afastamento.getDataHoraFim() != null) && (!afastamento.getDescricao().equals(""))) {
+	public void salvar(final Afastamento afastamento) throws Exception {
+		validator.validate(afastamento);
+		
+		if (!validator.hasErrors() && (afastamento.getDataHoraInicio() != null ) && (afastamento.getDataHoraFim() != null) && (!afastamento.getDescricao().equals(""))) {
 			if (!afastamento.ordemDeDatasCorreta()) {
 				validator.add(new I18nMessage("afastamentos.dataHoraInicio.validation", "dataHoraInicio"));
 			}
@@ -79,6 +79,7 @@ public class AfastamentoController extends TpController {
 			
 			result.include("afastamento", afastamento);
 			result.include("condutores", condutores);
+			result.include(MODO, null == afastamento.getId() ? LABEL_INCLUIR : LABEL_EDITAR);
 			validator.onErrorUse(Results.page()).of(AfastamentoController.class).editar(afastamento.getCondutor().getId(), afastamento.getId());
 		} else {
 			afastamento.setCondutor(Condutor.AR.findById(afastamento.getCondutor().getId()));
@@ -86,17 +87,16 @@ public class AfastamentoController extends TpController {
 					afastamento.getCondutor().getId(),
 					afastamento.getCondutor().getCpOrgaoUsuario().getId(),
 					afastamento.getDataHoraInicio(), afastamento.getDataHoraFim());
-			String listaMissoes = "";
+			StringBuilder listaMissoes = new StringBuilder();
 			String delimitador = "";
 
 			for (Missao item : missoes) {
-				listaMissoes += delimitador;
-				listaMissoes += item.getSequence();
+				listaMissoes.append(delimitador).append(item.getSequence());
 				delimitador = ",";
 			}
 
-			if (missoes.size() > 0) {
-				validator.add(new I18nMessage(listaMissoes, "LinkErroCondutor"));
+			if (!missoes.isEmpty()) {
+				validator.add(new I18nMessage(listaMissoes.toString(), "LinkErroCondutor"));
 				
 				result.include("afastamento", afastamento);
 				result.redirectTo(this).editar(afastamento.getCondutor().getId(), afastamento.getId());

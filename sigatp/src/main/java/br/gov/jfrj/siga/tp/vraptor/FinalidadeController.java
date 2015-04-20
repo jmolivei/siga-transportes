@@ -23,10 +23,10 @@ import br.gov.jfrj.siga.vraptor.SigaObjects;
 public class FinalidadeController extends TpController {
 	
 	private static final String MODO = "modo";
-	private static final String EDITAR = "views.botoes.editar";
-	private static final String INCLUIR = "views.botoes.incluir";
+	private static final String LABEL_EDITAR = "views.label.editar";
+	private static final String LABEL_INCLUIR = "views.label.incluir";
 
-	public FinalidadeController(HttpServletRequest request, Result result, CpDao dao, Validator validator, SigaObjects so, EntityManager em) throws Exception {
+	public FinalidadeController(HttpServletRequest request, Result result, CpDao dao, Validator validator, SigaObjects so, EntityManager em) {
 		super(request, result, TpDao.getInstance(), validator, so, em);
 	}
 
@@ -60,9 +60,9 @@ public class FinalidadeController extends TpController {
     	
     	if(isUpdate(finalidade)) {
     		finalidade.checarProprietario(getTitular().getOrgaoUsuario());
-    		result.include(MODO, EDITAR);
+    		result.include(MODO, LABEL_EDITAR);
     	} else
-    		result.include(MODO, INCLUIR);
+    		result.include(MODO, LABEL_INCLUIR);
     	
     	result.include("finalidade", finalidade);
     }

@@ -12,6 +12,8 @@ import br.com.caelum.vraptor.Result;
 import br.com.caelum.vraptor.Validator;
 import br.com.caelum.vraptor.core.Localization;
 import br.com.caelum.vraptor.view.Results;
+import br.gov.jfrj.siga.tp.auth.annotation.RoleAdmin;
+import br.gov.jfrj.siga.tp.auth.annotation.RoleAdminFrota;
 import br.gov.jfrj.siga.tp.model.ItemMenu;
 import br.gov.jfrj.siga.tp.model.RelatorioDiario;
 import br.gov.jfrj.siga.tp.model.TpDao;
@@ -23,7 +25,7 @@ import br.gov.jfrj.siga.vraptor.SigaObjects;
 public class RelatorioDiarioController extends TpController {
 	
 	public RelatorioDiarioController(HttpServletRequest request, Result result, Localization localization, 
-			Validator validator, SigaObjects so, EntityManager em) throws Exception {
+			Validator validator, SigaObjects so, EntityManager em) {
 		super(request, result, TpDao.getInstance(), validator, so, em);
 	}
 
@@ -37,8 +39,8 @@ public class RelatorioDiarioController extends TpController {
 		result.include("idVeiculo", idVeiculo);
 	}
 	
-//	@RoleAdmin
-//	@RoleAdminFrota
+	@RoleAdmin
+	@RoleAdminFrota
 	@Path("/incluir/{idVeiculo}")
 	public void incluir(Long idVeiculo) throws Exception {
 		Veiculo veiculo = Veiculo.AR.findById(idVeiculo);
@@ -47,16 +49,16 @@ public class RelatorioDiarioController extends TpController {
 		result.include("relatorioDiario", relatorioDiario);
 	}
 	
-//	@RoleAdmin
-//	@RoleAdminFrota
+	@RoleAdmin
+	@RoleAdminFrota
 	@Path("/editar/{id}")
 	public void editar(Long id) throws Exception {
 		RelatorioDiario relatorioDiario = RelatorioDiario.AR.findById(id);
 		result.include("relatorioDiario", relatorioDiario);
 	}
 	
-//	@RoleAdmin
-//	@RoleAdminFrota
+	@RoleAdmin
+	@RoleAdminFrota
 	@Path("/salvar")
 	public void salvar(@Valid RelatorioDiario relatorioDiario) throws Exception {
 		redirecionarSeErroAoSalvar(relatorioDiario);
@@ -65,8 +67,8 @@ public class RelatorioDiarioController extends TpController {
 		result.redirectTo(this).listarPorVeiculo(relatorioDiario.getVeiculo().getId());
 	}
 	
-//	@RoleAdmin
-//	@RoleAdminFrota
+	@RoleAdmin
+	@RoleAdminFrota
 	@Path("/excluir/{id}")
 	public void excluir(Long id) throws Exception {
 		RelatorioDiario relatorioDiario = RelatorioDiario.AR.findById(id);
