@@ -57,7 +57,7 @@ public class Requisicoes extends Controller {
 		}
 
 		for (int cont = 0; cont < req.length; cont++) {
-			RequisicaoTransporte requisicao = RequisicaoTransporte.findById(req[cont]);
+			RequisicaoTransporte requisicao = RequisicaoTransporte.AR.findById(req[cont]);
 			requisicao.cpComplexo = novoComplexo;
 			requisicao.save();
 		}
@@ -100,7 +100,7 @@ public class Requisicoes extends Controller {
 		}
 		criterioBusca = criterioBusca + " order by dataHoraSaidaPrevista desc";
 
-		List<RequisicaoTransporte> requisicoesTransporte = RequisicaoTransporte.find(criterioBusca, parametros).fetch();
+		List<RequisicaoTransporte> requisicoesTransporte = RequisicaoTransporte.AR.find(criterioBusca, parametros).fetch();
 		if (estadosRequisicao != null) {
 			filtrarRequisicoes(requisicoesTransporte,estadosRequisicao);
 		} 
@@ -265,7 +265,7 @@ public class Requisicoes extends Controller {
 	}
 
 	public static void editar(Long id) throws Exception {
-		RequisicaoTransporte requisicaoTransporte = RequisicaoTransporte.findById(id);
+		RequisicaoTransporte requisicaoTransporte = RequisicaoTransporte.AR.findById(id);
 		checarSolicitante(requisicaoTransporte.solicitante.getIdInicial(),requisicaoTransporte.cpComplexo.getIdComplexo(),true);
 		requisicaoTransporte.idSolicitante=requisicaoTransporte.solicitante.getId();
 		//MenuMontador.instance().RecuperarMenuRequisicoes(id, renderArgs);
@@ -319,7 +319,7 @@ public class Requisicoes extends Controller {
 	}
 
 	public static void ler(Long id) throws Exception {
-		RequisicaoTransporte requisicaoTransporte = RequisicaoTransporte.findById(id);
+		RequisicaoTransporte requisicaoTransporte = RequisicaoTransporte.AR.findById(id);
 		checarSolicitante(requisicaoTransporte.solicitante.getIdInicial(), requisicaoTransporte.cpComplexo.getIdComplexo(),false);
 		requisicaoTransporte.idSolicitante=requisicaoTransporte.solicitante.getId();
 		MenuMontador.instance().recuperarMenuRequisicoes(id, false, false);
@@ -368,7 +368,7 @@ public class Requisicoes extends Controller {
 	}
 
 	public static void excluir(Long id) throws Exception{
-		RequisicaoTransporte requisicaoTransporte = RequisicaoTransporte.findById(id);
+		RequisicaoTransporte requisicaoTransporte = RequisicaoTransporte.AR.findById(id);
 		checarSolicitante(requisicaoTransporte.solicitante.getIdInicial(),requisicaoTransporte.cpComplexo.getIdComplexo(),true);
 		requisicaoTransporte.idSolicitante=requisicaoTransporte.solicitante.getId();
 

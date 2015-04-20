@@ -23,8 +23,8 @@ import br.gov.jfrj.siga.tp.util.MenuMontador;
 @With(AutorizacaoGIAntigo.class)
 public class Andamentos extends Controller {
 
-	public static void listarPorRequisicao(Long idRequisicao, boolean popUp) {
-		RequisicaoTransporte requisicaoTransporte = RequisicaoTransporte.findById(idRequisicao);
+	public static void listarPorRequisicao(Long idRequisicao, boolean popUp) throws Exception {
+		RequisicaoTransporte requisicaoTransporte = RequisicaoTransporte.AR.findById(idRequisicao);
 		List<Andamento> andamentos = Andamento.find("requisicaoTransporte = ? order by id desc",requisicaoTransporte).fetch();
 		MenuMontador.instance().recuperarMenuRequisicoes(idRequisicao, popUp, popUp);
 		render(andamentos, requisicaoTransporte);
@@ -90,7 +90,7 @@ public class Andamentos extends Controller {
 	protected static void montarAndamentos() throws Exception {
 		Long id = params.get("id", Long.class);
 		Andamento andamento = new Andamento();
-		andamento.requisicaoTransporte = RequisicaoTransporte.findById(id);
+		andamento.requisicaoTransporte = RequisicaoTransporte.AR.findById(id);
 		String acaoExecutada = Http.Request.current().actionMethod;
 		acaoExecutada = (acaoExecutada.substring(0, acaoExecutada.length()-1) + "DA").toUpperCase();
 		andamento.estadoRequisicao = EstadoRequisicao.valueOf(acaoExecutada);

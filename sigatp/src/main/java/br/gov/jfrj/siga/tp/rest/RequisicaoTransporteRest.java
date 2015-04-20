@@ -41,9 +41,9 @@ public class RequisicaoTransporteRest {
 		return requisicaoTransporte.tipoFinalidade.getDescricao();
 	}
 
-	public static RequisicaoTransporteRest recuperar(Long id) {
+	public static RequisicaoTransporteRest recuperar(Long id) throws Exception {
 		RequisicaoTransporteRest retorno = new RequisicaoTransporteRest();
-		retorno.requisicaoTransporte = RequisicaoTransporte.findById(id);
+		retorno.requisicaoTransporte = RequisicaoTransporte.AR.findById(id);
 		return retorno;
 	}
 	

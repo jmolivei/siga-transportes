@@ -70,11 +70,11 @@ public class RelatoriosConsumoMedio extends Controller {
 		RelatorioConsumoMedio resultado = new RelatorioConsumoMedio();
 
 		Calendar dataInicial = Calendar.getInstance();
-		relatorio.abastecimentoInicial = Abastecimento.findById(relatorio.abastecimentoInicial.getId());
+		relatorio.abastecimentoInicial = Abastecimento.AR.findById(relatorio.abastecimentoInicial.getId());
 		dataInicial.setTime(relatorio.abastecimentoInicial.getDataHora().getTime());
 
 		Calendar dataFinal = Calendar.getInstance();
-		relatorio.abastecimentoFinal = Abastecimento.findById(relatorio.abastecimentoFinal.getId());
+		relatorio.abastecimentoFinal = Abastecimento.AR.findById(relatorio.abastecimentoFinal.getId());
 		dataFinal.setTime(relatorio.abastecimentoFinal.getDataHora().getTime());
 
 		String qrl = "SELECT m.id, m.consumoEmLitros, m.odometroSaidaEmKm, m.odometroRetornoEmKm " + "FROM  Missao m " + "WHERE m.veiculo.getId() = ? " + "AND   m.dataHora BETWEEN ? AND ? "

@@ -44,7 +44,7 @@ public class Gabinetes extends Controller {
 		List<Fornecedor> fornecedores = Fornecedor.listarTodos();
 		List<Veiculo> veiculos = Veiculo.listarTodos(AutorizacaoGIAntigo.titular().getOrgaoUsuario());
 		List<Condutor> condutores = Condutor.listarTodos(AutorizacaoGIAntigo.titular().getOrgaoUsuario());
-		Abastecimento abastecimento = Abastecimento.findById(id);
+		Abastecimento abastecimento = Abastecimento.AR.findById(id);
 		render(abastecimento, veiculos, condutores, fornecedores);
 	}
 
@@ -63,10 +63,9 @@ public class Gabinetes extends Controller {
 	}
 
 	@RoleAdmin
-	public static void excluir(Long id) {
-		Abastecimento abastecimento = Abastecimento.findById(id);
+	public static void excluir(Long id) throws Exception {
+		Abastecimento abastecimento = Abastecimento.AR.findById(id);
 		abastecimento.delete();
 		listar();
 	}
-
 }

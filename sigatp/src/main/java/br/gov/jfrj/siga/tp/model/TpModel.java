@@ -1,5 +1,6 @@
 package br.gov.jfrj.siga.tp.model;
 
+import br.gov.jfrj.siga.model.ContextoPersistencia;
 import br.gov.jfrj.siga.model.Objeto;
 
 /**
@@ -18,6 +19,12 @@ public abstract class TpModel extends Objeto {
 		TpDao.getInstance().gravar(this);
 	}
 
+	public void refresh() {
+		ContextoPersistencia
+			.em()
+			.refresh(this);
+	}
+	
 	public boolean ehNovo() {
 		return getId() == null || ID_VAZIO.equals(getId());
 	}

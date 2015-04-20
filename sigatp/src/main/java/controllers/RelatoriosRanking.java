@@ -129,7 +129,7 @@ public class RelatoriosRanking extends Controller {
 
 				requisicao = new RequisicaoTransporte();
 				requisicao.id = Long.parseLong(lista.get(i)[2].toString());
-				setRequisicao.add((RequisicaoTransporte) RequisicaoTransporte.findById(requisicao.id));
+				setRequisicao.add((RequisicaoTransporte) RequisicaoTransporte.AR.findById(requisicao.id));
 
 				if (i < lista.size() - 1) {
 					idProximoCondutor = Long.parseLong(lista.get(i + 1)[0].toString());
@@ -194,7 +194,7 @@ public class RelatoriosRanking extends Controller {
 
 				requisicao = new RequisicaoTransporte();
 				requisicao.id = Long.parseLong(lista.get(i)[1].toString());
-				setRequisicao.add((RequisicaoTransporte) RequisicaoTransporte.findById(requisicao.id));
+				setRequisicao.add((RequisicaoTransporte) RequisicaoTransporte.AR.findById(requisicao.id));
 
 				if (i < lista.size() - 1) {
 					idProximoVeiculo = Long.parseLong(lista.get(i + 1)[0].toString());
@@ -275,7 +275,7 @@ public class RelatoriosRanking extends Controller {
 		try {
 			relatorio.dataInicio.setTime(formatarDataHora(relatorio.dataInicio, "00:00:00"));
 			relatorio.dataFim.setTime(formatarDataHora(relatorio.dataFim, "23:59:59"));
-			lista = RequisicaoTransporte.find("dataHora BETWEEN ? AND ? " + "AND cpOrgaoUsuario.idOrgaoUsu = ? ", relatorio.dataInicio, relatorio.dataFim, cpOrgaoUsuario.getIdOrgaoUsu()).fetch();
+			lista = RequisicaoTransporte.AR.find("dataHora BETWEEN ? AND ? " + "AND cpOrgaoUsuario.idOrgaoUsu = ? ", relatorio.dataInicio, relatorio.dataFim, cpOrgaoUsuario.getIdOrgaoUsu()).fetch();
 			RankingTipoPassageiroRequisicao itemRp = null;
 
 			for (int i = 0; i < listaTipoDePassageiro.size(); i++) {

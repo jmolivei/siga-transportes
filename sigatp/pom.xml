@@ -83,10 +83,18 @@
 			<scope>provided</scope>
 		</dependency>
 
-		<!-- dependency> <groupId>org.seleniumhq.selenium</groupId> <artifactId>selenium-server</artifactId> 
-			<version>2.42.0</version> <exclusions> <exclusion> <artifactId>xerces</artifactId> 
-			<groupId>xercesImpl</groupId> </exclusion> </exclusions> </dependency -->
-
+		<dependency>
+			<groupId>org.seleniumhq.selenium</groupId>
+			<artifactId>selenium-server</artifactId>
+			<version>2.42.0</version>
+			<exclusions>
+				<exclusion>
+					<artifactId>xerces</artifactId>
+					<groupId>xercesImpl</groupId>
+				</exclusion>
+			</exclusions>
+		</dependency>
+		
 		<dependency>
 			<groupId>org.apache.ant</groupId>
 			<artifactId>ant-junit</artifactId>
@@ -157,13 +165,13 @@
 
 		<!-- DEV <dependency> <groupId>org.hibernate</groupId> <artifactId>hibernate-validator-legacy</artifactId> 
 			<version>4.0.2.GA</version> </dependency> -->
-			
+
 		<dependency>
 			<groupId>org.hibernate</groupId>
 			<artifactId>hibernate-validator</artifactId>
 			<version>4.1.0.Final</version>
 		</dependency>
-			
+
 
 		<dependency>
 			<groupId>javax.validation</groupId>
@@ -206,16 +214,31 @@
 
 		<!-- DEV <scope>provided</scope> -->
 
-		<!-- Teste -->
-		<!-- <dependency> <groupId>org.seleniumhq.selenium</groupId> <artifactId>selenium-java</artifactId> 
-			<version>2.42.2</version> <scope>test</scope> <exclusions> <exclusion> <groupId>com.google.guava</groupId> 
-			<artifactId>guava</artifactId> </exclusion> </exclusions> </dependency> <dependency> 
-			<groupId>org.testng</groupId> <artifactId>testng</artifactId> <version>6.8.8</version> 
-			<scope>test</scope> </dependency> <dependency> <groupId>com.google.guava</groupId> 
-			<artifactId>guava</artifactId> <version>15.0</version> <scope>test</scope> 
-			</dependency> -->
+		<dependency>
+			<groupId>org.seleniumhq.selenium</groupId>
+			<artifactId>selenium-java</artifactId>
+			<version>2.42.2</version>
+			<scope>test</scope>
+			<exclusions>
+				<exclusion>
+					<groupId>com.google.guava</groupId>
+					<artifactId>guava</artifactId>
+				</exclusion>
+			</exclusions>
+		</dependency>
+		<dependency>
+			<groupId>org.testng</groupId>
+			<artifactId>testng</artifactId>
+			<version>6.8.8</version>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>com.google.guava</groupId>
+			<artifactId>guava</artifactId>
+			<version>15.0</version>
+			<scope>test</scope>
+		</dependency>
 	</dependencies>
-
 
 	<build>
 		<plugins>

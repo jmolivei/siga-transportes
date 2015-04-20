@@ -11,7 +11,7 @@ public class SigaPropertiesTest {
 	public void getValue_ImagemFileSizeHappyDay() {
 		Assert.assertEquals("1", SigaProperties.getValue("imagem.filesize"));
 	}
-	
+
 	@Test
 	public void getValue_null() {
 		Assert.assertNull(SigaProperties.getValue("chave.que.nao.existe"));

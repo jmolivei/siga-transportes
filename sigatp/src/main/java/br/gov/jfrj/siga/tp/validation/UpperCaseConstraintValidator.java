@@ -13,7 +13,6 @@ import net.sf.oval.exception.OValException;
 public class UpperCaseConstraintValidator extends AbstractAnnotationCheck<UpperCase> {
 	@Override
 	public boolean isSatisfied(Object validatedObject, Object value, OValContext context, Validator validator) throws OValException {
-
 		this.setMessage("Campo invalido.");
 
 		try {
@@ -39,7 +38,6 @@ public class UpperCaseConstraintValidator extends AbstractAnnotationCheck<UpperC
 		} catch (Exception e) {
 			return false;
 		}
-
 		return true;
 	}
 }
