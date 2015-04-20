@@ -123,10 +123,10 @@ public class EscalaDeTrabalhoController extends TpController {
 	@RoleAdminMissao
 	@RoleAdminMissaoComplexo
 	@Path("/salvar")
-	public void salvar(EscalaDeTrabalho escalaDeTrabalho, EscalaDeTrabalho novaEscala) throws Exception {
+	public void salvar(EscalaDeTrabalho escalaDeTrabalho, List<DiaDeTrabalho> diasDeTrabalho) throws Exception {
        
 		if(!validator.hasErrors()) {
-        	error(novaEscala.getDiasDeTrabalho().isEmpty(), "diasDeTrabalho", "escalasDeTrabalho.diaDaSemana.validation");
+        	error(diasDeTrabalho.isEmpty(), "diasDeTrabalho", "escalasDeTrabalho.diaDaSemana.validation");
         }
         
         EscalaDeTrabalho escalaAntiga = new EscalaDeTrabalho();
@@ -136,7 +136,7 @@ public class EscalaDeTrabalhoController extends TpController {
 
         if(!validator.hasErrors()) {
 	        escalaDeTrabalho.setDiasDeTrabalho(new ArrayList<DiaDeTrabalho>());
-	        escalaDeTrabalho.getDiasDeTrabalho().addAll(novaEscala.getDiasDeTrabalho());
+	        escalaDeTrabalho.getDiasDeTrabalho().addAll(diasDeTrabalho);
         }
         
         if(!validator.hasErrors()) {
@@ -181,14 +181,14 @@ public class EscalaDeTrabalhoController extends TpController {
         	escalaDeTrabalho.save();
     		
     		for (DiaDeTrabalho diaDeTrabalho : escalaDeTrabalho.getDiasDeTrabalho()) {
-                DiaDeTrabalho diaDeTrabalhoNovo = new DiaDeTrabalho();
-                diaDeTrabalhoNovo.setDiaEntrada(diaDeTrabalho.getDiaEntrada());
-                diaDeTrabalhoNovo.setDiaSaida(diaDeTrabalho.getDiaSaida());
-                diaDeTrabalhoNovo.setHoraEntrada(diaDeTrabalho.getHoraEntrada());
-                diaDeTrabalhoNovo.setHoraSaida(diaDeTrabalho.getHoraSaida());
-                diaDeTrabalhoNovo.setEscalaDeTrabalho(escalaDeTrabalho);
-                
-                diaDeTrabalhoNovo.save();
+	                DiaDeTrabalho diaDeTrabalhoNovo = new DiaDeTrabalho();
+	                diaDeTrabalhoNovo.setDiaEntrada(diaDeTrabalho.getDiaEntrada());
+	                diaDeTrabalhoNovo.setDiaSaida(diaDeTrabalho.getDiaSaida());
+	                diaDeTrabalhoNovo.setHoraEntrada(diaDeTrabalho.getHoraEntrada());
+	                diaDeTrabalhoNovo.setHoraSaida(diaDeTrabalho.getHoraSaida());
+	                diaDeTrabalhoNovo.setEscalaDeTrabalho(escalaDeTrabalho);
+	                
+	                diaDeTrabalhoNovo.save();
     		}
     		
         } else {
@@ -200,6 +200,7 @@ public class EscalaDeTrabalhoController extends TpController {
            	escalaDeTrabalho.save();
             EscalaDeTrabalho.AR.em().detach(escalaDeTrabalho);
 
+            EscalaDeTrabalho novaEscala = new EscalaDeTrabalho(); 
         	novaEscala.setCondutor(escalaDeTrabalho.getCondutor());
         	novaEscala.setDataVigenciaInicio(Calendar.getInstance());
         	novaEscala.getDataVigenciaInicio().set(Calendar.HOUR_OF_DAY, 0);
@@ -208,7 +209,7 @@ public class EscalaDeTrabalhoController extends TpController {
         	novaEscala.setDiasDeTrabalho(escalaDeTrabalho.getDiasDeTrabalho());
         	novaEscala.save();
         	
-    		for (DiaDeTrabalho diaDeTrabalho : novaEscala.getDiasDeTrabalho()) {
+    		for (DiaDeTrabalho diaDeTrabalho : diasDeTrabalho) {
                 DiaDeTrabalho diaDeTrabalhoNovo = new DiaDeTrabalho();
                 diaDeTrabalhoNovo.setDiaEntrada(diaDeTrabalho.getDiaEntrada());
                 diaDeTrabalhoNovo.setDiaSaida(diaDeTrabalho.getDiaSaida());

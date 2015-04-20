@@ -9,7 +9,7 @@
 
 <script>
 	var carregarMascaraHora = function(){
-			$(".hora").mask('99:99');
+			$(".hora").unmask('99:99').mask('99:99');
 		};
 
 	var carregarMascaraData = function() {

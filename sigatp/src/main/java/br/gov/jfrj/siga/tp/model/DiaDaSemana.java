@@ -8,11 +8,11 @@ public enum DiaDaSemana {
 	
 	DOMINGO	(0, "Domingo", "Domingo"),
 	SEGUNDA	(1, "Segunda", "Segunda-feira"), 
-	TERCA	(2, "TerÃ§a", "TerÃ§a-feira"), 
+	TERCA	(2, "Terça", "Terça-feira"), 
 	QUARTA	(3, "Quarta", "Quarta-feira"), 
 	QUINTA	(4, "Quinta", "Quinta-feira"), 
 	SEXTA	(5, "Sexta", "Sexta-feira"), 
-	SABADO	(6, "SÃ¡bado", "SÃ¡bado"); 
+	SABADO	(6, "Sábado", "Sábado"); 
 
 	
 	private Integer ordem;
