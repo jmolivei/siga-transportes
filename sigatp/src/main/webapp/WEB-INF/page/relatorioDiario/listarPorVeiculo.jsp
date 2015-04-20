@@ -6,7 +6,7 @@
 
 <link rel="stylesheet" type="text/css" href="'/public/stylesheets/relatorioDiario.css'">
 
-<jsp:include page="../tags/calendario.jsp" />
+<sigatp:calendario/>
 
 <siga:pagina titulo="Transportes">
 	<div class="gt-bd clearfix">
@@ -40,8 +40,8 @@
 			    		<td><c:out value="${relatorioDiario.equipamentoObrigatorio}"/></td>
 			    		<td><c:out value="${relatorioDiario.cartoes}"/></td>
 			    		<td><textarea name="relatorioDiario.observacao" readonly class="textarealistar" rows="4" cols="20"><c:out value="${relatorioDiario.observacao}"/></textarea></td>
-			    		<td><a href="/sigatp/app/relatorioDiario/editar/${relatorioDiario.id}">Editar</a></td>
-			    		<td><a href="/sigatp/app/relatorioDiario/excluir/${relatorioDiario.id}" onclick="javascript:return confirm('Tem certeza de que deseja excluir este Relat&oacute;rio Di&aacute;rio?');">Excluir</a></td>
+			    		<td><a href="${linkTo[RelatorioDiarioController].editar[relatorioDiario.id]}">Editar</a></td>
+			    		<td><a href="${linkTo[RelatorioDiarioController].excluir[relatorioDiario.id]}" onclick="javascript:return confirm('Tem certeza de que deseja excluir este Relat&oacute;rio Di&aacute;rio?');">Excluir</a></td>
 					</tr>
 					</c:forEach>
 				</tbody>
@@ -55,7 +55,7 @@
 			</c:choose>
 		
 			<div class="gt-table-buttons">
-				<a href="/sigatp/app/relatorioDiario/incluir/${veiculo.id}" class="gt-btn-medium gt-btn-left"><fmt:message key="views.botoes.incluir"/></a>
+				<a href="${linkTo[RelatorioDiarioController].incluir[veiculo.id]}" class="gt-btn-medium gt-btn-left"><fmt:message key="views.botoes.incluir"/></a>
 			</div>
 		</div>
 	</div>
