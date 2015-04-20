@@ -229,7 +229,7 @@ public class EscalaDeTrabalhoController extends TpController {
 	@RoleAdmin
 	@RoleAdminMissao
 	@RoleAdminMissaoComplexo
-	@Path("/excluir{id}")
+	@Path("/excluir/{id}")
 	public void excluir(final Long id) throws Exception {
     	EscalaDeTrabalho escala = EscalaDeTrabalho.AR.findById(id);
     	Long idCondutor = escala.getCondutor().getId();

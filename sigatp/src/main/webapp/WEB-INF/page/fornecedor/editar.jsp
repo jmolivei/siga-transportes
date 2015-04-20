@@ -7,7 +7,7 @@
 <siga:pagina titulo="Fornecedores">
 	<div class="gt-bd clearfix">
 		<div class="gt-content clearfix">
-			<h3>Editar Fornecedor</h3>
+			<h2><fmt:message key="${modo}" /> <fmt:message key="fornecedor" /></h2>
 			<jsp:include page="form.jsp" />
 		</div>		
 	</div>
