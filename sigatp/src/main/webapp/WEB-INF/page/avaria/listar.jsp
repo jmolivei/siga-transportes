@@ -27,7 +27,7 @@
 						    		<td><fmt:formatDate pattern="dd/MM/yyyy" value="${item.dataDeRegistro.time}"/></td>
 						    		<td><fmt:formatDate pattern="dd/MM/yyyy" value="${item.dataDeSolucao.time}"/></td>
 						    		<td style="white-space: pre-line;">${item.descricao}</td>
-						    		<td><a href="${linkTo[AvariaController].editar[null][item.id][false]}"><fmt:message key="views.botoes.editar" /></a></td>
+						    		<td><a href="${linkTo[AvariaController].editar[item.veiculo.id][item.id][false]}"><fmt:message key="views.botoes.editar" /></a></td>
 						    		<td><a onclick="javascript:return confirm('Tem certeza de que deseja excluir esta avaria?');" href="${linkTo[AvariaController].excluir[item.id][false]}"><fmt:message key="views.botoes.excluir" /></a></td>
 								</tr>
 								</c:forEach>
