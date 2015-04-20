@@ -41,6 +41,7 @@ function verificaCampos(){
 		<div class="gt-content clearfix">
 			<h2>${autoDeInfracao.id > 0 ? "Editar" : "Incluir" } Auto de Infra&ccedil;&atilde;o</h2>
 			<jsp:include page="../tags/calendario.jsp" />
+			<sigatp:decimal/>
 			<sigatp:erros/>
 			
 			<form name="formAutosDeInfracao" id="formAutosDeInfracao" action="${linkTo[AutoDeInfracaoController].salvar}" method="post" cssClass="form">
