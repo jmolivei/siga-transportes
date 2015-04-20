@@ -4,7 +4,6 @@ import java.util.List;
 
 import javax.persistence.EntityManager;
 import javax.servlet.http.HttpServletRequest;
-import javax.validation.Valid;
 
 import br.com.caelum.vraptor.Path;
 import br.com.caelum.vraptor.Resource;
@@ -67,8 +66,10 @@ public class AfastamentoController extends TpController {
 	@RoleAdminMissao
 	@RoleAdminMissaoComplexo
 	@Path("/salvar")
-	public void salvar(@Valid final Afastamento afastamento) throws Exception {
-		if ((afastamento.getDataHoraInicio() != null ) && (afastamento.getDataHoraFim() != null) && (!afastamento.getDescricao().equals(""))) {
+	public void salvar(final Afastamento afastamento) throws Exception {
+		validator.validate(afastamento);
+		
+		if (!validator.hasErrors() && (afastamento.getDataHoraInicio() != null ) && (afastamento.getDataHoraFim() != null) && (!afastamento.getDescricao().equals(""))) {
 			if (!afastamento.ordemDeDatasCorreta()) {
 				validator.add(new I18nMessage("afastamentos.dataHoraInicio.validation", "dataHoraInicio"));
 			}
@@ -79,6 +80,7 @@ public class AfastamentoController extends TpController {
 			
 			result.include("afastamento", afastamento);
 			result.include("condutores", condutores);
+			result.include(MODO, null == afastamento.getId() ? INCLUIR : EDITAR);
 			validator.onErrorUse(Results.page()).of(AfastamentoController.class).editar(afastamento.getCondutor().getId(), afastamento.getId());
 		} else {
 			afastamento.setCondutor(Condutor.AR.findById(afastamento.getCondutor().getId()));

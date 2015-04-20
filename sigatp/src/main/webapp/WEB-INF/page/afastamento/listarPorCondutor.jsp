@@ -54,5 +54,3 @@
 		</div>
 	</div>
 </siga:pagina>
-
-<jsp:include page="../tags/calendario.jsp" />
