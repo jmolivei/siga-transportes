@@ -23,7 +23,7 @@ import br.gov.jfrj.siga.vraptor.SigaObjects;
 public class RelatorioDiarioController extends TpController {
 	
 	public RelatorioDiarioController(HttpServletRequest request, Result result, Localization localization, 
-			Validator validator, SigaObjects so, EntityManager em) throws Exception {
+			Validator validator, SigaObjects so, EntityManager em) {
 		super(request, result, TpDao.getInstance(), validator, so, em);
 	}
 

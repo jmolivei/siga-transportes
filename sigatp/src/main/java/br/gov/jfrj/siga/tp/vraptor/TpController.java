@@ -24,7 +24,7 @@ public class TpController extends SigaController {
 
 	protected Validator validator;
 
-	public TpController(HttpServletRequest request, Result result, CpDao dao, Validator validator, SigaObjects so, EntityManager em) throws Exception {
+	public TpController(HttpServletRequest request, Result result, CpDao dao, Validator validator, SigaObjects so, EntityManager em) {
 		super(request, result, dao, so, em);
 		this.validator = validator;
 		this.result.include("currentTimeMillis", new Date().getTime());

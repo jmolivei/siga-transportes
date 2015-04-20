@@ -35,7 +35,7 @@ public class CondutorController extends TpController {
 	
 	private static final String CONDUTOR = "condutor";
 
-	public CondutorController(HttpServletRequest request, Result result, CpDao dao, Validator validator, SigaObjects so, EntityManager em) throws Exception {
+	public CondutorController(HttpServletRequest request, Result result, CpDao dao, Validator validator, SigaObjects so, EntityManager em) {
 		super(request, result, TpDao.getInstance(), validator, so, em);
 	}
 

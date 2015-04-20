@@ -32,7 +32,7 @@ public class AfastamentoController extends TpController {
 	private static final String BOTAO_EDITAR = "views.botoes.editar";
 	private static final String BOTAO_INCLUIR = "views.botoes.incluir";
 
-	public AfastamentoController(HttpServletRequest request, Result result, CpDao dao, Validator validator, SigaObjects so, EntityManager em) throws Exception {
+	public AfastamentoController(HttpServletRequest request, Result result, CpDao dao, Validator validator, SigaObjects so, EntityManager em) {
 		super(request, result, TpDao.getInstance(), validator, so, em);
 	}
 

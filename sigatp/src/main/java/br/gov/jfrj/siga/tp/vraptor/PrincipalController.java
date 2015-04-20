@@ -13,7 +13,7 @@ import br.gov.jfrj.siga.vraptor.SigaObjects;
 @Resource
 public class PrincipalController extends TpController {
 	
-	public PrincipalController(HttpServletRequest request, Result result, CpDao dao, Validator validator, SigaObjects so, EntityManager em) throws Exception {
+	public PrincipalController(HttpServletRequest request, Result result, CpDao dao, Validator validator, SigaObjects so, EntityManager em) throws  {
 		super(request, result, TpDao.getInstance(), validator, so, em);
 	}
 

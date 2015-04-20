@@ -25,7 +25,7 @@ import br.gov.jfrj.siga.vraptor.SigaObjects;
 @Path("/app/fornecedor")
 public class FornecedorController extends TpController {
 
-	public FornecedorController(HttpServletRequest request, Result result, CpDao dao, Validator validator, SigaObjects so, /*AutorizacaoGIAntigo dadosAutorizacao,*/ EntityManager em) throws Exception {
+	public FornecedorController(HttpServletRequest request, Result result, CpDao dao, Validator validator, SigaObjects so, EntityManager em) {
 		super(request, result, TpDao.getInstance(), validator, so, em);
 	}
 

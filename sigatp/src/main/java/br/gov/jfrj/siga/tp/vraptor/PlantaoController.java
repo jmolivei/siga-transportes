@@ -28,7 +28,7 @@ import br.gov.jfrj.siga.vraptor.SigaObjects;
 @Path("/app/plantao")
 public class PlantaoController extends TpController {
 
-	public PlantaoController(HttpServletRequest request, Result result, CpDao dao, Validator validator, SigaObjects so, EntityManager em) throws Exception {
+	public PlantaoController(HttpServletRequest request, Result result, CpDao dao, Validator validator, SigaObjects so, EntityManager em) {
 		super(request, result, TpDao.getInstance(), validator, so, em);
 	}
 
