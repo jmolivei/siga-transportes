@@ -32,7 +32,7 @@
 					    </table>
 						<div id="pagination"></div>
 						<div class="gt-table-buttons">
-							<a href="${linkTo[FinalidadeController].editar[0]}" id="botaoIncluirFinalidade" class="gt-btn-medium gt-btn-left"><fmt:message key="views.botoes.incluir" /></a>
+							<a href="${linkTo[FinalidadeController].incluir}" id="botaoIncluirFinalidade" class="gt-btn-medium gt-btn-left"><fmt:message key="views.botoes.incluir" /></a>
 						</div>
 					</div>
 				</c:when>
