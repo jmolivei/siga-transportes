@@ -37,8 +37,8 @@
 			    	    <td><fmt:formatDate value="${relatorioDiario.data.time}" pattern="dd/MM/yyyy"/></td>
 			    		<td><c:out value="${relatorioDiario.odometroEmKm}"/></td>
 			    		<td><c:out value="${relatorioDiario.nivelDeCombustivel.descricao}"/></td>
-			    		<td><c:out value="${relatorioDiario.equipamentoObrigatorio}"/></td>
-			    		<td><c:out value="${relatorioDiario.cartoes}"/></td>
+			    		<td><c:out value="${relatorioDiario.equipamentoObrigatorio.descricao}"/></td>
+			    		<td><c:out value="${relatorioDiario.cartoes.descricao}"/></td>
 			    		<td><textarea name="relatorioDiario.observacao" readonly class="textarealistar" rows="4" cols="20"><c:out value="${relatorioDiario.observacao}"/></textarea></td>
 			    		<td><a href="${linkTo[RelatorioDiarioController].editar[relatorioDiario.id]}">Editar</a></td>
 			    		<td><a href="${linkTo[RelatorioDiarioController].excluir[relatorioDiario.id]}" onclick="javascript:return confirm('Tem certeza de que deseja excluir este Relat&oacute;rio Di&aacute;rio?');">Excluir</a></td>
