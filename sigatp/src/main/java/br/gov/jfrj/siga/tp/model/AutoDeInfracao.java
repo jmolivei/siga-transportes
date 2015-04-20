@@ -74,6 +74,7 @@ public class AutoDeInfracao extends TpModel implements ConvertableEntity, Compar
 	@Convert(DoubleConverter.class)
 	public double valor;
 
+	@Convert(DoubleConverter.class)
 	public double valorComDesconto;
 
 	@NotNull

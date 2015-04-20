@@ -77,7 +77,12 @@ public class PlantaoController extends TpController {
 			throws Exception {
 		Long idCondutor = setaCondutor(plantao);
 		Long idPlantao = isEdicao(plantao) ? plantao.id : 0L;
-
+		
+		if (validator.hasErrors()) {
+			result.include("plantao", plantao);
+			redirecionaPaginaCasoOcorraErros(idCondutor, idPlantao);
+		}
+		
 		error(!plantao.ordemDeDatasCorreta(), "dataHoraInicio", "plantoes.dataHoraInicio.validation");
 
 		String listaAfastamento = "";
