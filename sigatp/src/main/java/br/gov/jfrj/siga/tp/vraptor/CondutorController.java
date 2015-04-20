@@ -12,7 +12,6 @@ import br.com.caelum.vraptor.Path;
 import br.com.caelum.vraptor.Resource;
 import br.com.caelum.vraptor.Result;
 import br.com.caelum.vraptor.Validator;
-import br.com.caelum.vraptor.core.Localization;
 import br.com.caelum.vraptor.interceptor.multipart.UploadedFile;
 import br.com.caelum.vraptor.validator.I18nMessage;
 import br.com.caelum.vraptor.validator.ValidationMessage;
@@ -36,7 +35,7 @@ public class CondutorController extends TpController {
 	
 	private static final String CONDUTOR = "condutor";
 
-	public CondutorController(HttpServletRequest request, Result result, CpDao dao, Localization localization, Validator validator, SigaObjects so, EntityManager em) throws Exception {
+	public CondutorController(HttpServletRequest request, Result result, CpDao dao, Validator validator, SigaObjects so, EntityManager em) throws Exception {
 		super(request, result, TpDao.getInstance(), validator, so, em);
 	}
 
