@@ -41,7 +41,7 @@
 									<td>${autoDeInfracao.foiPago().descricao}</td>
 									<td>${autoDeInfracao.foiRecebido.descricao}</td>
 									<td><a href="${linkTo[AutoDeInfracaoController].editar[autoDeInfracao.id]}"><fmt:message key="views.botoes.editar"/></a></td>
-									<td><a href="${linkTo[AutoDeInfracaoController].excluir[autoDeInfracao.id]}"><fmt:message key="views.botoes.excluir"/></a></td>
+									<td><a href="${linkTo[AutoDeInfracaoController].excluir[autoDeInfracao.id]}" onclick="javascript:return confirm('Tem certeza de que deseja excluir este auto de infra&ccedil;&atilde;o?');"><fmt:message key="views.botoes.excluir" /></a></td>
 								</tr>
 							</c:forEach>
 						</tbody>

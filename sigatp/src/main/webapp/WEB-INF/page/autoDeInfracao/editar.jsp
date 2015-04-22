@@ -49,19 +49,13 @@ function verificaCampos(){
 					<div class="coluna margemDireitaG">
 				       	<label for="autoDeInfracao.dataHora" class= "obrigatorio">Data e Hora</label>
 						<input type="text" id="dataHora" name="autoDeInfracao.dataHora" value="<fmt:formatDate pattern="dd/MM/yyyy HH:mm" value="${autoDeInfracao.dataHora.time}" />" size="20" class="dataHora"/> 
+
 						<label for="autoDeInfracao.veiculo.id" class= "obrigatorio">Ve&iacute;culo</label>
-				       	<select name="autoDeInfracao.veiculo.id">
-				       		<c:forEach items="${veiculos}" var="veiculo">
-				       			<option value="${veiculo.id}" ${autoDeInfracao.veiculo.id == veiculo.id ? 'selected' : ''}>${veiculo.dadosParaExibicao}</option>
-				       		</c:forEach>
-				       	</select>
+						<siga:select name="autoDeInfracao.veiculo.id" list="veiculos" listKey="id" listValue="dadosParaExibicao" value="${autoDeInfracao.veiculo.id}" headerKey="0" headerValue=" "/>
 			
 						<label for="autoDeInfracao.condutor.id" class= "obrigatorio">Condutor</label>
-				       	<select name="autoDeInfracao.condutor.id">
-				       		<c:forEach items="${condutores}" var="condutor">
-				       			<option value="${condutor.id}" ${autoDeInfracao.condutor.id == condutor.id ? 'selected' : ''}>${condutor.dadosParaExibicao}</option>
-				       		</c:forEach>
-				       	</select>
+						<siga:select name="autoDeInfracao.condutor.id" list="condutores" listKey="id" listValue="dadosParaExibicao" value="${autoDeInfracao.condutor.id}" headerKey="0" headerValue=" "/>
+
 						<label for="autoDeInfracao.local" class= "obrigatorio">Local</label>
 						<input type="text" id="local" name="autoDeInfracao.local" size="46" value="${autoDeInfracao.local}"/>
 					</div>
@@ -71,39 +65,50 @@ function verificaCampos(){
 							<input type="text" id="codigoDaAutuacao" name="autoDeInfracao.codigoDaAutuacao" value="${autoDeInfracao.codigoDaAutuacao}" />
 							<input type="hidden" id="codigoDaPenalidade" name="autoDeInfracao.codigoDaPenalidade" value="0" />
 						</c:if>
+						
 						<c:if test="${tipoNotificacao.toString().contains('PENALIDADE')}">
 							<label for="autoDeInfracao.codigoDaPenalidade" class= "obrigatorio">C&oacute;d. da Penalidade</label>
 							<input type="text" id="codigoDaPenalidade" name="autoDeInfracao.codigoDaPenalidade" value="${autoDeInfracao.codigoDaPenalidade}" />
 							<input type="hidden" id="codigoDaAutuacao" name="autoDeInfracao.codigoDaAutuacao" value="0" />
 						</c:if>
+						
 						<label for="autoDeInfracao.descricao" class= "obrigatorio">Descri&ccedil;&atilde;o</label>
 						<input type="text" id="descricao" name="autoDeInfracao.descricao" size="46" value="${autoDeInfracao.descricao}" />
+						
 						<label for="autoDeInfracao.enquadramento" class= "obrigatorio">Enquadramento</label>
 						<input type="text" id="enquadramento" name="autoDeInfracao.enquadramento" value="${autoDeInfracao.enquadramento}" />
+						
 						<label for="autoDeInfracao.gravidade" class= "obrigatorio">Gravidade</label>
-				       	<select name="autoDeInfracao.gravidade">
-				       		<c:forEach items="${autoDeInfracao.gravidade.values()}" var="gravidade">
-				       			<option value="${gravidade}" ${autoDeInfracao.gravidade == gravidade ? 'selected' : ''}>${gravidade}</option>
-				       		</c:forEach>
-				       	</select>
+						<select name="autoDeInfracao.gravidade">
+							<c:forEach items="${autoDeInfracao.gravidade.values()}" var="gravidade">
+								<option value="${gravidade}" ${autoDeInfracao.gravidade == gravidade ? 'selected' : ''}>${gravidade.descricao}</option>
+							</c:forEach>
+						</select> 
+						
 						<label for="autoDeInfracao.quantidadeDePontos" class= "obrigatorio">Qtd. de Pontos</label>
 						<input type="text" id="quantidadeDePontos" name="autoDeInfracao.quantidadeDePontos" size="1" value="${autoDeInfracao.quantidadeDePontos}" />
 					</div>
+					
 					<div class="coluna">
 						<label for="autoDeInfracao.foiRecebido" class= "obrigatorio">Recebido?</label>
-				       	<select name="autoDeInfracao.foiRecebido">
-				       		<c:forEach items="${autoDeInfracao.foiRecebido.values()}" var="foiRecebido">
-				       			<option value="${foiRecebido}" ${autoDeInfracao.foiRecebido == foiRecebido ? 'selected' : ''}>${foiRecebido.descricao}</option>
-				       		</c:forEach>
-				       	</select>
+                        <select name="autoDeInfracao.foiRecebido">
+	                        <c:forEach items="${autoDeInfracao.foiRecebido.values()}" var="foiRecebido">
+	                            <option value="${foiRecebido}" ${autoDeInfracao.foiRecebido == foiRecebido ? 'selected' : ''}>${foiRecebido.descricao}</option>
+	                        </c:forEach>
+                        </select>
+
 						<label for="autoDeInfracao.numeroDoProcesso">N&uacute;mero do Processo</label>
 						<input type="text" id="numeroDoProcesso" name="autoDeInfracao.numeroDoProcesso" value="${autoDeInfracao.numeroDoProcesso}" />			
+						
 						<label for="autoDeInfracao.dataDeVencimento" class= "obrigatorio">Vencimento</label>
 						<input type="text" id="dataDeVencimento" name="autoDeInfracao.dataDeVencimento" size="8" value="<fmt:formatDate pattern="dd/MM/yyyy" value="${autoDeInfracao.dataDeVencimento.time}"/>" class="datePicker"/>
+						
 						<label for="autoDeInfracao.valor" class= "obrigatorio">Valor</label>
 						<input type="text" id="valor" name="autoDeInfracao.valor" value="${autoDeInfracao.valor}" class="decimal"/>
+						
 						<label for="autoDeInfracao.valorComDesconto">Valor c/ Desconto</label>
 						<input type="text" name="autoDeInfracao.valorComDesconto" value="${autoDeInfracao.valorComDesconto}" class="decimal"/>
+						
 						<label for="autoDeInfracao.dataDePagamento">Pagamento</label>
 						<input type="text" name="autoDeInfracao.dataDePagamento" size="8" value="<fmt:formatDate pattern="dd/MM/yyyy" value="${autoDeInfracao.dataDePagamento.time}"/>" class="datePicker"/>
 						

@@ -2,7 +2,7 @@ package br.gov.jfrj.siga.tp.model;
 
 public enum Gravidade {
 
-	LEVE("LEVE",3), MEDIA("M√âDIA",4), GRAVE("GRAVE",5), GRAVISSIMA("GRAV√çSSIMA",7);
+	LEVE("LEVE",3), MEDIA("M…DIA",4), GRAVE("GRAVE",5), GRAVISSIMA("GRAVÕSSIMA",7);
 	
 	private String descricao;
 	private int pontuacao;

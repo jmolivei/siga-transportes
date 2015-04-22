@@ -42,6 +42,14 @@ public class AfastamentoController extends TpController {
 		result.include("afastamentos", afastamentos);
 		result.include("condutor", condutor);
 	}
+	
+	@RoleAdmin
+	@RoleAdminMissao
+	@RoleAdminMissaoComplexo
+	@Path("/incluir/{idCondutor}")
+	public void incluir(Long idCondutor) throws Exception {
+		result.forwardTo(AfastamentoController.class).editar(idCondutor, null);
+	}
 
 	@RoleAdmin
 	@RoleAdminMissao
