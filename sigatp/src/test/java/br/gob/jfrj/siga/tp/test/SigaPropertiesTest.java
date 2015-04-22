@@ -1,4 +1,4 @@
-package br.gob.jfrj.siga.tp.util;
+package br.gob.jfrj.siga.tp.test;
 
 import org.junit.Assert;
 import org.junit.Test;

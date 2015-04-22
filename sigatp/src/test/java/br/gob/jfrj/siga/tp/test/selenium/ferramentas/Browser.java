@@ -1,4 +1,4 @@
-package selenium.ferramentas;
+package br.gob.jfrj.siga.tp.test.selenium.ferramentas;
 
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
@@ -6,8 +6,6 @@ import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.firefox.FirefoxProfile;
 import org.openqa.selenium.ie.InternetExplorerDriver;
 import org.openqa.selenium.remote.DesiredCapabilities;
-
-import selenium.BasicoTest;
 
 public enum Browser {
 
@@ -26,7 +24,10 @@ public enum Browser {
 	public WebDriver getDriver() throws Exception {
 		switch (tipo) {
 		case 0: // firefox
-			FirefoxProfile firefoxProfile = createFirefoxProfile();
+			FirefoxProfile firefoxProfile = new FirefoxProfile();
+			firefoxProfile.setPreference("network.proxy.type", 2);
+			firefoxProfile.setPreference("network.proxy.no_proxies_on", "localhost");
+
 			return new FirefoxDriver(firefoxProfile);
 
 		case 1: // IE
@@ -45,16 +46,5 @@ public enum Browser {
 		default:
 			return null;
 		}
-	}
-
-	private FirefoxProfile createFirefoxProfile() {
-		FirefoxProfile firefoxProfile = new FirefoxProfile();
-		String proxy = BasicoTest.getProperty("proxySiga");
-		if (proxy != null) {
-			firefoxProfile.setPreference("network.proxy.type", 2);
-			firefoxProfile.setPreference("network.proxy.autoconfig_url", proxy);
-			firefoxProfile.setPreference("network.proxy.no_proxies_on", "localhost");
-		}
-		return firefoxProfile;
 	}
 }

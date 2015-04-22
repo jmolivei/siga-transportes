@@ -1,6 +1,6 @@
-package selenium.sigatp;
+package br.gob.jfrj.siga.tp.test.selenium.sigatp;
 
-import selenium.ferramentas.Pagina;
+import br.gob.jfrj.siga.tp.test.selenium.ferramentas.Pagina;
 
 public class NavegacaoSiga {
 

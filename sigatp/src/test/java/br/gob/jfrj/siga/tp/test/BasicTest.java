@@ -1,3 +1,4 @@
+package br.gob.jfrj.siga.tp.test;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileOutputStream;

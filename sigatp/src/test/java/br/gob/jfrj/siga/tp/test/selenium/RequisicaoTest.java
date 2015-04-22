@@ -1,4 +1,4 @@
-package selenium;
+package br.gob.jfrj.siga.tp.test.selenium;
 
 import org.junit.Assert;
 import org.junit.Test;

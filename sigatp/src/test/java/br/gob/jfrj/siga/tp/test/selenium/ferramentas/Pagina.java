@@ -1,4 +1,4 @@
-package selenium.ferramentas;
+package br.gob.jfrj.siga.tp.test.selenium.ferramentas;
 
 import java.util.concurrent.TimeUnit;
 

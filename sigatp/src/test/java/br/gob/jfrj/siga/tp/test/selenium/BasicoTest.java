@@ -1,11 +1,11 @@
-package selenium;
+package br.gob.jfrj.siga.tp.test.selenium;
 
 import org.junit.After;
 import org.junit.Assert;
 
-import selenium.ferramentas.Browser;
-import selenium.ferramentas.Pagina;
-import selenium.sigatp.NavegacaoSigaTp;
+import br.gob.jfrj.siga.tp.test.selenium.ferramentas.Browser;
+import br.gob.jfrj.siga.tp.test.selenium.ferramentas.Pagina;
+import br.gob.jfrj.siga.tp.test.selenium.sigatp.NavegacaoSigaTp;
 
 import com.google.common.base.Optional;
 

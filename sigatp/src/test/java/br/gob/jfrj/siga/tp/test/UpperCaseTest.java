@@ -1,3 +1,4 @@
+package br.gob.jfrj.siga.tp.test;
 import net.sf.oval.Validator;
 
 import org.junit.Assert;

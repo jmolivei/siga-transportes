@@ -1,4 +1,4 @@
-package selenium.sigatp;
+package br.gob.jfrj.siga.tp.test.selenium.sigatp;
 
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
@@ -7,7 +7,7 @@ import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.ui.ExpectedCondition;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
-import selenium.ferramentas.Pagina;
+import br.gob.jfrj.siga.tp.test.selenium.ferramentas.Pagina;
 
 public class NavegacaoSigaTp extends NavegacaoSiga {
 
