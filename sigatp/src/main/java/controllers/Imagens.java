@@ -27,7 +27,7 @@ public class Imagens extends Controller {
     	@SuppressWarnings({ "unchecked", "static-access" })
 		List<Upload> uploads  = (List<Upload>) request.current().args.get("__UPLOADS");
     	
-    	if (uploads.size() > 0) {
+    	if (!uploads.isEmpty()) {
     		Upload uploadFile = uploads.get(0);
         	File arquivo = new File(uploadFile.getFileName());
         	

@@ -9,7 +9,7 @@ import net.sf.oval.configuration.annotation.Constraint;
 import br.gov.jfrj.siga.tp.validation.UpperCaseConstraintValidator;
 
 /**
- * Tem por finalidade converter para maiusculas todo atributo que estiver 
+ * Tem por finalidade converter para maiusculas os atributos que estiverem 
  * anotado por @UpperCase
  * 
  * Utilizada em classes Model

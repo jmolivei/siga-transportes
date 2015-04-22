@@ -12,7 +12,6 @@ import play.templates.GroovyTemplate.ExecutableTemplate;
 import br.gov.jfrj.siga.tp.tag.ErroLinkTag;
 
 /**
- * TODO: Tags devem ser migrada para tags JSP no pacote br.gov.jfrj.siga.tp.tag
  * 
  * @author db1
  *
@@ -23,7 +22,6 @@ public class TpTags extends FastTags {
 
 	private static final String IMG_LINKNOVAJANELAICON = "/sigatp/public/images/linknovajanelaicon.png";
 
-	// TODO: Migrar para tag jsp
 	public static void _link(Map<?, ?> args, Closure body, PrintWriter out, ExecutableTemplate template, int fromLine) throws Exception {
 		String texto;
 		String parteTextoLink;
@@ -127,7 +125,6 @@ public class TpTags extends FastTags {
 		out.println(saida.toString());
 	}
 
-	// TODO: Migrar para tag jsp
 	public static void _erroGenericolink(Map<?, ?> args, Closure body, PrintWriter out, ExecutableTemplate template, int fromLine) throws Exception {
 		String mensagem;
 		String comando;

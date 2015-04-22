@@ -16,7 +16,7 @@ import br.gov.jfrj.siga.tp.auth.annotation.LogMotivo;
  * Interceptor que processa a anotacao {@link LogMotivo}.
  * 
  * Funciona junto a tag MotivoLog nos formulários Abastecimentos/listar e
- * ControlesGabinete/listar, método de exclusão.
+ * ControlesGabinete/listar, metodo de exclusão.
  * Necessário incluir uma tag <form> com id="formulario".
  * Incluir também a tag #{motivoLog /} antes de </form>
  * 
