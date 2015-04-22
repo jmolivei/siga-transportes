@@ -44,13 +44,13 @@ import br.jus.jfrj.siga.uteis.UpperCase;
 @Entity
 @Audited
 @Table(schema = "SIGATP")
-@SequenceGenerator(name = "hibernate_sequence_generator", sequenceName = "SIGATP.hibernate_sequence")
 // @Unique(message="condutor.dppessoa.unique" ,field = "dpPessoa")
 public class Condutor extends TpModel implements ConvertableEntity, Comparable<Condutor> {
 
 	public static final ActiveRecord<Condutor> AR = new ActiveRecord<>(Condutor.class);
 
 	@Id
+	@SequenceGenerator(name = "hibernate_sequence_generator", sequenceName = "SIGATP.hibernate_sequence")
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "hibernate_sequence_generator")
 	private Long id;
 

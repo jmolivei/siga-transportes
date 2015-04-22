@@ -72,6 +72,7 @@
  	}
 
 	$(window).load(function() {
+		carregarDadosDpPessoa();
 		if(${condutor.id} > 0) {
 			var exibirImgArquivo = "${linkTo[CondutorController].exibirImagem[condutor.id]}";
 		  	    $.get(

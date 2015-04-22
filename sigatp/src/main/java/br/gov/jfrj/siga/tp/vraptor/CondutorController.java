@@ -94,10 +94,11 @@ public class CondutorController extends TpController {
 				condutor.setDpPessoa(new DpPessoa());
 			
 			result.include(CONDUTOR, condutor);
+			result.include("listCategorias", CategoriaCNH.values());
 			if(condutor.getId() > 0) 
-				validator.onErrorUse(Results.logic()).forwardTo(CondutorController.class).editar(condutor.getId());
+				validator.onErrorUse(Results.page()).of(CondutorController.class).editar(condutor.getId());
 			else
-				validator.onErrorUse(Results.logic()).forwardTo(CondutorController.class).incluir();
+				validator.onErrorUse(Results.page()).of(CondutorController.class).editar(0L);
 		}
 
 		condutor.setCpOrgaoUsuario(getTitular().getOrgaoUsuario());

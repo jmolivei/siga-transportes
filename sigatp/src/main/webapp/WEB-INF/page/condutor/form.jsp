@@ -18,8 +18,8 @@
 				</div>
 
 				<label for="condutor.dpPessoa.id">Servidor: </label>
-
-				<siga:selecao tipo="pessoa" propriedade="pessoa" tema="simple" modulo="siga" onchange="carregarDadosDpPessoa()"/>
+				
+				<siga:selecao tipo="pessoa" propriedade="pessoa" tema="simple" modulo="siga" onchange="carregarDadosDpPessoa()" urlAcao="buscar" siglaInicial="${condutor.dpPessoa}" idInicial="${condutor.dpPessoa.id}" descricaoInicial="${condutor.dpPessoa.descricao}"/>
 
 				<input type="hidden" name="condutor.dpPessoa" value="" />
 			</c:when>
