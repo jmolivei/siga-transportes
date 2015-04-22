@@ -40,7 +40,7 @@ function carregouDadosDpPessoa(response, param){
 	<div class="gt-bd clearfix">
 		<div class="gt-content clearfix">
 			<h2>${condutor.nomePessoaAI}</h2>
-			<h3>${condutor.id > 0 ? "Editar" : "Incluir" } Dados Cadastrais</h3>
+			<h3>${condutor.id > 0 ? "Editar Dados Cadastrais" : "Incluir Condutor" } </h3>
 			<jsp:include page="menu.jsp" />
 			<sigatp:erros />
 			<br />
