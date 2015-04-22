@@ -6,8 +6,6 @@
 
 <link rel="stylesheet" type="text/css" href="'/public/stylesheets/relatorioDiario.css'">
 
-<sigatp:calendario/>
-
 <siga:pagina titulo="Transportes">
 	<div class="gt-bd clearfix">
 		<div class="gt-content clearfix">
@@ -16,42 +14,42 @@
 			<jsp:include page="../veiculo/menu.jsp" />
 			
 			<c:choose>
-			<c:when test="${relatoriosDiarios.size() > 0}">
-			<div class="gt-content-box gt-for-table">
-			 	<table id="htmlgrid" class="gt-table">
-			    	<thead>
-				    	<tr style="font-weight: bold;">
-				    	    <th>Data</th>
-					   		<th>Od&ocirc;metro (Km)</th>
-					   		<th>N&iacute;vel de Combust&iacute;vel</th>
-					   		<th>Equip. Obrig.</th>
-					   		<th>Cart&otilde;es</th>
-					   		<th>Observa&ccedil;&atilde;o</th>
-					   		<th></th>
-					   		<th></th>
-						</tr>
-					</thead>
-					<tbody>
-					<c:forEach items="${relatoriosDiarios}" var="relatorioDiario">
-					<tr>
-			    	    <td><fmt:formatDate value="${relatorioDiario.data.time}" pattern="dd/MM/yyyy"/></td>
-			    		<td><c:out value="${relatorioDiario.odometroEmKm}"/></td>
-			    		<td><c:out value="${relatorioDiario.nivelDeCombustivel.descricao}"/></td>
-			    		<td><c:out value="${relatorioDiario.equipamentoObrigatorio.descricao}"/></td>
-			    		<td><c:out value="${relatorioDiario.cartoes.descricao}"/></td>
-			    		<td><textarea name="relatorioDiario.observacao" readonly class="textarealistar" rows="4" cols="20"><c:out value="${relatorioDiario.observacao}"/></textarea></td>
-			    		<td><a href="${linkTo[RelatorioDiarioController].editar[relatorioDiario.id]}">Editar</a></td>
-			    		<td><a href="${linkTo[RelatorioDiarioController].excluir[relatorioDiario.id]}" onclick="javascript:return confirm('Tem certeza de que deseja excluir este Relat&oacute;rio Di&aacute;rio?');">Excluir</a></td>
-					</tr>
-					</c:forEach>
-				</tbody>
-			</table>
-			<div id="pagination"/>    
-			</div>
-			</c:when>
-			<c:otherwise>
-			<br/><h3>N&atilde;o existem relat&oacute;rios di&aacute;rios cadastrados para este ve&iacute;culo.</h3>
-			</c:otherwise>
+				<c:when test="${relatoriosDiarios.size() > 0}">
+					<div class="gt-content-box gt-for-table">
+					 	<table id="htmlgrid" class="gt-table">
+					    	<thead>
+						    	<tr style="font-weight: bold;">
+						    	    <th>Data</th>
+							   		<th>Od&ocirc;metro (Km)</th>
+							   		<th>N&iacute;vel de Combust&iacute;vel</th>
+							   		<th>Equip. Obrig.</th>
+							   		<th>Cart&otilde;es</th>
+							   		<th>Observa&ccedil;&atilde;o</th>
+							   		<th></th>
+							   		<th></th>
+								</tr>
+							</thead>
+							<tbody>
+							<c:forEach items="${relatoriosDiarios}" var="relatorioDiario">
+							<tr>
+					    	    <td><fmt:formatDate value="${relatorioDiario.data.time}" pattern="dd/MM/yyyy"/></td>
+					    		<td><c:out value="${relatorioDiario.odometroEmKm}"/></td>
+					    		<td><c:out value="${relatorioDiario.nivelDeCombustivel.descricao}"/></td>
+					    		<td><c:out value="${relatorioDiario.equipamentoObrigatorio.descricao}"/></td>
+					    		<td><c:out value="${relatorioDiario.cartoes.descricao}"/></td>
+					    		<td><textarea name="relatorioDiario.observacao" readonly class="textarealistar" rows="4" cols="20"><c:out value="${relatorioDiario.observacao}"/></textarea></td>
+					    		<td><a href="${linkTo[RelatorioDiarioController].editar[relatorioDiario.id]}"><fmt:message key="views.botoes.editar"/></a></td>
+					    		<td><a href="${linkTo[RelatorioDiarioController].excluir[relatorioDiario.id]}" onclick="javascript:return confirm('Tem certeza de que deseja excluir este Relat&oacute;rio Di&aacute;rio?');"><fmt:message key="views.botoes.excluir"/></a></td>
+							</tr>
+							</c:forEach>
+						</tbody>
+					</table>
+					<div id="pagination"/>    
+					</div>
+				</c:when>
+				<c:otherwise>
+					<br/><h3>N&atilde;o existem relat&oacute;rios di&aacute;rios cadastrados para este ve&iacute;culo.</h3>
+				</c:otherwise>
 			</c:choose>
 		
 			<div class="gt-table-buttons">
