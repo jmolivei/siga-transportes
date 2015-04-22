@@ -36,7 +36,7 @@ function carregouDadosDpPessoa(response, param){
 
 </script>
 
-<siga:pagina titulo="Transportes">
+<siga:pagina titulo="SIGA-Transporte">
 	<div class="gt-bd clearfix">
 		<div class="gt-content clearfix">
 			<h2>${condutor.nomePessoaAI}</h2>

@@ -3,7 +3,7 @@
 <%@ taglib uri="http://localhost/jeetags" prefix="siga" %>
 <%@ taglib prefix="sigatp" tagdir="/WEB-INF/tags/" %>
 
-<siga:pagina titulo="Transportes">
+<siga:pagina titulo="SIGA-Transporte">
 	<div class="gt-bd clearfix">
 		<div class="gt-content clearfix">
 			<h2>Condutores</h2>
