@@ -95,9 +95,9 @@ public class EscalaDeTrabalhoController extends TpController {
     	DiaDeTrabalho diaTrabalho = new DiaDeTrabalho();
     	escala.getDiasDeTrabalho().add(diaTrabalho);
        
-        if (escalas.isEmpty() && (escalas.get(0).getDataVigenciaFim() == null || escalas.get(0).getDataVigenciaFim().after(Calendar.getInstance()))) {
+        if (!escalas.isEmpty() && (escalas.get(0).getDataVigenciaFim() == null || escalas.get(0).getDataVigenciaFim().after(Calendar.getInstance()))) {
         	 escala = escalas.get(0);
-        } else if (escalas.isEmpty() && ehMesmoDia(escalas.get(0).getDataVigenciaFim(),Calendar.getInstance())) {
+        } else if (!escalas.isEmpty() && ehMesmoDia(escalas.get(0).getDataVigenciaFim(),Calendar.getInstance())) {
        		escalas.add(0,escala);
         }
         
@@ -299,7 +299,7 @@ public class EscalaDeTrabalhoController extends TpController {
 		StringBuilder listaMissoes = new StringBuilder();
 		String delimitador="";
 
-		if (missoes != null && missoes.isEmpty()) {
+		if (missoes != null && !missoes.isEmpty()) {
 			for (Missao missao : missoes) {
 				String dataMissao = formatar.format(missao.dataHoraSaida.getTime());
 				String dataFormatadaOracle = "to_date('" + dataMissao + "', 'DD/MM/YYYY HH24:mi')";

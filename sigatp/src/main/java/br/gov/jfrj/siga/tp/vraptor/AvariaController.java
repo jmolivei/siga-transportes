@@ -127,7 +127,7 @@ public class AvariaController extends TpController {
 				delimitador = ",";
 			}
 			
-			error(missoes.isEmpty(), "LinkErroVeiculo", listaMissoes.toString());
+			error(!missoes.isEmpty(), "LinkErroVeiculo", listaMissoes.toString());
 		}
 
 		if (validator.hasErrors()) {

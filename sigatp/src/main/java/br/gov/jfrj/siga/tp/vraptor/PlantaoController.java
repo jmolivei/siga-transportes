@@ -123,19 +123,17 @@ public class PlantaoController extends TpController {
 			result.include("plantao", plantao);
 			redirecionaPaginaCasoOcorraErros(idCondutor, idPlantao);
 		} else {
-			if (isEdicao(plantao)) {
-				if (!(plantao.dataHoraInicio.before(dataHoraInicioNova) && plantao.dataHoraFim
-						.after(dataHoraFimNova))) {
-					List<Missao> missoes = retornarMissoesCondutorPlantao(
-							plantao, dataHoraInicioNova, dataHoraFimNova);
-					String listaMissoes = "";
+			if (isEdicao(plantao) && !(plantao.dataHoraInicio.before(dataHoraInicioNova) 
+					&& plantao.dataHoraFim.after(dataHoraFimNova))) {
+				List<Missao> missoes = retornarMissoesCondutorPlantao(
+						plantao, dataHoraInicioNova, dataHoraFimNova);
+				String listaMissoes = "";
 
-					for (Missao item : missoes) {
-						listaMissoes += listaMissoes == "" ? "" : ",";
-						listaMissoes += item.getSequence();
-					}
-					error(missoes.isEmpty(), "LinkErroCondutor", listaMissoes);
+				for (Missao item : missoes) {
+					listaMissoes += listaMissoes == "" ? "" : ",";
+					listaMissoes += item.getSequence();
 				}
+				error(!missoes.isEmpty(), "LinkErroCondutor", listaMissoes);
 			}
 
 			if (validator.hasErrors()) {
@@ -164,7 +162,7 @@ public class PlantaoController extends TpController {
 			delimitador = ",";
 		}
 
-		error(missoes.isEmpty(), "LinkErroCondutor", listaMissoes.toString());
+		error(!missoes.isEmpty(), "LinkErroCondutor", listaMissoes.toString());
 
 		if (validator.hasErrors())
 			redirecionaPaginaCasoOcorraErros(plantao.condutor.getId(), id);
@@ -215,22 +213,18 @@ public class PlantaoController extends TpController {
 					plantao.dataHoraInicio, plantao.dataHoraFim);
 		}
 
-		if (dataHoraInicioNova != null) {
-			if (dataHoraInicioNova.after(plantao.dataHoraInicio)) {
-				retorno.addAll(Missao.retornarMissoes("condutor.id",
-						plantao.condutor.getId(), plantao.condutor
-								.getCpOrgaoUsuario().getId(),
-						dataHoraInicioNova, plantao.dataHoraInicio));
-			}
+		if (dataHoraInicioNova != null && dataHoraInicioNova.after(plantao.dataHoraInicio)) {
+			retorno.addAll(Missao.retornarMissoes("condutor.id",
+					plantao.condutor.getId(), plantao.condutor
+							.getCpOrgaoUsuario().getId(),
+					dataHoraInicioNova, plantao.dataHoraInicio));
 		}
 
-		if (dataHoraFimNova != null) {
-			if (dataHoraFimNova.before(plantao.dataHoraFim)) {
-				retorno.addAll(Missao.retornarMissoes("condutor.id",
-						plantao.condutor.getId(), plantao.condutor
-								.getCpOrgaoUsuario().getId(),
-						plantao.dataHoraFim, dataHoraFimNova));
-			}
+		if (dataHoraFimNova != null && dataHoraFimNova.before(plantao.dataHoraFim)) {
+			retorno.addAll(Missao.retornarMissoes("condutor.id",
+					plantao.condutor.getId(), plantao.condutor
+							.getCpOrgaoUsuario().getId(),
+					plantao.dataHoraFim, dataHoraFimNova));
 		}
 
 		return retorno;

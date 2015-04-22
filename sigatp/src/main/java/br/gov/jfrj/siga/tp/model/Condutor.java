@@ -178,7 +178,7 @@ public class Condutor extends TpModel implements ConvertableEntity, Comparable<C
 			condutores = null;
 		}
 
-		if (condutores != null && condutores.isEmpty() && (!inicioRapido.equals(PerguntaSimNao.SIM))) {
+		if (condutores != null && !condutores.isEmpty() && (!inicioRapido.equals(PerguntaSimNao.SIM))) {
 			for (Iterator<Condutor> iterator = condutores.iterator(); iterator.hasNext();) {
 				Condutor condutor = (Condutor) iterator.next();
 
@@ -241,7 +241,7 @@ public class Condutor extends TpModel implements ConvertableEntity, Comparable<C
 		Query qry = JPA.em().createQuery(qrl);
 		try {
 			plantoes = ((List<Plantao>) qry.getResultList());
-			if (plantoes != null && plantoes.isEmpty()) {
+			if (plantoes != null && !plantoes.isEmpty()) {
 				return true;
 			} else {
 				return false;

@@ -121,7 +121,7 @@ public class VeiculoController extends TpController {
 		if (veiculo.getLotacoes() == null) {
 			return true;
 		}
-		return (veiculo.getLotacoes().isEmpty()) && (!veiculo.getLotacoes().get(0).getLotacao().equivale(lotacaoAtual));
+		return (!veiculo.getLotacoes().isEmpty()) && (!veiculo.getLotacoes().get(0).getLotacao().equivale(lotacaoAtual));
 	}
 
 	private void validarAntesDeSalvar(Veiculo veiculo, DpLotacao lotacaoAtual) {
