@@ -220,7 +220,7 @@ public class Missoes extends Controller {
 
 		for (Iterator<RequisicaoTransporte> iterator = missao.requisicoesTransporte.iterator(); iterator.hasNext();) {
 			RequisicaoTransporte req = iterator.next();
-			req = RequisicaoTransporte.findById(req.id);
+			req = RequisicaoTransporte.AR.findById(req.id);
 
 			if (req.servicoVeiculo != null) {
 				temRequisicaoDeServico = true;
@@ -424,7 +424,7 @@ public class Missoes extends Controller {
 
 	protected static Missao recuperarComplexoPeloPerfil(Missao missao) throws Exception {
 		if (AutorizacaoGIAntigo.ehAgente() || AutorizacaoGIAntigo.ehAdministradorMissaoPorComplexo()) {
-			RequisicaoTransporte req1 = RequisicaoTransporte.findById(missao.requisicoesTransporte.get(0).id);
+			RequisicaoTransporte req1 = RequisicaoTransporte.AR.findById(missao.requisicoesTransporte.get(0).id);
 			missao.cpComplexo = req1.cpComplexo;
 		} else {
 			missao.cpComplexo = AutorizacaoGIAntigo.recuperarComplexoPadrao();
@@ -575,7 +575,7 @@ public class Missoes extends Controller {
 				List<RequisicaoTransporte> requisicoesTransporte = (List<RequisicaoTransporte>) renderArgs.get("requisicoesTransporte");
 				for (int i = 0; i < missao.requisicoesTransporte.size(); i++) {
 					if (missao.requisicoesTransporte.get(i) != null) {
-						RequisicaoTransporte req = RequisicaoTransporte.findById(missao.requisicoesTransporte.get(i).id);
+						RequisicaoTransporte req = RequisicaoTransporte.AR.findById(missao.requisicoesTransporte.get(i).id);
 						missao.requisicoesTransporte.set(i, req);
 					}
 				}
@@ -630,7 +630,7 @@ public class Missoes extends Controller {
 	@RoleAdmin
 	@RoleAdminMissao
 	@RoleAdminMissaoComplexo
-	public static void incluirComRequisicoes(Long[] req) {
+	public static void incluirComRequisicoes(Long[] req) throws Exception {
 		if (req == null) {
 			incluir();
 		}
@@ -638,7 +638,7 @@ public class Missoes extends Controller {
 		missao.inicioRapido = PerguntaSimNao.NAO;
 		missao.requisicoesTransporte = new ArrayList<RequisicaoTransporte>();
 		for (int cont = 0; cont < req.length; cont++) {
-			missao.requisicoesTransporte.add((RequisicaoTransporte) RequisicaoTransporte.findById(req[cont]));
+			missao.requisicoesTransporte.add((RequisicaoTransporte) RequisicaoTransporte.AR.findById(req[cont]));
 		}
 
 		removerRequisicoesDoRenderArgs(missao.requisicoesTransporte);
@@ -649,7 +649,7 @@ public class Missoes extends Controller {
 	@RoleAdmin
 	@RoleAdminMissao
 	@RoleAdminMissaoComplexo
-	public static void incluirInicioRapido(Long[] req) {
+	public static void incluirInicioRapido(Long[] req) throws Exception {
 		if (req == null) {
 			incluir();
 		}
@@ -657,7 +657,7 @@ public class Missoes extends Controller {
 		missao.inicioRapido = PerguntaSimNao.SIM;
 		missao.requisicoesTransporte = new ArrayList<RequisicaoTransporte>();
 		for (int cont = 0; cont < req.length; cont++) {
-			missao.requisicoesTransporte.add((RequisicaoTransporte) RequisicaoTransporte.findById(req[cont]));
+			missao.requisicoesTransporte.add((RequisicaoTransporte) RequisicaoTransporte.AR.findById(req[cont]));
 		}
 
 		removerRequisicoesDoRenderArgs(missao.requisicoesTransporte);
@@ -697,7 +697,7 @@ public class Missoes extends Controller {
 		String veiculosDisp = "";
 		for (RequisicaoTransporte req : missao.requisicoesTransporte) {
 			if (req.servicoVeiculo != null) {
-				req = RequisicaoTransporte.findById(req.id);
+				req = RequisicaoTransporte.AR.findById(req.id);
 				veiculosDisp += req.servicoVeiculo.veiculo.getId() + ", ";
 			}
 		}

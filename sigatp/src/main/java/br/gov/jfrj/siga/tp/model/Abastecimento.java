@@ -25,17 +25,19 @@ import org.hibernate.envers.RelationTargetAuditMode;
 import play.data.binding.As;
 import play.data.validation.Min;
 import play.data.validation.Required;
-import play.db.jpa.GenericModel;
 import play.db.jpa.JPA;
 import play.modules.br.jus.jfrj.siga.uteis.validadores.validarAnoData.ValidarAnoData;
 import br.gov.jfrj.siga.dp.CpOrgaoUsuario;
 import br.gov.jfrj.siga.dp.DpPessoa;
+import br.gov.jfrj.siga.model.ActiveRecord;
 
 @SuppressWarnings("serial")
 @Entity
 @Audited
 @Table(schema = "SIGATP")
-public class Abastecimento extends GenericModel implements Comparable<Abastecimento> {
+public class Abastecimento extends TpModel implements Comparable<Abastecimento> {
+	
+	public static final ActiveRecord<Abastecimento> AR = new ActiveRecord<>(Abastecimento.class);
 	
 	@Id
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "hibernate_sequence_generator") 
@@ -245,25 +247,25 @@ public class Abastecimento extends GenericModel implements Comparable<Abastecime
 	}
 
 	public static List<Abastecimento> listarTodos() {
-		List<Abastecimento> abastecimentos = Abastecimento.findAll();
+		List<Abastecimento> abastecimentos = Abastecimento.AR.findAll();
 		Collections.sort(abastecimentos, Collections.reverseOrder());
 		return abastecimentos;
 	}
 
 	public static List<Abastecimento> buscarTodosPorVeiculo(Veiculo veiculo){
-		List<Abastecimento> abastecimentos = Abastecimento.find("veiculo", veiculo).fetch();
+		List<Abastecimento> abastecimentos = Abastecimento.AR.find("veiculo", veiculo).fetch();
 		Collections.sort(abastecimentos, Collections.reverseOrder());
 		return abastecimentos;
 	}
 		
 	public static List<Abastecimento> buscarTodosPorCondutor(Condutor condutor){
-		List<Abastecimento> abastecimentos = Abastecimento.find("condutor", condutor).fetch();
+		List<Abastecimento> abastecimentos = Abastecimento.AR.find("condutor", condutor).fetch();
 		Collections.sort(abastecimentos, Collections.reverseOrder());
 		return abastecimentos;
 	}
 
 	public static List<Abastecimento> buscarTodosPorTipoDeCombustivel(TipoDeCombustivel tipo){
-		List<Abastecimento> abastecimentos = Abastecimento.find("tipoDeCombustivel", tipo).fetch();
+		List<Abastecimento> abastecimentos = Abastecimento.AR.find("tipoDeCombustivel", tipo).fetch();
 		Collections.sort(abastecimentos, Collections.reverseOrder());
 		return abastecimentos;
 	}
@@ -303,7 +305,7 @@ public class Abastecimento extends GenericModel implements Comparable<Abastecime
 	}
 
 	public static List<Abastecimento> listarAbastecimentosDoCondutor(Condutor condutor) {
-		List<Abastecimento> abastecimentos = Abastecimento.find("titular.idPessoaIni = ?", condutor.getDpPessoa().getIdInicial()).fetch();
+		List<Abastecimento> abastecimentos = Abastecimento.AR.find("titular.idPessoaIni = ?", condutor.getDpPessoa().getIdInicial()).fetch();
 		Collections.sort(abastecimentos, Collections.reverseOrder());
 		return abastecimentos;
 	}

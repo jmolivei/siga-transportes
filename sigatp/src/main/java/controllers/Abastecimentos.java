@@ -90,7 +90,7 @@ public class Abastecimentos extends Controller {
 	@RoleAdminMissaoComplexo
 	@RoleGabinete
 	public static void editar(Long id) throws Exception{
-		Abastecimento abastecimento = Abastecimento.findById(id);
+		Abastecimento abastecimento = Abastecimento.AR.findById(id);
 		verificarAcesso(abastecimento);
 		
 		List<Fornecedor> fornecedores = Fornecedor.listarTodos();
@@ -155,7 +155,7 @@ public class Abastecimentos extends Controller {
 	@RoleAdminFrota
 	@RoleGabinete
 	public static void excluir(Long id) throws Exception{
-		Abastecimento abastecimento = Abastecimento.findById(id);
+		Abastecimento abastecimento = Abastecimento.AR.findById(id);
 		verificarAcesso(abastecimento);
 		abastecimento.delete();
 		listar();		
