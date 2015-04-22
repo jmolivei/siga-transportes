@@ -22,13 +22,13 @@
 								</tr>
 					 		</thead>
 					 		<tbody>
-								<c:forEach items="${avarias}" var="item">
+								<c:forEach items="${avarias}" var="avaria">
 								   	<tr>
-							    		<td><fmt:formatDate pattern="dd/MM/yyyy" value="${item.dataDeRegistro.time}"/></td>
-							    		<td><fmt:formatDate pattern="dd/MM/yyyy" value="${item.dataDeSolucao.time}"/></td>
-							    		<td style="white-space: pre-line;">${item.descricao}</td>
-							    		<td><a href="${linkTo[AvariaController].editar[item.id][true]}"><fmt:message key="views.botoes.editar" /></a></td>
-							    		<td><a onclick="javascript:return confirm('Tem certeza de que deseja excluir esta avaria?');" href="${linkTo[AvariaController].excluir[item.id][true]}"><fmt:message key="views.botoes.excluir" /></a></td>
+							    		<td><fmt:formatDate pattern="dd/MM/yyyy" value="${avaria.dataDeRegistro.time}"/></td>
+							    		<td><fmt:formatDate pattern="dd/MM/yyyy" value="${avaria.dataDeSolucao.time}"/></td>
+							    		<td style="white-space: pre-line;">${avaria.descricao}</td>
+							    		<td><a href="${linkTo[AvariaController].editar[veiculo.id][avaria.id][true]}"><fmt:message key="views.botoes.editar" /></a></td>
+							    		<td><a onclick="javascript:return confirm('Tem certeza de que deseja excluir esta avaria?');" href="${linkTo[AvariaController].excluir[avaria.id][true]}"><fmt:message key="views.botoes.excluir" /></a></td>
 									</tr>
 								</c:forEach>
 					 		</tbody>
@@ -41,7 +41,7 @@
 				</c:otherwise>
 			</c:choose>
 			<div class="gt-table-buttons">
-				<a href="${linkTo[AvariaController].editar[veiculo.id]}" class="gt-btn-medium gt-btn-left"><fmt:message key="views.botoes.incluir" /></a>
+				<a href="${linkTo[AvariaController].incluir[veiculo.id]}" class="gt-btn-medium gt-btn-left"><fmt:message key="views.botoes.incluir" /></a>
 			</div>
 		</div>
 	</div>

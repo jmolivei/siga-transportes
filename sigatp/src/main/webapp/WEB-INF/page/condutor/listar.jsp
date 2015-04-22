@@ -1,11 +1,7 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<%@ page language="java" contentType="text/html; charset=UTF-8"
-	buffer="64kb"%>
-<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
-<%@ taglib prefix="siga" uri="http://localhost/jeetags" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
+<%@ taglib uri="http://localhost/jeetags" prefix="siga" %>
 <%@ taglib prefix="sigatp" tagdir="/WEB-INF/tags/" %>
-<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 
 <siga:pagina titulo="Transportes">
 	<div class="gt-bd clearfix">
@@ -18,8 +14,8 @@
 			<c:choose>
 				<c:when test="${condutores.size() > 0}">
 					<div class="gt-content-box gt-for-table">
-
-						<table class="gt-table" width="100%">
+						<table id="htmlgrid" class="gt-table" width="100%">
+						<thead>
 							<tr class="header">
 								<th align="center" width="7%">Matr.</th>
 								<th width="25%">Nome</th>
@@ -29,6 +25,8 @@
 								<th width="5%"></th>
 								<th width="5%"></th>
 							</tr>
+						</thead>
+						<tbody>
 							<c:forEach items="${condutores}" var="item">
 								<tr class="${evenorodd}">
 									<td><c:if test="${not empty item.matricula}">${item.matricula}</c:if></td>
@@ -55,8 +53,9 @@
 									</td>
 								</tr>
 							</c:forEach>
-						</table>
-						<div id="pagination" />
+						</tbody>
+					</table>
+					<div id="pagination" ></div>    
 					</div>
 				</c:when>
 				<c:otherwise>

@@ -29,7 +29,7 @@ public class AvariaController extends TpController {
 	private static final String LABEL_EDITAR = "views.label.editar";
 	private static final String LABEL_INCLUIR = "views.label.incluir";
 
-	public AvariaController(HttpServletRequest request, Result result, Validator validator, SigaObjects so, EntityManager em){
+	public AvariaController(HttpServletRequest request, Result result, Validator validator, SigaObjects so, EntityManager em) throws Exception {
 		super(request, result, TpDao.getInstance(), validator, so, em);
 	}
 
@@ -54,62 +54,66 @@ public class AvariaController extends TpController {
 	@RoleAdmin
 	@RoleAdminFrota
 	@Path("/incluir/{idVeiculo}")
-	public void editar(Long idVeiculo) throws Exception {
-		Avaria avaria = new Avaria();
-		boolean fixarVeiculo = false;
-		List<Veiculo> veiculos = Veiculo.listarTodos(getTitular().getOrgaoUsuario());
-		if (idVeiculo != null) {
-			avaria.setVeiculo(Veiculo.AR.findById(idVeiculo));
-			fixarVeiculo = true;
-			MenuMontador.instance(result).recuperarMenuVeiculos(avaria.getVeiculo().getId(), ItemMenu.AVARIAS);
-		}
-		
-		result.include(MODO, LABEL_INCLUIR);
-		result.include("avaria", avaria);
-		result.include("veiculos", veiculos);
-		result.include("fixarVeiculo", fixarVeiculo);
+	public void incluir(Long idVeiculo) throws Exception {
+		result.forwardTo(this).editar(idVeiculo, null, false);
+	}
+	
+	@RoleAdmin
+	@RoleAdminFrota
+	@Path("/incluir")
+	public void incluir() throws Exception {
+		result.forwardTo(this).editar(null, null, false);
 	}
 
 	@RoleAdmin
 	@RoleAdminFrota
-	@Path("/editar/{id}/{fixarVeiculo}")
-	public void editar(Long id, Boolean fixarVeiculo) throws Exception {
-		Avaria avaria = Avaria.AR.findById(id);
+	@Path("/editar/{idVeiculo}/{id}/{fixarVeiculo}")
+	public void editar(final Long idVeiculo, final Long id, final Boolean fixarVeiculo) throws Exception {
+		Avaria avaria = new Avaria();
 		Veiculo veiculo = new Veiculo();
 		
-		if (fixarVeiculo)
-			veiculo = avaria.getVeiculo();
+		if(null != id) {
+			avaria = Avaria.AR.findById(id);
+			if (fixarVeiculo)
+				veiculo = avaria.getVeiculo();
+			
+			result.include("veiculo", veiculo);
+			result.include("fixarVeiculo", fixarVeiculo);
+			
+		} else {
+			if (idVeiculo != null) {
+				avaria.setVeiculo(Veiculo.AR.findById(idVeiculo));
+				result.include("fixarVeiculo", true);
+				MenuMontador.instance(result).recuperarMenuVeiculos(avaria.getVeiculo().getId(), ItemMenu.AVARIAS);
+			} else
+				result.include("fixarVeiculo", false);
+		}
 		
 		List<Veiculo> veiculos = Veiculo.listarTodos(getTitular().getOrgaoUsuario());
-		MenuMontador.instance(result).recuperarMenuVeiculos(avaria.getVeiculo().getId(), ItemMenu.AVARIAS);
 		
-		result.include(MODO, LABEL_EDITAR);
+		resultIncluirOuEditar(avaria);
 		result.include("avaria", avaria);
 		result.include("veiculos", veiculos);
-		result.include("veiculo", veiculo);
-		result.include("fixarVeiculo", fixarVeiculo);
 	}
 
 	@RoleAdmin
 	@RoleAdminFrota
 	@Path("/salvar")
 	public void salvar(@Valid Avaria avaria, boolean fixarVeiculo) throws Exception {
+		
 		if (validator.hasErrors()) {
 			MenuMontador.instance(result).recuperarMenuVeiculos(avaria.getVeiculo().getId(), ItemMenu.AVARIAS);
 			List<Veiculo> veiculos = Veiculo.listarTodos(getTitular().getOrgaoUsuario());
 			Veiculo veiculo = Veiculo.AR.findById(avaria.getVeiculo().getId());
 
-			if(null == avaria.getId())
-				result.include(MODO, LABEL_INCLUIR);
-			else
-				result.include(MODO, LABEL_EDITAR);
+			resultIncluirOuEditar(avaria);
 			
 			result.include("avaria", avaria);
 			result.include("veiculos", veiculos);
 			result.include("veiculo", veiculo);
 			result.include("fixarVeiculo", fixarVeiculo);
 			
-			validator.onErrorUse(Results.page()).of(AvariaController.class).editar(null);
+			validator.onErrorUse(Results.page()).of(AvariaController.class).editar(veiculo.getId(), avaria.getId(), true);
 		}
 
 		if (avaria.podeCircular.equals(PerguntaSimNao.NAO)) {
@@ -128,10 +132,8 @@ public class AvariaController extends TpController {
 
 		if (validator.hasErrors()) {
 			result.include("avaria", avaria);
-			if(avaria.getId() > 0)
-				validator.onErrorUse(Results.page()).of(AvariaController.class).editar(avaria.getId(), true);
-			else
-				validator.onErrorUse(Results.page()).of(AvariaController.class).editar(null);
+			resultIncluirOuEditar(avaria);
+			validator.onErrorUse(Results.page()).of(AvariaController.class).editar(avaria.getVeiculo().getId(), avaria.getId(), true);
 		} else {
 			avaria.save();
 			if (fixarVeiculo)
@@ -139,6 +141,13 @@ public class AvariaController extends TpController {
 			else
 				result.redirectTo(this).listar();
 		}
+	}
+
+	private void resultIncluirOuEditar(Avaria avaria) {
+		if(avaria.getId() == 0)
+			result.include(MODO, LABEL_INCLUIR);
+		else
+			result.include(MODO, LABEL_EDITAR);
 	}
 
 	@RoleAdmin

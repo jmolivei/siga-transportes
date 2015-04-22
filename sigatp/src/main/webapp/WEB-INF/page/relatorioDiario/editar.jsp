@@ -6,7 +6,8 @@
 <siga:pagina titulo="Transportes">
 	<div class="gt-bd clearfix">
 		<div class="gt-content clearfix">
-			<h2>${relatorioDiario.veiculo.dadosParaExibicao} - Editar Relat&oacute;rio Di&aacute;rio</h2>
+			<h2>${relatorioDiario.veiculo.dadosParaExibicao}</h2>
+			<h3>${tipoCadastro}</h3>			
 			<jsp:include page="form.jsp" />
 		</div>
 	</div>

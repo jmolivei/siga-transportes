@@ -48,8 +48,12 @@
 							    			</span>
 							    		</c:if>
 						    		</td>
-						    		<td><a href="${linkTo[CondutorController].edita[item.id]}"><fmt:message key="views.botoes.editar" /></a></td>
-						    		<td><a href="${linkTo[CondutorController].exclui[item.id]}" onclick="javascript:return confirm('Tem certeza de que deseja excluir os dados deste condutor?');"><fmt:message key="views.botoes.excluir" /></a></td>
+						    		<%-- 
+						    			Os links abaixo foram modificados de Condutor para EscalaDeTrabalhoController para fazer sentido nessa tela
+						    			Se fosse feita a transcrição do Play o método estaria tentando editar/excluir um condutor pelo id da escala de trabalho.
+						    		 --%>
+						    		<td><a href="${linkTo[EscalaDeTrabalhoController].editar[item.id]}"><fmt:message key="views.botoes.editar" /></a></td>
+						    		<td><a href="${linkTo[EscalaDeTrabalhoController].excluir[item.id]}" onclick="javascript:return confirm('Tem certeza de que deseja excluir os dados desta escala de trabalho?');"><fmt:message key="views.botoes.excluir" /></a></td>
 								</tr>
 							</c:forEach>
 							</tbody>
@@ -61,9 +65,11 @@
 					<h3>N&atilde;o existem escalas de trabalho cadastradas para este condutor.</h3>
 				</c:otherwise>
 			</c:choose>
-			<div class="gt-table-buttons">
-				<a href="${linkTo[EscalasDeTrabalho].editar[0]}" class="gt-btn-medium gt-btn-left"><fmt:message key="views.botoes.incluir" /></a>
+			<%-- Esse trecho está comentado pois para incluir uma nova escala de trabalho é necessário o id de um condutor. Foi apenas transcrito do Play.
+ 			<div class="gt-table-buttons">
+				<a href="${linkTo[EscalaDeTrabalho].incluir[0]}" class="gt-btn-medium gt-btn-left"><fmt:message key="views.botoes.incluir" /></a>
 			</div>
+			--%>
 		</div>
 	</div>
 </siga:pagina>

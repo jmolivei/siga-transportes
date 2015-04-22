@@ -18,6 +18,7 @@ import br.gov.jfrj.siga.tp.model.ItemMenu;
 import br.gov.jfrj.siga.tp.model.RelatorioDiario;
 import br.gov.jfrj.siga.tp.model.TpDao;
 import br.gov.jfrj.siga.tp.model.Veiculo;
+import br.gov.jfrj.siga.tp.vraptor.i18n.MessagesBundle;
 import br.gov.jfrj.siga.vraptor.SigaObjects;
 
 @Resource
@@ -47,14 +48,19 @@ public class RelatorioDiarioController extends TpController {
 		RelatorioDiario relatorioDiario = new RelatorioDiario();
 		relatorioDiario.setVeiculo(veiculo);
 		result.include("relatorioDiario", relatorioDiario);
+		result.forwardTo(this).editar(null);
 	}
 	
 	@RoleAdmin
 	@RoleAdminFrota
 	@Path("/editar/{id}")
 	public void editar(Long id) throws Exception {
-		RelatorioDiario relatorioDiario = RelatorioDiario.AR.findById(id);
-		result.include("relatorioDiario", relatorioDiario);
+		result.include("tipoCadastro", id != null?MessagesBundle.getMessage("views.relatorioDiario.editar")
+				 								 :MessagesBundle.getMessage("views.relatorioDiario.incluir"));		
+		if (id!=null){
+			RelatorioDiario relatorioDiario = RelatorioDiario.AR.findById(id);
+			result.include("relatorioDiario", relatorioDiario);
+		}
 	}
 	
 	@RoleAdmin

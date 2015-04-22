@@ -1,10 +1,12 @@
 package br.gov.jfrj.siga.tp.vraptor;
 
 import java.util.List;
+
 import javax.persistence.EntityManager;
 import javax.persistence.EntityTransaction;
 import javax.persistence.PersistenceException;
 import javax.servlet.http.HttpServletRequest;
+
 import br.com.caelum.vraptor.Path;
 import br.com.caelum.vraptor.Resource;
 import br.com.caelum.vraptor.Result;
@@ -50,6 +52,14 @@ public class FinalidadeController extends TpController {
    		
     	result.include("finalidades", finalidades);
     }
+	
+	@RoleAdmin
+	@RoleAdminMissao
+	@RoleAdminMissaoComplexo
+	@Path("/incluir")
+	public void incluir() throws Exception {
+		result.forwardTo(this).editar(null);
+	}
 	
 	@RoleAdmin
 	@RoleAdminMissao

@@ -49,7 +49,7 @@
 				</c:otherwise>
 			</c:choose>
 			<div class="gt-table-buttons">
-				<a href="${linkTo[AfastamentoController].editar[condutor.id][0]}" id="botaoIncluirCondutor" class="gt-btn-medium gt-btn-left"><fmt:message key="views.botoes.incluir" /></a>
+				<a href="${linkTo[AfastamentoController].incluir[condutor.id]}" id="botaoIncluirCondutor" class="gt-btn-medium gt-btn-left"><fmt:message key="views.botoes.incluir" /></a>
 			</div>
 		</div>
 	</div>
