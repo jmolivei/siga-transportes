@@ -7,10 +7,10 @@ import org.junit.Test;
 import br.gov.jfrj.siga.tp.model.UsuarioTeste;
 
 public class UpperCaseTest {
-	UsuarioTeste user = new UsuarioTeste();
-	String nome = "baylon".toUpperCase();
-	String endereco = "rua.voluntarios da patria".toUpperCase();
-	String bairro = "botafogo".toUpperCase();
+	private UsuarioTeste user = new UsuarioTeste();
+	private String nome = "baylon".toUpperCase();
+	private String endereco = "rua.voluntarios da patria".toUpperCase();
+	private String bairro = "botafogo".toUpperCase();
 
 	@Test
 	public void testaUpperCase() {

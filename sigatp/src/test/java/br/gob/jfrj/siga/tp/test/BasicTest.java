@@ -47,7 +47,7 @@ public class BasicTest {
 		Boolean renavamOk;
 		String nomeArquivo = "src//test//java//lista_renavam.txt";
 		String linha = "";
-		String mostra = "";
+		StringBuilder mostra = new StringBuilder();
 		int totrenavamOk = 0;
 		int totrenavamNotOk = 0;
 
@@ -61,14 +61,13 @@ public class BasicTest {
 				while (true) {
 					linha = br.readLine();
 
-					if (linha == null) {
+					if (linha == null) 
 						break;
-					}
 
-					mostra += linha + " ";
+					mostra.append(linha).append(" ");
 				}
 
-				String[] renavam = mostra.split(" ");
+				String[] renavam = mostra.toString().split(" ");
 				String texto = "";
 
 				File arquivo;
