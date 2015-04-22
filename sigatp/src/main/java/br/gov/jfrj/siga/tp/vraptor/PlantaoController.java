@@ -66,7 +66,7 @@ public class PlantaoController extends TpController {
 	@RoleAdminMissaoComplexo
 	@Path("/incluir/{idCondutor}")
 	public void incluir(Long idCondutor) throws Exception {
-		result.redirectTo(this).editar(idCondutor, 0L);
+		result.forwardTo(PlantaoController.class).editar(idCondutor, 0L);
 	}
 
 	@RoleAdmin
