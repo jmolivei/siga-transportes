@@ -68,10 +68,9 @@ public class AfastamentoController extends TpController {
 	public void salvar(final Afastamento afastamento) throws Exception {
 		validator.validate(afastamento);
 		
-		if (!validator.hasErrors() && (afastamento.getDataHoraInicio() != null ) && (afastamento.getDataHoraFim() != null) && (!afastamento.getDescricao().equals(""))) {
-			if (!afastamento.ordemDeDatasCorreta()) {
-				validator.add(new I18nMessage("afastamentos.dataHoraInicio.validation", "dataHoraInicio"));
-			}
+		if (!validator.hasErrors() && (afastamento.getDataHoraInicio() != null ) && (afastamento.getDataHoraFim() != null) 
+				&& (!afastamento.getDescricao().equals(""))&& (!afastamento.ordemDeDatasCorreta())) {
+			validator.add(new I18nMessage("afastamentos.dataHoraInicio.validation", "dataHoraInicio"));
 		}
 		
 		if (validator.hasErrors()) {

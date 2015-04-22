@@ -171,7 +171,6 @@ public class Plantao extends TpModel implements ConvertableEntity, Comparable<Pl
 	public static List<String> getReferencias(Long orgaoUsuario) {
 		List<Plantao> objetos;
 		List<String> retorno;
-		// TODO ordenar
 		/*
 		 * SELECT p.referencia FROM Plantao p WHERE p.timestamp = (SELECT MAX(ee.timestamp) FROM Entity ee WHERE ee.entityId = e.entityId)
 		 */

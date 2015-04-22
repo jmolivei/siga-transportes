@@ -383,7 +383,7 @@ public class AutorizacaoGIAntigo extends SigaApplication {
 
 	/**
 	 *  Funciona junto a tag MotivoLog nos formul�rios Abastecimentos/listar e
-	 *  ControlesGabinete/listar, m�todo de exclus�o.
+	 *  ControlesGabinete/listar, metodo de exclus�o.
 	 *  Necess�rio incluir uma tag <form> com id="formulario".
 	 *  Incluir tamb�m a tag #{motivoLog /} antes de </form>
 	 */
