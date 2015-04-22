@@ -141,7 +141,7 @@ public class PlantaoController extends TpController {
 				redirecionaPaginaCasoOcorraErros(idCondutor, idPlantao);
 			} else {
 				plantao.save();
-				result.forwardTo(this).listarPorCondutor(idCondutor);
+				result.redirectTo(PlantaoController.class).listarPorCondutor(idCondutor);
 			}
 		}
 	}
@@ -168,7 +168,7 @@ public class PlantaoController extends TpController {
 			redirecionaPaginaCasoOcorraErros(plantao.condutor.getId(), id);
 		else {
 			plantao.delete();
-			result.forwardTo(this).listarPorCondutor(plantao.condutor.getId());
+			result.redirectTo(PlantaoController.class).listarPorCondutor(plantao.condutor.getId());
 		}
 	}
 

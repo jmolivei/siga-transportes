@@ -120,7 +120,7 @@ public class CondutorController extends TpController {
 		try {
 			condutor.delete();
 			tx.commit();
-			result.forwardTo(this).listar();
+			result.redirectTo(CondutorController.class).listar();
 		} catch (PersistenceException ex) {
 			tx.rollback();
 			if (ex.getCause().getCause().getMessage().contains("restrição de integridade")) 
@@ -134,8 +134,6 @@ public class CondutorController extends TpController {
 			validator.add(new ValidationMessage(ex.getMessage(), CONDUTOR));
 			validator.onErrorForwardTo(CondutorController.class).listar();
 		}
-		
-		result.forwardTo(this).listar();
 	}
 
 	@RoleAdmin
