@@ -91,7 +91,7 @@ public class RelatorioDiarioController extends TpController {
 				validator.onErrorUse(Results.page()).of(RelatorioDiarioController.class).editar(relatorioDiario.getId());
 			}
 			else {
-				validator.onErrorUse(Results.page()).of(RelatorioDiarioController.class).incluir(relatorioDiario.getVeiculo().getId());
+				validator.onErrorUse(Results.page()).of(RelatorioDiarioController.class).editar(relatorioDiario.getId());
 			}
 		}
 	}
