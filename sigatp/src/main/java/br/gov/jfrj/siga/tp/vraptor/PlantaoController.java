@@ -158,9 +158,11 @@ public class PlantaoController extends TpController {
 	@RoleAdminMissaoComplexo
 	@Path("/excluir/{id}")
 	public void excluir(Long id) throws Exception {
+		EntityTransaction tx = Plantao.AR.em().getTransaction();
+		
 		Plantao plantao = Plantao.AR.findById(id);
 		Long idCondutor = plantao.condutor.getId();
-
+		
 		List<Missao> missoes = retornarMissoesCondutorPlantao(plantao, null, null);
 		StringBuilder listaMissoes = new StringBuilder();
 		String delimitador = "";
@@ -175,20 +177,30 @@ public class PlantaoController extends TpController {
 		if (validator.hasErrors()) {
 			redirecionaPaginaCasoOcorraErros(idCondutor, id);
 		} else {
+			
+			if (!tx.isActive()) 
+				tx.begin();
+			
 			try {
 				plantao.delete();
+				tx.commit();
+				
 				result.redirectTo(PlantaoController.class).listarPorCondutor(idCondutor);
 			} catch (PersistenceException ex) {
+				tx.rollback();
+				
 				if (ex.getCause().getCause().getMessage().contains("restrição de integridade")) 
 					validator.add(new I18nMessage(PLANTAO, "plantao.excluir.validation"));
 				else 
 					validator.add(new ValidationMessage(ex.getMessage(), PLANTAO));
 				
-				validator.onErrorForwardTo(PlantaoController.class).listarPorCondutor(idCondutor);
 			} catch (Exception ex) {
+				tx.rollback();
+				
 				validator.add(new ValidationMessage(ex.getMessage(), PLANTAO));
-				validator.onErrorForwardTo(PlantaoController.class).listarPorCondutor(idCondutor);
 			}
+			
+			validator.onErrorForwardTo(PlantaoController.class).listarPorCondutor(idCondutor);
 		}
 	}
 
