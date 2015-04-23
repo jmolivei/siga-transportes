@@ -85,7 +85,6 @@ public class FinalidadeController extends TpController {
 		
 		validator.validate(finalidade);
 		
-		error(null == finalidade.getDescricao(), "finalidade", "views.erro.campoObrigatorio");
 		FinalidadeRequisicao finalidadeBuscada = buscar(finalidade.getId());
 		finalidadeBuscada.setDescricao(finalidade.getDescricao());
 		
