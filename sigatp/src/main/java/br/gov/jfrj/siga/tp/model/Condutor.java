@@ -68,15 +68,15 @@ public class Condutor extends TpModel implements ConvertableEntity, Comparable<C
 	private CategoriaCNH categoriaCNH;
 
 	@Basic(optional = false)
-	@NotNull(message = "Data de vencimento da CHN deve ser preenchida")
+	@NotNull(message = "Data de Vencimento da CNH deve ser preenchida")
 	private Calendar dataVencimentoCNH;
 
 	@Basic(optional = false)
-	@NotNull(message = "Número de CNH deve ser preenchido")
+	@NotNull(message = "Número da CNH deve ser preenchido")
 	private String numeroCNH;
 
 	@Basic(optional = false)
-	@NotNull(message = "Telefone Institucional deve ser preenchido")
+	@NotNull(message = "Telefone fixo institucional deve ser preenchido")
 	private String telefoneInstitucional;
 
 	@OneToMany(mappedBy = "condutor")
