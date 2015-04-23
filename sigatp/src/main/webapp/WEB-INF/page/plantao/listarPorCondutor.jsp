@@ -11,7 +11,7 @@
 			<h2>${condutor.dadosParaExibicao}</h2>
 			<h3>Plant&otilde;es</h3>
 			<jsp:include page="../condutor/menu.jsp"></jsp:include>
-	
+			<sigatp:erros />
 			<c:choose>
 				<c:when test="${plantoes.size()>0}">
 					<div class="gt-content-box gt-for-table">

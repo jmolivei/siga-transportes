@@ -3,13 +3,18 @@ package br.gov.jfrj.siga.tp.vraptor;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
+
 import javax.persistence.EntityManager;
+import javax.persistence.EntityTransaction;
+import javax.persistence.PersistenceException;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
+
 import br.com.caelum.vraptor.Path;
 import br.com.caelum.vraptor.Resource;
 import br.com.caelum.vraptor.Result;
 import br.com.caelum.vraptor.Validator;
+import br.com.caelum.vraptor.validator.I18nMessage;
 import br.com.caelum.vraptor.validator.ValidationMessage;
 import br.com.caelum.vraptor.view.Results;
 import br.gov.jfrj.siga.dp.dao.CpDao;
@@ -27,6 +32,8 @@ import br.gov.jfrj.siga.vraptor.SigaObjects;
 @Resource
 @Path("/app/plantao")
 public class PlantaoController extends TpController {
+
+	private static final String PLANTAO = "plantao";
 
 	public PlantaoController(HttpServletRequest request, Result result, CpDao dao, Validator validator, SigaObjects so, EntityManager em) {
 		super(request, result, TpDao.getInstance(), validator, so, em);
@@ -57,7 +64,7 @@ public class PlantaoController extends TpController {
 		}
 
 		MenuMontador.instance(result).recuperarMenuCondutores(idCondutor, ItemMenu.PLANTOES);
-		result.include("plantao", plantao);
+		result.include(PLANTAO, plantao);
 		result.include("idCond", idCondutor);
 	}
 
@@ -79,7 +86,7 @@ public class PlantaoController extends TpController {
 		Long idPlantao = isEdicao(plantao) ? plantao.id : 0L;
 		
 		if (validator.hasErrors()) {
-			result.include("plantao", plantao);
+			result.include(PLANTAO, plantao);
 			redirecionaPaginaCasoOcorraErros(idCondutor, idPlantao);
 		}
 		
@@ -97,10 +104,10 @@ public class PlantaoController extends TpController {
 		}
 		
 		if(!listaAfastamento.equals(""))
-			validator.add(new ValidationMessage("Condutor afastado " + getMensagemPeriodo(listaAfastamento) + " de: " + listaAfastamento + ".", "plantao"));
+			validator.add(new ValidationMessage("Condutor afastado " + getMensagemPeriodo(listaAfastamento) + " de: " + listaAfastamento + ".", PLANTAO));
 
 		if (validator.hasErrors()) {
-			result.include("plantao", plantao);
+			result.include(PLANTAO, plantao);
 			redirecionaPaginaCasoOcorraErros(idCondutor, idPlantao);
 		} else {
 			String listaPlantao = "";
@@ -116,11 +123,11 @@ public class PlantaoController extends TpController {
 			}
 
 			if(!listaPlantao.equals(""))
-				validator.add(new ValidationMessage("Condutor em plant&atilde;o " + getMensagemPeriodo(listaPlantao) + " de: " + listaPlantao + ".", "plantao"));
+				validator.add(new ValidationMessage("Condutor em plant&atilde;o " + getMensagemPeriodo(listaPlantao) + " de: " + listaPlantao + ".", PLANTAO));
 		}
 
 		if (validator.hasErrors()) {
-			result.include("plantao", plantao);
+			result.include(PLANTAO, plantao);
 			redirecionaPaginaCasoOcorraErros(idCondutor, idPlantao);
 		} else {
 			if (isEdicao(plantao) && !(plantao.dataHoraInicio.before(dataHoraInicioNova) 
@@ -137,7 +144,7 @@ public class PlantaoController extends TpController {
 			}
 
 			if (validator.hasErrors()) {
-				result.include("plantao", plantao);
+				result.include(PLANTAO, plantao);
 				redirecionaPaginaCasoOcorraErros(idCondutor, idPlantao);
 			} else {
 				plantao.save();
@@ -152,6 +159,7 @@ public class PlantaoController extends TpController {
 	@Path("/excluir/{id}")
 	public void excluir(Long id) throws Exception {
 		Plantao plantao = Plantao.AR.findById(id);
+		Long idCondutor = plantao.condutor.getId();
 
 		List<Missao> missoes = retornarMissoesCondutorPlantao(plantao, null, null);
 		StringBuilder listaMissoes = new StringBuilder();
@@ -164,11 +172,23 @@ public class PlantaoController extends TpController {
 
 		error(!missoes.isEmpty(), "LinkErroCondutor", listaMissoes.toString());
 
-		if (validator.hasErrors())
-			redirecionaPaginaCasoOcorraErros(plantao.condutor.getId(), id);
-		else {
-			plantao.delete();
-			result.redirectTo(PlantaoController.class).listarPorCondutor(plantao.condutor.getId());
+		if (validator.hasErrors()) {
+			redirecionaPaginaCasoOcorraErros(idCondutor, id);
+		} else {
+			try {
+				plantao.delete();
+				result.redirectTo(PlantaoController.class).listarPorCondutor(idCondutor);
+			} catch (PersistenceException ex) {
+				if (ex.getCause().getCause().getMessage().contains("restrição de integridade")) 
+					validator.add(new I18nMessage(PLANTAO, "plantao.excluir.validation"));
+				else 
+					validator.add(new ValidationMessage(ex.getMessage(), PLANTAO));
+				
+				validator.onErrorForwardTo(PlantaoController.class).listarPorCondutor(idCondutor);
+			} catch (Exception ex) {
+				validator.add(new ValidationMessage(ex.getMessage(), PLANTAO));
+				validator.onErrorForwardTo(PlantaoController.class).listarPorCondutor(idCondutor);
+			}
 		}
 	}
 
