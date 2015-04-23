@@ -128,7 +128,7 @@ public class EscalaDeTrabalhoController extends TpController {
 	public void salvar(EscalaDeTrabalho escalaDeTrabalho, List<DiaDeTrabalho> diasDeTrabalho) throws Exception {
        
 		if(!validator.hasErrors()) {
-        	error(diasDeTrabalho.isEmpty(), "diasDeTrabalho", "escalasDeTrabalho.diaDaSemana.validation");
+        	error(diasDeTrabalho == null || diasDeTrabalho.isEmpty(), "diasDeTrabalho", "escalasDeTrabalho.diaDaSemana.validation");
         }
         
         EscalaDeTrabalho escalaAntiga = new EscalaDeTrabalho();
