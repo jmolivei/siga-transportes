@@ -22,6 +22,7 @@
 								</tr>
 							</c:forEach>
 		     			</table>
+		     			<div id="pagination"></div>
 					</div>
 				</c:when>
 				<c:otherwise>
