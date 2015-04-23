@@ -42,7 +42,7 @@
 				<label for="categoriaCNH" class="obrigatorio">Categoria CNH:</label>
 				<siga:select name="condutor.categoriaCNH" list="listCategorias" listKey="descricao" listValue="descricao" value="${condutor.categoriaCNH}"/>
 
-				<label for="condutor.dataVencimentoCNH" class="obrigatorio">Data de Vencimento CNH:</label> 
+				<label for="condutor.dataVencimentoCNH" class="obrigatorio">Data de Vencimento da CNH:</label> 
 				<input type="text" name="condutor.dataVencimentoCNH" class="datePicker"
 					value="<fmt:formatDate pattern="dd/MM/yyyy" value="${condutor.dataVencimentoCNH.time}" />" />
 			</div>
