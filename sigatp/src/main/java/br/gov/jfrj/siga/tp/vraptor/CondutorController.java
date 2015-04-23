@@ -103,7 +103,7 @@ public class CondutorController extends TpController {
 
 		condutor.setCpOrgaoUsuario(getTitular().getOrgaoUsuario());
 		condutor.save();
-		result.forwardTo(this).listar();
+		result.redirectTo(CondutorController.class).listar();
 	}
 
 	@RoleAdmin
@@ -169,5 +169,4 @@ public class CondutorController extends TpController {
 			return new ArrayList<Condutor>();
 		}
 	}
-
 }
