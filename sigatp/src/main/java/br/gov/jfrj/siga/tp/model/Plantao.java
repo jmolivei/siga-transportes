@@ -20,6 +20,7 @@ import javax.validation.constraints.NotNull;
 import org.hibernate.envers.Audited;
 
 import br.gov.jfrj.siga.model.ActiveRecord;
+import br.gov.jfrj.siga.tp.validation.annotation.Data;
 import br.gov.jfrj.siga.tp.vraptor.ConvertableEntity;
 
 @SuppressWarnings("serial")
@@ -40,9 +41,11 @@ public class Plantao extends TpModel implements ConvertableEntity, Comparable<Pl
 	public Condutor condutor;
 
 	@NotNull
+	@Data(descricaoCampo = "Data/Hora Inicio")
 	public Calendar dataHoraInicio;
 
 	@NotNull
+	@Data(descricaoCampo = "Data/Hora Fim")
 	public Calendar dataHoraFim;
 
 	public Plantao() {

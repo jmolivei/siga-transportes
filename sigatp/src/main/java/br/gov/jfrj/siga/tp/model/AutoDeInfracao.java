@@ -20,6 +20,7 @@ import org.hibernate.envers.Audited;
 
 import br.gov.jfrj.siga.model.ActiveRecord;
 import br.gov.jfrj.siga.tp.util.PerguntaSimNao;
+import br.gov.jfrj.siga.tp.validation.annotation.Data;
 import br.gov.jfrj.siga.tp.vraptor.ConvertableEntity;
 import br.jus.jfrj.siga.uteis.UpperCase;
 
@@ -77,6 +78,7 @@ public class AutoDeInfracao extends TpModel implements ConvertableEntity, Compar
 	private Integer quantidadeDePontos;
 
 	@NotNull
+	@Data(descricaoCampo = "Data de Vencimento")
 	private Calendar dataDeVencimento;
 
 	private Calendar dataDePagamento;
@@ -85,11 +87,13 @@ public class AutoDeInfracao extends TpModel implements ConvertableEntity, Compar
 	@NotNull
 	private Condutor condutor;
 
+	@Data(descricaoCampo = "Data Limite")
 	private Calendar dataLimiteApresentacao;
 
 	@UpperCase
 	private String memorando;
 
+	@Data(descricaoCampo = "Data Processo")
 	private Calendar dataDoProcesso;
 
 	@UpperCase
