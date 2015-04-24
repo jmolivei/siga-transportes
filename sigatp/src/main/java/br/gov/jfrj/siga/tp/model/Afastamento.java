@@ -18,8 +18,8 @@ import javax.validation.constraints.NotNull;
 import org.hibernate.envers.Audited;
 import org.hibernate.validator.constraints.NotEmpty;
 
-import play.modules.br.jus.jfrj.siga.uteis.validadores.validarAnoData.ValidarAnoData;
 import br.gov.jfrj.siga.model.ActiveRecord;
+import br.gov.jfrj.siga.tp.validation.annotation.Data;
 import br.gov.jfrj.siga.tp.validation.annotation.UpperCase;
 import br.gov.jfrj.siga.tp.vraptor.ConvertableEntity;
 
@@ -47,11 +47,11 @@ public class Afastamento extends TpModel implements ConvertableEntity {
 	private String descricao;
 
 	@NotNull
-	@ValidarAnoData(descricaoCampo = "Data/Hora Inicio")
+	@Data(descricaoCampo = "Data/Hora Inicio")
 	private Calendar dataHoraInicio;
 
 	@NotNull
-	@ValidarAnoData(descricaoCampo = "Data/Hora Fim")
+	@Data(descricaoCampo = "Data/Hora Fim")
 	private Calendar dataHoraFim;
 
 	public Afastamento() {
