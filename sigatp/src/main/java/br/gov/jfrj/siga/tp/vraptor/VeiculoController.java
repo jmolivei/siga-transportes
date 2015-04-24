@@ -26,7 +26,6 @@ import br.gov.jfrj.siga.tp.model.Veiculo;
 import br.gov.jfrj.siga.tp.util.Combo;
 import br.gov.jfrj.siga.tp.util.PerguntaSimNao;
 import br.gov.jfrj.siga.tp.util.Situacao;
-import br.gov.jfrj.siga.tp.vraptor.i18n.MessagesBundle;
 import br.gov.jfrj.siga.vraptor.SigaObjects;
 
 import com.google.common.base.Optional;
@@ -34,6 +33,10 @@ import com.google.common.base.Optional;
 @Resource
 @Path("/app/veiculos/")
 public class VeiculoController extends TpController {
+
+	private static final String TIPO_CADASTRO = "tipoCadastro";
+	private static final String LABEL_EDITAR = "views.cadastro.editar";
+	private static final String LABEL_INCLUIR = "views.cadastro.incluir";
 
 	public VeiculoController(HttpServletRequest request, Result result, Validator validator, SigaObjects so, EntityManager em) {
 		super(request, result, TpDao.getInstance(), validator, so, em);
@@ -76,8 +79,6 @@ public class VeiculoController extends TpController {
 	@RoleAdminFrota
 	@Path("/editar/{id}")
 	public void editar(Long id) throws Exception {
-		result.include("tipoCadastro", id != null?MessagesBundle.getMessage("views.cadastro.editar")
-												 :MessagesBundle.getMessage("views.cadastro.incluir"));
 		Veiculo veiculo = obterVeiculoParaEdicao(id);
 		preencherResultComDadosPadrao(veiculo);
 		result.include("veiculo", veiculo);
@@ -156,6 +157,7 @@ public class VeiculoController extends TpController {
 	private void preencherResultComDadosPadrao(Veiculo veiculo) throws Exception {
 		Combo.montar(result, Combo.Cor, Combo.Fornecedor);
 
+		labelIncluirOuEditar(veiculo.getId());
 		result.include(Combo.Grupo.getDescricao(), Grupo.listarTodos());
 		result.include("dpLotacoes", buscarDpLotacoes());
 		result.include("situacoes", Situacao.values());
@@ -179,5 +181,9 @@ public class VeiculoController extends TpController {
 			return DpLotacao.AR.findById(lotacaoAtualSel.getId());
 		}
 		return null;
+	}
+	
+	private void labelIncluirOuEditar(Long id) {
+		result.include(TIPO_CADASTRO, (id == null || id == 0) ? LABEL_INCLUIR : LABEL_EDITAR);
 	}
 }
