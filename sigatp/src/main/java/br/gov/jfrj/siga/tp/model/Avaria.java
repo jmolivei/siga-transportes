@@ -21,7 +21,7 @@ import play.modules.br.jus.jfrj.siga.uteis.validadores.validarAnoData.ValidarAno
 import br.gov.jfrj.siga.model.ActiveRecord;
 import br.gov.jfrj.siga.tp.util.PerguntaSimNao;
 import br.gov.jfrj.siga.tp.vraptor.ConvertableEntity;
-import br.jus.jfrj.siga.uteis.UpperCase;
+import br.gov.jfrj.siga.tp.validation.annotation.UpperCase;
 
 import com.google.gson.Gson;
 

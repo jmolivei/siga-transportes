@@ -95,7 +95,12 @@ public class FinalidadeController extends TpController {
 		
     	if(validator.hasErrors()) {
     		result.include("finalidade", finalidadeBuscada);
-			validator.onErrorUse(Results.logic()).forwardTo(FinalidadeController.class).editar(finalidadeBuscada.getId());
+    		if(isUpdate(finalidadeBuscada))
+    			result.include(MODO, LABEL_EDITAR);
+    		else
+    			result.include(MODO, LABEL_INCLUIR);
+    		
+    		validator.onErrorUse(Results.page()).of(FinalidadeController.class).editar(finalidadeBuscada.getId());
 		}
 
 	 	finalidadeBuscada.save();

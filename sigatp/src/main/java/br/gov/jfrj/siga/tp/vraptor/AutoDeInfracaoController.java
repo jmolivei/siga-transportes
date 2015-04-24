@@ -123,7 +123,7 @@ public class AutoDeInfracaoController extends TpController{
 			
 		} else {
 			autoDeInfracao.save();
-			result.forwardTo(this).listar();
+			result.redirectTo(this).listar();
 		}
 	}
 	
@@ -135,6 +135,6 @@ public class AutoDeInfracaoController extends TpController{
 		AutoDeInfracao autoDeInfracao = AutoDeInfracao.AR.findById(id);
 		autoDeInfracao.delete();
 		
-		result.forwardTo(this).listar();
+		result.redirectTo(this).listar();
 	}
 }

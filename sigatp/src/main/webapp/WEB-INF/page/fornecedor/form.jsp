@@ -44,7 +44,7 @@
        	<label for="fornecedor.ramoDeAtividade" class= "obrigatorio">Ramo de Atividade</label>
 		<select name="fornecedor.ramoDeAtividade" >
 			<c:forEach items="${fornecedor.ramoDeAtividade.values()}" var="ramoDeAtividade">
-				<option value="${ramoDeAtividade}" ${ramoDeAtividade == fornecedor.ramoDeAtividade ? 'selected' : ''}>${ramoDeAtividade}</option>
+				<option value="${ramoDeAtividade}" ${ramoDeAtividade == fornecedor.ramoDeAtividade ? 'selected' : ''}>${ramoDeAtividade.descricao}</option>
 			</c:forEach>
 		</select>	
        	<label for="fornecedor.razaoSocial" class= "obrigatorio">Razão Social</label>
