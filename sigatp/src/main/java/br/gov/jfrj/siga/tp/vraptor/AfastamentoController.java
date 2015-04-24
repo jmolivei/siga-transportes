@@ -26,6 +26,7 @@ import br.gov.jfrj.siga.vraptor.SigaObjects;
 @Path("/app/afastamento/")
 public class AfastamentoController extends TpController {
 	
+	private static final String AFASTAMENTO = "afastamento";
 	private static final String MODO = "modo";
 	private static final String LABEL_EDITAR = "views.label.editar";
 	private static final String LABEL_INCLUIR = "views.label.incluir";
@@ -66,7 +67,7 @@ public class AfastamentoController extends TpController {
 			result.include(MODO, LABEL_EDITAR);
 			afastamento = Afastamento.AR.findById(id);
 		}
-		result.include("afastamento", afastamento);
+		result.include(AFASTAMENTO, afastamento);
 	}
 
 	@RoleAdmin
@@ -78,13 +79,13 @@ public class AfastamentoController extends TpController {
 		
 		if (!validator.hasErrors() && (afastamento.getDataHoraInicio() != null ) && (afastamento.getDataHoraFim() != null) 
 				&& (!afastamento.getDescricao().equals(""))&& (!afastamento.ordemDeDatasCorreta())) {
-			validator.add(new I18nMessage("afastamentos.dataHoraInicio.validation", "dataHoraInicio"));
+			validator.add(new I18nMessage(AFASTAMENTO, "afastamentos.dataHoraInicio.validation"));
 		}
 		
 		if (validator.hasErrors()) {
 			List<Condutor> condutores = Condutor.listarTodos(getTitular().getOrgaoUsuario());
 			
-			result.include("afastamento", afastamento);
+			result.include(AFASTAMENTO, afastamento);
 			result.include("condutores", condutores);
 			result.include(MODO, null == afastamento.getId() ? LABEL_INCLUIR : LABEL_EDITAR);
 			validator.onErrorUse(Results.page()).of(AfastamentoController.class).editar(afastamento.getCondutor().getId(), afastamento.getId());
@@ -105,7 +106,7 @@ public class AfastamentoController extends TpController {
 			if (!missoes.isEmpty()) {
 				validator.add(new I18nMessage(listaMissoes.toString(), "LinkErroCondutor"));
 				
-				result.include("afastamento", afastamento);
+				result.include(AFASTAMENTO, afastamento);
 				result.redirectTo(this).editar(afastamento.getCondutor().getId(), afastamento.getId());
 			} else {
 				afastamento.save();
