@@ -7,7 +7,8 @@
 <siga:pagina titulo="Transportes">
 	<div class="gt-bd clearfix">
 		<div class="gt-content clearfix">
-			<h2>${condutor.dadosParaExibicao} - <fmt:message key="afastamento.relacao" /></h2>
+			<h2>${condutor.dadosParaExibicao}</h2>
+			<h3><fmt:message key="afastamento.relacao" /></h3>
 			<jsp:include page="../condutor/menu.jsp"></jsp:include>
 			<c:choose>
 				<c:when test="${afastamentos.size()>0}">
