@@ -232,7 +232,7 @@ public class PlantaoController extends TpController {
 	}
 
 	private void redirecionaPaginaCasoOcorraErros(Long idCondutor, Long idPlantao) throws Exception {
-		validator.onErrorUse(Results.logic()).forwardTo(PlantaoController.class).editar(idCondutor, idPlantao);
+		validator.onErrorUse(Results.page()).of(PlantaoController.class).editar(idCondutor, idPlantao);
 	}
 
 	private List<Missao> retornarMissoesCondutorPlantao(Plantao plantao,
