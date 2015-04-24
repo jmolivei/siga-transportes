@@ -78,15 +78,13 @@ public class FornecedorController extends TpController {
 	@Path("/salvar")
 	public void salvar(@Valid Fornecedor fornecedor) throws Exception {
 		if (validator.hasErrors()) {
-			String template = fornecedor.getId() > 0 ? "/app/fornecedor/editar" : "/app/fornecedor/incluir";
 			
 			result.include("listaUF", Uf.listarTodos());
-			result.include("template", template);
 			result.include("fornecedor", fornecedor);
 			
 			if(fornecedor.getId() == 0){
 				result.include(MODO, LABEL_INCLUIR);
-				validator.onErrorUse(Results.page()).of(FornecedorController.class).incluir();
+				validator.onErrorUse(Results.page()).of(FornecedorController.class).editar(null);
 			} else {
 				result.include(MODO, LABEL_EDITAR);
 				validator.onErrorUse(Results.page()).of(FornecedorController.class).editar(fornecedor.getId());
