@@ -1,3 +1,4 @@
+
 package br.gov.jfrj.siga.tp.validation;
 
 import java.lang.reflect.Field;
@@ -18,6 +19,7 @@ import org.hibernate.Session;
 import org.hibernate.internal.SessionFactoryImpl;
 import org.hibernate.service.jdbc.connections.internal.DatasourceConnectionProviderImpl;
 
+import br.gov.jfrj.siga.dp.DpPessoa;
 import br.gov.jfrj.siga.model.ContextoPersistencia;
 import br.gov.jfrj.siga.tp.model.TpModel;
 import br.gov.jfrj.siga.tp.validation.annotation.Unique;
@@ -67,9 +69,13 @@ public class UniqueConstraintValidator implements ConstraintValidator<Unique, Tp
 
 	private void atribuirParametros(PreparedStatement statement, TpModel tpModel) throws SQLException {
 		String field = unique.field();
-		statement.setObject(1, new Mirror().on(tpModel).get().field(field));
-		if (tpModel.getId() != null) {
-			statement.setObject(2, tpModel.getId());
+		if (isUniqueColumn() && new Mirror().on(tpModel).get().field(field) instanceof DpPessoa) {
+				DpPessoa tp = (DpPessoa) new Mirror().on(tpModel).get().field(field);
+				statement.setObject(1, tp.getId());
+		} else {
+			statement.setObject(1, new Mirror().on(tpModel).get().field(field));
+			if (tpModel.getId() != null) 
+				statement.setObject(2, tpModel.getId());
 		}
 	}
 
@@ -77,13 +83,16 @@ public class UniqueConstraintValidator implements ConstraintValidator<Unique, Tp
 		String queryString = QUERY_TEMPLATE.replace("[MODEL_CLASS]", obterNomeTabela(tpModel));
 		queryString = queryString.replace("[FIELD]", obterNomeColuna(tpModel));
 
-		if (tpModel.getId() != null) {
+		if (tpModel.getId() != null && !isUniqueColumn())
 			queryString += " AND t.id != ? ";
-		}
+		
 		return queryString;
 	}
 
 	private CharSequence obterNomeColuna(TpModel tpModel) {
+		if(isUniqueColumn())
+			return unique.uniqueColumn();
+		
 		Field field = new Mirror().on(tpModel.getClass()).reflect().field(unique.field());
 		Column column = field.getAnnotation(Column.class);
 
@@ -113,5 +122,9 @@ public class UniqueConstraintValidator implements ConstraintValidator<Unique, Tp
 		} catch (SQLException e) {
 			throw new RuntimeException(e);
 		}
+	}
+	
+	private boolean isUniqueColumn() {
+		return !"".equals(unique.uniqueColumn());
 	}
 }

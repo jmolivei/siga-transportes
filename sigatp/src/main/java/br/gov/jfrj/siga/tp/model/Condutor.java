@@ -37,6 +37,7 @@ import br.gov.jfrj.siga.dp.DpLotacao;
 import br.gov.jfrj.siga.dp.DpPessoa;
 import br.gov.jfrj.siga.model.ActiveRecord;
 import br.gov.jfrj.siga.tp.util.PerguntaSimNao;
+import br.gov.jfrj.siga.tp.validation.annotation.Unique;
 import br.gov.jfrj.siga.tp.vraptor.ConvertableEntity;
 import br.jus.jfrj.siga.uteis.UpperCase;
 
@@ -44,7 +45,7 @@ import br.jus.jfrj.siga.uteis.UpperCase;
 @Entity
 @Audited
 @Table(schema = "SIGATP")
-// @Unique(message="condutor.dppessoa.unique" ,field = "dpPessoa")
+@Unique(message="{condutor.dppessoa.unique}" ,field = "dpPessoa", uniqueColumn="DPPESSOA_ID_PESSOA")
 public class Condutor extends TpModel implements ConvertableEntity, Comparable<Condutor> {
 
 	public static final ActiveRecord<Condutor> AR = new ActiveRecord<>(Condutor.class);

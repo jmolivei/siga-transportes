@@ -22,6 +22,8 @@ public @interface Unique {
 	
 	String field();
 	
+	String uniqueColumn() default "";
+	
 	@Target(ElementType.TYPE)
     @Retention(RetentionPolicy.RUNTIME)
     @interface List {
