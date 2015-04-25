@@ -72,6 +72,8 @@ public class UniqueConstraintValidator implements ConstraintValidator<Unique, Tp
 		if (isUniqueColumn() && new Mirror().on(tpModel).get().field(field) instanceof DpPessoa) {
 				DpPessoa tp = (DpPessoa) new Mirror().on(tpModel).get().field(field);
 				statement.setObject(1, tp.getId());
+				if (tpModel.getId() != null) 
+					statement.setObject(2, tpModel.getId());				
 		} else {
 			statement.setObject(1, new Mirror().on(tpModel).get().field(field));
 			if (tpModel.getId() != null) 
@@ -83,7 +85,7 @@ public class UniqueConstraintValidator implements ConstraintValidator<Unique, Tp
 		String queryString = QUERY_TEMPLATE.replace("[MODEL_CLASS]", obterNomeTabela(tpModel));
 		queryString = queryString.replace("[FIELD]", obterNomeColuna(tpModel));
 
-		if (tpModel.getId() != null && !isUniqueColumn())
+		if (tpModel.getId() != null)
 			queryString += " AND t.id != ? ";
 		
 		return queryString;
