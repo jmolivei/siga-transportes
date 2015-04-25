@@ -37,6 +37,7 @@ public class AutoDeInfracao extends TpModel implements ConvertableEntity, Compar
 	private Long id;
 
 	@NotNull
+	@Data(descricaoCampo = "Data e Hora")
 	private Calendar dataHora;
 
 	@ManyToOne

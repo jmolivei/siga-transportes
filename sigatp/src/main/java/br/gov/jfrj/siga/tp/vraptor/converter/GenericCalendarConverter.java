@@ -17,6 +17,7 @@ public class GenericCalendarConverter implements Converter<Calendar> {
 
 	private static final String DATA_INICIO = "01/01/1900 ";
 	private static final String DD_MM_YYYY_HH_MM = "dd/MM/yyyy HH:mm";
+	private static final String DD_MM_YYYY = "dd/MM/yyyy";
 	private Validator validator;
 
 	public GenericCalendarConverter(Validator validator) {
@@ -49,7 +50,15 @@ public class GenericCalendarConverter implements Converter<Calendar> {
 			calendar.setTime(sdf.parse(value));
 			return calendar;
 		} catch (ParseException e) {
-			validator.add(new I18nMessage("data", "data.validation"));
+			try {
+				Calendar calendar = Calendar.getInstance();
+				SimpleDateFormat sdf = new SimpleDateFormat(DD_MM_YYYY);
+				sdf.setLenient(false);
+				calendar.setTime(sdf.parse(value));
+				return calendar;				
+			} catch (Exception e2) {
+				validator.add(new I18nMessage("data", "data.validation"));
+			}
 		}
 		return null;
 	}
