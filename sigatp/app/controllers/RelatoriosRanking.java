@@ -328,8 +328,7 @@ public class RelatoriosRanking extends Controller {
 		return listaRankingTipoPassageiro;
 	}
 
-	private static Date formatarDataHora(Calendar data, String hora)
-			throws ParseException {
+	private static Date formatarDataHora(Calendar data, String hora) throws ParseException {
 		String strDataPesquisa = "";
 		SimpleDateFormat formatar = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
 		strDataPesquisa = String.format("%02d", data.get(Calendar.DAY_OF_MONTH)) + "/"

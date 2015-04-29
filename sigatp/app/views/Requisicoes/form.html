@@ -54,7 +54,7 @@
 		        	<label class="obrigatorio">Tipo de passageiros</label>
 					<h6> (&eacute; poss&iacute;vel selecionar mais de um usando a tecla "Ctrl")</h6>
 					<select id="tiposDePassageiros" name="tiposDePassageiros" multiple size="5" title="caso necess&aacute;rio selecione mais de um usando a tecla 'Ctrl'">
-						#{list tipoDePassageiro.valuesParaComboRequisicao(), as:'tipo'}
+						#{list opcoesDeTiposDePassageiro, as:'tipo'}
 							<option value="${tipo}"#{if requisicaoTransporte.contemTipoDePassageiro(tipo)} selected="selected"#{/if}>${tipo.descricao}</option>
 						#{/list}
 					</select>

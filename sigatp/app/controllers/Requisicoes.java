@@ -64,6 +64,11 @@ public class Requisicoes extends Controller {
 		listarPAprovar();
 	}
 
+	private static void recuperarERenderizarTiposDePassageiro(DpPessoa usuario, CpComplexo complexo) {
+		List<TipoDePassageiro> tipos = TipoDePassageiro.valuesParaComboRequisicao(usuario, complexo, AutorizacaoGI.ehAdministrador());
+		RenderArgs.current().put("opcoesDeTiposDePassageiro", tipos);
+	}
+	
 	private static void carregarRequisicoesUltimosSeteDiasPorEstados(EstadoRequisicao[] estadosRequisicao) throws Exception {
 		Calendar ultimos7dias = Calendar.getInstance();
 		ultimos7dias.add(Calendar.DATE, -7);
@@ -241,6 +246,7 @@ public class Requisicoes extends Controller {
 			MenuMontador.instance().RecuperarMenuRequisicoes(requisicaoTransporte.id, false, false);
 			String template = requisicaoTransporte.id > 0 ? "@editar" : "@incluir";
 			carregarTiposDeCarga(requisicaoTransporte);
+			recuperarERenderizarTiposDePassageiro(AutorizacaoGI.titular(), AutorizacaoGI.recuperarComplexoPadrao());			
 			carregarFinalidades();
 			renderTemplate(template, requisicaoTransporte, checkRetorno, checkSemPassageiros);
 		}
@@ -250,14 +256,15 @@ public class Requisicoes extends Controller {
 		renderArgs.put("finalidades", FinalidadeRequisicao.listarTodos());
 	}
 
-	public static void incluir(){
+	public static void incluir() throws Exception {
 		RequisicaoTransporte requisicaoTransporte = new RequisicaoTransporte();
 		DpPessoa dpPessoa = AutorizacaoGI.titular(); 
 		requisicaoTransporte.solicitante=dpPessoa;
 		requisicaoTransporte.idSolicitante=dpPessoa.getId();
 
 		carregarTiposDeCarga(requisicaoTransporte);
-
+		recuperarERenderizarTiposDePassageiro(AutorizacaoGI.titular(), AutorizacaoGI.recuperarComplexoPadrao());
+		
 		carregarFinalidades();
 
 		render(requisicaoTransporte);
@@ -270,6 +277,7 @@ public class Requisicoes extends Controller {
 		//MenuMontador.instance().RecuperarMenuRequisicoes(id, renderArgs);
 
 		carregarTiposDeCarga(requisicaoTransporte);
+		recuperarERenderizarTiposDePassageiro(AutorizacaoGI.titular(), AutorizacaoGI.recuperarComplexoPadrao());
 
 		carregarFinalidades();
 
@@ -280,8 +288,7 @@ public class Requisicoes extends Controller {
 		render(requisicaoTransporte, checkRetorno);
 	}
 
-	private static void checarSolicitante(
-			Long idSolicitante, Long idComplexo, Boolean escrita) throws Exception {
+	private static void checarSolicitante(Long idSolicitante, Long idComplexo, Boolean escrita) throws Exception {
 		if (! AutorizacaoGI.ehAdministrador() && ! AutorizacaoGI.ehAprovador() && ! AutorizacaoGI.ehAgente() && ! AutorizacaoGI.ehAdministradorMissao() && ! AutorizacaoGI.ehAdministradorMissaoPorComplexo()) {
 			if (! AutorizacaoGI.titular().getIdInicial().equals(idSolicitante)) {
 				try {
@@ -323,6 +330,7 @@ public class Requisicoes extends Controller {
 		requisicaoTransporte.idSolicitante=requisicaoTransporte.solicitante.getId();
 		MenuMontador.instance().RecuperarMenuRequisicoes(id, false, false);
 		carregarTiposDeCarga(requisicaoTransporte);
+		recuperarERenderizarTiposDePassageiro(AutorizacaoGI.titular(), AutorizacaoGI.recuperarComplexoPadrao());
 		carregarFinalidades();
 
 		render(requisicaoTransporte);
@@ -342,6 +350,7 @@ public class Requisicoes extends Controller {
 		RequisicaoTransporte req = recuperarPelaSigla(sequence, popUp);
 
 		carregarTiposDeCarga(req);
+		recuperarERenderizarTiposDePassageiro(AutorizacaoGI.titular(), AutorizacaoGI.recuperarComplexoPadrao());
 
 		carregarFinalidades();
 
@@ -360,7 +369,7 @@ public class Requisicoes extends Controller {
 
 		renderArgs.put("requisicaoTransporte", requisicaoTransporte);
 		if(requisicaoTransporte.dataHoraRetornoPrevisto != null) {
-			renderArgs.put("checkRetorno", true);
+			RenderArgs.put("checkRetorno", true);
 		}
 
 		return requisicaoTransporte;

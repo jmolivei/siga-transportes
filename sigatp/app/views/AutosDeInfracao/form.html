@@ -1,40 +1,46 @@
+<script src="@{'/public/javascripts/jquery/jquery-ui-1.8.16.custom.min.js'}"></script>
 #{erros}#{/erros}
-<script>
-function verificaCampos(){
-	
-	var dataHora = document.getElementById("dataHora").value;
-	var codigoDaAutuacao = document.getElementById("codigoDaAutuacao").value;
-	var codigoDaPenalidade = document.getElementById("codigoDaPenalidade").value;
-	var descricao = document.getElementById("descricao").value;
-	var enquadramento = document.getElementById("enquadramento").value;
-	var local = document.getElementById("local").value;
-	var valor = document.getElementById("valor").value;
-	var quantidadeDePontos = document.getElementById("quantidadeDePontos").value;
-	var dataDeVencimento = document.getElementById("dataDeVencimento").value;
-	var codigoNotificacao = "";
-
-	if (dataHora == "" || 
-		codigoDaAutuacao == "" ||
-		codigoDaPenalidade == "" ||
-		descricao == "" ||
-		enquadramento == "" ||
-		local == "" ||
-		valor == "" ||
-		quantidadeDePontos == "" ||
-		dataDeVencimento == ""){
-			alert("Um ou mais campos obrigatórios estão sem preenchimento.");
-			return false;
-	}
-	return true;
-
-}
-</script>
 #{form @AutosDeInfracao.salvar(), enctype:'multipart/form-data',id:'formAutosDeInfracao' }
+
+
+
+	<script type="text/javascript">
+         $(function() {	
+    		var $mudouDataHoraSaida =  $('#selPenalidadeId').change( function() {         		    	
+			   #{if (exibirMenuAdministrar || exibirMenuAdministrarMissao || exibirMenuAdministrarMissaoComplexo)}        	 
+        	   if ($('#selPenalidadeId').val() != "") {        	  
+	    	       var listarValorPenalidadeSelecionada = #{jsAction @AutosDeInfracao.listarValorPenalidade(':idPenalidade') /}
+	    		   $.get(    				   
+	    				   listarValorPenalidadeSelecionada({idPenalidade: $('#selPenalidadeId option:selected').val() }), 
+	 		           function(html) {
+	    			        $('#valor').val(html)	               
+			      	   }
+			   	   );
+			   	   
+	    	       var listarClassificacaoPenalidadeSelecionada = #{jsAction @AutosDeInfracao.listarClassificacaoPenalidade(':idPenalidade') /}
+	    		   $.get(    				   
+	    				   listarClassificacaoPenalidadeSelecionada({idPenalidade: $('#selPenalidadeId option:selected').val() }), 
+	 		           function(html) {
+	    			        $('#penalidadeClassificacao').val(html)		                
+			                $('#valor').focus()			                
+			      	   }
+			   	   );	    		   
+        	   }
+        	   #{/if}
+    	   });
+            #{if autoDeInfracao.id == 0}
+     		 $mudouDataHoraSaida.trigger('change'); 
+     	   #{/if}
+   		  
+      	   
+       }); 
+	</script>
+
 <div class="gt-content-box gt-form clearfix">
 	<div class="coluna margemDireitaG">
        	<label for="autoDeInfracao.dataHora" class= "obrigatorio">Data e Hora</label>
 		<input type="text" id="dataHora" name="autoDeInfracao.dataHora" size="16" class="dataHora" value="${autoDeInfracao.dataHora?.format('dd/MM/yyyy HH:mm')}"/> 
-		<label for="autoDeInfracao.veiculo.id" class= "obrigatorio">Veículo</label>
+		<label for="autoDeInfracao.veiculo.id" class= "obrigatorio">Ve&iacute;culo</label>
 		#{select 'autoDeInfracao.veiculo.id', items:veiculos,
 				labelProperty:'dadosParaExibicao', value:autoDeInfracao.veiculo?.id}
 				#{/select}
@@ -47,28 +53,19 @@ function verificaCampos(){
 	</div>
 	<div class="coluna margemDireitaG">
 		#{if tipoNotificacao.toString().contains('AUTUACAO')}
-			<label for="autoDeInfracao.codigoDaAutuacao" class= "obrigatorio">Cód. da Autuação</label>
-			<input type="text" id="codigoDaAutuacao" name="autoDeInfracao.codigoDaAutuacao" value="${autoDeInfracao.codigoDaAutuacao}" />
-			<input type="hidden" id="codigoDaPenalidade" name="autoDeInfracao.codigoDaPenalidade" value="0" />
+			<label for="autoDeInfracao.tipoDeNotificacao" class= "obrigatorio">Cód. da Autuação</label>
 		#{/if}
 		#{if tipoNotificacao.toString().contains('PENALIDADE')}
-			<label for="autoDeInfracao.codigoDaPenalidade" class= "obrigatorio">Cód. da Penalidade</label>
-			<input type="text" id="codigoDaPenalidade" name="autoDeInfracao.codigoDaPenalidade" value="${autoDeInfracao.codigoDaPenalidade}" />
-			<input type="hidden" id="codigoDaAutuacao" name="autoDeInfracao.codigoDaAutuacao" value="0" />
+			<label for="autoDeInfracao.tipoDeNotificacao" class= "obrigatorio">Cód. da Penalidade</label>
 		#{/if}
-		<label for="autoDeInfracao.descricao" class= "obrigatorio">Descrição</label>
-		<input type="text" id="descricao" name="autoDeInfracao.descricao" size="46" value="${autoDeInfracao.descricao}" />
-		<label for="autoDeInfracao.enquadramento" class= "obrigatorio">Enquadramento</label>
-		<input type="text" id="enquadramento" name="autoDeInfracao.enquadramento" value="${autoDeInfracao.enquadramento}" />
-		<label for="autoDeInfracao.gravidade" class= "obrigatorio">Gravidade</label>
-		#{select 'autoDeInfracao.gravidade',
-				items:autoDeInfracao.gravidade?.values(), labelProperty:'descricao',
-				value:autoDeInfracao?.gravidade} #{/select}				
-		<label for="autoDeInfracao.quantidadeDePontos" class= "obrigatorio">Qtd. de Pontos</label>
-		<input type="text" id="quantidadeDePontos" name="autoDeInfracao.quantidadeDePontos" size="1" value="${autoDeInfracao.quantidadeDePontos}" />
+		<input type="hidden" id="tipoDeNotificacao" name="autoDeInfracao.tipoDeNotificacao" value="${tipoNotificacao}" />		
+		#{select 'autoDeInfracao.penalidade.id', id:'selPenalidadeId', items:penalidades,
+				labelProperty:'dadosParaExibicao', value:autoDeInfracao.penalidade?.id}
+		#{/select}	
+
 	</div>
 	<div class="coluna">
-		<label for="autoDeInfracao." class= "obrigatorio">Recebido?</label>
+		<label for="autoDeInfracao.foiRecebido" class= "obrigatorio">Recebido?</label>
 		#{select 'autoDeInfracao.foiRecebido',
 				items:autoDeInfracao.foiRecebido?.values(), labelProperty:'descricao',
 				value:autoDeInfracao?.foiRecebido} #{/select}
@@ -77,12 +74,18 @@ function verificaCampos(){
 		<label for="autoDeInfracao.dataDeVencimento" class= "obrigatorio">Vencimento</label>
 		<input type="text" id="dataDeVencimento" name="autoDeInfracao.dataDeVencimento" size="8" value="${autoDeInfracao.dataDeVencimento?.format('dd/MM/yyyy')}" class="datePicker"/>
 		<label for="autoDeInfracao.valor" class= "obrigatorio">Valor</label>
-		<input type="text" id="valor" name="autoDeInfracao.valor" value="${autoDeInfracao.valor}" class="decimal"/>
+		
+		<div id="dadosPenalidade">
+			<input type="text" id="valor" name="autoDeInfracao.valor" value="${autoDeInfracao.valor.formataValorExponencialParaDecimal()}" class="valor_numerico decimal"/>
+			<label for='penalidadeClassificacao'>Classifica&ccedil;&atilde;o</label>
+			<input type='text' id='penalidadeClassificacao' name='penalidadeClassificacao' value='' readonly='readonly' />			
+		</div>		
+		
 		<label for="autoDeInfracao.valorComDesconto">Valor c/ Desconto</label>
-		<input type="text" name="autoDeInfracao.valorComDesconto" value="${autoDeInfracao.valorComDesconto}" class="decimal"/>
+		<input type="text" name="autoDeInfracao.valorComDesconto" value="${autoDeInfracao.valorComDesconto.formataValorExponencialParaDecimal()}" class="valor_numerico decimal"/>	
 		<label for="autoDeInfracao.dataDePagamento">Pagamento</label>
 		<input type="text" name="autoDeInfracao.dataDePagamento" size="8" value="${autoDeInfracao.dataDePagamento?.format('dd/MM/yyyy')}" class="datePicker"/>
-	
+
 		<input type="hidden" name="autoDeInfracao.id" value="${autoDeInfracao.id}"/>
 	</div>
 </div>

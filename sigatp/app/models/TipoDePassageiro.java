@@ -3,6 +3,9 @@ package models;
 import java.util.ArrayList;
 import java.util.List;
 
+import br.gov.jfrj.siga.cp.CpComplexo;
+import br.gov.jfrj.siga.dp.DpPessoa;
+
 public enum TipoDePassageiro {
 
 	MAGISTRADOS("MAGISTRADOS"), 
@@ -12,6 +15,7 @@ public enum TipoDePassageiro {
 	CARGA("CARGA"), 
 	NENHUM("SEM PASSAGEIROS") ;
 	
+	private static final String _NOME_PARAMETRO_MOSTRAR_TIPO_PASSAGEIRO_CARGA = "mostrarTipoPassageiroCarga";
 	private String descricao;
 	
 	private TipoDePassageiro(String descricao){
@@ -35,14 +39,26 @@ public enum TipoDePassageiro {
 		return this.descricao.equals(outroPassageiro.getDescricao());
 	}
 	
-	public List<TipoDePassageiro> valuesParaComboRequisicao() {
+	public static List<TipoDePassageiro> valuesParaComboRequisicao(DpPessoa usuario, CpComplexo complexo, boolean usuarioEhAdministrador) {		
 		List<TipoDePassageiro> retorno = new ArrayList<TipoDePassageiro>();
 		
 		retorno.add(TipoDePassageiro.MAGISTRADOS);
 		retorno.add(TipoDePassageiro.DIGNITARIOS);
 		retorno.add(TipoDePassageiro.SERVIDORES);
 		retorno.add(TipoDePassageiro.TERCEIRIZADOS);
-		retorno.add(TipoDePassageiro.CARGA);
+		
+		boolean mostrarCarga = false;
+		
+		if(usuarioEhAdministrador) {
+			mostrarCarga = true;
+		} else {
+			String valorDoParametroMostrarCarga = Parametro.buscarValorEmVigor(_NOME_PARAMETRO_MOSTRAR_TIPO_PASSAGEIRO_CARGA, usuario, complexo);
+			mostrarCarga = Boolean.valueOf(valorDoParametroMostrarCarga);
+		}
+		
+		if(mostrarCarga) {
+			retorno.add(TipoDePassageiro.CARGA);
+		}
 		
 		return retorno;
 	}

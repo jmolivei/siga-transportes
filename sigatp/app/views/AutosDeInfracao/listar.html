@@ -12,12 +12,12 @@
 				    	<thead>
 				    	<tr>
 				    	    <th>Data e Hora</th>
-				    	    <th>Veículo</th>
-				    		<th>Condutor</th>
-				    		<th>Descrição</th>
-				    		<th>Nº Proc. Recurso</th>
+							<th>Ve&iacute;culo</th>
+				    		<th>Condutor</th>				    		
+				    		<th>N<sup>o</sup> Proc. Recurso</th>				    		
 							<th>Pago?</th>
 							<th>Recebido?</th>
+							<th>Descri&ccedil;&atilde;o</th>
 							<th width="5%"></th>
 							<th width="5%"></th>				    		
 						</tr>
@@ -28,11 +28,11 @@
 		    	    		<td>${autoDeInfracao.dataHora?.format('dd/MM/yyyy HH:mm')}</td>
 		    				<td>${autoDeInfracao.veiculo?.dadosParaExibicao}</td>
 		    				<td>${autoDeInfracao.condutor?.dadosParaExibicao}</td>
-		    				<td>${autoDeInfracao.descricao}</td>
 		    				<td>${autoDeInfracao.numeroDoProcesso}</td>
 							<td>${autoDeInfracao.foiPago().descricao}</td>
 							<td>${autoDeInfracao.foiRecebido.descricao}</td>
-	    					<td><a href="@{AutosDeInfracao.editar(autoDeInfracao.id)}">Editar</a></td>
+							<td>${autoDeInfracao.penalidade?.dadosParaExibicao}</td>
+							<td><a href="@{AutosDeInfracao.editar(autoDeInfracao.id)}">Editar</a></td>
 	    					<td><a href="@{AutosDeInfracao.excluir(autoDeInfracao.id)}">Excluir</a></td>
 						</tr>
 					#{/list}

@@ -1,16 +1,18 @@
 package controllers;
 
+import java.text.ParseException;
+import java.util.Calendar;
 import java.util.List;
 
-import controllers.AutorizacaoGI.RoleAdmin;
-import br.gov.jfrj.siga.cp.CpComplexo;
-import br.gov.jfrj.siga.dp.CpOrgaoUsuario;
 import models.Parametro;
 import play.data.validation.Valid;
 import play.data.validation.Validation;
 import play.mvc.Controller;
 import play.mvc.Scope.RenderArgs;
 import play.mvc.With;
+import br.gov.jfrj.siga.cp.CpComplexo;
+import br.gov.jfrj.siga.dp.CpOrgaoUsuario;
+import controllers.AutorizacaoGI.RoleAdmin;
 
 @With(AutorizacaoGI.class)
 public class Parametros extends Controller {
@@ -66,5 +68,14 @@ public class Parametros extends Controller {
    
 		listar();
     }
-	
+
+	public static Calendar formatarDataParametro(String stringCron) throws ParseException {
+		String stringData = Parametro.buscarConfigSistemaEmVigor(stringCron);
+		String[] data = stringData.split("/");
+		Calendar cal  = Calendar.getInstance();
+		cal.set(Calendar.DAY_OF_MONTH, Integer.parseInt(data[0]));
+		cal.set(Calendar.MONTH, Integer.parseInt(data[1]));
+		cal.set(Calendar.YEAR, Integer.parseInt(data[2]));
+		return cal;
+	}
 }

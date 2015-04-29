@@ -12,7 +12,7 @@
 			<module name="org.hibernate" />
 			<module name="org.infinispan" />
 			<module name="org.hibernate.commons-annotations" />
-
+			<module name="sigadoc.org.bouncycastle" export="true"/>
 
 			<!-- <module name="sigadoc.play" export="true" slot="sigatp" /> -->
 		</dependencies>

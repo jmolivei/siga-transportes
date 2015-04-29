@@ -7,10 +7,12 @@ import controllers.AutorizacaoGI.RoleAdmin;
 import controllers.AutorizacaoGI.RoleAdminFrota;
 import controllers.AutorizacaoGI.RoleAdminMissao;
 import controllers.AutorizacaoGI.RoleAprovador;
+import play.Logger;
 import play.data.validation.Valid;
 import play.data.validation.Validation;
 import play.i18n.Messages;
 import play.mvc.*;
+import play.mvc.Scope.RenderArgs;
 import uteis.MenuMontador;
 import br.gov.jfrj.siga.dp.DpPessoa;
 import models.*;
@@ -100,7 +102,7 @@ public class Andamentos extends Controller {
 	@RoleAdminMissao
 	@RoleAprovador
 	public static void autorizar(Long id) throws Exception {
-		Andamento andamento = (Andamento) renderArgs.current().get("andamento");
+		Andamento andamento = (Andamento) RenderArgs.current().get("andamento");
 		if (Http.Request.current().actionMethod.equals("autorizar") || Http.Request.current().actionMethod.equals("rejeitar")) {
 			if (andamento.requisicaoTransporte.getUltimoAndamento().estadoRequisicao != EstadoRequisicao.AUTORIZADA &&
 				andamento.requisicaoTransporte.getUltimoAndamento().estadoRequisicao != EstadoRequisicao.REJEITADA &&

@@ -24,7 +24,6 @@ import play.mvc.Controller;
 import play.mvc.Router;
 import play.mvc.With;
 import uteis.CondutorFiltro;
-import uteis.FormataCaminhoDoContextoUrl;
 import br.gov.jfrj.siga.dp.DpLotacao;
 import br.gov.jfrj.siga.dp.DpPessoa;
 
@@ -270,15 +269,13 @@ public class Application extends Controller {
 	}
 
 	private static String obterCaminhoUrl(String template, String parametro, String valor) {
-		FormataCaminhoDoContextoUrl formata = new FormataCaminhoDoContextoUrl();
 		if (!parametro.equals("") && !valor.equals("")) {
 			Map<String,Object> param=new HashMap<String,Object>();
 			param.put(parametro, valor);
-			return formata.retornarCaminhoContextoUrl(Router.reverse(template,param).url);
+			return Router.reverse(template,param).url;
 		}
 		else {
-			return formata.retornarCaminhoContextoUrl(Router.reverse(template).url);
-		}
+			return Router.reverse(template).url;		}
 	}
 
 	private static Boolean equals(Object item, Object ... search) {

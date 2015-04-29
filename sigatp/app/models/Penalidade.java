@@ -12,10 +12,11 @@ import javax.persistence.Table;
 import org.hibernate.envers.Audited;
 
 import play.data.binding.As;
-import play.data.validation.*;
+import play.data.validation.Required;
+import play.data.validation.Unique;
 import play.db.jpa.GenericModel;
 import play.modules.br.jus.jfrj.siga.uteis.validadores.upperCase.UpperCase;
-import binders.DoubleBinder;
+import binders.PriceBinder;
 import br.gov.jfrj.siga.dp.CpOrgaoUsuario;
 
 @SuppressWarnings("serial")
@@ -43,7 +44,7 @@ public class Penalidade extends GenericModel {
 	public String artigoCTB;
 	
 	@Required
-	@As(binder=DoubleBinder.class)
+	@As(binder=PriceBinder.class)
 	public double valor;
 	
 	@Required
@@ -77,6 +78,10 @@ public class Penalidade extends GenericModel {
 			return null;
 		}
 		return retorno;
+	}
+
+	public String getDadosParaExibicao() {
+		return this.codigoInfracao + " - " + this.descricaoInfracao;
 	}
 
 }

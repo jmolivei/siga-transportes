@@ -2,16 +2,13 @@ package controllers;
 
 import java.util.List;
 
-import javax.persistence.EntityTransaction;
-
-import controllers.AutorizacaoGI.RoleAdmin;
-import controllers.AutorizacaoGI.RoleAdminFrota;
-import models.FinalidadeRequisicao;
 import models.Penalidade;
 import play.data.validation.Valid;
 import play.data.validation.Validation;
 import play.mvc.Controller;
 import play.mvc.With;
+import controllers.AutorizacaoGI.RoleAdmin;
+import controllers.AutorizacaoGI.RoleAdminFrota;
 
 @With(AutorizacaoGI.class)
 public class Penalidades extends Controller {

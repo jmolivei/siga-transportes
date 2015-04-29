@@ -42,7 +42,6 @@ import play.i18n.Messages;
 import play.modules.br.jus.jfrj.siga.uteis.validadores.sequence.SequenceMethods;
 import play.modules.br.jus.jfrj.siga.uteis.validadores.validarAnoData.ValidarAnoData;
 import play.mvc.Router;
-import uteis.FormataCaminhoDoContextoUrl;
 import uteis.Reflexao;
 import uteis.SigaTpException;
 import br.gov.jfrj.siga.cp.CpComplexo;
@@ -183,8 +182,7 @@ public class RequisicaoTransporte extends GenericModel implements Comparable<Req
 			param.put("sequence", servicoVeiculo.getSequence());
 			param.put("popUp", true);
 			
-			FormataCaminhoDoContextoUrl formata = new FormataCaminhoDoContextoUrl();
-			String caminhoUrl = formata.retornarCaminhoContextoUrl(Router.getFullUrl("ServicosVeiculo.buscarServico",param)); 
+			String caminhoUrl = Router.reverse("ServicosVeiculo.buscarServico",param).url; 
 
 			saida.append(" - ");
 	        saida.append("Servi&ccedil;o: " + servicoVeiculo.getSequence() + " <a href=\"#\" onclick=\"javascript:window.open('" + caminhoUrl + "');\">");

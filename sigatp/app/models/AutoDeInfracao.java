@@ -10,6 +10,7 @@ import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
@@ -23,7 +24,7 @@ import play.data.validation.Required;
 import play.db.jpa.GenericModel;
 import play.modules.br.jus.jfrj.siga.uteis.validadores.validarAnoData.ValidarAnoData;
 import uteis.PerguntaSimNao;
-import binders.DoubleBinder;
+import binders.PriceBinder;
 import br.jus.jfrj.siga.uteis.UpperCase;
 
 @Entity
@@ -45,23 +46,13 @@ public class AutoDeInfracao extends GenericModel implements Comparable<AutoDeInf
 	@NotNull
 	public Veiculo veiculo;	
 	
-	@Required
-	public String codigoDaAutuacao;
+	public TipoDeNotificacao tipoDeNotificacao;
 	
 	@Required
-	public String codigoDaPenalidade;
-	
-	@Required
-	@UpperCase
-	public String descricao;
-	
-	@Required
-	@Enumerated(EnumType.STRING)
-	public Gravidade gravidade;
-	
-	@Required
-	@UpperCase
-	public String enquadramento;
+	@ManyToOne
+	@NotNull
+	@JoinColumn(name = "PENALIDADE_ID")
+	public Penalidade penalidade;	
 	
 	@Required
 	@UpperCase
@@ -72,14 +63,11 @@ public class AutoDeInfracao extends GenericModel implements Comparable<AutoDeInf
 	public PerguntaSimNao foiRecebido;
 	
 	@Required
-	@As(binder=DoubleBinder.class)
+	@As(binder=PriceBinder.class)
 	public double valor;
 	
-	@As(binder=DoubleBinder.class)
+	@As(binder=PriceBinder.class)
 	public double valorComDesconto;
-	
-	@Required
-	public int quantidadeDePontos;
 	
 	@Required
 	@As(lang={"*"}, value = {"dd/MM/yyyy"})
@@ -89,9 +77,6 @@ public class AutoDeInfracao extends GenericModel implements Comparable<AutoDeInf
 	@As(lang={"*"}, value = {"dd/MM/yyyy"})
 	@ValidarAnoData(intervalo=5, descricaoCampo="Data de Pagamento")
 	public Calendar dataDePagamento;
-	
-	//@Required
-	//public Requisicao requisicao;
 	
 	@Required
 	@ManyToOne
@@ -120,32 +105,22 @@ public class AutoDeInfracao extends GenericModel implements Comparable<AutoDeInf
 	
 	public AutoDeInfracao(){
 		this.id = new Long(0);
-		this.gravidade = Gravidade.LEVE;
 		this.foiRecebido = PerguntaSimNao.NAO;
 	}
 	
 		
 	public AutoDeInfracao(Long id, Calendar dataHora, Veiculo veiculo,
-			String codigoDaAutuacao, String codigoDaPenalidade,
-			String descricao, Gravidade gravidade, String enquadramento,
-			String local, PerguntaSimNao foiRecebido, double valor,
-			int quantidadeDePontos, double valorComDesconto,
+			String local, PerguntaSimNao foiRecebido, double valor, double valorComDesconto,
 			Calendar dataDeVencimento, Calendar dataDePagamento, Condutor condutor,
 			Calendar dataLimiteApresentacao, String memorando,
-			Calendar dataDoProcesso, String numeroDoProcesso) {
+			Calendar dataDoProcesso, String numeroDoProcesso, Penalidade penalidade) {
 		super();
 		this.id = id;
 		this.dataHora = dataHora;
 		this.veiculo = veiculo;
-		this.codigoDaAutuacao = codigoDaAutuacao;
-		this.codigoDaPenalidade = codigoDaPenalidade;
-		this.descricao = descricao;
-		this.gravidade = gravidade;
-		this.enquadramento = enquadramento;
 		this.local = local;
 		this.foiRecebido = foiRecebido;
 		this.valor = valor;
-		this.quantidadeDePontos = quantidadeDePontos;
 		this.valorComDesconto = valorComDesconto;
 		this.dataDeVencimento = dataDeVencimento;
 		this.dataDePagamento = dataDePagamento;
@@ -154,6 +129,7 @@ public class AutoDeInfracao extends GenericModel implements Comparable<AutoDeInf
 		this.memorando = memorando;
 		this.dataDoProcesso = dataDoProcesso;
 		this.numeroDoProcesso = numeroDoProcesso;
+		this.penalidade = penalidade;
 	}
 
 

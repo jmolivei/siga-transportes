@@ -2,6 +2,9 @@ package uteis;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
+import com.gargoylesoftware.htmlunit.WebConsole.Logger;
+
 import play.mvc.Http;
 
 public class FormataCaminhoDoContextoUrl {
@@ -24,8 +27,8 @@ public class FormataCaminhoDoContextoUrl {
 		m = r.matcher(url);
 
 		if (m.find()) {
-			//return url.replace(m.group(),"");
-			return m.group(3).toString().substring(1);
+			return url.replace(m.group(),"");
+			//return m.group(3).toString().substring(1);
 		}
         else {
         	return url;

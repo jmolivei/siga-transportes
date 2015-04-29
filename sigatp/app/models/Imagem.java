@@ -81,7 +81,7 @@ public class Imagem { //extends GenericModel {
 	}
 	
 	public static boolean tamanhoImagemAceito(int tamanho) {
-		int valorMaxMBConfigurado = Integer.parseInt(Play.configuration.getProperty("imagem.filesize").toString());
+		int valorMaxMBConfigurado = Integer.parseInt(Parametro.buscarConfigSistemaEmVigor("imagem.filesize"));		
 		final int valor1MB = 1048576;  
 		int valorMaximo = valorMaxMBConfigurado * valor1MB;
 		

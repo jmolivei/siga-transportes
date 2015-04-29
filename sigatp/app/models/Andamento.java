@@ -1,6 +1,7 @@
 package models;
 
 import java.util.Calendar;
+import java.util.List;
 
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
@@ -16,13 +17,12 @@ import javax.validation.constraints.NotNull;
 import org.hibernate.envers.Audited;
 import org.hibernate.envers.RelationTargetAuditMode;
 
-
-
 import play.data.binding.As;
 import play.data.validation.Required;
 import play.db.jpa.GenericModel;
 import br.gov.jfrj.siga.dp.DpPessoa;
 import br.jus.jfrj.siga.uteis.UpperCase;
+import controllers.Parametros;
 
 @SuppressWarnings("serial")
 @Entity
@@ -31,7 +31,8 @@ import br.jus.jfrj.siga.uteis.UpperCase;
 public class Andamento extends GenericModel implements Comparable<Andamento> {
 
 	@Id
-	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "hibernate_sequence_generator") @SequenceGenerator(name = "hibernate_sequence_generator", sequenceName="SIGATP.hibernate_sequence") 
+	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "hibernate_sequence_generator") 
+	@SequenceGenerator(name = "hibernate_sequence_generator", sequenceName="SIGATP.hibernate_sequence") 
 	public Long id;
 	
 	@UpperCase
@@ -64,7 +65,20 @@ public class Andamento extends GenericModel implements Comparable<Andamento> {
 	@Override
 	public int compareTo(Andamento o) {
 		int retorno = this.dataAndamento.compareTo(o.dataAndamento);
-		
 		return retorno;
+	}
+
+	public static List<Andamento> listarPorDataNotificacaoWorkFlow() throws Exception {
+		Calendar calendar = Parametros.formatarDataParametro("cron.dataInicioPesquisaw") ;
+		Object[] parametros = {calendar, EstadoRequisicao.ABERTA, EstadoRequisicao.AUTORIZADA,EstadoRequisicao.PROGRAMADA,EstadoRequisicao.REJEITADA};
+		return Andamento.find("dataNotificacaoWorkFlow is null " +
+						"and dataAndamento >= ? " +
+						"and estadoRequisicao in (?,?,?,?)", parametros).fetch();
+	}
+	
+	public static void gravarDataNotificacaoWorkFlow(Long id) throws Exception {
+		Andamento andamento = Andamento.findById(id);
+		andamento.dataNotificacaoWorkFlow = Calendar.getInstance();
+		andamento.save();
 	}
 }

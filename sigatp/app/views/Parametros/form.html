@@ -50,7 +50,10 @@
 	    
 		    <label for="parametro.dataFim">Fim de Vig&ecirc;ncia</label>
 		    <input type="text" name="parametro.dataFim" class="datePicker" value="${parametro.dataFim?.format('dd/MM/yyyy')}" />
-						
+		    
+		    <label for="parametro.descricao" class="obrigatorio">Descri&ccedil;&atilde;o</label>
+			<textarea name="parametro.descricao" rows="7" cols="80">${parametro?.descricao}</textarea>
+									
 		    <input type="hidden" name="parametro.id" value="${parametro.id}"/>
 		</div>
 	<span class="alerta menor">* Preenchimento obrigat&oacute;rio</span>

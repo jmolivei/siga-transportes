@@ -52,6 +52,14 @@ import br.jus.jfrj.siga.uteis.UpperCase;
 @Table(schema = "SIGATP")
 public class Condutor extends GenericModel implements Comparable<Condutor> {
 	
+	public Calendar getDataVencimentoCNH() {
+		return dataVencimentoCNH;
+	}
+
+	public void setDataVencimentoCNH(Calendar dataVencimentoCNH) {
+		this.dataVencimentoCNH = dataVencimentoCNH;
+	}
+	
 	@Id
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "hibernate_sequence_generator") @SequenceGenerator(name = "hibernate_sequence_generator", sequenceName="SIGATP.hibernate_sequence") 
 	public Long id;
@@ -366,6 +374,12 @@ public class Condutor extends GenericModel implements Comparable<Condutor> {
 		return condutores;
 	}
 
+	public static List<Condutor> listarTodos() throws Exception {
+		List<Condutor> condutores = Condutor.findAll();
+		Collections.sort(condutores);
+		return condutores;
+	}
+	
 	public static List<Condutor> listarFiltradoPor(CpOrgaoUsuario orgaoUsuario,
 			DpLotacao lotacao) throws Exception  {
 		List<Condutor> condutores = Condutor.find("cpOrgaoUsuario=? and dpPessoa.lotacao.idLotacaoIni = ?", orgaoUsuario, lotacao.getIdInicial() ).fetch();

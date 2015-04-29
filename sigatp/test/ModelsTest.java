@@ -410,11 +410,6 @@ public class ModelsTest extends UnitTest  {
 	@Test
 	public void incluiAutoDeInfracao() throws Exception {
 		autoDeInfracao1.dataHora = new GregorianCalendar(2011, Calendar.OCTOBER, 11, 8, 0);
-		autoDeInfracao1.codigoDaAutuacao = "123456789012345";
-		autoDeInfracao1.codigoDaPenalidade = "123456789012345";
-		autoDeInfracao1.descricao = "xxxxxxxxxxxxx";
-		autoDeInfracao1.gravidade = Gravidade.GRAVISSIMA;
-		autoDeInfracao1.enquadramento = "xxxxxxxxxxxxx";
 		autoDeInfracao1.local = "xxxxxxxxxxxxx";
 		autoDeInfracao1.foiRecebido = PerguntaSimNao.SIM;
 		autoDeInfracao1.valor = 500.00D;

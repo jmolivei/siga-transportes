@@ -142,15 +142,15 @@ public class MenuMontador {
 			EstadoRequisicao estadoRequisicao,
 			EstadoRequisicao estadoRequisicaoP) {
 		RenderArgs.current().put("menuRequisicoesMostrarTodas", (estadoRequisicao != null && estadoRequisicaoP!= null ));
-		RenderArgs.current().put("menuRequisicoesMostrarAutorizadasENaoAtendidas", (estadoRequisicao != EstadoRequisicao.AUTORIZADA && estadoRequisicaoP!= EstadoRequisicao.NAOATENDIDA ));
-		RenderArgs.current().put("menuRequisicoesMostrarAbertas", (estadoRequisicao != EstadoRequisicao.ABERTA && estadoRequisicaoP!= EstadoRequisicao.ABERTA));
-		RenderArgs.current().put("menuRequisicoesMostrarAutorizadas", (estadoRequisicao != EstadoRequisicao.AUTORIZADA && estadoRequisicaoP!= EstadoRequisicao.AUTORIZADA ));
-		RenderArgs.current().put("menuRequisicoesMostrarRejeitadas", (estadoRequisicao != EstadoRequisicao.REJEITADA && estadoRequisicaoP!= EstadoRequisicao.REJEITADA));
-		RenderArgs.current().put("menuRequisicoesMostrarProgramadas", (estadoRequisicao != EstadoRequisicao.PROGRAMADA && estadoRequisicaoP!= EstadoRequisicao.PROGRAMADA));
-		RenderArgs.current().put("menuRequisicoesMostrarEmAtendimento", (estadoRequisicao != EstadoRequisicao.EMATENDIMENTO && estadoRequisicaoP!= EstadoRequisicao.EMATENDIMENTO));
-		RenderArgs.current().put("menuRequisicoesMostrarAtendidas", (estadoRequisicao != EstadoRequisicao.ATENDIDA && estadoRequisicaoP!= EstadoRequisicao.ATENDIDA));
-		RenderArgs.current().put("menuRequisicoesMostrarNaoAtendidas", (estadoRequisicao != EstadoRequisicao.NAOATENDIDA && estadoRequisicaoP!= EstadoRequisicao.NAOATENDIDA));
-		RenderArgs.current().put("menuRequisicoesMostrarCanceladas", (estadoRequisicao != EstadoRequisicao.CANCELADA && estadoRequisicaoP!= EstadoRequisicao.CANCELADA));
+		RenderArgs.current().put("menuRequisicoesMostrarAutorizadasENaoAtendidas", (estadoRequisicao != EstadoRequisicao.AUTORIZADA || estadoRequisicaoP != EstadoRequisicao.NAOATENDIDA ));
+		RenderArgs.current().put("menuRequisicoesMostrarAbertas", (estadoRequisicao != EstadoRequisicao.ABERTA && estadoRequisicaoP != EstadoRequisicao.ABERTA ));
+		RenderArgs.current().put("menuRequisicoesMostrarAutorizadas", (estadoRequisicao != EstadoRequisicao.AUTORIZADA && estadoRequisicaoP != EstadoRequisicao.AUTORIZADA || estadoRequisicao == EstadoRequisicao.AUTORIZADA && estadoRequisicaoP == EstadoRequisicao.NAOATENDIDA ));
+		RenderArgs.current().put("menuRequisicoesMostrarRejeitadas", (estadoRequisicao != EstadoRequisicao.REJEITADA && estadoRequisicaoP != EstadoRequisicao.REJEITADA));
+		RenderArgs.current().put("menuRequisicoesMostrarProgramadas", (estadoRequisicao != EstadoRequisicao.PROGRAMADA && estadoRequisicaoP != EstadoRequisicao.PROGRAMADA));
+		RenderArgs.current().put("menuRequisicoesMostrarEmAtendimento", (estadoRequisicao != EstadoRequisicao.EMATENDIMENTO && estadoRequisicaoP != EstadoRequisicao.EMATENDIMENTO));
+		RenderArgs.current().put("menuRequisicoesMostrarAtendidas", (estadoRequisicao != EstadoRequisicao.ATENDIDA && estadoRequisicaoP != EstadoRequisicao.ATENDIDA));
+		RenderArgs.current().put("menuRequisicoesMostrarNaoAtendidas", (estadoRequisicao != EstadoRequisicao.NAOATENDIDA && estadoRequisicaoP != EstadoRequisicao.NAOATENDIDA || estadoRequisicao == EstadoRequisicao.AUTORIZADA && estadoRequisicaoP == EstadoRequisicao.NAOATENDIDA));
+		RenderArgs.current().put("menuRequisicoesMostrarCanceladas", (estadoRequisicao != EstadoRequisicao.CANCELADA && estadoRequisicaoP != EstadoRequisicao.CANCELADA));
 		
 		return RenderArgs.current();
 		
