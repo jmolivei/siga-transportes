@@ -25,7 +25,7 @@ import br.gov.jfrj.siga.dp.DpPessoa;
 
 @On("cron.iniciow")
 public class WorkFlowNotificacoes extends Job<Object>  {
-	private static final String espacosHtml = "&nbsp;&nbsp;&nbsp;&nbsp;";
+	public static final String espacosHtml = "&nbsp;&nbsp;&nbsp;&nbsp;";
 	
 	public void doJob() {
 		boolean executa = Boolean.parseBoolean(Parametro.buscarConfigSistemaEmVigor("cron.executaw"));
@@ -42,7 +42,7 @@ public class WorkFlowNotificacoes extends Job<Object>  {
 		Logger.info("Serviço de Nofitificação do WorkFlow finalizado");
 	}
 	
-	private static void notificarAndamentos() throws Exception  {
+	public static void notificarAndamentos() throws Exception  {
 		String titulo = "Notifica\u00E7\u00F5es do Andamento de Requisi\u00E7\u00F5es de Transporte";
 		List<Andamento> andamentos = Andamento.listarPorDataNotificacaoWorkFlow();
 		

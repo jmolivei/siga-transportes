@@ -53,10 +53,10 @@
 	</div>
 	<div class="coluna margemDireitaG">
 		#{if tipoNotificacao.toString().contains('AUTUACAO')}
-			<label for="autoDeInfracao.tipoDeNotificacao" class= "obrigatorio">Cód. da Autuação</label>
+			<label for="autoDeInfracao.tipoDeNotificacao" class= "obrigatorio">Autua&ccedil;&atilde;o</label>
 		#{/if}
 		#{if tipoNotificacao.toString().contains('PENALIDADE')}
-			<label for="autoDeInfracao.tipoDeNotificacao" class= "obrigatorio">Cód. da Penalidade</label>
+			<label for="autoDeInfracao.tipoDeNotificacao" class= "obrigatorio">Penalidade</label>
 		#{/if}
 		<input type="hidden" id="tipoDeNotificacao" name="autoDeInfracao.tipoDeNotificacao" value="${tipoNotificacao}" />		
 		#{select 'autoDeInfracao.penalidade.id', id:'selPenalidadeId', items:penalidades,
