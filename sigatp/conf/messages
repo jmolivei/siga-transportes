@@ -44,6 +44,7 @@ veiculo.anoFabricacao.maxSize=O ano de fabricacao excedeu o tamanho de 4 digitos
 veiculo.anoModelo.minSize=O ano do modelo deve ter o tamanho exato de 4 digitos.
 veiculo.anoModelo.maxSize=O ano do modelo excedeu o tamanho de 4 digito.
 renavamCheck.validation=Renavam Inv&aacute;lido.
+chassiCheck.validation=Chassi Inv&aacute;lido.
 missao.requisicoesTransporte.required=Inclua ao menos uma requisicao de transporte.
 andamentos.estadoRequisicao.jaCancelada.validation=Requisi&ccedil;&atilde;o j&aacute; foi cancelada.
 andamentos.estadoRequisicao.andamento.validation=Requisi&ccedil;&atilde;o n&atilde;o pode ser cancelada pois est&aacute; em andamento.
@@ -125,3 +126,5 @@ tpTags.parametrosInvalidos.exception=N\u00FAmero de par\u00E2metros inv\u00E1lid
 tpTags.naoInformados.exception=Par\u00E2metros: texto, parteTextoLink e/ou comando n\u00E3o informados.
 tpTags.comandoNaoInformado.exception=Par\u00E2metro: comando n\u00E3o informado.
 missao.categoriaCNHCondutorErradaParaVeiculo.validation=A categoria da carteira de motorista do condutor n\u00E3o permite conduzir o ve\u00EDculo.
+
+validacao.teste=Teste de valicacao

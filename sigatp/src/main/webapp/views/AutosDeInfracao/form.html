@@ -1,0 +1,97 @@
+<script src="@{'/public/javascripts/jquery/jquery-ui-1.8.16.custom.min.js'}"></script>
+#{erros}#{/erros}
+#{form @AutosDeInfracao.salvar(), enctype:'multipart/form-data',id:'formAutosDeInfracao' }
+
+
+
+	<script type="text/javascript">
+         $(function() {	
+    		var $mudouDataHoraSaida =  $('#selPenalidadeId').change( function() {         		    	
+			   #{if (exibirMenuAdministrar || exibirMenuAdministrarMissao || exibirMenuAdministrarMissaoComplexo)}        	 
+        	   if ($('#selPenalidadeId').val() != "") {        	  
+	    	       var listarValorPenalidadeSelecionada = #{jsAction @AutosDeInfracao.listarValorPenalidade(':idPenalidade') /}
+	    		   $.get(    				   
+	    				   listarValorPenalidadeSelecionada({idPenalidade: $('#selPenalidadeId option:selected').val() }), 
+	 		           function(html) {
+	    			        $('#valor').val(html)	               
+			      	   }
+			   	   );
+			   	   
+	    	       var listarClassificacaoPenalidadeSelecionada = #{jsAction @AutosDeInfracao.listarClassificacaoPenalidade(':idPenalidade') /}
+	    		   $.get(    				   
+	    				   listarClassificacaoPenalidadeSelecionada({idPenalidade: $('#selPenalidadeId option:selected').val() }), 
+	 		           function(html) {
+	    			        $('#penalidadeClassificacao').val(html)		                
+			                $('#valor').focus()			                
+			      	   }
+			   	   );	    		   
+        	   }
+        	   #{/if}
+    	   });
+            #{if autoDeInfracao.id == 0}
+     		 $mudouDataHoraSaida.trigger('change'); 
+     	   #{/if}
+   		  
+      	   
+       }); 
+	</script>
+
+<div class="gt-content-box gt-form clearfix">
+	<div class="coluna margemDireitaG">
+       	<label for="autoDeInfracao.dataHora" class= "obrigatorio">Data e Hora</label>
+		<input type="text" id="dataHora" name="autoDeInfracao.dataHora" size="16" class="dataHora" value="${autoDeInfracao.dataHora?.format('dd/MM/yyyy HH:mm')}"/> 
+		<label for="autoDeInfracao.veiculo.id" class= "obrigatorio">Ve&iacute;culo</label>
+		#{select 'autoDeInfracao.veiculo.id', items:veiculos,
+				labelProperty:'dadosParaExibicao', value:autoDeInfracao.veiculo?.id}
+				#{/select}
+		<label for="autoDeInfracao.condutor.id" class= "obrigatorio">Condutor</label>
+		#{select 'autoDeInfracao.condutor.id', items:condutores,
+				labelProperty:'dadosParaExibicao', value:autoDeInfracao.condutor?.id} #{/select}
+
+		<label for="autoDeInfracao.local" class= "obrigatorio">Local</label>
+		<input type="text" id="local" name="autoDeInfracao.local" size="46" value="${autoDeInfracao.local}"/>
+	</div>
+	<div class="coluna margemDireitaG">
+		#{if tipoNotificacao.toString().contains('AUTUACAO')}
+			<label for="autoDeInfracao.tipoDeNotificacao" class= "obrigatorio">Autua&ccedil;&atilde;o</label>
+		#{/if}
+		#{if tipoNotificacao.toString().contains('PENALIDADE')}
+			<label for="autoDeInfracao.tipoDeNotificacao" class= "obrigatorio">Penalidade</label>
+		#{/if}
+		<input type="hidden" id="tipoDeNotificacao" name="autoDeInfracao.tipoDeNotificacao" value="${tipoNotificacao}" />		
+		#{select 'autoDeInfracao.penalidade.id', id:'selPenalidadeId', items:penalidades,
+				labelProperty:'dadosParaExibicao', value:autoDeInfracao.penalidade?.id}
+		#{/select}	
+
+	</div>
+	<div class="coluna">
+		<label for="autoDeInfracao.foiRecebido" class= "obrigatorio">Recebido?</label>
+		#{select 'autoDeInfracao.foiRecebido',
+				items:autoDeInfracao.foiRecebido?.values(), labelProperty:'descricao',
+				value:autoDeInfracao?.foiRecebido} #{/select}
+		<label for="autoDeInfracao.numeroDoProcesso">N&uacute;mero do Processo</label>
+		<input type="text" id="numeroDoProcesso" name="autoDeInfracao.numeroDoProcesso" value="${autoDeInfracao.numeroDoProcesso}" />			
+		<label for="autoDeInfracao.dataDeVencimento" class= "obrigatorio">Vencimento</label>
+		<input type="text" id="dataDeVencimento" name="autoDeInfracao.dataDeVencimento" size="8" value="${autoDeInfracao.dataDeVencimento?.format('dd/MM/yyyy')}" class="datePicker"/>
+		<label for="autoDeInfracao.valor" class= "obrigatorio">Valor</label>
+		
+		<div id="dadosPenalidade">
+			<input type="text" id="valor" name="autoDeInfracao.valor" value="${autoDeInfracao.valor.formataValorExponencialParaDecimal()}" class="valor_numerico decimal"/>
+			<label for='penalidadeClassificacao'>Classifica&ccedil;&atilde;o</label>
+			<input type='text' id='penalidadeClassificacao' name='penalidadeClassificacao' value='' readonly='readonly' />			
+		</div>		
+		
+		<label for="autoDeInfracao.valorComDesconto">Valor c/ Desconto</label>
+		<input type="text" name="autoDeInfracao.valorComDesconto" value="${autoDeInfracao.valorComDesconto.formataValorExponencialParaDecimal()}" class="valor_numerico decimal"/>	
+		<label for="autoDeInfracao.dataDePagamento">Pagamento</label>
+		<input type="text" name="autoDeInfracao.dataDePagamento" size="8" value="${autoDeInfracao.dataDePagamento?.format('dd/MM/yyyy')}" class="datePicker"/>
+
+		<input type="hidden" name="autoDeInfracao.id" value="${autoDeInfracao.id}"/>
+	</div>
+</div>
+<span class="alerta menor">&{'views.erro.preenchimentoObrigatorio'}</span>
+<div class="gt-table-buttons">
+	<input type="submit" value="&{'views.botoes.salvar'}" class="gt-btn-medium gt-btn-left" />
+	<input type="button" value="&{'views.botoes.cancelar'}" class="gt-btn-medium gt-btn-left" onClick="javascript:location.href='@{AutosDeInfracao.listar()}';" />
+</div>
+#{/form}

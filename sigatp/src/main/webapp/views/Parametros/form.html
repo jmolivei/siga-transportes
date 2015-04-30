@@ -1,0 +1,64 @@
+<script src="@{'/public/javascripts/jquery/jquery-ui-1.8.16.custom.min.js'}"></script>
+<script src="@{'/public/javascripts/jquery/jquery-1.6.4.min.js'}"></script>
+
+#{erros}#{/erros}
+#{decimal /}
+#{calendario /}
+
+#{form @Parametros.salvar(), id:'formParametro', enctype:'multipart/form-data'}
+	<div class="gt-content-box gt-form"> 
+		<label for="parametro.nomeParametro" class="obrigatorio">Nome do Par&acirc;metro:</label>
+		<input type="text" name="parametro.nomeParametro" value="${parametro.nomeParametro}" />
+
+		<label for="parametro.valorParametro" class="obrigatorio">Valor do Par&acirc;metro:</label>
+		<input type="text" name="parametro.valorParametro" value="${parametro.valorParametro}" />
+	    
+	    <label for= "parametro.dpLotacao.id">Lota&ccedil;&atilde;o:</label>
+				#{selecao 	tipo:'lotacao', 
+							nome:'parametro.dpLotacao', 
+							value:parametro?.dpLotacao/} 
+			
+			<label for="parametro.dpPessoa.id">Servidor: </label>
+				#{selecao tipo:'pessoa',nome:'parametro.dpPessoa', value:parametro?.dpPessoa/}							
+	    
+	    
+	    	<label for="parametro.cpOrgaoUsuario.idOrgaoUsu">Org&atilde;o do Usu&aacute;rio:</label>
+				#{select 'parametro.cpOrgaoUsuario.idOrgaoUsu',
+						id: 'comboorgao',
+				        items:cpOrgaoUsuarios,
+			    	    labelProperty:'nmOrgaoUsu',
+			    	    value:parametro.cpOrgaoUsuario?.idOrgaoUsu}
+			    	    #{option ''} #{/option}
+				#{/select}  
+				
+	    	<label for= "parametro.cpComplexo">Complexo:</label>	
+
+			<select name="parametro.cpComplexo.idComplexo" size="1" >
+				<option value=""></option>
+   				#{list cpComplexos, as:'cpComplexo'}
+   					#{if parametro.cpComplexo != null && cpComplexo.idComplexo == parametro.cpComplexo.idComplexo} 
+   						<option value="${cpComplexo.idComplexo}" selected=selected>${cpComplexo.nomeComplexo}</option>
+   					#{/if}
+   					#{else}
+						<option value="${cpComplexo.idComplexo}">${cpComplexo.nomeComplexo}</option>
+   					#{/else}
+				#{/list} 
+   			</select>
+
+   			<label for="parametro.dataInicio">In&iacute;cio de Vig&ecirc;ncia:</label>
+	    	<input type="text" name="parametro.dataInicio" class="datePicker" value="${parametro.dataInicio?.format('dd/MM/yyyy')}" />
+	    
+		    <label for="parametro.dataFim">Fim de Vig&ecirc;ncia</label>
+		    <input type="text" name="parametro.dataFim" class="datePicker" value="${parametro.dataFim?.format('dd/MM/yyyy')}" />
+		    
+		    <label for="parametro.descricao" class="obrigatorio">Descri&ccedil;&atilde;o</label>
+			<textarea name="parametro.descricao" rows="7" cols="80">${parametro?.descricao}</textarea>
+									
+		    <input type="hidden" name="parametro.id" value="${parametro.id}"/>
+		</div>
+	<span class="alerta menor">* Preenchimento obrigat&oacute;rio</span>
+	<div class="gt-table-buttons">
+		<input type="submit" value="Salvar" class="gt-btn-medium gt-btn-left" />
+		<input type="button" value="Cancelar" class="gt-btn-medium gt-btn-left" onclick="javascript:window.location = '@{Parametros.listar()}';" />
+	</div>
+#{/form}

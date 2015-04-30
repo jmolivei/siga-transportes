@@ -1,0 +1,152 @@
+#{extends 'main.html' /}
+
+#{set title:'SIGA-Transporte' /}
+
+	<script type="text/javascript">
+        $(function() {
+
+        	$('.complexo').css('visibility','hidden');
+			$('.bt_requisicao').css('display','none');
+
+        	$('#requisicao_transferirDeComplexo').click( function() {	
+        		$('.bt_requisicao').css('display','block');
+        		$('.bt_edicao').css('display','none');
+        		$('.complexo').css('visibility','visible');
+        		$('.edicao').css('visibility','hidden');
+     	   });
+
+        	$('#requisicao_cancelar').click( function() {	
+        		$('.bt_requisicao').css('display','none');
+        		$('.bt_edicao').css('display','block');
+        		$('.complexo').css('visibility','hidden');
+        		$('.edicao').css('visibility','visible');
+     	   });
+
+			$('#requisicao_salvarNovoComplexo').click( function() {	
+				if($('form').serialize().indexOf("req=") != -1) {
+					$('form').submit();
+				} else {
+					alert('Por favor, selecione ao menos uma requisição.');
+				}
+			});
+       });
+	</script>
+	
+    %{
+         numeroAutorizadas = 0 
+	}%
+
+<div class="gt-bd clearfix">
+	<div class="gt-content clearfix">
+		#{if menuRequisicoesMostrarAbertas && menuRequisicoesMostrarAutorizadas && menuRequisicoesMostrarRejeitadas} 
+			<h2>Lista de Todas as Requisi&ccedil;&otilde;es</h2>
+		#{/if}
+		#{elseif !menuRequisicoesMostrarAbertas}
+			<h2>Lista de Requisi&ccedil;&otilde;es Abertas</h2>
+		#{/elseif}
+		#{elseif !menuRequisicoesMostrarAutorizadas}
+			<h2>Lista de Requisi&ccedil;&otilde;es Autorizadas</h2>
+		#{/elseif}
+		#{elseif !menuRequisicoesMostrarRejeitadas}
+			<h2>Lista de Requisi&ccedil;&otilde;es Rejeitadas</h2>
+		#{/elseif}
+#{form @Requisicoes.salvarNovoComplexo(), id:'formSalvarNovoComplexo', enctype:'multipart/form-data'}
+
+#{include 'Requisicoes/menuListarPAprovar.html' /}
+
+#{if requisicoesTransporte.size() > 0}
+		<div class="gt-content-box gt-for-table">     
+		 	<table id="htmlgrid" class="gt-table" >
+		 	<thead>
+		    	<tr style="font-weight: bold;">
+		    		<!--<th width="15%">Numero</th>-->
+		    		<th width="10%">Saida</th>
+			   		<th width="10%">Retorno</th><!--
+			   		<th width="15%">Passageiros</th>
+			   		<th width="20%">Itinerario</th>-->
+			   		<th width="10%">Complexo</th>
+			   		<th width="30%">Outros Dados</th>
+			   		<th width="10%"></th>
+			   		<th width="10%"></th>
+			   		<th width="10%"></th>
+				</tr>
+			</thead>
+			<tbody>	
+#{list requisicoesTransporte, as:'requisicaoTransporte'}
+			   	<tr id ="row_${requisicaoTransporte.id}"><!--	
+		    	    <td><nobr><a href="@{Requisicoes.buscarPelaSequence(requisicaoTransporte.sequence)}">${requisicaoTransporte.sequence}</a> <a href="#" onclick="javascript:window.open('@{Requisicoes.buscarPelaSequence(requisicaoTransporte.sequence, true)}');"><img src="/sigatp/public/images/linknovajanelaicon.png" alt="Abrir em uma nova janela" title="Abrir em uma nova janela"></a></nobr></td>
+		    		<td>${requisicaoTransporte.dataHoraSaidaPrevista?.format('dd/MM/yyyy HH:mm')}</td>
+		    		<td>${requisicaoTransporte.dataHoraRetornoPrevisto?.format('dd/MM/yyyy HH:mm')}</td>
+		    		<td style="white-space: pre;">${requisicaoTransporte.passageiros}</td>
+		    		<td style="white-space: pre;">${requisicaoTransporte.itinerarios}</td>	-->
+					
+					<td>${requisicaoTransporte.dataHoraSaidaPrevista?.format('dd/MM/yyyy HH:mm')}</td>
+		    		<td>
+					#{if requisicaoTransporte.dataHoraRetornoPrevisto != null}
+		    			${requisicaoTransporte.dataHoraRetornoPrevisto?.format('dd/MM/yyyy HH:mm')}
+		    		#{/if}
+		    		#{else}
+		    			N&atilde;o
+		    		#{/else}
+					</td>
+					<td>${requisicaoTransporte.cpComplexo?.nomeComplexo}
+					
+					</td>
+			   	    <td>
+			   	    	#{tp.tags.link requisicaoTransporte.descricaoCompleta,
+		    		  	 			   parteTextoLink: requisicaoTransporte.sequence,
+		    		  	 			   ehEditavel: true,
+		    						   comando: @Requisicoes.buscarPelaSequence(requisicaoTransporte.sequence, true)}
+		    			#{/tp.tags.link}
+					</td>		    		
+		    		<td class="edicao">
+		    		
+		   	#{if (exibirMenuAprovador || exibirMenuAdministrar || exibirMenuAdministrarMissao || exibirMenuAdministrarMissaoComplexo) && ! requisicaoTransporte.getUltimoAndamento().estadoRequisicao.equals(models.EstadoRequisicao.AUTORIZADA)} <a class="once"
+				href="@{Andamentos.autorizar(requisicaoTransporte.id)}"> <img 
+				src="/sigatp/public/images/approvedicon.png"
+				style="margin-right: 5px;">Autorizar</a>&nbsp;&nbsp;&nbsp;
+			#{/if}
+			</td>
+			<td class="edicao">
+			#{if (exibirMenuAprovador || exibirMenuAdministrar || exibirMenuAdministrarMissao || exibirMenuAdministrarMissaoComplexo ) && ! requisicaoTransporte.getUltimoAndamento().estadoRequisicao.equals(models.EstadoRequisicao.REJEITADA)} <a class="once"
+				href="@{Andamentos.rejeitar(requisicaoTransporte.id)}"> <img 
+				src="/sigatp/public/images/rejectedicon.png"
+				style="margin-right: 5px;">Rejeitar</a>&nbsp;&nbsp;&nbsp;
+			#{/if}   
+			<td class="complexo" valign="middle" colspan="2">
+			#{if requisicaoTransporte.getUltimoAndamento().estadoRequisicao.equals(models.EstadoRequisicao.AUTORIZADA)}
+			         %{
+          			   numeroAutorizadas = numeroAutorizadas + 1
+ 					 }%
+			<input type="checkbox" name="req" value="${requisicaoTransporte.id}" class="complexo reqs">#{/if}</td>
+			</td> 		
+				</tr>
+#{/list}
+			 </tbody>
+		     </table>
+		     		   		    <div id="pagination"/>    
+		</div>
+#{/if}
+#{else}
+<h2>N&atilde;o existem requisi&ccedil;&otilde;es neste estado.</h2>
+#{/else}
+
+<div class="gt-table-buttons">
+	#{if  (exibirMenuAdministrar || exibirMenuAdministrarMissao ) && requisicoesTransporte.size() > 0 && numeroAutorizadas > 0}
+	<a href="#" id="requisicao_transferirDeComplexo" class="gt-btn-medium gt-btn-left bt_edicao">Alterar Complexo</a>
+	#{/if}
+	<div class="clearfix">
+		<label class="bt_requisicao" for= "idNovoComplexo">&nbsp;&nbsp;Alterar para: </label>
+		#{select 'novoComplexo.idComplexo',
+				  class: 'bt_requisicao',
+		   		  items:complexos,
+		   		  valueProperty:'idComplexo',
+		   		  labelProperty:'nomeComplexo'}
+		#{/select}
+	</div>
+	<a href="#" id="requisicao_salvarNovoComplexo" class="gt-btn-medium gt-btn-left bt_requisicao">&{'views.botoes.salvar'}</a>
+	<a href="#" id="requisicao_cancelar" class="gt-btn-medium gt-btn-left bt_requisicao">&{'views.botoes.cancelar'}</a>
+</div>
+#{/form}
+	</div>
+</div>

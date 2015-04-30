@@ -5,21 +5,45 @@
 
 	<parent>
 		<groupId>siga</groupId>
-		<artifactId>play-dependencies</artifactId>
+		<artifactId>siga-doc</artifactId>
 		<version>1.1</version>
-		<relativePath>../pom-play.xml</relativePath>
 	</parent>
 
 	<artifactId>sigatp</artifactId>
 	<modelVersion>4.0.0</modelVersion>
-	<packaging>play</packaging>
+	<packaging>war</packaging>
 
 	<dependencies>
-<!-- 		<dependency>
-			<groupId>com.google.guava</groupId>
-			<artifactId>guava</artifactId>
-			<version>15.0</version>
-		</dependency> -->
+		<!-- SIGA -->
+		<dependency>
+			<groupId>siga</groupId>
+			<artifactId>siga-vraptor-module</artifactId>
+			<exclusions>
+				<exclusion>
+					<artifactId>xerces</artifactId>
+					<groupId>xercesImpl</groupId>
+				</exclusion>
+			</exclusions>
+		</dependency>
+		<dependency>
+			<groupId>org.codehaus.jettison</groupId>
+			<artifactId>jettison</artifactId>
+			<version>1.3.5</version>
+		</dependency>
+		<dependency>
+			<groupId>br.com.caelum.vraptor</groupId>
+			<artifactId>vraptor-jpa</artifactId>
+			<version>1.0.2</version>
+			<exclusions>
+				<exclusion>  <!-- declare the exclusion here -->
+					<groupId>org.eclipse.persistence</groupId>
+					<artifactId>javax.persistence</artifactId>
+				</exclusion>
+			</exclusions>
+		</dependency>
+
+		<!-- <dependency> <groupId>com.google.guava</groupId> <artifactId>guava</artifactId> 
+			<version>15.0</version> </dependency> -->
 
 		<!-- Siga Uteis Play Module -->
 		<dependency>
@@ -70,7 +94,7 @@
 				</exclusion>
 			</exclusions>
 		</dependency>
-
+		
 		<dependency>
 			<groupId>org.apache.ant</groupId>
 			<artifactId>ant-junit</artifactId>
@@ -143,9 +167,17 @@
 			<version>4.0.2.GA</version> </dependency> -->
 
 		<dependency>
+			<groupId>org.hibernate</groupId>
+			<artifactId>hibernate-validator</artifactId>
+			<version>4.1.0.Final</version>
+		</dependency>
+
+
+		<dependency>
 			<groupId>javax.validation</groupId>
 			<artifactId>validation-api</artifactId>
 			<version>1.1.0.Final</version>
+			<scope>provided</scope>
 		</dependency>
 
 
@@ -154,16 +186,61 @@
 			<artifactId>hibernate-envers</artifactId>
 			<version>4.2.15.Final</version>
 		</dependency>
+
+		<dependency>
+			<groupId>org.apache.tomcat</groupId>
+			<artifactId>jsp-api</artifactId>
+			<scope>provided</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>jsptags</groupId>
+			<artifactId>pager-taglib</artifactId>
+		</dependency>
+
+		<!-- standard.jar -->
+		<dependency>
+			<groupId>taglibs</groupId>
+			<artifactId>standard</artifactId>
+			<version>1.1.2</version>
+		</dependency>
+
+		<!-- JSTL -->
+		<dependency>
+			<groupId>javax.servlet</groupId>
+			<artifactId>jstl</artifactId>
+			<version>1.1.2</version>
+		</dependency>
+
 		<!-- DEV <scope>provided</scope> -->
 
-		<!-- Teste -->
-		<!-- <dependency> <groupId>org.seleniumhq.selenium</groupId> <artifactId>selenium-java</artifactId> 
-			<version>2.42.2</version> <scope>test</scope> <exclusions> <exclusion> <groupId>com.google.guava</groupId> 
-			<artifactId>guava</artifactId> </exclusion> </exclusions> </dependency> <dependency> 
-			<groupId>org.testng</groupId> <artifactId>testng</artifactId> <version>6.8.8</version> 
-			<scope>test</scope> </dependency> <dependency> <groupId>com.google.guava</groupId> 
-			<artifactId>guava</artifactId> <version>15.0</version> <scope>test</scope> 
-			</dependency> -->
+		<dependency>
+			<groupId>org.seleniumhq.selenium</groupId>
+			<artifactId>selenium-java</artifactId>
+			<version>2.42.2</version>
+			<scope>test</scope>
+			<exclusions>
+				<exclusion>
+					<groupId>com.google.guava</groupId>
+					<artifactId>guava</artifactId>
+				</exclusion>
+			</exclusions>
+		</dependency>
+		<dependency>
+			<groupId>org.testng</groupId>
+			<artifactId>testng</artifactId>
+			<version>6.8.8</version>
+			<scope>test</scope>
+		</dependency>
 	</dependencies>
 
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-war-plugin</artifactId>
+				<version>2.6</version>
+			</plugin>
+		</plugins>
+	</build>
 </project>
