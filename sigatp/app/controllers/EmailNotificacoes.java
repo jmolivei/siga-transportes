@@ -52,7 +52,7 @@ public class EmailNotificacoes extends Job<Object>  {
 			Calendar calendar = Calendar.getInstance();
 			missoes = Missao.find("estadoMissao = ? and dataHoraSaida < ? " +
 					"order by condutor", EstadoMissao.PROGRAMADA, calendar).fetch();
-			if (missoes.size() > 0) {
+			if (missoes != null && missoes.size() > 0) {
 				notificarMissoes(missoes, tituloEmail, tipoNotificacao);
 			}
 		} catch (Exception ex) {
@@ -70,7 +70,7 @@ public class EmailNotificacoes extends Job<Object>  {
 			calendar.add(Calendar.DAY_OF_YEAR, -7);
 			missoes = Missao.find("estadoMissao = ? and dataHoraSaida < ? " +
 					"order by condutor", EstadoMissao.INICIADA, calendar).fetch();
-			if (missoes.size() > 0) {
+			if (missoes != null && missoes.size() > 0) {
 				notificarMissoes(missoes, tituloEmail, tipoNotificacao);
 			}	
 
@@ -221,7 +221,7 @@ public class EmailNotificacoes extends Job<Object>  {
 				condutores = Condutor.listarTodos();
 				Calendar calendar = Calendar.getInstance();
 				calendar.add(Calendar.MONTH, +3);
-				if (condutores.size() > 0) {
+				if (condutores != null && condutores.size() > 0) {
 					notificarCondutores(condutores, tituloEmail, tipoNotificacao,calendar);
 				}
 			} catch (Exception e) {

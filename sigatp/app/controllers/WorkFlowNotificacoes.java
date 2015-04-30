@@ -46,7 +46,7 @@ public class WorkFlowNotificacoes extends Job<Object>  {
 		String titulo = "Notifica\u00E7\u00F5es do Andamento de Requisi\u00E7\u00F5es de Transporte";
 		List<Andamento> andamentos = Andamento.listarPorDataNotificacaoWorkFlow();
 		
-		if (andamentos.size() > 0) {
+		if (andamentos != null && andamentos.size() > 0) {
 			for(Andamento item : andamentos) {
 				Set<DpPessoa> lstPessoas = null;
 				boolean notificar = false;
