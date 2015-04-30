@@ -21,7 +21,7 @@ import org.hibernate.validator.constraints.NotEmpty;
 import br.gov.jfrj.siga.model.ActiveRecord;
 import br.gov.jfrj.siga.tp.validation.annotation.Data;
 import br.gov.jfrj.siga.tp.validation.annotation.UpperCase;
-import br.gov.jfrj.siga.tp.vraptor.ConvertableEntity;
+import br.gov.jfrj.siga.vraptor.converter.ConvertableEntity;
 
 @SuppressWarnings("serial")
 @Entity

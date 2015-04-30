@@ -40,8 +40,8 @@ import br.gov.jfrj.siga.tp.validation.annotation.Chassi;
 import br.gov.jfrj.siga.tp.validation.annotation.Renavam;
 import br.gov.jfrj.siga.tp.validation.annotation.Unique;
 import br.gov.jfrj.siga.tp.validation.annotation.UpperCase;
-import br.gov.jfrj.siga.tp.vraptor.ConvertableEntity;
 import br.gov.jfrj.siga.tp.vraptor.i18n.MessagesBundle;
+import br.gov.jfrj.siga.vraptor.converter.ConvertableEntity;
 
 @Entity
 // @Table(name = "VEICULO_2", schema="SIGAOR")

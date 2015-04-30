@@ -29,9 +29,5 @@ public abstract class TpModel extends Objeto {
 		return getId() == null || ID_VAZIO.equals(getId());
 	}
 
-	public static boolean existe(Long id) {
-		return id != null && !ID_VAZIO.equals(id);
-	}
-
 	public abstract Long getId();
 }

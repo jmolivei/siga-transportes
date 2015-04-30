@@ -16,8 +16,6 @@ import javax.validation.constraints.NotNull;
 import org.hibernate.envers.Audited;
 import org.hibernate.envers.RelationTargetAuditMode;
 
-
-
 import play.data.binding.As;
 import play.data.validation.Required;
 import play.db.jpa.GenericModel;

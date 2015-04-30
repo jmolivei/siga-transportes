@@ -20,8 +20,8 @@ import org.hibernate.envers.RelationTargetAuditMode;
 import play.modules.br.jus.jfrj.siga.uteis.validadores.validarAnoData.ValidarAnoData;
 import br.gov.jfrj.siga.dp.DpLotacao;
 import br.gov.jfrj.siga.model.ActiveRecord;
-import br.gov.jfrj.siga.tp.vraptor.ConvertableEntity;
 import br.gov.jfrj.siga.tp.vraptor.i18n.MessagesBundle;
+import br.gov.jfrj.siga.vraptor.converter.ConvertableEntity;
 
 @Entity
 // @Table(name = "LOTACAO_VEICULO_2", schema="SIGAOR")
