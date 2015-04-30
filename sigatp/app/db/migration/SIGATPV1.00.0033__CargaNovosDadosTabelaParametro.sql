@@ -5,7 +5,7 @@ insert into sigatp.parametro (id, nomeparametro, valorparametro, datainicio, des
 values (23, 'cron.iniciow', '0 0/10 9-19 1/1 * ? *', current_timestamp, 'Workflow : Configurações de inicialização do serviço (será utilizados na versão com vraptor).');
 
 insert into SIGATP.PARAMETRO (ID, NOMEPARAMETRO, VALORPARAMETRO, DATAINICIO, DESCRICAO) 
-VALUES (24, 'cron.dataInioPesquisaw', '01/04/2014', current_timestamp, 'Workflow : Data de início das requisições transporte para notificação');
+VALUES (24, 'cron.dataInicioPesquisaw', '01/04/2014', current_timestamp, 'Workflow : Data de início das requisições transporte para notificação');
 
 insert into sigatp.parametro (id, nomeparametro, valorparametro, datainicio, descricao) 
 values (25, 'caminhoHostnameStandalone', 'sigaidp.crossdomain.url', current_timestamp, 'Workflow : Parâmetro no arquivo standalone.xml que contém o hostname do servidor');

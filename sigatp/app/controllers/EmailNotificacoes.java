@@ -28,19 +28,19 @@ public class EmailNotificacoes extends Job<Object>  {
 	private static final String espacosHtml = "&nbsp;&nbsp;";
 	
 	public void doJob() {
-		boolean executa = Boolean.parseBoolean(Parametro.buscarConfigSistemaEmVigor("cron.executa"));if (executa)) {
+		boolean executa = Boolean.parseBoolean(Parametro.buscarConfigSistemaEmVigor("cron.executa"));
 		if (executa) {
 			try {
 				verificarVencimentoCarteira3MesesAntes();
 				verificarMissoesProgramadas();
 				verificarMissoesIniciadasMaisDe7Dias();
 			} catch (Exception ex) {
-				Logger.info(ex.getMessage());
+				Logger.info("Erro no Serviço EmailNotificações " + ex.getMessage());
 			}
 		} else {
-			Logger.info("Serviço desligado");
+			Logger.info("Serviço EmailNotificações desligado");
 		}
-		Logger.info("Serviço finalizado");
+		Logger.info("Serviço EmailNotificações finalizado");
 	}
 	
 	private void verificarMissoesProgramadas()  {
@@ -52,8 +52,9 @@ public class EmailNotificacoes extends Job<Object>  {
 			Calendar calendar = Calendar.getInstance();
 			missoes = Missao.find("estadoMissao = ? and dataHoraSaida < ? " +
 					"order by condutor", EstadoMissao.PROGRAMADA, calendar).fetch();
-			notificarMissoes(missoes, tituloEmail, tipoNotificacao);
-
+			if (missoes.size() > 0) {
+				notificarMissoes(missoes, tituloEmail, tipoNotificacao);
+			}
 		} catch (Exception ex) {
 			ex.printStackTrace();
 		}
@@ -69,7 +70,9 @@ public class EmailNotificacoes extends Job<Object>  {
 			calendar.add(Calendar.DAY_OF_YEAR, -7);
 			missoes = Missao.find("estadoMissao = ? and dataHoraSaida < ? " +
 					"order by condutor", EstadoMissao.INICIADA, calendar).fetch();
-			notificarMissoes(missoes, tituloEmail, tipoNotificacao);
+			if (missoes.size() > 0) {
+				notificarMissoes(missoes, tituloEmail, tipoNotificacao);
+			}	
 
 		} catch (Exception ex) {
 			ex.printStackTrace();
@@ -218,7 +221,9 @@ public class EmailNotificacoes extends Job<Object>  {
 				condutores = Condutor.listarTodos();
 				Calendar calendar = Calendar.getInstance();
 				calendar.add(Calendar.MONTH, +3);
-				notificarCondutores(condutores, tituloEmail, tipoNotificacao,calendar);
+				if (condutores.size() > 0) {
+					notificarCondutores(condutores, tituloEmail, tipoNotificacao,calendar);
+				}
 			} catch (Exception e) {
 				e.printStackTrace();
 			}

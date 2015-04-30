@@ -33,7 +33,7 @@ public class WorkFlowNotificacoes extends Job<Object>  {
 			try {
 				notificarAndamentos();
 			} catch (Exception ex) {
-				Logger.info(ex.getMessage());
+				Logger.info("Erro no Serviço de Notificação do WorkFlow " + ex.getMessage());
 			}
 		}
 		else {
@@ -46,38 +46,40 @@ public class WorkFlowNotificacoes extends Job<Object>  {
 		String titulo = "Notifica\u00E7\u00F5es do Andamento de Requisi\u00E7\u00F5es de Transporte";
 		List<Andamento> andamentos = Andamento.listarPorDataNotificacaoWorkFlow();
 		
-		for(Andamento item : andamentos) {
-			Set<DpPessoa> lstPessoas = null;
-			boolean notificar = false;
-		
-			if (item.estadoRequisicao.equals(EstadoRequisicao.ABERTA)) {
-				lstPessoas = new HashSet<DpPessoa>(retornarConfiguracaoDpPessoa(item));
-				notificar = true;
-			}
+		if (andamentos.size() > 0) {
+			for(Andamento item : andamentos) {
+				Set<DpPessoa> lstPessoas = null;
+				boolean notificar = false;
 			
-			else if(item.estadoRequisicao.equals(EstadoRequisicao.REJEITADA) || item.estadoRequisicao.equals(EstadoRequisicao.AUTORIZADA) ||
-				    item.estadoRequisicao.equals(EstadoRequisicao.PROGRAMADA)) {
-				    
-				lstPessoas = new HashSet<DpPessoa>();
-				lstPessoas.add(item.responsavel);
-				
-				if (!item.responsavel.getId().equals(item.requisicaoTransporte.solicitante.getId())) {
-					lstPessoas.add(item.requisicaoTransporte.solicitante);
+				if (item.estadoRequisicao.equals(EstadoRequisicao.ABERTA)) {
+					lstPessoas = new HashSet<DpPessoa>(retornarConfiguracaoDpPessoa(item));
+					notificar = true;
 				}
-				notificar = true;
-			}
-
-			if (notificar) {
-				SimpleDateFormat fr = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
-				String sequencia = item.estadoRequisicao.getDescricao() + " " +  item.requisicaoTransporte.getSequence() + " " +
-						item.requisicaoTransporte.id + " " + fr.format(item.requisicaoTransporte.dataHoraSaidaPrevista.getTime());
-
-				if (enviarEmail(titulo, lstPessoas, sequencia)) {
-					try {
-						Andamento.gravarDataNotificacaoWorkFlow(item.id);
+				
+				else if(item.estadoRequisicao.equals(EstadoRequisicao.REJEITADA) || item.estadoRequisicao.equals(EstadoRequisicao.AUTORIZADA) ||
+					    item.estadoRequisicao.equals(EstadoRequisicao.PROGRAMADA)) {
+					    
+					lstPessoas = new HashSet<DpPessoa>();
+					lstPessoas.add(item.responsavel);
+					
+					if (!item.responsavel.getId().equals(item.requisicaoTransporte.solicitante.getId())) {
+						lstPessoas.add(item.requisicaoTransporte.solicitante);
 					}
-					catch (Exception ex) {
-						Logger.info("Falha ao gravar notificação: " + ex.getMessage());
+					notificar = true;
+				}
+	
+				if (notificar) {
+					SimpleDateFormat fr = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
+					String sequencia = item.estadoRequisicao.getDescricao() + " " +  item.requisicaoTransporte.getSequence() + " " +
+							item.requisicaoTransporte.id + " " + fr.format(item.requisicaoTransporte.dataHoraSaidaPrevista.getTime());
+	
+					if (enviarEmail(titulo, lstPessoas, sequencia)) {
+						try {
+							Andamento.gravarDataNotificacaoWorkFlow(item.id);
+						}
+						catch (Exception ex) {
+							Logger.info("Falha ao gravar notificação: " + ex.getMessage());
+						}
 					}
 				}
 			}
