@@ -15,7 +15,7 @@ import org.hibernate.envers.Audited;
 import play.data.validation.Required;
 import play.modules.br.jus.jfrj.siga.uteis.validadores.upperCase.UpperCase;
 import br.gov.jfrj.siga.model.ActiveRecord;
-import br.gov.jfrj.siga.tp.vraptor.ConvertableEntity;
+import br.gov.jfrj.siga.vraptor.converter.ConvertableEntity;
 
 @Entity
 @Audited
