@@ -77,6 +77,6 @@ standalone.bat
 
 * Stop:
 ```
-Ctrl + C
+Ctrl+C
 ```
 
