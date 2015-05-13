@@ -31,7 +31,7 @@ import br.gov.jfrj.siga.vraptor.SigaObjects;
 @Resource
 @Path("/app/escalaDeTrabalho")
 public class EscalaDeTrabalhoController extends TpController {
-	
+
 	private static final String MODO = "modo";
 	private static final String LABEL_EDITAR = "views.label.editar";
 	private static final String LABEL_INCLUIR = "views.label.incluir";
@@ -44,7 +44,7 @@ public class EscalaDeTrabalhoController extends TpController {
 	public void listar() {
     	result.include("escalas", EscalaDeTrabalho.buscarTodasVigentes());
     }
-	
+
 	@RoleAdmin
 	@RoleAdminMissao
 	@RoleAdminMissaoComplexo
@@ -52,21 +52,21 @@ public class EscalaDeTrabalhoController extends TpController {
     public void incluir(Long idCondutor) throws Exception {
 		MenuMontador.instance(result).recuperarMenuCondutores(idCondutor, ItemMenu.ESCALASDETRABALHO);
     	Condutor condutor = Condutor.AR.findById(idCondutor);
-    	
+
     	EscalaDeTrabalho escala = new EscalaDeTrabalho();
     	escala.setCondutor(condutor);
-        
+
     	DiaDaSemana diaSemana = DiaDaSemana.SEGUNDA;
     	DiaDeTrabalho diaTrabalho = new DiaDeTrabalho();
     	escala.getDiasDeTrabalho().add(diaTrabalho);
-    	
+
     	result.include(MODO, LABEL_INCLUIR);
     	result.include("escala", escala);
     	result.include("diaSemana", diaSemana);
-    	
+
     	result.use(Results.page()).of(EscalaDeTrabalhoController.class).editar(null);
 	}
-	
+
 	@RoleAdmin
 	@RoleAdminMissao
 	@RoleAdminMissaoComplexo
@@ -75,62 +75,62 @@ public class EscalaDeTrabalhoController extends TpController {
 		EscalaDeTrabalho escala = EscalaDeTrabalho.AR.findById(id);
     	MenuMontador.instance(result).recuperarMenuCondutores(escala.getCondutor().getId(), ItemMenu.ESCALASDETRABALHO);
     	DiaDaSemana diaSemana = DiaDaSemana.SEGUNDA;
-    	
+
     	result.include(MODO, LABEL_EDITAR);
     	result.include("escala", escala);
     	result.include("diaSemana", diaSemana);
     }
-	
+
 	@Path("/listarPorCondutor/{id}")
 	public void listarPorCondutor(Long id) throws Exception {
     	MenuMontador.instance(result).recuperarMenuCondutores(id, ItemMenu.ESCALASDETRABALHO);
         Condutor condutor = Condutor.AR.findById(id);
-        
+
         List<EscalaDeTrabalho> escalas = EscalaDeTrabalho.buscarTodosPorCondutor(condutor);
-        
+
         EscalaDeTrabalho escala = new EscalaDeTrabalho();
         escala.setCondutor(condutor);
     	DiaDaSemana diaSemana = DiaDaSemana.SEGUNDA;
     	escala.setDataVigenciaInicio(Calendar.getInstance());
     	DiaDeTrabalho diaTrabalho = new DiaDeTrabalho();
     	escala.getDiasDeTrabalho().add(diaTrabalho);
-       
+
         if (!escalas.isEmpty() && (escalas.get(0).getDataVigenciaFim() == null || escalas.get(0).getDataVigenciaFim().after(Calendar.getInstance()))) {
         	 escala = escalas.get(0);
         } else if (!escalas.isEmpty() && ehMesmoDia(escalas.get(0).getDataVigenciaFim(),Calendar.getInstance())) {
        		escalas.add(0,escala);
         }
-        
+
         result.include("escalas", escalas);
         result.include("condutor", condutor);
         result.include("escala", escala);
         result.include("diaSemana", diaSemana);
      }
-	
+
 	@RoleAdmin
 	@RoleAdminMissao
 	@RoleAdminMissaoComplexo
 	@Path("/finalizar")
-    public void finalizar(EscalaDeTrabalho escalaDeTrabalho) throws Exception { 
+    public void finalizar(EscalaDeTrabalho escalaDeTrabalho) throws Exception {
 		escalaDeTrabalho.setDataVigenciaFim(Calendar.getInstance());
     	escalaDeTrabalho.getDataVigenciaFim().set(Calendar.HOUR_OF_DAY, 23);
     	escalaDeTrabalho.getDataVigenciaFim().set(Calendar.MINUTE, 59);
     	escalaDeTrabalho.getDataVigenciaFim().set(Calendar.SECOND, 59);
 		escalaDeTrabalho.save();
-		
+
 		result.redirectTo(this).listarPorCondutor(escalaDeTrabalho.getCondutor().getId());
 	}
-    
+
 	@RoleAdmin
 	@RoleAdminMissao
 	@RoleAdminMissaoComplexo
 	@Path("/salvar")
 	public void salvar(EscalaDeTrabalho escalaDeTrabalho, List<DiaDeTrabalho> diasDeTrabalho) throws Exception {
-       
+
 		if(!validator.hasErrors()) {
         	error(diasDeTrabalho == null || diasDeTrabalho.isEmpty(), "diasDeTrabalho", "escalasDeTrabalho.diaDaSemana.validation");
         }
-        
+
         EscalaDeTrabalho escalaAntiga = new EscalaDeTrabalho();
         escalaAntiga.setDiasDeTrabalho(new ArrayList<DiaDeTrabalho>());
         escalaAntiga.getDiasDeTrabalho().addAll(escalaDeTrabalho.getDiasDeTrabalho());
@@ -140,48 +140,46 @@ public class EscalaDeTrabalhoController extends TpController {
 	        escalaDeTrabalho.setDiasDeTrabalho(new ArrayList<DiaDeTrabalho>());
 	        escalaDeTrabalho.getDiasDeTrabalho().addAll(diasDeTrabalho);
         }
-        
+
         if(!validator.hasErrors()) {
         	validarEscala(escalaDeTrabalho.getDiasDeTrabalho());
         }
-        
+
         if(!validator.hasErrors()) {
         	validarMissoesParaNovaEscala(escalaDeTrabalho);
         }
-        
+
         if(validator.hasErrors()) {
         	MenuMontador.instance(result).recuperarMenuCondutores(escalaDeTrabalho.getCondutor().getId(), ItemMenu.ESCALASDETRABALHO);
-        	
+
             Condutor condutor = escalaDeTrabalho.getCondutor();
-            
+
         	List<EscalaDeTrabalho> escalas = EscalaDeTrabalho.buscarTodosPorCondutor(condutor);
-        	
+
         	for (EscalaDeTrabalho escala : escalas) {
-        		if (escalaDeTrabalho.getId().equals(escala.getId())) {
+        		if (isMesmaEscala(escalaDeTrabalho, escala) && isMesmosDiasDeTrabalho(escalaAntiga.getDiasDeTrabalho(), diasDeTrabalho)) {
         			escala.setDiasDeTrabalho(escalaAntiga.getDiasDeTrabalho());
         		}
 			}
-        	
-        	DiaDaSemana diaSemana = DiaDaSemana.SEGUNDA;
-        	
+
         	result.include("escalas", escalas);
             result.include("condutor", condutor);
             result.include("escala", escalaDeTrabalho);
-            result.include("diaSemana", diaSemana);
-            
+            result.include("diaSemana", DiaDaSemana.SEGUNDA);
+
             validator.onErrorUse(Results.logic()).forwardTo(EscalaDeTrabalhoController.class).listarPorCondutor(condutor.getId());
         }
-        
+
         escalaDeTrabalho.setDataVigenciaInicio(Calendar.getInstance());
         if (ehMesmoDia(escalaDeTrabalho.getDataVigenciaInicio(), Calendar.getInstance())) {
         	if (escalaDeTrabalho.getId() > 0) {
         		Object[] escalas = new Object[1];
         		escalas[0] = escalaDeTrabalho;
         		DiaDeTrabalho.AR.delete("escalaDeTrabalho", escalas);
-        	} 
-        	
+        	}
+
         	escalaDeTrabalho.save();
-    		
+
     		for (DiaDeTrabalho diaDeTrabalho : escalaDeTrabalho.getDiasDeTrabalho()) {
 	                DiaDeTrabalho diaDeTrabalhoNovo = new DiaDeTrabalho();
 	                diaDeTrabalhoNovo.setDiaEntrada(diaDeTrabalho.getDiaEntrada());
@@ -189,10 +187,10 @@ public class EscalaDeTrabalhoController extends TpController {
 	                diaDeTrabalhoNovo.setHoraEntrada(diaDeTrabalho.getHoraEntrada());
 	                diaDeTrabalhoNovo.setHoraSaida(diaDeTrabalho.getHoraSaida());
 	                diaDeTrabalhoNovo.setEscalaDeTrabalho(escalaDeTrabalho);
-	                
+
 	                diaDeTrabalhoNovo.save();
     		}
-    		
+
         } else {
         	escalaDeTrabalho.setDataVigenciaFim(Calendar.getInstance());
         	escalaDeTrabalho.getDataVigenciaFim().add(Calendar.DATE,-1);
@@ -202,7 +200,7 @@ public class EscalaDeTrabalhoController extends TpController {
            	escalaDeTrabalho.save();
             EscalaDeTrabalho.AR.em().detach(escalaDeTrabalho);
 
-            EscalaDeTrabalho novaEscala = new EscalaDeTrabalho(); 
+            EscalaDeTrabalho novaEscala = new EscalaDeTrabalho();
         	novaEscala.setCondutor(escalaDeTrabalho.getCondutor());
         	novaEscala.setDataVigenciaInicio(Calendar.getInstance());
         	novaEscala.getDataVigenciaInicio().set(Calendar.HOUR_OF_DAY, 0);
@@ -210,7 +208,7 @@ public class EscalaDeTrabalhoController extends TpController {
         	novaEscala.getDataVigenciaInicio().set(Calendar.SECOND, 0);
         	novaEscala.setDiasDeTrabalho(escalaDeTrabalho.getDiasDeTrabalho());
         	novaEscala.save();
-        	
+
     		for (DiaDeTrabalho diaDeTrabalho : diasDeTrabalho) {
                 DiaDeTrabalho diaDeTrabalhoNovo = new DiaDeTrabalho();
                 diaDeTrabalhoNovo.setDiaEntrada(diaDeTrabalho.getDiaEntrada());
@@ -218,14 +216,22 @@ public class EscalaDeTrabalhoController extends TpController {
                 diaDeTrabalhoNovo.setHoraEntrada(diaDeTrabalho.getHoraEntrada());
                 diaDeTrabalhoNovo.setHoraSaida(diaDeTrabalho.getHoraSaida());
                 diaDeTrabalhoNovo.setEscalaDeTrabalho(novaEscala);
-                
+
                 diaDeTrabalhoNovo.save();
     		}
         }
-        
+
         result.redirectTo(CondutorController.class).listar();
     }
-	
+
+	private boolean isMesmaEscala(EscalaDeTrabalho escalaDeTrabalho, EscalaDeTrabalho escala) {
+		return escalaDeTrabalho.getId().equals(escala.getId());
+	}
+
+	private boolean isMesmosDiasDeTrabalho(List<DiaDeTrabalho> diasDeTrabalhoAntigo, List<DiaDeTrabalho> diasDeTrabalhoNovo) {
+		return diasDeTrabalhoAntigo.equals(diasDeTrabalhoNovo);
+	}
+
 	@RoleAdmin
 	@RoleAdminMissao
 	@RoleAdminMissaoComplexo
@@ -234,31 +240,31 @@ public class EscalaDeTrabalhoController extends TpController {
     	EscalaDeTrabalho escala = EscalaDeTrabalho.AR.findById(id);
     	Long idCondutor = escala.getCondutor().getId();
     	escala.delete();
-    	
+
     	result.redirectTo(this).listarPorCondutor(idCondutor);
     }
-	
+
 	private boolean  ehMesmoDia(Calendar cal1, Calendar cal2) {
 	    if (cal1 == null || cal2 == null)
 	        return false;
 	    return (cal1.get(Calendar.ERA) == cal2.get(Calendar.ERA)
-	            && cal1.get(Calendar.YEAR) == cal2.get(Calendar.YEAR) 
+	            && cal1.get(Calendar.YEAR) == cal2.get(Calendar.YEAR)
 	            && cal1.get(Calendar.DAY_OF_YEAR) == cal2.get(Calendar.DAY_OF_YEAR));
 	}
-	
+
 	private boolean validarEscala(List<DiaDeTrabalho> diasDeTrabalho) {
 		for (DiaDeTrabalho diaDeTrabalho : diasDeTrabalho) {
 			if(null == diaDeTrabalho.getHoraEntrada()) {
 				validator.add(new I18nMessage("diasDeTrabalho", "escalasDeTrabalho.horaEntrada.vazia.validation"));
 				return false;
 			}
-			
+
 			if(null == diaDeTrabalho.getHoraSaida()) {
 				validator.add(new I18nMessage("diasDeTrabalho", "escalasDeTrabalho.horaSaida.vazia.validation"));
 				return false;
 			}
 		}
-		
+
 		Collections.sort(diasDeTrabalho);
 		List<String> periodosDeTrabalho = new ArrayList<String>();
 		for (DiaDeTrabalho diaDeTrabalho : diasDeTrabalho) {
@@ -267,7 +273,7 @@ public class EscalaDeTrabalhoController extends TpController {
 				validator.add(new I18nMessage("diasDeTrabalho", "escalasDeTrabalho.diaEntrada.validation"));
 				return false;
 			}
-			
+
 			if (diaDeTrabalho.getHoraEntrada().after(diaDeTrabalho.getHoraSaida()) &&
 				diaDeTrabalho.getDiaEntrada().getOrdem().equals(diaDeTrabalho.getDiaSaida().getOrdem())) {
 				validator.add(new I18nMessage("diasDeTrabalho", "escalasDeTrabalho.horaEntrada.validation"));
@@ -277,7 +283,7 @@ public class EscalaDeTrabalhoController extends TpController {
 			periodosDeTrabalho.add(diaDeTrabalho.getDiaEntrada().getOrdem() + diaDeTrabalho.getHoraEntradaFormatada("HHmm"));
 			periodosDeTrabalho.add(diaDeTrabalho.getDiaSaida().getOrdem() + diaDeTrabalho.getHoraSaidaFormatada("HHmm"));
 		}
-		
+
 		for (int i = 0; i < periodosDeTrabalho.size(); i++) {
 			if (i + 1 != periodosDeTrabalho.size())  {
 				int intervalo1 = Integer.parseInt(periodosDeTrabalho.get(i));
@@ -288,7 +294,7 @@ public class EscalaDeTrabalhoController extends TpController {
 				}
 			}
 		}
-		
+
 		return true;
 	}
 
@@ -307,9 +313,9 @@ public class EscalaDeTrabalhoController extends TpController {
 					! missao.condutor.estaDePlantao(dataFormatadaOracle)	) {
 					listaMissoes.append(delimitador).append(missao.getSequence());
 					delimitador=",";
-					valido = false;	
+					valido = false;
 				}
-			} 
+			}
 			if (! valido) {
 				validator.add(new I18nMessage("LinkErroEscalaDeTrabalho", listaMissoes.toString()));
 			}
