@@ -29,7 +29,7 @@
 	<li>
 		<a id="menuGabinetes" class="" href="#">Gabinetes</a>
 	  	<ul>
-			<li><a id="menuGabAbastecimentos" class="" href="@{Abastecimentos.listar}">Abastecimentos</a></li>  	
+			<li><a id="menuGabAbastecimentos" class="" href="${linkTo[AbastecimentoController].listar}">Abastecimentos</a></li>  	
 	 		<li><a id="menuGabinetesListar" class="" href="@{ControlesGabinete.listar()}">Controles de entrada / sa&iacute;da</a></li>
 	 		<li><a id="menuAdmFornecedores" class="" href="${linkTo[FornecedorController].listar}">Fornecedores</a></li>	
 		</ul>
@@ -55,7 +55,7 @@
 	<c:when test="${exibirMenuAdministrar}">
 		<li><a id="menuAdm" href="#">Administrar</a>  	
 			<ul>
-				<li><a id="menuAdmAbastecimentos" class="" href="@{Abastecimentos.listar}">Abastecimentos</a></li>
+				<li><a id="menuAdmAbastecimentos" class="" href="${linkTo[AbastecimentoController].listar}">Abastecimentos</a></li>
 				<li><a id="menuAdmInfracoes" class="" href="${linkTo[AutoDeInfracaoController].listar}">Autos de Infra&ccedil;&atilde;o</a></li>
 				<!-- <li><a id="menuAdmCompras" class="" href="@{Application.emdesenvolvimento}">Compras de Materiais</a></li> -->
 				<li><a id="menuAdmCondutores" class="" href="${linkTo[CondutorController].listar}">Condutores</a></li>
@@ -82,7 +82,7 @@
 	<c:when test="${exibirMenuAdministrarFrota}">
 		<li><a id="menuAdm" href="#">Administrar</a>  	
 			<ul>
-				<li><a id="menuAdmAbastecimentos" class="" href="@{Abastecimentos.listar}">Abastecimentos</a></li>
+				<li><a id="menuAdmAbastecimentos" class="" href="${linkTo[AbastecimentoController].listar}">Abastecimentos</a></li>
 				<!-- <li><a id="menuAdmCompras" class="" href="@{Application.emdesenvolvimento}">Compras de Materiais</a></li> -->
 				<li><a id="menuAdmFornecedores" class="" href="${linkTo[FornecedorController].listar}">Fornecedores</a></li>
 				<li><a id="menuAdmPenalidades" class="" href="@{penalidades.listar}">Penalidades</a></li>			
@@ -100,7 +100,7 @@
 	<c:when test="${exibirMenuAdministrarMissao || exibirMenuAdministrarMissaoComplexo}">
 		<li><a id="menuAdm" href="#">Administrar</a>  	
 			<ul>
-				<li><a id="menuAdmAbastecimentos" class="" href="@{Abastecimentos.listar}">Abastecimentos</a></li>
+				<li><a id="menuAdmAbastecimentos" class="" href="${linkTo[AbastecimentoController].listar}">Abastecimentos</a></li>
 				<li><a id="menuAdmInfracoes" class="" href="${linkTo[AutoDeInfracaoController].listar}">Autos de Infra&ccedil;&atilde;o</a></li>
 				<li><a id="menuAdmCondutores" class="" href="${linkTo[CondutorController].listar}">Condutores</a></li>
 				<li><a id="menuAdmFinalidades" class="" href="${linkTo[FinalidadeController].listar}">Finalidades</a></li>

@@ -1,9 +1,12 @@
 package br.gov.jfrj.siga.tp.model;
 
+import java.math.BigDecimal;
+import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.List;
+import java.util.Locale;
 
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
@@ -64,7 +67,6 @@ public class Abastecimento extends TpModel implements Comparable<Abastecimento> 
 	private double quantidadeEmLitros;
 	
 	@Required
-//	@As(binder=PriceBinder.class)
 	private double precoPorLitro;
 	
 	@Required
@@ -109,6 +111,17 @@ public class Abastecimento extends TpModel implements Comparable<Abastecimento> 
 	@ManyToOne
 	@JoinColumn(name = "ID_ORGAO_USU")
 	private CpOrgaoUsuario orgao;
+
+ 	public String formataValorExponencialParaDecimal(double number) {
+		return BigDecimal.valueOf((Double) number).toPlainString();
+	}
+
+ 	public String formataMoedaBrasileiraSemSimbolo(double number) {
+		Locale defaultLocale = new Locale("pt", "BR", "BRL");
+		NumberFormat nf = NumberFormat.getCurrencyInstance(defaultLocale);
+		String moeda =  nf.format(number).replace("R$", "").trim();
+		return moeda;
+	}
 	
 	public Long getId() {
 		return id;
@@ -356,7 +369,7 @@ public class Abastecimento extends TpModel implements Comparable<Abastecimento> 
 		String query = "select a from Abastecimento a "
 					+ "where orgao.id = " + admin.getOrgaoUsuario().getId();
 				 
-		Query qry = JPA.em().createQuery(query);
+		Query qry = AR.em().createQuery(query);
 		try {
 			retorno = (List<Abastecimento>) qry.getResultList();
 		} catch(NoResultException ex) {
