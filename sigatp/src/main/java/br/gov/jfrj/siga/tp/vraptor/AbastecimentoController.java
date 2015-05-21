@@ -41,6 +41,7 @@ import com.google.common.collect.Lists;
 @Path("/app/abastecimento/")
 public class AbastecimentoController extends TpController {
 
+	private static final String ABASTECIMENTO = "abastecimento";
 	private static final String TIPOS_COMBUSTIVEL_PARA_ABASTECIMENTO = "tiposCombustivelParaAbastecimento";
 	private static final String CONDUTORES = "condutores";
 	private static final String VEICULOS = "veiculos";
@@ -96,7 +97,7 @@ public class AbastecimentoController extends TpController {
 		List<Condutor> condutores = listarCondutores();
 		Abastecimento abastecimento = new Abastecimento();
 
-		result.include("abastecimento", abastecimento);
+		result.include(ABASTECIMENTO, abastecimento);
 		result.include(VEICULOS, veiculos);
 		result.include(CONDUTORES, condutores);
 		result.include(FORNECEDORES, fornecedores);
@@ -130,10 +131,12 @@ public class AbastecimentoController extends TpController {
 			result.include(CONDUTORES, condutores);
 			validator.onErrorUse(Results.page()).of(AbastecimentoController.class).editar(abastecimento.getId());
 		} else {
+
+			abastecimento.setTitular(getTitular());
+			abastecimento.setSolicitante(getCadastrante());
+
 			if(abastecimento.getId().equals(new Long(0))) { 
 				abastecimento.setOrgao(getTitular().getOrgaoUsuario());
-				abastecimento.setTitular(getTitular());
-				abastecimento.setSolicitante(getCadastrante());
 			}
 
 			abastecimento.save();
@@ -161,7 +164,7 @@ public class AbastecimentoController extends TpController {
 		List<Veiculo> veiculos = listarVeiculos();
 		List<Condutor> condutores = listarCondutores();
 
-		result.include("abastecimento", abastecimento);
+		result.include(ABASTECIMENTO, abastecimento);
 		result.include(VEICULOS, veiculos);
 		result.include(CONDUTORES, condutores);
 		result.include(FORNECEDORES, fornecedores);
@@ -231,6 +234,5 @@ public class AbastecimentoController extends TpController {
 		}
 
 	}
-	
 
 }

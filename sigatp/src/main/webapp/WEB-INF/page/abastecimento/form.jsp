@@ -4,21 +4,25 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt"%>
 <%@ taglib prefix="sigatp" tagdir="/WEB-INF/tags/" %>
 
-<sigatp:erros />
+<fmt:setLocale value="pt_BR"/>
+<jsp:include page="../tags/calendario.jsp" />
+<%-- <sigatp:decimal /> --%>
 
 <form name="formAbastecimentos" id="formAbastecimentos"
 	action="${linkTo[AbastecimentoController].salvar}" method="post"
 	cssClass="form" enctype="multipart/form-data"> 
+	
+	<sigatp:erros />
 
 	<input type="hidden" name="abastecimento.id" value="${abastecimento.id}" />
 	<input type="hidden" name="abastecimento.titular" value="${abastecimento.titular.id}" />
-	<input type="hidden" name="abastecimento.solicitante" value="${abastecimento.solicitante.id}" />
+	<input type="hidden" name="abastecimento.orgao" value="${abastecimento.orgao.id}" />
 
 	<div class="gt-content-box gt-form clearfix">
 		<div class="coluna margemDireitaG">
 			<label for="abastecimento.dataHora" class="obrigatorio">Data e Hora</label> 
 			<input type="text" name="abastecimento.dataHora"
-				value="<fmt:formatDate pattern="dd/MM/yyyy" value="${abastecimento.dataHora.time}" />"
+				value="<fmt:formatDate pattern="dd/MM/yyyy HH:mm" value="${abastecimento.dataHora.time}" />"
 				size="16" class="dataHora" /> 
 
 			<label for="abastecimento.condutor.id" class="obrigatorio">Condutor</label>
@@ -32,7 +36,8 @@
 				value="${abastecimento.veiculo.id}" headerKey="0" headerValue=" " />
 
 			<label for="abastecimento.odometroEmKm" class= "obrigatorio">Od&ocirc;metro (Km)</label>
-	       	<input type="text" name="abastecimento.odometroEmKm" value="${abastecimento.odometroEmKm}" class="valor_numerico decimal"/>
+	       	<input type="text" name="abastecimento.odometroEmKm" 
+	       		value="<fmt:formatNumber type="number" pattern="0.00" value="${abastecimento.odometroEmKm}" />" class="valor_numerico decimal" />
 		</div>
 		<div class="coluna margemDireitaG">
  	       	<label for="abastecimento.tipoDeCombustivel" class= "obrigatorio">Tipo de Combust&iacute;vel</label>
@@ -48,22 +53,23 @@
 			<label for="abastecimento.precoPorLitro" class="obrigatorio">Pre&ccedil;o por litro (R$)</label> 
 			<input type="text"
 				name="abastecimento.precoPorLitro"
-				value="${abastecimento.formataValorExponencialParaDecimal(abastecimento.precoPorLitro)}"
+				value="<fmt:formatNumber type="number" pattern="0.00" value="${abastecimento.precoPorLitro}" />"
 				class="valor_numerico decimal" /> 
 
 			<label for="abastecimento.quantidadeEmLitros" class="obrigatorio">Quantidade(litros)</label> 
 			<input type="text"
 				name="abastecimento.quantidadeEmLitros"
-				value="${abastecimento.formataValorExponencialParaDecimal(abastecimento.quantidadeEmLitros)}"
+				value="<fmt:formatNumber type="number" pattern="0.00" value="${abastecimento.quantidadeEmLitros}" />"
 				class="valor_numerico decimal" /> 
 
 			<input type="hidden" name="abastecimento.nivelDeCombustivel" value="A" />
  	    </div>
  	    <div class="coluna">
 	       	<label for="abastecimento.valorTotalDaNotaFiscal" class= "obrigatorio">Valor da Nota Fiscal (R$) </label>
-	       	<input type="text" name="abastecimento.valorTotalDaNotaFiscal" value="${abastecimento.formataValorExponencialParaDecimal(abastecimento.valorTotalDaNotaFiscal)}" class="valor_numerico decimal" />
+	       	<input type="text" name="abastecimento.valorTotalDaNotaFiscal" 
+	       		value="<fmt:formatNumber type="number" pattern="0.00" value="${abastecimento.valorTotalDaNotaFiscal}" />" class="valor_numerico decimal" />
 	      	<label for="abastecimento.numeroDaNotaFiscal" class= "obrigatorio">N&uacute;mero da Nota Fiscal</label>
-	       	<input type="text" name="abastecimento.numeroDaNotaFiscal" value="${abastecimento.numeroDaNotaFiscal}" class="valor_numerico""/>
+	       	<input type="text" name="abastecimento.numeroDaNotaFiscal" value="${abastecimento.numeroDaNotaFiscal}" class="valor_numerico" />
 		</div>
 	</div>
 	<span class="alerta menor"><fmt:message key="views.erro.preenchimentoObrigatorio"/></span>
