@@ -11,7 +11,11 @@ import org.hibernate.envers.Audited;
 
 import play.data.validation.Required;
 import br.gov.jfrj.siga.model.ActiveRecord;
+<<<<<<< HEAD
 import br.gov.jfrj.siga.vraptor.converter.ConvertableEntity;
+=======
+import br.gov.jfrj.siga.tp.vraptor.ConvertableEntity;
+>>>>>>> 7ec8f3664954cd31f8f83fafefe1ffc804c17a5b
 
 @Entity
 // @Table(name = "COR_2", schema="SIGAOR")

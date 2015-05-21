@@ -1,3 +1,25 @@
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 package br.gov.jfrj.siga.tp.model;
 
 import java.util.Calendar;
@@ -71,7 +93,7 @@ public class LotacaoVeiculo extends TpModel implements ConvertableEntity {
 	}
 
 	/**
-	 * Inclui a nova lotaÃ§Ã£o do veÃ­culo e preenche a data fim da lotaÃ§Ã£o anterior
+	 * Inclui a nova lotação do veículo e preenche a data fim da lotação anterior
 	 * 
 	 * @param veiculo
 	 */

@@ -1,7 +1,10 @@
 package controllers;
 
+import java.text.ParseException;
+import java.util.Calendar;
 import java.util.List;
 
+import models.Parametro;
 import play.data.validation.Valid;
 import play.data.validation.Validation;
 import play.mvc.Controller;
@@ -9,11 +12,9 @@ import play.mvc.Scope.RenderArgs;
 import play.mvc.With;
 import br.gov.jfrj.siga.cp.CpComplexo;
 import br.gov.jfrj.siga.dp.CpOrgaoUsuario;
-import br.gov.jfrj.siga.tp.auth.annotation.RoleAdmin;
-import br.gov.jfrj.siga.tp.model.TpDao;
-import br.gov.jfrj.siga.tp.model.Parametro;
+import controllers.AutorizacaoGI.RoleAdmin;
 
-@With(AutorizacaoGIAntigo.class)
+@With(AutorizacaoGI.class)
 public class Parametros extends Controller {
 	@SuppressWarnings("unused")
 	private static final String ACTION_LISTAR = "@listar";
@@ -49,8 +50,8 @@ public class Parametros extends Controller {
 	}
 
 	private static void carregarDadosPerifericos() {
-		List<CpOrgaoUsuario> cpOrgaoUsuarios = TpDao.findAll(CpOrgaoUsuario.class);
-		List<CpComplexo> cpComplexos = TpDao.findAll(CpComplexo.class);
+		List<CpOrgaoUsuario> cpOrgaoUsuarios = CpOrgaoUsuario.findAll();
+		List<CpComplexo> cpComplexos = CpComplexo.findAll();
 		RenderArgs.current().put("cpOrgaoUsuarios", cpOrgaoUsuarios);
 		RenderArgs.current().put("cpComplexos", cpComplexos);
 	}
@@ -67,5 +68,14 @@ public class Parametros extends Controller {
    
 		listar();
     }
-	
+
+	public static Calendar formatarDataParametro(String stringCron) throws ParseException {
+		String stringData = Parametro.buscarConfigSistemaEmVigor(stringCron);
+		String[] data = stringData.split("/");
+		Calendar cal  = Calendar.getInstance();
+		cal.set(Calendar.DAY_OF_MONTH, Integer.parseInt(data[0]));
+		cal.set(Calendar.MONTH, Integer.parseInt(data[1]));
+		cal.set(Calendar.YEAR, Integer.parseInt(data[2]));
+		return cal;
+	}
 }

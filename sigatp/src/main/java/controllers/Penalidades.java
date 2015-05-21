@@ -2,14 +2,23 @@ package controllers;
 
 import java.util.List;
 
+import javax.persistence.EntityTransaction;
+
+import controllers.AutorizacaoGI.RoleAdmin;
+import controllers.AutorizacaoGI.RoleAdminFrota;
+import models.FinalidadeRequisicao;
+import models.Penalidade;
 import play.data.validation.Valid;
 import play.data.validation.Validation;
 import play.mvc.Controller;
 import play.mvc.With;
+
+
 import br.gov.jfrj.siga.tp.auth.annotation.RoleAdmin;
 import br.gov.jfrj.siga.tp.auth.annotation.RoleAdminFrota;
 import br.gov.jfrj.siga.tp.model.Penalidade;
 
+@With(AutorizacaoGI.class)
 @With(AutorizacaoGIAntigo.class)
 public class Penalidades extends Controller {
 	private static final String _ACTION_LISTAR = "@listar";

@@ -1,3 +1,380 @@
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 package br.gob.jfrj.siga.tp.test;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -140,61 +517,61 @@ public class ModelsTest {
 	@Test
 	public void incluiGrupoVeiculo() throws Exception {
 
-		grupo1.setNome("VE√çCULO DE REPRESENTA√á√ÉO");
+		grupo1.setNome("VEÕCULO DE REPRESENTA«√O");
 		grupo1.setFinalidade("TRANSPORTE DOS PRESIDENTES, DOS VICE-PRESIDENTES E DOS CORREGEDORES DOS TRIBUNAIS REGIONAIS FEDERAIS");
-		grupo1.setCaracteristicas("VE√çCULOS DE M√âDIO PORTE, TIPO SEDAN, COR PRETA, COM CAPACIDADE DE TRANSPORTE DE AT√â 5 (CINCO) PASSAGEIROS" + ", MOTOR DE POT√äNCIA M√çNIMA"
-				+ "DE 116 CV E M√ÅXIMA DE 159 CV (GASOLINA) E ITENS DE SEGURAN√áA CONDIZENTES COM" + " O SERVI√áO");
+		grupo1.setCaracteristicas("VEÕCULOS DE M…DIO PORTE, TIPO SEDAN, COR PRETA, COM CAPACIDADE DE TRANSPORTE DE AT… 5 (CINCO) PASSAGEIROS" + ", MOTOR DE POT NCIA MÕNIMA"
+				+ "DE 116 CV E M¡XIMA DE 159 CV (GASOLINA) E ITENS DE SEGURAN«A CONDIZENTES COM" + " O SERVI«O");
 		grupo1.setLetra("A");
 		grupo1.save();
 		grupo1.refresh();
 		Assert.assertNotSame(new Long(0), grupo1.getId());
 
-		grupo2.setNome("VE√çCULO DE TRANSPORTE INSTITUCIONAL");
-		grupo2.setFinalidade("TRANSPORTE, EM OBJETO DE SERVI√áO, DOS JU√çZES DE SEGUNDO GRAU E" + " DOS JU√çZES DIRETORES DE FORO E DIRETORES DE SUBSE√á√ïES JUDICI√ÅRIAS");
-		grupo2.setCaracteristicas("VE√çCULOS DE M√âDIO PORTE, TIPO SEDAN, COR PRETA, COM CAPACIDADE DE TRANSPORTE DE AT√â 5 (CINCO) PASSAGEIROS" + ", MOTOR DE POT√äNCIA M√çNIMA"
-				+ "DE 116 CV E M√ÅXIMA DE 159 CV (GASOLINA) E ITENS DE SEGURAN√áA CONDIZENTES COM" + " O SERVI√áO");
+		grupo2.setNome("VEÕCULO DE TRANSPORTE INSTITUCIONAL");
+		grupo2.setFinalidade("TRANSPORTE, EM OBJETO DE SERVI«O, DOS JUÕZES DE SEGUNDO GRAU E" + " DOS JUÕZES DIRETORES DE FORO E DIRETORES DE SUBSE«’ES JUDICI¡RIAS");
+		grupo2.setCaracteristicas("VEÕCULOS DE M…DIO PORTE, TIPO SEDAN, COR PRETA, COM CAPACIDADE DE TRANSPORTE DE AT… 5 (CINCO) PASSAGEIROS" + ", MOTOR DE POT NCIA MÕNIMA"
+				+ "DE 116 CV E M¡XIMA DE 159 CV (GASOLINA) E ITENS DE SEGURAN«A CONDIZENTES COM" + " O SERVI«O");
 		grupo2.setLetra("B");
 		grupo2.save();
 		grupo2.refresh();
 		Assert.assertNotSame(new Long(0), grupo2.getId());
 
-		grupo3.setNome("VE√çCULO DE SERVI√áO COMUM");
-		grupo3.setFinalidade("TRANSPORTE, EM OBJETO DE SERVI√áO, DE JU√çZES DE PRIMEIRO GRAU E" + " SERVIDORES NO DESEMPENHO DE ATIVIDADES EXTERNAS DE INTERESSE DA ADMINISTRA√á√ÉO");
-		grupo3.setCaracteristicas("VE√çCULOS DE PEQUENO PORTE, COM CAPACIDADE DE AT√â 5 (CINCO)" + " OCUPANTES, MOTOR COM POT√äNCIA M√çNIMA DE 80 CV E M√ÅXIMA DE 112 CV (GASOLINA)"
-				+ "E ITENS DE SEGURAN√áA CONDIZENTES COM O SERVI√áO");
+		grupo3.setNome("VEÕCULO DE SERVI«O COMUM");
+		grupo3.setFinalidade("TRANSPORTE, EM OBJETO DE SERVI«O, DE JUÕZES DE PRIMEIRO GRAU E" + " SERVIDORES NO DESEMPENHO DE ATIVIDADES EXTERNAS DE INTERESSE DA ADMINISTRA«√O");
+		grupo3.setCaracteristicas("VEÕCULOS DE PEQUENO PORTE, COM CAPACIDADE DE AT… 5 (CINCO)" + " OCUPANTES, MOTOR COM POT NCIA MÕNIMA DE 80 CV E M¡XIMA DE 112 CV (GASOLINA)"
+				+ "E ITENS DE SEGURAN«A CONDIZENTES COM O SERVI«O");
 		grupo3.setLetra("C");
 		grupo3.save();
 		grupo3.refresh();
 		Assert.assertNotSame(new Long(0), grupo3.getId());
 
-		grupo4.setNome("VE√çCULO DE TRANSPORTE COLETIVO E DE APOIO √ÄS ATIVIDADES JUDICI√ÅRIAS");
-		grupo4.setFinalidade("transporte, em objeto de servi√ßo, de magistrados e servidores no" + " desempenho de atividades externas de interesse da administra√ß√£o, a√≠ inclu√≠do o"
+		grupo4.setNome("VEÕCULO DE TRANSPORTE COLETIVO E DE APOIO ¿S ATIVIDADES JUDICI¡RIAS");
+		grupo4.setFinalidade("transporte, em objeto de serviÁo, de magistrados e servidores no" + " desempenho de atividades externas de interesse da administraÁ„o, aÌ incluÌdo o"
 				+ "funcionamento dos juizados especiais federais itinerantes".toUpperCase());
-		grupo4.setCaracteristicas("pick-ups cabine dupla, vans com capacidade m√≠nima de 12" + " (doze) ocupantes, micro√¥nibus e √¥nibus, motor com pot√™ncia condizente com o" + " servi√ßo".toUpperCase());
+		grupo4.setCaracteristicas("pick-ups cabine dupla, vans com capacidade mÌnima de 12" + " (doze) ocupantes, microÙnibus e Ùnibus, motor com potÍncia condizente com o" + " serviÁo".toUpperCase());
 		grupo4.setLetra("D");
 		grupo4.save();
 		grupo4.refresh();
 		Assert.assertNotSame(new Long(0), grupo4.getId());
 
-		grupo5.setNome("Ve√≠culo de transporte de carga leve".toUpperCase());
-		grupo5.setFinalidade("transporte de cargas leves no desempenho de atividades externas" + " de interesse da administra√ß√£o".toUpperCase());
-		grupo5.setCaracteristicas("furg√µes, pick-ups de cabine simples, reboques e semireboques," + " motor de pot√™ncia condizente com o servi√ßo".toUpperCase());
+		grupo5.setNome("VeÌculo de transporte de carga leve".toUpperCase());
+		grupo5.setFinalidade("transporte de cargas leves no desempenho de atividades externas" + " de interesse da administraÁ„o".toUpperCase());
+		grupo5.setCaracteristicas("furgıes, pick-ups de cabine simples, reboques e semireboques," + " motor de potÍncia condizente com o serviÁo".toUpperCase());
 		grupo5.setLetra("E");
 		grupo5.save();
 		grupo5.refresh();
 		Assert.assertNotSame(new Long(0), grupo5.getId());
 
-		grupo6.setNome("Ve√≠culo de transporte de carga pesada".toUpperCase());
+		grupo6.setNome("VeÌculo de transporte de carga pesada".toUpperCase());
 		grupo6.setFinalidade("transporte de cargas pesadas".toUpperCase());
-		grupo6.setCaracteristicas("ve√≠culos tipo caminh√£o, motor de pot√™ncia condizente com o servi√ßo".toUpperCase());
+		grupo6.setCaracteristicas("veÌculos tipo caminh„o, motor de potÍncia condizente com o serviÁo".toUpperCase());
 		grupo6.setLetra("F");
 		grupo6.save();
 		grupo6.refresh();
 		Assert.assertNotSame(new Long(0), grupo6.getId());
 
-		grupo7.setNome("Ve√≠culo de servi√ßo de apoio especial".toUpperCase());
-		grupo7.setFinalidade("atendimento, em car√°ter de socorro m√©dico ou de apoio √†s" + "atividades de seguran√ßa, a magistrados e servidores".toUpperCase());
-		grupo7.setCaracteristicas("ambul√¢ncias e ve√≠culos com dispositivo de alarme e luz" + " vermelha intermitente, motor de pot√™ncia condizente com o servi√ßo".toUpperCase());
+		grupo7.setNome("VeÌculo de serviÁo de apoio especial".toUpperCase());
+		grupo7.setFinalidade("atendimento, em car·ter de socorro mÈdico ou de apoio ‡s" + "atividades de seguranÁa, a magistrados e servidores".toUpperCase());
+		grupo7.setCaracteristicas("ambul‚ncias e veÌculos com dispositivo de alarme e luz" + " vermelha intermitente, motor de potÍncia condizente com o serviÁo".toUpperCase());
 		grupo7.setLetra("G");
 		grupo7.save();
 		grupo7.refresh();
@@ -396,7 +773,7 @@ public class ModelsTest {
 	@Test
 	public void incluiAfastamento() throws Exception {
 		afastamento1.setCondutor(condutor1);
-		afastamento1.setDescricao("Licen√ßa Nojo");
+		afastamento1.setDescricao("LicenÁa Nojo");
 		afastamento1.setDataHoraInicio(new GregorianCalendar(2012, Calendar.OCTOBER, 11, 8, 1));
 		afastamento1.setDataHoraFim(new GregorianCalendar(2012, Calendar.OCTOBER, 11, 8, 0));
 		afastamento1.save();
@@ -430,7 +807,7 @@ public class ModelsTest {
 		requisicaoTransporte1.refresh();
 		Assert.assertNotSame(new Long(0), requisicaoTransporte1.id);
 
-		andamento1.descricao = "Nova requisi√ß√£o";
+		andamento1.descricao = "Nova requisiÁ„o";
 		andamento1.dataAndamento = Calendar.getInstance();
 		andamento1.estadoRequisicao = EstadoRequisicao.ABERTA;
 		andamento1.requisicaoTransporte = requisicaoTransporte1;
@@ -448,7 +825,7 @@ public class ModelsTest {
 		requisicaoTransporte2.refresh();
 		Assert.assertNotSame(new Long(0), requisicaoTransporte2.id);
 
-		andamento2.descricao = "Nova requisi√ß√£o";
+		andamento2.descricao = "Nova requisiÁ„o";
 		andamento2.dataAndamento = Calendar.getInstance();
 		andamento2.estadoRequisicao = EstadoRequisicao.ABERTA;
 		andamento2.requisicaoTransporte = requisicaoTransporte2;
@@ -466,7 +843,7 @@ public class ModelsTest {
 		requisicaoTransporte3.refresh();
 		Assert.assertNotSame(new Long(0), requisicaoTransporte3.id);
 
-		andamento3.descricao = "Nova requisi√ß√£o";
+		andamento3.descricao = "Nova requisiÁ„o";
 		andamento3.dataAndamento = Calendar.getInstance();
 		andamento3.estadoRequisicao = EstadoRequisicao.ABERTA;
 		andamento3.requisicaoTransporte = requisicaoTransporte3;
@@ -484,7 +861,7 @@ public class ModelsTest {
 		requisicaoTransporte7.refresh();
 		Assert.assertNotSame(new Long(0), requisicaoTransporte7.id);
 
-		andamento7.descricao = "Nova requisi√ß√£o";
+		andamento7.descricao = "Nova requisiÁ„o";
 		andamento7.dataAndamento = Calendar.getInstance();
 		andamento7.estadoRequisicao = EstadoRequisicao.ABERTA;
 		andamento7.requisicaoTransporte = requisicaoTransporte7;
@@ -502,7 +879,7 @@ public class ModelsTest {
 		requisicaoTransporte8.refresh();
 		Assert.assertNotSame(new Long(0), requisicaoTransporte8.id);
 
-		andamento8.descricao = "Nova requisi√ß√£o";
+		andamento8.descricao = "Nova requisiÁ„o";
 		andamento8.dataAndamento = Calendar.getInstance();
 		andamento8.estadoRequisicao = EstadoRequisicao.ABERTA;
 		andamento8.requisicaoTransporte = requisicaoTransporte8;
@@ -520,7 +897,7 @@ public class ModelsTest {
 		requisicaoTransporte9.refresh();
 		Assert.assertNotSame(new Long(0), requisicaoTransporte9.id);
 
-		andamento9.descricao = "Nova requisi√ß√£o";
+		andamento9.descricao = "Nova requisiÁ„o";
 		andamento9.dataAndamento = Calendar.getInstance();
 		andamento9.estadoRequisicao = EstadoRequisicao.ABERTA;
 		andamento9.requisicaoTransporte = requisicaoTransporte9;
@@ -539,7 +916,7 @@ public class ModelsTest {
 		requisicaoTransporte4.refresh();
 		Assert.assertNotSame(new Long(0), requisicaoTransporte4.id);
 
-		andamento4.descricao = "Nova requisi√ß√£o";
+		andamento4.descricao = "Nova requisiÁ„o";
 		andamento4.dataAndamento = Calendar.getInstance();
 		andamento4.estadoRequisicao = EstadoRequisicao.ABERTA;
 		andamento4.requisicaoTransporte = requisicaoTransporte4;
@@ -557,7 +934,7 @@ public class ModelsTest {
 		requisicaoTransporte5.refresh();
 		Assert.assertNotSame(new Long(0), requisicaoTransporte5.id);
 
-		andamento5.descricao = "Nova requisi√ß√£o";
+		andamento5.descricao = "Nova requisiÁ„o";
 		andamento5.dataAndamento = Calendar.getInstance();
 		andamento5.estadoRequisicao = EstadoRequisicao.ABERTA;
 		andamento5.requisicaoTransporte = requisicaoTransporte5;
@@ -575,7 +952,7 @@ public class ModelsTest {
 		requisicaoTransporte6.refresh();
 		Assert.assertNotSame(new Long(0), requisicaoTransporte6.id);
 
-		andamento6.descricao = "Nova requisi√ß√£o";
+		andamento6.descricao = "Nova requisiÁ„o";
 		andamento6.dataAndamento = Calendar.getInstance();
 		andamento6.estadoRequisicao = EstadoRequisicao.ABERTA;
 		andamento6.requisicaoTransporte = requisicaoTransporte6;
@@ -594,7 +971,7 @@ public class ModelsTest {
 		requisicaoTransporte11.refresh();
 		Assert.assertNotSame(new Long(0), requisicaoTransporte11.id);
 
-		andamento11.descricao = "Nova requisi√ß√£o";
+		andamento11.descricao = "Nova requisiÁ„o";
 		andamento11.dataAndamento = Calendar.getInstance();
 		andamento11.estadoRequisicao = EstadoRequisicao.ABERTA;
 		andamento11.requisicaoTransporte = requisicaoTransporte11;
@@ -612,7 +989,7 @@ public class ModelsTest {
 		requisicaoTransporte12.refresh();
 		Assert.assertNotSame(new Long(0), requisicaoTransporte12.id);
 
-		andamento12.descricao = "Nova requisi√ß√£o";
+		andamento12.descricao = "Nova requisiÁ„o";
 		andamento12.dataAndamento = Calendar.getInstance();
 		andamento12.estadoRequisicao = EstadoRequisicao.ABERTA;
 		andamento12.requisicaoTransporte = requisicaoTransporte12;
@@ -630,7 +1007,7 @@ public class ModelsTest {
 		requisicaoTransporte13.refresh();
 		Assert.assertNotSame(new Long(0), requisicaoTransporte13.id);
 
-		andamento13.descricao = "Nova requisi√ß√£o";
+		andamento13.descricao = "Nova requisiÁ„o";
 		andamento13.dataAndamento = Calendar.getInstance();
 		andamento13.estadoRequisicao = EstadoRequisicao.ABERTA;
 		andamento13.requisicaoTransporte = requisicaoTransporte13;

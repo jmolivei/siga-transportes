@@ -15,7 +15,7 @@
 		<input type="text" name="penalidade.artigoCTB" value="${penalidade.artigoCTB}" />
 
 		<label for="penalidade.valor" class="obrigatorio">Valor:</label>
-		<input type="text" id="valor" name="penalidade.valor" value="${penalidade.valor}" class="valor_numerico decimal"/>
+		<input type="text" id="valor" name="penalidade.valor" value="${penalidade.valor.formataValorExponencialParaDecimal()}" class="valor_numerico decimal"/>
 
 		<label for="penalidade.infrator" class="obrigatorio">Tipo de Infrator:</label>
 		#{select 'penalidade.infrator',
