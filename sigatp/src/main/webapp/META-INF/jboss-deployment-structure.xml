@@ -6,16 +6,16 @@
 
 		<dependencies>
 			<module name="sigadoc.rel" export="true" />
-			
+
 			<module name="org.picketlink" />
 			<module name="asm.asm" />
 			<module name="com.google.guava"/>
 			<module name="org.hibernate" />
 			<module name="org.infinispan" />
 			<module name="org.hibernate.commons-annotations" />
-			<!-- Incluido depois da OSI17 João Luis -->
+			<!-- Incluido depois da OSI17 Joao Luis -->
 			<module name="sigadoc.org.bouncycastle" export="true"/>
-			<!-- Fim -->			
+			<!-- Fim -->
 			<module name="sigadoc.play" export="true" slot="sigatp" />
 		</dependencies>
 	</deployment>

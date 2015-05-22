@@ -10,6 +10,7 @@ import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
@@ -43,9 +44,9 @@ public class AutoDeInfracao extends TpModel implements ConvertableEntity, Compar
 	@ManyToOne
 	@NotNull
 	private Veiculo veiculo;
-	
+
 	//  Incluido depois da OSI17 - Joao Luis
-	
+
 	@ManyToOne
 	@NotNull
 	@JoinColumn(name = "PENALIDADE_ID")
@@ -127,9 +128,9 @@ public class AutoDeInfracao extends TpModel implements ConvertableEntity, Compar
 	public void setVeiculo(Veiculo veiculo) {
 		this.veiculo = veiculo;
 	}
-	
+
 	//  Incluido depois da OSI17 - Joao Luis
-	
+
 	public Penalidade getPenalidade() {
 		return penalidade;
 	}
@@ -286,7 +287,7 @@ public class AutoDeInfracao extends TpModel implements ConvertableEntity, Compar
 
 	public AutoDeInfracao() {
 		this.id = new Long(0);
-		this.gravidade = Gravidade.LEVE;
+//		this.gravidade = Gravidade.LEVE;
 		this.foiRecebido = PerguntaSimNao.NAO;
 	}
 
@@ -297,11 +298,11 @@ public class AutoDeInfracao extends TpModel implements ConvertableEntity, Compar
 		this.id = id;
 		this.dataHora = dataHora;
 		this.veiculo = veiculo;
-		this.codigoDaAutuacao = codigoDaAutuacao;
-		this.codigoDaPenalidade = codigoDaPenalidade;
-		this.descricao = descricao;
-		this.gravidade = gravidade;
-		this.enquadramento = enquadramento;
+//		this.codigoDaAutuacao = codigoDaAutuacao;
+//		this.codigoDaPenalidade = codigoDaPenalidade;
+//		this.descricao = descricao;
+//		this.gravidade = gravidade;
+//		this.enquadramento = enquadramento;
 		this.local = local;
 		this.foiRecebido = foiRecebido;
 		this.valor = valor;

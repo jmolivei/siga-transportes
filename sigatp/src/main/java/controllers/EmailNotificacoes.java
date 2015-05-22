@@ -39,7 +39,7 @@ import com.google.common.collect.Lists;
 @On("cron.inicio")
 public class EmailNotificacoes extends Job<Object>  {
 	private static final String espacosHtml = "&nbsp;&nbsp;&nbsp;&nbsp;";
-	
+
 	public void doJob() {
 		String executa = Play.configuration.getProperty("cron.executa").toString();
 		if (executa.toUpperCase().equals("TRUE")) {
@@ -52,7 +52,7 @@ public class EmailNotificacoes extends Job<Object>  {
 		}
 		Logger.info("Serviço finalizado");
 	}
-	
+
 	private void verificarMissoesProgramadas()  {
 		List<Missao> missoes = new ArrayList<Missao>();
 		String tituloEmail = "Missoes programadas nao iniciadas";
@@ -73,7 +73,7 @@ public class EmailNotificacoes extends Job<Object>  {
 		List<Missao> missoes = new ArrayList<Missao>();
 		String tituloEmail = "Missoes iniciadas a mais de 7 dias nao finalizadas";
 		String tipoNotificacao = "Nao finalizada";
-		
+
 		try {
 			Calendar calendar = Calendar.getInstance();
 			calendar.add(Calendar.DAY_OF_YEAR, -7);
@@ -85,7 +85,7 @@ public class EmailNotificacoes extends Job<Object>  {
 			ex.printStackTrace();
 		}
 	}
-	
+
 	private void verificarRequisicoesPendentesDeAprovacao() {
 		List<RequisicaoTransporte> requisicoes = new ArrayList<RequisicaoTransporte>();
 		String tituloEmail = "Requisicoes pendentes de aprovacao";
@@ -94,16 +94,16 @@ public class EmailNotificacoes extends Job<Object>  {
 		try {
 			final Calendar calendar = Calendar.getInstance();
 			requisicoes = RequisicaoTransporte.listar(EstadoRequisicao.ABERTA);
-			
+
 			if (requisicoes.size() > 0) {
-				List<RequisicaoTransporte> requisicoesFiltradas = 
+				List<RequisicaoTransporte> requisicoesFiltradas =
 						Lists.newArrayList(Iterables.filter(requisicoes, new Predicate<RequisicaoTransporte>() {
 							public boolean apply(RequisicaoTransporte requisicao) {
-								return requisicao.dataHoraSaidaPrevista.after(calendar);
+								return requisicao.getDataHoraSaidaPrevista().after(calendar);
 							}
 						}
-				));	
-				
+				));
+
 				if (requisicoesFiltradas.size() > 0) {
 					notificarRequisicoes(requisicoesFiltradas, tituloEmail, tipoNotificacao);
 				}
@@ -115,14 +115,14 @@ public class EmailNotificacoes extends Job<Object>  {
 	}
 
 	private static List<DpPessoa> retornarAprovadores(CpServico servico, Long stConfiguracao) {
-		List<CpConfiguracao> configuracoes = new ArrayList<CpConfiguracao>(); 
+		List<CpConfiguracao> configuracoes = new ArrayList<CpConfiguracao>();
 		Set<DpPessoa> setAprovador = new HashSet<DpPessoa>();
 		List<DpPessoa> aprovadores = new ArrayList<DpPessoa>();
-		
+
 		configuracoes = TpDao.find(CpConfiguracao.class, "cpServico.idServico = ? and " +
 			       							"cpSituacaoConfiguracao.idSitConfiguracao = ? and " +
 			       							"hisDtFim is null", servico.getIdServico(), stConfiguracao).fetch();
-	
+
 		for (CpConfiguracao cpConfiguracao : configuracoes) {
 			if (cpConfiguracao.getDpPessoa() != null) {
 				setAprovador.add(cpConfiguracao.getDpPessoa());
@@ -132,14 +132,14 @@ public class EmailNotificacoes extends Job<Object>  {
 				setAprovador.addAll(aprovadores);
 			}
 		}
-		
+
 		return new ArrayList<DpPessoa>(setAprovador);
 	}
 
 	private static void notificarMissoes(List<Missao> missoes, String titulo, String notificacao) throws Exception  {
 		Condutor condutor = new Condutor();
 		HashMap<Condutor, String> dadosCondutor = new HashMap<Condutor, String>();
-		
+
 		for(Missao item : missoes) {
 			condutor = item.condutor;
 			String sequencia = item.getSequence() + " " + item.getId() + ",";
@@ -151,7 +151,7 @@ public class EmailNotificacoes extends Job<Object>  {
 				dadosCondutor.put(condutor, sequencia);
 			}
 		}
-		
+
 		if (dadosCondutor.size() > 0) {
 			enviarEmail(titulo, notificacao, dadosCondutor);
 		}
@@ -167,12 +167,12 @@ public class EmailNotificacoes extends Job<Object>  {
 		lstAprovadores = retornarAprovadores(servico, stConfiguracao);
 		DpPessoa[] arrayAprovador = lstAprovadores.toArray(new DpPessoa[lstAprovadores.size()]);
 		Comparator<DpPessoa> comp = null;
-		
+
 		for(RequisicaoTransporte item : requisicoes) {
 			aprovador = item.getUltimoAndamento().getResponsavel();
 			int index = Arrays.binarySearch(arrayAprovador, aprovador, comp);
 			DpPessoa chave = lstAprovadores.get(index);
-			String sequencia = item.getSequence() + " " + item.id + ",";
+			String sequencia = item.getSequence() + " " + item.getId() + ",";
 
 			if (dadosAprovador.containsKey(lstAprovadores.get(index))) {
 				dadosAprovador.put(chave, dadosAprovador.get(chave) + sequencia);
@@ -181,7 +181,7 @@ public class EmailNotificacoes extends Job<Object>  {
 				dadosAprovador.put(chave, sequencia);
 			}
 		}
-		
+
 		if (dadosAprovador.size() > 0) {
 			enviarEmail(titulo, notificacao, dadosAprovador);
 		}
@@ -192,19 +192,19 @@ public class EmailNotificacoes extends Job<Object>  {
 		String nome = "";
 		String parteMensagem = "";
 		Boolean plural = lista.split(",").length > 1 ? true : false;
-		String mensagem; 
-				
+		String mensagem;
+
 		if (pessoa.getClass().equals(Condutor.class)) {
 			sexo = ((Condutor)pessoa).getDpPessoa().getSexo().toUpperCase();
 			nome = ((Condutor)pessoa).getNome();
-			
+
 			if (titulo.contains("Missoes")) {
-				parteMensagem = plural ? "as miss&otilde;es " : "a miss&atilde;o "; 
+				parteMensagem = plural ? "as miss&otilde;es " : "a miss&atilde;o ";
 
 				if (notificacao.contains("Nao finalizada")) {
-					parteMensagem += "abaixo, caso j&aacute; tenha/m sido realizada/s, " + 
+					parteMensagem += "abaixo, caso j&aacute; tenha/m sido realizada/s, " +
 								    "precisa/m ser finalizada/s.<br>";
-					
+
 				}
 				else if (notificacao.contains("Nao iniciada")) {
 					parteMensagem += "abaixo precisa/m ser iniciada/s ou cancelada/s.<br>";
@@ -214,7 +214,7 @@ public class EmailNotificacoes extends Job<Object>  {
 		else if(pessoa.getClass().equals(DpPessoa.class)) {
 			sexo = ((DpPessoa)pessoa).getSexo().toUpperCase();
 			nome = ((DpPessoa)pessoa).getNomePessoa();
-			
+
 			if (titulo.contains("Requisicoes")) {
 				parteMensagem = plural ? "as requisi&ccedil;&otilde;es " : "a requisi&ccedil;&atilde;o ";
 
@@ -223,12 +223,12 @@ public class EmailNotificacoes extends Job<Object>  {
 				}
 			}
 		}
-		
+
 		mensagem = sexo.equals("F") ? "Prezada Sra. " : "Prezado Sr. " + nome + ", ";
 		mensagem += parteMensagem.replaceAll("/s", plural ? "s" : "").replaceAll("/m", plural ? "m" : "");
 		return mensagem;
 	}
-	
+
 	private static String retirarTagsHtml(String conteudo) {
 		String retorno = conteudo.replace("<br>", "\n");
 		retorno = retorno.replace("&aacute", "á");
@@ -250,13 +250,13 @@ public class EmailNotificacoes extends Job<Object>  {
 		retorno = retorno.replace("</a>", "");
 		return retorno;
 	}
-	
+
 	@SuppressWarnings("unchecked")
 	private static void enviarEmail(String titulo, String notificacao, HashMap<?, String> dados) throws Exception {
 		String hostName = InetAddress.getLocalHost().getHostName();
 		final String finalMensagem = "Att.<br>M&oacute;dulo de Transportes do Siga.<br><br>" +
 		   		"Aten&ccedil;&atilde;o: esta &eacute; uma mensagem autom&aacute;tica. Por favor, n&atilde;o responda.";
-		
+
 		Set<Object> itensKey = (Set<Object>) dados.keySet();
 
 		for(Object item : itensKey){
@@ -279,24 +279,24 @@ public class EmailNotificacoes extends Job<Object>  {
 						parametros.add("id," + id + ",Missoes.cancelar,Cancelar");
 					}
 				}
-				
+
 				if (titulo.contains("Requisicoes")) {
 					if (notificacao.contains("Pendente aprovar")) {
 						parametros.add("id," + id + ",Andamentos.autorizar,Autorizar");
 						parametros.add("id," + id + ",Andamentos.rejeitar,Rejeitar");
 					}
 				}
-				
+
 				for (String parametro : parametros) {
 					String[] itens = parametro.split(",");
 					Map<String,Object> param = new HashMap<String, Object>();
 					param.put(itens[0], itens[1]);
-					
+
 					FormataCaminhoDoContextoUrl formata = new FormataCaminhoDoContextoUrl();
 					String caminhoUrl = formata.retornarCaminhoContextoUrl(Router.getFullUrl(itens[2],param));
-					
-					conteudoHTML += (primeiraVez ? "<p>" + sequence : "") + espacosHtml + 
-								    "<a href='" + "http://" + hostName + caminhoUrl + "'>" + itens[3] + "</a>" + 
+
+					conteudoHTML += (primeiraVez ? "<p>" + sequence : "") + espacosHtml +
+								    "<a href='" + "http://" + hostName + caminhoUrl + "'>" + itens[3] + "</a>" +
 								    espacosHtml;
 					primeiraVez = false;
 				}
@@ -316,17 +316,17 @@ public class EmailNotificacoes extends Job<Object>  {
 				else if(item.getClass().equals(DpPessoa.class)) {
 					email = ((DpPessoa)item).getEmailPessoa();
 				}
-				destinatario = new String[1]; 
+				destinatario = new String[1];
 				destinatario[0] = email;
 			}
 			else {
 				email = Play.configuration.getProperty("cron.listaEmail").toString();
 				destinatario = email.split(",");
 			}
-		
+
 			conteudoHTML += finalMensagem + "</html>";
 			String conteudo = retirarTagsHtml(conteudoHTML);
-			
+
 			Correio.enviar(remetente, destinatario, assunto, conteudo, conteudoHTML);
 			SimpleDateFormat fr = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
 			Calendar calendar = Calendar.getInstance();

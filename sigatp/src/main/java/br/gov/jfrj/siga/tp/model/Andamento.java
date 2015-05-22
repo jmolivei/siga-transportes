@@ -1,6 +1,7 @@
 package br.gov.jfrj.siga.tp.model;
 
 import java.util.Calendar;
+import java.util.List;
 
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
@@ -16,10 +17,10 @@ import javax.validation.constraints.NotNull;
 import org.hibernate.envers.Audited;
 import org.hibernate.envers.RelationTargetAuditMode;
 
-import play.db.jpa.GenericModel;
 import br.gov.jfrj.siga.dp.DpPessoa;
 import br.gov.jfrj.siga.model.ActiveRecord;
 import br.jus.jfrj.siga.uteis.UpperCase;
+import controllers.Parametros;
 
 @SuppressWarnings("serial")
 @Entity
@@ -28,35 +29,35 @@ import br.jus.jfrj.siga.uteis.UpperCase;
 public class Andamento extends TpModel implements Comparable<Andamento> {
 
 	public static final ActiveRecord<Andamento> AR = new ActiveRecord<>(Andamento.class);
-	
+
 	@Id
-	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "hibernate_sequence_generator") @SequenceGenerator(name = "hibernate_sequence_generator", sequenceName="SIGATP.hibernate_sequence") 
+	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "hibernate_sequence_generator") @SequenceGenerator(name = "hibernate_sequence_generator", sequenceName="SIGATP.hibernate_sequence")
 	private Long id;
-	
+
 	@UpperCase
 	private String descricao;
-	
+
 	@NotNull
 	private Calendar dataAndamento;
-	
+
 	private Calendar dataNotificacaoWorkFlow;
-	
+
  	@NotNull
 	@Enumerated(EnumType.STRING)
  	private EstadoRequisicao estadoRequisicao;
-	
+
 	@NotNull
 	@ManyToOne
 	private RequisicaoTransporte requisicaoTransporte;
-	
+
 	@ManyToOne
 	private Missao missao;
-	
+
 	@NotNull
 	@Audited(targetAuditMode = RelationTargetAuditMode.NOT_AUDITED)
 	@ManyToOne
 	private DpPessoa responsavel;
-	
+
 	public Long getId() {
 		return id;
 	}
@@ -124,20 +125,21 @@ public class Andamento extends TpModel implements Comparable<Andamento> {
 	@Override
 	public int compareTo(Andamento o) {
 		int retorno = this.dataAndamento.compareTo(o.dataAndamento);
-		
+
 		return retorno;
 	}
-	
-	public static List<Andamento> listarPorDataNotificacaoWorkFlow() throws Exception {
-		Calendar calendar = Parametros.formatarDataParametro("cron.dataInicioPesquisaw") ;
-		Object[] parametros = {calendar, EstadoRequisicao.ABERTA, EstadoRequisicao.AUTORIZADA,EstadoRequisicao.PROGRAMADA,EstadoRequisicao.REJEITADA};
-		return Andamento.find("dataNotificacaoWorkFlow is null " +
-						"and dataAndamento >= ? " +
-						"and estadoRequisicao in (?,?,?,?)", parametros).fetch();
-	}
-	
+
+//	TODO  OSI22 - No merge das versoes houve problemas, procurar solucao. O metodo buscarConfigSistemaEmVigor dentro do Parametros nao esta implementado
+//	public static List<Andamento> listarPorDataNotificacaoWorkFlow() throws Exception {
+//		Calendar calendar = Parametros.formatarDataParametro("cron.dataInicioPesquisaw") ;
+//		Object[] parametros = {calendar, EstadoRequisicao.ABERTA, EstadoRequisicao.AUTORIZADA,EstadoRequisicao.PROGRAMADA,EstadoRequisicao.REJEITADA};
+//		return Andamento.AR.find("dataNotificacaoWorkFlow is null " +
+//						"and dataAndamento >= ? " +
+//						"and estadoRequisicao in (?,?,?,?)", parametros).fetch();
+//	}
+
 	public static void gravarDataNotificacaoWorkFlow(Long id) throws Exception {
-		Andamento andamento = Andamento.findById(id);
+		Andamento andamento = Andamento.AR.findById(id);
 		andamento.dataNotificacaoWorkFlow = Calendar.getInstance();
 		andamento.save();
 	}

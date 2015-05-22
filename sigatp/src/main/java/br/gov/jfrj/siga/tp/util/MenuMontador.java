@@ -27,8 +27,8 @@ public class MenuMontador {
 		RenderArgs.current().put("menuAutosdeinfracoes", (id != 0) && (menuVeiculos != ItemMenu.INFRACOES));
 		RenderArgs.current().put("menuLotacoes", (id != 0) && (menuVeiculos != ItemMenu.LOTACOES));
 	}
-	
-	
+
+
 	public void recuperarMenuCondutores(Long id, ItemMenu menuCondutor) {
 		RenderArgs.current().put("idCondutor", id);
 		RenderArgs.current().put("menuCondutoresIncluir", (id == 0));
@@ -39,7 +39,7 @@ public class MenuMontador {
 		RenderArgs.current().put("menuAgenda", (id != 0) && (menuCondutor != ItemMenu.AGENDA));
 		RenderArgs.current().put("menuInfracoes", (id != 0) && (menuCondutor != ItemMenu.INFRACOES));
 	}
-	
+
 	public void recuperarMenuRequisicoes(Long id, boolean popUp, boolean mostrarBotaoRequisicao) {
 		RenderArgs.current().put("idRequisicao", id);
 		RenderArgs.current().put("popUp", popUp);
@@ -53,58 +53,58 @@ public class MenuMontador {
 		} else {
 			RenderArgs.current().put("menuRequisicoesListarAndamentos", (id != null));
 		}
-		
+
 	}
-	
-	
-	public RenderArgs  RecuperarMenuMissoes(EstadoMissao estado) {
+
+
+	public RenderArgs recuperarMenuMissoes(EstadoMissao estado) {
 		RenderArgs.current().put("menuMissoesMostrarVoltar", false);
 		RenderArgs.current().put("menuMissoesMostrarTodas", (estado != null));
 		RenderArgs.current().put("menuMissoesMostrarFinalizadas", (estado != EstadoMissao.FINALIZADA));
 		RenderArgs.current().put("menuMissoesMostrarIniciadas", (estado != EstadoMissao.INICIADA));
 		RenderArgs.current().put("menuMissoesMostrarProgramadas", (estado != EstadoMissao.PROGRAMADA));
 		RenderArgs.current().put("menuMissoesMostrarCanceladas", (estado != EstadoMissao.CANCELADA));
-		
+
 		RenderArgs.current().put("menuMissoesMostrarFiltrarPorCondutor", true);
-		
+
 		return RenderArgs.current();
 	}
-	
-	public RenderArgs  RecuperarMenuMissoesPorCondutor() {
+
+	public RenderArgs recuperarMenuMissoesPorCondutor() {
 		RenderArgs.current().put("menuMissoesMostrarVoltar", true);
-		
+
 		RenderArgs.current().put("menuMissoesMostrarTodas", false);
 		RenderArgs.current().put("menuMissoesMostrarFinalizadas", false);
 		RenderArgs.current().put("menuMissoesMostrarIniciadas", false);
 		RenderArgs.current().put("menuMissoesMostrarProgramadas", false);
 		RenderArgs.current().put("menuMissoesMostrarCanceladas", false);
-		
+
 		RenderArgs.current().put("menuMissoesMostrarFiltrarPorCondutor", true);
-		
+
 		return RenderArgs.current();
 	}
-	
-	public RenderArgs  RecuperarMenuFinalidades(boolean mostrarBotaoTodas) {
+
+	public RenderArgs recuperarMenuFinalidades(boolean mostrarBotaoTodas) {
 		RenderArgs.current().put("menuFinalidadesMostrarVoltar", !mostrarBotaoTodas);
 		RenderArgs.current().put("menuFinalidadesMostrarTodas", mostrarBotaoTodas);
-		
+
 		return RenderArgs.current();
 	}
-	
-	public RenderArgs RecuperarMenuListarRequisicoes(EstadoRequisicao estado) {
-		return RecuperarMenuListarRequisicoes(estado,estado);
+
+	public RenderArgs recuperarMenuListarRequisicoes(EstadoRequisicao estado) {
+		return recuperarMenuListarRequisicoes(estado,estado);
 	}
-	
-	public RenderArgs  RecuperarMenuListarPAprovarRequisicoes(EstadoRequisicao estado) {
+
+	public RenderArgs recuperarMenuListarPAprovarRequisicoes(EstadoRequisicao estado) {
 		RenderArgs.current().put("menuRequisicoesMostrarTodas", (estado != null));
 		RenderArgs.current().put("menuRequisicoesMostrarAbertas", (estado != EstadoRequisicao.ABERTA));
 		RenderArgs.current().put("menuRequisicoesMostrarAutorizadas", (estado != EstadoRequisicao.AUTORIZADA));
 		RenderArgs.current().put("menuRequisicoesMostrarRejeitadas", (estado != EstadoRequisicao.REJEITADA));
-		
+
 		return RenderArgs.current();
 	}
-	
-	public RenderArgs  recuperarMenuMissao(Long id, EstadoMissao estado) {
+
+	public RenderArgs recuperarMenuMissao(Long id, EstadoMissao estado) {
 		RenderArgs.current().put("idMissao", id);
 		RenderArgs.current().put("menuMissaoEditar", ((estado == EstadoMissao.PROGRAMADA) || (estado == EstadoMissao.INICIADA)));
 		if (AutorizacaoGIAntigo.ehAdministrador()) {
@@ -116,31 +116,31 @@ public class MenuMontador {
 		RenderArgs.current().put("menuMissaoFinalizar", (estado == EstadoMissao.INICIADA));
 		return RenderArgs.current();
 	}
-	
-	
+
+
 	public static MenuMontador instance() {
 		return new MenuMontador(null);
 	}
 
-	public RenderArgs RecuperarMenuServicoVeiculo(Long id, EstadoServico estado) {
+	public RenderArgs recuperarMenuServicoVeiculo(Long id, EstadoServico estado) {
 		RenderArgs.current().put("idServico", id);
-		RenderArgs.current().put("menuServicoVeiculoEditar", (estado == EstadoServico.AGENDADO) || (estado == EstadoServico.INICIADO)); 
+		RenderArgs.current().put("menuServicoVeiculoEditar", (estado == EstadoServico.AGENDADO) || (estado == EstadoServico.INICIADO));
 		RenderArgs.current().put("menuServicoVeiculoExcluir", (estado == EstadoServico.AGENDADO));
 		return RenderArgs.current();
 	}
 
-	public RenderArgs  RecuperarMenuServicosVeiculo(EstadoServico estado) {
+	public RenderArgs recuperarMenuServicosVeiculo(EstadoServico estado) {
 		RenderArgs.current().put("menuServicosVeiculoMostrarTodos", (estado != null));
 		RenderArgs.current().put("menuServicosVeiculoMostrarRealizados", (estado != EstadoServico.REALIZADO));
 		RenderArgs.current().put("menuServicosVeiculoMostrarIniciados", (estado != EstadoServico.INICIADO));
 		RenderArgs.current().put("menuServicosVeiculoMostrarAgendados", (estado != EstadoServico.AGENDADO));
 		RenderArgs.current().put("menuServicosVeiculoMostrarCancelados", (estado != EstadoServico.CANCELADO));
-		
+
 		return RenderArgs.current();
 	}
 
 
-	public RenderArgs RecuperarMenuListarRequisicoes(
+	public RenderArgs recuperarMenuListarRequisicoes(
 			EstadoRequisicao estadoRequisicao,
 			EstadoRequisicao estadoRequisicaoP) {
 		RenderArgs.current().put("menuRequisicoesMostrarTodas", (estadoRequisicao != null && estadoRequisicaoP!= null ));
@@ -153,8 +153,8 @@ public class MenuMontador {
 		RenderArgs.current().put("menuRequisicoesMostrarAtendidas", (estadoRequisicao != EstadoRequisicao.ATENDIDA && estadoRequisicaoP != EstadoRequisicao.ATENDIDA));
 		RenderArgs.current().put("menuRequisicoesMostrarNaoAtendidas", (estadoRequisicao != EstadoRequisicao.NAOATENDIDA && estadoRequisicaoP != EstadoRequisicao.NAOATENDIDA || estadoRequisicao == EstadoRequisicao.AUTORIZADA && estadoRequisicaoP == EstadoRequisicao.NAOATENDIDA));
 		RenderArgs.current().put("menuRequisicoesMostrarCanceladas", (estadoRequisicao != EstadoRequisicao.CANCELADA && estadoRequisicaoP != EstadoRequisicao.CANCELADA));
-		
+
 		return RenderArgs.current();
-		
+
 	}
 }

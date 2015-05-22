@@ -29,46 +29,46 @@ import br.gov.jfrj.siga.dp.DpPessoa;
 @Audited
 @Table(schema = "SIGATP")
 public class Parametro extends GenericModel {
-	
+
 	@Id
-	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "hibernate_sequence_generator") 
-	@SequenceGenerator(name = "hibernate_sequence_generator", sequenceName="SIGATP.hibernate_sequence") 
+	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "hibernate_sequence_generator")
+	@SequenceGenerator(name = "hibernate_sequence_generator", sequenceName="SIGATP.hibernate_sequence")
 	public Long id;
-	
+
 	@Audited(targetAuditMode = RelationTargetAuditMode.NOT_AUDITED)
 	@ManyToOne
 	@JoinColumn(name = "ID_ORGAO_USU")
 	public CpOrgaoUsuario cpOrgaoUsuario;
-	
+
 	@Audited(targetAuditMode = RelationTargetAuditMode.NOT_AUDITED)
 	@ManyToOne
 	@JoinColumn(name = "ID_LOTACAO")
 	public DpLotacao dpLotacao;
-	
+
 	@Audited(targetAuditMode = RelationTargetAuditMode.NOT_AUDITED)
 	@ManyToOne
 	@JoinColumn(name = "ID_PESSOA")
-	public DpPessoa dpPessoa; 
-	
+	public DpPessoa dpPessoa;
+
  	@Audited(targetAuditMode = RelationTargetAuditMode.NOT_AUDITED)
 	@ManyToOne
 	@JoinColumn(name = "ID_COMPLEXO")
 	public CpComplexo cpComplexo;
- 	
+
  	@Required
  	public String nomeParametro;
- 	
+
  	@Required
  	public String valorParametro;
- 	
+
  	@As(lang={"*"}, value={"dd/MM/yyyy"})
 	@ValidarAnoData(descricaoCampo="Data de Inicio")
 	public Calendar dataInicio;
- 	
+
  	@As(lang={"*"}, value={"dd/MM/yyyy"})
 	@ValidarAnoData(descricaoCampo="Data do Fim")
 	public Calendar dataFim;
- 	
+
 	public Parametro() {
 		this.id = new Long(0);
 	}
@@ -76,7 +76,7 @@ public class Parametro extends GenericModel {
 	public static List<Parametro> listarTodos() {
 		return Parametro.findAll();
 	}
-	
+
 
 	public static Parametro buscar(Long idBuscar) {
 		Parametro retorno = null;

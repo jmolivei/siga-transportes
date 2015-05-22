@@ -33,24 +33,24 @@ public class Abastecimentos extends Controller {
 			abastecimentos = Abastecimento.listarAbastecimentosDoCondutor(condutor);
 		} else if (AutorizacaoGIAntigo.ehAdminGabinete()) {
 			abastecimentos = Abastecimento.listarParaAdminGabinete(AutorizacaoGIAntigo.titular());
-		} else  if (AutorizacaoGIAntigo.ehAgente()) { 
+		} else  if (AutorizacaoGIAntigo.ehAgente()) {
 			abastecimentos = Abastecimento.listarParaAgente(AutorizacaoGIAntigo.titular());
 		} else { //eh admin
 			abastecimentos = Abastecimento.listarTodos(AutorizacaoGIAntigo.titular());
 		}
 		render(abastecimentos);
-	}	
+	}
 
 	public static void listarPorVeiculo(Long idVeiculo) throws Exception {
 		Veiculo veiculo = Veiculo.AR.findById(idVeiculo);
 		List<Abastecimento> abastecimentos = Abastecimento.buscarTodosPorVeiculo(veiculo);
-		MenuMontador.instance().RecuperarMenuVeiculos(idVeiculo, ItemMenu.ABASTECIMENTOS);
+		MenuMontador.instance().recuperarMenuVeiculos(idVeiculo, ItemMenu.ABASTECIMENTOS);
 		render(abastecimentos, veiculo);
 	}
 
 	@RoleAdmin
 	@RoleAdminFrota
-	@RoleAdminMissao	
+	@RoleAdminMissao
 	@RoleAdminMissaoComplexo
 	@RoleAdminGabinete
 	@RoleGabinete
@@ -69,14 +69,14 @@ public class Abastecimentos extends Controller {
 			return Veiculo.listarTodos(AutorizacaoGIAntigo.titular().getOrgaoUsuario());
 		}
 	}
-	
+
 	private static List<Condutor> listarCondutores() throws Exception {
 		if(AutorizacaoGIAntigo.ehGabinete()) {
 			List<Condutor> retorno = new ArrayList<Condutor>();
 			retorno.add(Condutor.recuperarLogado(AutorizacaoGIAntigo.titular(), AutorizacaoGIAntigo.titular().getOrgaoUsuario()));
 			return retorno;
 		}
-		
+
 		if (! AutorizacaoGIAntigo.ehAdministrador()) {
 			return Condutor.listarFiltradoPor(AutorizacaoGIAntigo.titular().getOrgaoUsuario(),AutorizacaoGIAntigo.titular().getLotacao());
 		} else {
@@ -86,14 +86,14 @@ public class Abastecimentos extends Controller {
 
 	@RoleAdmin
 	@RoleAdminGabinete
-	@RoleAdminMissao	
+	@RoleAdminMissao
 	@RoleAdminFrota
 	@RoleAdminMissaoComplexo
 	@RoleGabinete
 	public static void editar(Long id) throws Exception{
 		Abastecimento abastecimento = Abastecimento.AR.findById(id);
 		verificarAcesso(abastecimento);
-		
+
 		List<Fornecedor> fornecedores = Fornecedor.listarTodos();
 		List<Veiculo> veiculos = listarVeiculos();
 		List<Condutor> condutores = listarCondutores();
@@ -111,11 +111,11 @@ public class Abastecimentos extends Controller {
 		if(!abastecimento.getId().equals(new Long(0))) { // somente na alteracao
 			verificarAcesso(abastecimento);
 		}
-		
+
 		if (abastecimento.getOdometroEmKm() == 0) {
 			Validation.addError("odometroEmKm", "abastecimento.odometroEmKm.validation");
 		}
-		
+
 		if(Validation.hasErrors()){
 			List<Fornecedor> fornecedores = Fornecedor.listarTodos();
 			List<Veiculo> veiculos = listarVeiculos();
@@ -125,18 +125,18 @@ public class Abastecimentos extends Controller {
 			renderTemplate(template, abastecimento, fornecedores, veiculos, condutores);
 		}
 		else {
-			
+
 			abastecimento.setTitular(AutorizacaoGIAntigo.titular());
 			abastecimento.setSolicitante(AutorizacaoGIAntigo.cadastrante());
 			if(abastecimento.getId().equals(new Long(0))) { // somente na inclusao
 				abastecimento.setOrgao(AutorizacaoGIAntigo.titular().getOrgaoUsuario());
 			}
-			
+
 			abastecimento.save();
 			listar();
-		}	
+		}
 	}
-	
+
 	private static void verificarAcesso(Abastecimento abastecimento) throws Exception {
 		if(AutorizacaoGIAntigo.ehAdminGabinete() || AutorizacaoGIAntigo.ehGabinete()) {
 			if(!(AutorizacaoGIAntigo.ehAdminGabinete() && AutorizacaoGIAntigo.titular().getLotacao().equivale(abastecimento.getTitular().getLotacao())) && !abastecimento.getTitular().equivale(AutorizacaoGIAntigo.titular())) {
@@ -149,7 +149,7 @@ public class Abastecimentos extends Controller {
 	}
 
 	@LogMotivo
-	@RoleAdmin 
+	@RoleAdmin
 	@RoleAdminGabinete
 	@RoleAdminMissaoComplexo
 	@RoleAdminFrota
@@ -158,6 +158,6 @@ public class Abastecimentos extends Controller {
 		Abastecimento abastecimento = Abastecimento.AR.findById(id);
 		verificarAcesso(abastecimento);
 		abastecimento.delete();
-		listar();		
+		listar();
 	}
 }

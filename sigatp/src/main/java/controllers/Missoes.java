@@ -206,11 +206,11 @@ public class Missoes extends Controller {
 	/*
 	 * private static void checarAcesso(Missao missao) throws Exception { if (! AutorizacaoGI.ehAdministrador() && ! AutorizacaoGI.ehAdministradorMissao()) { if (missao.getId() == 0) { throw new
 	 * Exception("Voce nao tem acesso para incluir Missao"); }
-	 * 
+	 *
 	 * if (! AutorizacaoGI.titular().equivale(missao.condutor.dpPessoa)) { try { throw new Exception("Voce nao tem acesso a esta miss�o"); } catch (Exception e) { AutorizacaoGI.tratarExcecoes(e); } }
 	 * }
-	 * 
-	 * 
+	 *
+	 *
 	 * }
 	 */
 
@@ -220,14 +220,14 @@ public class Missoes extends Controller {
 
 		for (Iterator<RequisicaoTransporte> iterator = missao.requisicoesTransporte.iterator(); iterator.hasNext();) {
 			RequisicaoTransporte req = iterator.next();
-			req = RequisicaoTransporte.AR.findById(req.id);
+			req = RequisicaoTransporte.AR.findById(req.getId());
 
-			if (req.servicoVeiculo != null) {
+			if (req.getServicoVeiculo() != null) {
 				temRequisicaoDeServico = true;
 				if (veiculoInicial == null) {
-					veiculoInicial = req.servicoVeiculo.veiculo;
+					veiculoInicial = req.getServicoVeiculo().veiculo;
 				} else {
-					if (!veiculoInicial.equals(req.servicoVeiculo.veiculo)) {
+					if (!veiculoInicial.equals(req.getServicoVeiculo().veiculo)) {
 						Validation.addError("veiculo", "missoes.veiculo.validation");
 						redirecionarSeErroAoSalvar(missao, template);
 					}
@@ -266,7 +266,7 @@ public class Missoes extends Controller {
 	private static void deletarAndamentos(List<RequisicaoTransporte> requisicoesTransporte, Missao missao) throws Exception {
 
 		for (RequisicaoTransporte requisicaoTransporte : requisicoesTransporte) {
-			List<Andamento> andamentos = Andamento.AR.find("requisicaoTransporte.id = ? order by id desc", requisicaoTransporte.id).fetch();
+			List<Andamento> andamentos = Andamento.AR.find("requisicaoTransporte.id = ? order by id desc", requisicaoTransporte.getId()).fetch();
 			for (Andamento andamento : andamentos) {
 				if (andamento.getMissao() != null && andamento.getMissao().getId().equals(missao.getId()) && andamento.getEstadoRequisicao().equals(EstadoRequisicao.PROGRAMADA)) {
 					andamento.delete();
@@ -278,7 +278,7 @@ public class Missoes extends Controller {
 	private static void atualizarAndamentos(Missao missao) throws Exception {
 
 		for (RequisicaoTransporte requisicaoTransporte : missao.requisicoesTransporte) {
-			List<Andamento> andamentos = Andamento.AR.find("requisicaoTransporte.id = ? order by id desc", requisicaoTransporte.id).fetch();
+			List<Andamento> andamentos = Andamento.AR.find("requisicaoTransporte.id = ? order by id desc", requisicaoTransporte.getId()).fetch();
 			for (Andamento andamento : andamentos) {
 				Boolean novoAndamento = true;
 				if (andamento.getMissao() != null && andamento.getMissao().getId().equals(missao.getId())) {
@@ -322,8 +322,8 @@ public class Missoes extends Controller {
 		RequisicaoVsEstado[] requisicoesVsEstados = new RequisicaoVsEstado[missao.requisicoesTransporte.size()];
 		for (RequisicaoTransporte requisicaoTransporte : missao.requisicoesTransporte) {
 			RequisicaoVsEstado requisicaoVsEstados = new RequisicaoVsEstado();
-			requisicaoVsEstados.idRequisicaoTransporte = requisicaoTransporte.id;
-			requisicaoVsEstados.estado = requisicaoTransporte.ultimoEstado;
+			requisicaoVsEstados.idRequisicaoTransporte = requisicaoTransporte.getId();
+			requisicaoVsEstados.estado = requisicaoTransporte.getUltimoEstado();
 			requisicoesVsEstados[i] = requisicaoVsEstados;
 			i = i + 1;
 		}
@@ -358,7 +358,7 @@ public class Missoes extends Controller {
 		RequisicaoTransporte[] requisicoes = missao.requisicoesTransporte.toArray(new RequisicaoTransporte[missao.requisicoesTransporte.size()]);
 		EstadoRequisicao[] estadosRequisicao = new EstadoRequisicao[missao.requisicoesTransporte.size()];
 		for (int i = 0; i < requisicoes.length; i++) {
-			estadosRequisicao[i] = RequisicaoVsEstado.encontrarEstadoNaLista(requisicoesVsEstados, requisicoes[i].id);
+			estadosRequisicao[i] = RequisicaoVsEstado.encontrarEstadoNaLista(requisicoesVsEstados, requisicoes[i].getId());
 		}
 
 		gravarAndamentos(dpPessoa, "PELA MISSAO N." + missao.getSequence(), requisicoes, missao, estadosRequisicao);
@@ -424,8 +424,8 @@ public class Missoes extends Controller {
 
 	protected static Missao recuperarComplexoPeloPerfil(Missao missao) throws Exception {
 		if (AutorizacaoGIAntigo.ehAgente() || AutorizacaoGIAntigo.ehAdministradorMissaoPorComplexo()) {
-			RequisicaoTransporte req1 = RequisicaoTransporte.AR.findById(missao.requisicoesTransporte.get(0).id);
-			missao.cpComplexo = req1.cpComplexo;
+			RequisicaoTransporte req1 = RequisicaoTransporte.AR.findById(missao.requisicoesTransporte.get(0).getId());
+			missao.cpComplexo = req1.getCpComplexo();
 		} else {
 			missao.cpComplexo = AutorizacaoGIAntigo.recuperarComplexoPadrao();
 		}
@@ -528,7 +528,7 @@ public class Missoes extends Controller {
 		missao.estadoMissao = EstadoMissao.CANCELADA;
 		checarCondutorPeloUsuarioAutenticado(missao);
 		checarComplexo(missao.cpComplexo.getIdComplexo());
-		missao.cpComplexo = missao.requisicoesTransporte.get(0).cpComplexo;
+		missao.cpComplexo = missao.requisicoesTransporte.get(0).getCpComplexo();
 		missao.save();
 
 		gravarAndamentos(dpPessoa, "MISSAO CANCELADA", missao.requisicoesTransporte, missao, EstadoRequisicao.NAOATENDIDA);
@@ -575,7 +575,7 @@ public class Missoes extends Controller {
 				List<RequisicaoTransporte> requisicoesTransporte = (List<RequisicaoTransporte>) renderArgs.get("requisicoesTransporte");
 				for (int i = 0; i < missao.requisicoesTransporte.size(); i++) {
 					if (missao.requisicoesTransporte.get(i) != null) {
-						RequisicaoTransporte req = RequisicaoTransporte.AR.findById(missao.requisicoesTransporte.get(i).id);
+						RequisicaoTransporte req = RequisicaoTransporte.AR.findById(missao.requisicoesTransporte.get(i).getId());
 						missao.requisicoesTransporte.set(i, req);
 					}
 				}
@@ -696,9 +696,9 @@ public class Missoes extends Controller {
 
 		String veiculosDisp = "";
 		for (RequisicaoTransporte req : missao.requisicoesTransporte) {
-			if (req.servicoVeiculo != null) {
-				req = RequisicaoTransporte.AR.findById(req.id);
-				veiculosDisp += req.servicoVeiculo.veiculo.getId() + ", ";
+			if (req.getServicoVeiculo() != null) {
+				req = RequisicaoTransporte.AR.findById(req.getId());
+				veiculosDisp += req.getServicoVeiculo().veiculo.getId() + ", ";
 			}
 		}
 
@@ -927,23 +927,23 @@ public class Missoes extends Controller {
 	@SuppressWarnings("unchecked")
 	protected static List<Missao> buscarPorCondutoreseEscala(EscalaDeTrabalho escala) {
 		SimpleDateFormat formatar = new SimpleDateFormat("dd/MM/yyyy HH:mm");
-		String dataFormatadaFimOracle;	
+		String dataFormatadaFimOracle;
 		if (escala.getDataVigenciaFim() == null) {
 			@SuppressWarnings("unused")
 			Calendar dataFim = Calendar.getInstance();
 			dataFormatadaFimOracle = "to_date('31/12/9999 23:59', 'DD/MM/YYYY HH24:mi')";
 		} else {
 			String dataFim = formatar.format(escala.getDataVigenciaFim().getTime());
-			dataFormatadaFimOracle = "to_date('" + dataFim + "', 'DD/MM/YYYY HH24:mi')";		
+			dataFormatadaFimOracle = "to_date('" + dataFim + "', 'DD/MM/YYYY HH24:mi')";
 		}
 		String dataInicio = formatar.format(escala.getDataVigenciaInicio().getTime());
 		String dataFormatadaInicioOracle = "to_date('" + dataInicio + "', 'DD/MM/YYYY HH24:mi')";
-		List<Missao> missoes = null; 
+		List<Missao> missoes = null;
 		String qrl = 	"SELECT p FROM Missao p" +
 		" WHERE  p.condutor.id = " + escala.getCondutor().getId() +
 		" AND    p.estadoMissao NOT IN ('" + EstadoMissao.CANCELADA + "','" + EstadoMissao.FINALIZADA + "')" +
 		" AND   (p.dataHoraSaida >= " + dataFormatadaInicioOracle +
-		" AND    p.dataHoraSaida <= " + dataFormatadaFimOracle + "))"; 
+		" AND    p.dataHoraSaida <= " + dataFormatadaFimOracle + "))";
 
 		Query qry = JPA.em().createQuery(qrl);
 		try {

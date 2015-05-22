@@ -56,7 +56,7 @@ import br.jus.jfrj.siga.uteis.SiglaDocumentoType;
 @Table(schema = "SIGATP")
 public class RequisicaoTransporte extends TpModel implements Comparable<RequisicaoTransporte>, SequenceMethods {
 
-	private Router router;
+	//private Router router;
 	private static final String IMG_LINKNOVAJANELAICON = "/sigatp/public/images/linknovajanelaicon.png";
 	public static final ActiveRecord<RequisicaoTransporte> AR = new ActiveRecord<>(RequisicaoTransporte.class);
 
@@ -300,11 +300,11 @@ public class RequisicaoTransporte extends TpModel implements Comparable<Requisic
 		this.ultimoEstado = ultimoEstado;
 	}
 
-	public RequisicaoTransporte(Router router){
-		this.router = router;
-
-		new RequisicaoTransporte();
-	}
+//	public RequisicaoTransporte(Router router){
+//		this.router = router;
+//
+//		new RequisicaoTransporte();
+//	}
 
 	public RequisicaoTransporte() {
 		id = new Long(0);
@@ -361,7 +361,8 @@ public class RequisicaoTransporte extends TpModel implements Comparable<Requisic
 	}
 
 	private String urlFor(Class<?> classe, String metodo, Map<String, Object> param) {
-		return router.urlFor(classe, Resources.getMethod(classe, metodo), param);
+//		return router.urlFor(classe, Resources.getMethod(classe, metodo), param);
+		return "";
 	}
 
 	@Override

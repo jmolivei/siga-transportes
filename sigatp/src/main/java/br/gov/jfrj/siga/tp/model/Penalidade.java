@@ -16,13 +16,16 @@ import play.data.validation.Unique;
 import play.db.jpa.GenericModel;
 import play.modules.br.jus.jfrj.siga.uteis.validadores.upperCase.UpperCase;
 import br.gov.jfrj.siga.dp.CpOrgaoUsuario;
+import br.gov.jfrj.siga.model.ActiveRecord;
 
 @SuppressWarnings("serial")
 @Entity
 @Audited
 @Table(schema = "SIGATP")
-public class Penalidade extends GenericModel {
+public class Penalidade extends TpModel {
 	private static final long _ID_DA_PENALIDADE_OUTRA = -1;
+
+	public static final ActiveRecord<Penalidade> AR = new ActiveRecord<>(Penalidade.class);
 
 	@Id
 	@GeneratedValue
@@ -32,27 +35,27 @@ public class Penalidade extends GenericModel {
 	@Unique(message="Campo 'C&oacute;digo da Infra&ccedil;&atilde;o' j&aacute; existente")
 	@UpperCase
 	public String codigoInfracao;
-	
+
 	@Required
 	@UpperCase
 	public String descricaoInfracao;
-	
+
 	@Required
-	@UpperCase	
+	@UpperCase
 	public String artigoCTB;
-	
+
 	@Required
 	public double valor;
-	
+
 	@Required
 	@Enumerated(EnumType.STRING)
 	public Infrator infrator;
-	
+
 	@Required
 	@Enumerated(EnumType.STRING)
 	public Gravidade classificacao;
-		
-	
+
+
 	public Penalidade() {
 		this.id = new Long(0);
 		this.infrator = Infrator.CONDUTOR;
@@ -60,21 +63,27 @@ public class Penalidade extends GenericModel {
 	}
 
 	public static List<Penalidade> listarTodos() {
-		return Penalidade.findAll();
+		return Penalidade.AR.findAll();
 	}
-	
+
 	public static List<Penalidade> listarTodos(CpOrgaoUsuario orgaoUsuario) {
-		return Penalidade.find("cpOrgaoOrigem = ? and id <> ?", orgaoUsuario, _ID_DA_PENALIDADE_OUTRA).fetch();
+		return Penalidade.AR.find("cpOrgaoOrigem = ? and id <> ?", orgaoUsuario, _ID_DA_PENALIDADE_OUTRA).fetch();
 	}
 
 	public static Penalidade buscar(Long idBuscar) {
 		Penalidade retorno = null;
 		try {
-			retorno = Penalidade.find("id = ?", idBuscar).first();
+			retorno = Penalidade.AR.find("id = ?", idBuscar).first();
 		} catch (Exception e) {
 			return null;
 		}
 		return retorno;
+	}
+
+	@Override
+	public Long getId() {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 }

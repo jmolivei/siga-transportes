@@ -29,17 +29,17 @@ public class Andamentos extends Controller {
 		MenuMontador.instance().recuperarMenuRequisicoes(idRequisicao, popUp, popUp);
 		render(andamentos, requisicaoTransporte);
 	}
-	
+
 	@RoleAdmin
 	@RoleAdminFrota
-	@RoleAdminMissao	
+	@RoleAdminMissao
 	@RoleAprovador
 	public static void salvar(@Valid Andamento andamento) throws Exception {
 		if (andamento.getRequisicaoTransporte().getUltimoEstado() == EstadoRequisicao.CANCELADA) {
 			Validation.addError("estadoRequisicao", "andamentos.estadoRequisicao.validation");
 			redirecionarSeErroAoSalvar(andamento);
 		}
-		
+
 		if (andamento.getEstadoRequisicao() == EstadoRequisicao.CANCELADA
 		||  andamento.getEstadoRequisicao() == EstadoRequisicao.REJEITADA)  {
 			validation.required(andamento.getDescricao());
@@ -63,9 +63,9 @@ public class Andamentos extends Controller {
 			Requisicoes.listarPAprovar();
 		}
 	}
-	
+
 	private static void redirecionarSeErroAoSalvar(Andamento andamento) {
-		if(Validation.hasErrors()) 
+		if(Validation.hasErrors())
 		{
 			MenuMontador.instance().recuperarMenuRequisicoes(andamento.getRequisicaoTransporte().getId(), false, false);
 			String template="";
@@ -85,7 +85,7 @@ public class Andamentos extends Controller {
 			renderTemplate(template, andamento);
 		}
 	}
-	
+
 	@Before(priority=200,only={"autorizar","cancelar","rejeitar"})
 	protected static void montarAndamentos() throws Exception {
 		Long id = params.get("id", Long.class);
@@ -94,13 +94,13 @@ public class Andamentos extends Controller {
 		String acaoExecutada = Http.Request.current().actionMethod;
 		acaoExecutada = (acaoExecutada.substring(0, acaoExecutada.length()-1) + "DA").toUpperCase();
 		andamento.setEstadoRequisicao(EstadoRequisicao.valueOf(acaoExecutada));
-		
-		//TODO verificar a necessidade do ultimo true 
+
+		//TODO verificar a necessidade do ultimo true
 		MenuMontador.instance().recuperarMenuRequisicoes(id, false, true);
-		
+
 		renderArgs.put("andamento", andamento);
 	}
-	
+
 	@RoleAdmin
 	@RoleAdminMissao
 	@RoleAprovador
@@ -115,9 +115,9 @@ public class Andamentos extends Controller {
 		}
 		render();
 	}
-	
+
 	@RoleAdmin
-	@RoleAdminMissao	
+	@RoleAdminMissao
 	@RoleAprovador
 	public static void cancelar(Long id) throws Exception {
 		Andamento andamento = (Andamento) renderArgs.get("andamento");
@@ -130,7 +130,7 @@ public class Andamentos extends Controller {
 		}
 		render();
 	}
-	
+
 	@RoleAdmin
 	@RoleAdminMissao
 	@RoleAprovador
