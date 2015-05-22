@@ -81,7 +81,7 @@ public class RequisicaoTransporteRest {
 	}
 
 	public String getUltimoAndamento() {
-		return requisicaoTransporte.getUltimoAndamento().estadoRequisicao.getDescricao();
+		return requisicaoTransporte.getUltimoAndamento().getEstadoRequisicao().getDescricao();
 	}
 	
 	public Long getIdInicialDpPessoaSolicitante() {

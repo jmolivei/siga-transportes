@@ -151,11 +151,11 @@ public class Requisicoes extends Controller {
 		//gravar andamento
 		req.refresh();
 		Andamento andamento = new Andamento();
-		andamento.descricao = "NOVA REQUISICAO";
-		andamento.dataAndamento = Calendar.getInstance();
-		andamento.estadoRequisicao = EstadoRequisicao.ABERTA;
-		andamento.requisicaoTransporte = req;
-		andamento.responsavel = dpPessoa;
+		andamento.setDescricao("NOVA REQUISICAO");
+		andamento.setDataAndamento(Calendar.getInstance());
+		andamento.setEstadoRequisicao(EstadoRequisicao.ABERTA);
+		andamento.setRequisicaoTransporte(req);
+		andamento.setResponsavel(dpPessoa);
 		andamento.save();
 		
 		ver(req.id);

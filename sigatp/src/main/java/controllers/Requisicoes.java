@@ -114,7 +114,7 @@ public class Requisicoes extends Controller {
 			filtrarRequisicao = true;
 			RequisicaoTransporte requisicaoTransporte = (RequisicaoTransporte) iterator.next();
 			for (EstadoRequisicao estadoRequisicao : estadosRequisicao) {
-				if (requisicaoTransporte.getUltimoAndamento().estadoRequisicao.equals(estadoRequisicao)) 
+				if (requisicaoTransporte.getUltimoAndamento().getEstadoRequisicao().equals(estadoRequisicao)) 
 				{
 					filtrarRequisicao = false;
 					break;
@@ -193,12 +193,11 @@ public class Requisicoes extends Controller {
 		requisicaoTransporte.refresh();
 		if (novaRequisicao) {
 			Andamento andamento = new Andamento();
-			andamento.descricao = "NOVA REQUISICAO";
-			andamento.dataAndamento = Calendar.getInstance();
-			andamento.estadoRequisicao = EstadoRequisicao.ABERTA;
-			andamento.requisicaoTransporte = requisicaoTransporte;
-			//		andamento.responsavel = requisicaoTransporte.solicitante;
-			andamento.responsavel = AutorizacaoGIAntigo.cadastrante();
+			andamento.setDescricao("NOVA REQUISICAO");
+			andamento.setDataAndamento(Calendar.getInstance());
+			andamento.setEstadoRequisicao(EstadoRequisicao.ABERTA);
+			andamento.setRequisicaoTransporte(requisicaoTransporte);
+			andamento.setResponsavel(AutorizacaoGIAntigo.cadastrante());
 			andamento.save();
 		}
 
@@ -225,11 +224,11 @@ public class Requisicoes extends Controller {
 		requisicaoTransporte.refresh();
 		if (requisicaoTransporte.id == 0) {
 			Andamento andamento = new Andamento();
-			andamento.descricao = "NOVA REQUISICAO";
-			andamento.dataAndamento = Calendar.getInstance();
-			andamento.estadoRequisicao = EstadoRequisicao.ABERTA;
-			andamento.requisicaoTransporte = requisicaoTransporte;
-			andamento.responsavel = AutorizacaoGIAntigo.cadastrante();
+			andamento.setDescricao("NOVA REQUISICAO");
+			andamento.setDataAndamento(Calendar.getInstance());
+			andamento.setEstadoRequisicao(EstadoRequisicao.ABERTA);
+			andamento.setRequisicaoTransporte(requisicaoTransporte);
+			andamento.setResponsavel(AutorizacaoGIAntigo.cadastrante());
 			andamento.save();
 		}
 

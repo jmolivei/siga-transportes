@@ -438,7 +438,7 @@ public class RequisicaoTransporte extends TpModel implements Comparable<Requisic
 	}
 
 	private boolean recarregarAndamentos() {
-		this.andamentos = Andamento.find("", this.id).fetch();
+		this.andamentos = Andamento.AR.find("", this.id).fetch();
 		if (this.andamentos == null || this.andamentos.isEmpty()) {
 			return false;
 		}
@@ -452,16 +452,16 @@ public class RequisicaoTransporte extends TpModel implements Comparable<Requisic
 
 	public EstadoRequisicao getUltimoEstadoNestaMissao(Long idMissao) throws Exception {
 		Missao missao = Missao.AR.findById(idMissao);
-		Andamento andamento = Andamento.find("missao=? order by id desc", missao).first();
-		return andamento.estadoRequisicao;
+		Andamento andamento = Andamento.AR.find("missao=? order by id desc", missao).first();
+		return andamento.getEstadoRequisicao();
 	}
 
 	public EstadoRequisicao getUltimoEstado() {
 		Andamento andamento = getUltimoAndamento();
-		if (andamento.id == null) {
+		if (andamento.getId() == null) {
 			return null;
 		}
-		return andamento.estadoRequisicao;
+		return andamento.getEstadoRequisicao();
 	}
 
 	private void setUltimoAndamento(Andamento andamento) {
@@ -523,14 +523,14 @@ public class RequisicaoTransporte extends TpModel implements Comparable<Requisic
 		Andamento ultAnd = getUltimoAndamento();
 		boolean retorno = false;
 
-		retorno = ultAnd.estadoRequisicao.podeAgendar();
+		retorno = ultAnd.getEstadoRequisicao().podeAgendar();
 
 		return retorno;
 
 	}
 
 	public Boolean cancelar(DpPessoa responsavel, String descricao) throws Exception {
-		EstadoRequisicao ultimoAndamentoRequisicao = this.getUltimoAndamento().estadoRequisicao;
+		EstadoRequisicao ultimoAndamentoRequisicao = this.getUltimoAndamento().getEstadoRequisicao();
 		if (ultimoAndamentoRequisicao == EstadoRequisicao.PROGRAMADA) {
 			Boolean missaoAlterada = false;
 			for (Missao missao : missoes) {
@@ -557,11 +557,11 @@ public class RequisicaoTransporte extends TpModel implements Comparable<Requisic
 		if (ultimoAndamentoRequisicao == EstadoRequisicao.ABERTA || ultimoAndamentoRequisicao == EstadoRequisicao.AUTORIZADA || ultimoAndamentoRequisicao == EstadoRequisicao.REJEITADA
 				|| ultimoAndamentoRequisicao == EstadoRequisicao.PROGRAMADA) {
 			Andamento andamento = new Andamento();
-			andamento.responsavel = responsavel;
-			andamento.dataAndamento = Calendar.getInstance();
-			andamento.estadoRequisicao = EstadoRequisicao.CANCELADA;
-			andamento.descricao = descricao;
-			andamento.requisicaoTransporte = this;
+			andamento.setResponsavel(responsavel);
+			andamento.setDataAndamento(Calendar.getInstance());
+			andamento.setEstadoRequisicao(EstadoRequisicao.CANCELADA);
+			andamento.setDescricao(descricao);
+			andamento.setRequisicaoTransporte(this);
 			andamento.save();
 			setUltimoAndamento(andamento);
 			return true;
@@ -574,7 +574,7 @@ public class RequisicaoTransporte extends TpModel implements Comparable<Requisic
 	}
 
 	public void excluir(Boolean ehRequisicaoServico) throws Exception {
-		EstadoRequisicao ultimoAndamentoRequisicao = this.getUltimoAndamento().estadoRequisicao;
+		EstadoRequisicao ultimoAndamentoRequisicao = this.getUltimoAndamento().getEstadoRequisicao();
 
 		if (ultimoAndamentoRequisicao == EstadoRequisicao.ABERTA || ultimoAndamentoRequisicao == EstadoRequisicao.REJEITADA || ultimoAndamentoRequisicao == EstadoRequisicao.AUTORIZADA) {
 
@@ -616,7 +616,8 @@ public class RequisicaoTransporte extends TpModel implements Comparable<Requisic
 
 	public boolean getPodeAlterar() throws Exception {
 		Andamento ultAnd = getUltimoAndamento();
-		return (ultAnd.estadoRequisicao == EstadoRequisicao.ABERTA && this.origemExterna == false);
+
+		return (ultAnd.getEstadoRequisicao() == EstadoRequisicao.ABERTA && this.origemExterna == false);
 	}
 
 	@Override

@@ -243,12 +243,12 @@ public class Missoes extends Controller {
 			RequisicaoTransporte requisicaoTransporte = requisicoesTransporte[i];
 
 			Andamento andamento = new Andamento();
-			andamento.descricao = descricao;
-			andamento.dataAndamento = Calendar.getInstance();
-			andamento.estadoRequisicao = estadosRequisicao[i];
-			andamento.requisicaoTransporte = requisicaoTransporte;
-			andamento.responsavel = dpPessoa;
-			andamento.missao = missao;
+			andamento.setDescricao(descricao);
+			andamento.setDataAndamento(Calendar.getInstance());
+			andamento.setEstadoRequisicao(estadosRequisicao[i]);
+			andamento.setRequisicaoTransporte(requisicaoTransporte);
+			andamento.setResponsavel(dpPessoa);
+			andamento.setMissao(missao);
 			andamento.save();
 		}
 	}
@@ -266,9 +266,9 @@ public class Missoes extends Controller {
 	private static void deletarAndamentos(List<RequisicaoTransporte> requisicoesTransporte, Missao missao) throws Exception {
 
 		for (RequisicaoTransporte requisicaoTransporte : requisicoesTransporte) {
-			List<Andamento> andamentos = Andamento.find("requisicaoTransporte.id = ? order by id desc", requisicaoTransporte.id).fetch();
+			List<Andamento> andamentos = Andamento.AR.find("requisicaoTransporte.id = ? order by id desc", requisicaoTransporte.id).fetch();
 			for (Andamento andamento : andamentos) {
-				if (andamento.missao != null && andamento.missao.getId().equals(missao.getId()) && andamento.estadoRequisicao.equals(EstadoRequisicao.PROGRAMADA)) {
+				if (andamento.getMissao() != null && andamento.getMissao().getId().equals(missao.getId()) && andamento.getEstadoRequisicao().equals(EstadoRequisicao.PROGRAMADA)) {
 					andamento.delete();
 				}
 			}
@@ -278,10 +278,10 @@ public class Missoes extends Controller {
 	private static void atualizarAndamentos(Missao missao) throws Exception {
 
 		for (RequisicaoTransporte requisicaoTransporte : missao.requisicoesTransporte) {
-			List<Andamento> andamentos = Andamento.find("requisicaoTransporte.id = ? order by id desc", requisicaoTransporte.id).fetch();
+			List<Andamento> andamentos = Andamento.AR.find("requisicaoTransporte.id = ? order by id desc", requisicaoTransporte.id).fetch();
 			for (Andamento andamento : andamentos) {
 				Boolean novoAndamento = true;
-				if (andamento.missao != null && andamento.missao.getId().equals(missao.getId())) {
+				if (andamento.getMissao() != null && andamento.getMissao().getId().equals(missao.getId())) {
 					novoAndamento = false;
 					break;
 				}
@@ -295,12 +295,12 @@ public class Missoes extends Controller {
 
 	private static void gravaAndamento(DpPessoa dpPessoa, String descricao, Missao missao, EstadoRequisicao estadoRequisicao, RequisicaoTransporte requisicaoTransporte) {
 		Andamento andamento = new Andamento();
-		andamento.descricao = descricao;
-		andamento.dataAndamento = Calendar.getInstance();
-		andamento.estadoRequisicao = estadoRequisicao;
-		andamento.requisicaoTransporte = requisicaoTransporte;
-		andamento.responsavel = dpPessoa;
-		andamento.missao = missao;
+		andamento.setDescricao(descricao);
+		andamento.setDataAndamento(Calendar.getInstance());
+		andamento.setEstadoRequisicao(estadoRequisicao);
+		andamento.setRequisicaoTransporte(requisicaoTransporte);
+		andamento.setResponsavel(dpPessoa);
+		andamento.setMissao(missao);
 		andamento.save();
 	}
 

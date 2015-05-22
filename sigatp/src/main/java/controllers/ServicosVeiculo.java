@@ -205,11 +205,11 @@ public class ServicosVeiculo extends Controller {
 	private static void gravarAndamentosRequisicao(EstadoRequisicao estadoRequisicao, DpPessoa dpPessoa, 
 			String descricao,RequisicaoTransporte requisicaoTransporte) {
 		Andamento andamento = new Andamento();
-		andamento.descricao = descricao;
-		andamento.dataAndamento = Calendar.getInstance();
-		andamento.estadoRequisicao = estadoRequisicao;
-		andamento.requisicaoTransporte = requisicaoTransporte;
-		andamento.responsavel = dpPessoa;
+		andamento.setDescricao(descricao);
+		andamento.setDataAndamento(Calendar.getInstance());
+		andamento.setEstadoRequisicao(estadoRequisicao); 
+		andamento.setRequisicaoTransporte(requisicaoTransporte);
+		andamento.setResponsavel(dpPessoa);
 		andamento.save();
 	}
 	
