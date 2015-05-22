@@ -29,17 +29,16 @@ import javax.persistence.Query;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.persistence.Transient;
+import javax.validation.constraints.NotNull;
 
 import org.hibernate.envers.Audited;
 import org.hibernate.envers.RelationTargetAuditMode;
 
-import play.data.binding.As;
-import play.data.validation.Required;
-import play.db.jpa.JPA;
-import play.i18n.Messages;
+import controllers.ServicosVeiculo;
 import play.modules.br.jus.jfrj.siga.uteis.validadores.sequence.SequenceMethods;
 import play.modules.br.jus.jfrj.siga.uteis.validadores.validarAnoData.ValidarAnoData;
-import play.mvc.Router;
+import br.com.caelum.vraptor.http.route.Router;
+import br.com.caelum.vraptor.validator.I18nMessage;
 import br.gov.jfrj.siga.cp.CpComplexo;
 import br.gov.jfrj.siga.dp.CpOrgaoUsuario;
 import br.gov.jfrj.siga.dp.DpPessoa;
@@ -47,6 +46,7 @@ import br.gov.jfrj.siga.model.ActiveRecord;
 import br.gov.jfrj.siga.tp.util.FormataCaminhoDoContextoUrl;
 import br.gov.jfrj.siga.tp.util.Reflexao;
 import br.gov.jfrj.siga.tp.util.SigaTpException;
+import br.gov.jfrj.siga.vraptor.handler.Resources;
 import br.jus.jfrj.siga.uteis.Sequence;
 import br.jus.jfrj.siga.uteis.SiglaDocumentoType;
 
@@ -55,92 +55,256 @@ import br.jus.jfrj.siga.uteis.SiglaDocumentoType;
 @Audited
 @Table(schema = "SIGATP")
 public class RequisicaoTransporte extends TpModel implements Comparable<RequisicaoTransporte>, SequenceMethods {
-	private static final String IMG_LINKNOVAJANELAICON = "/sigatp/public/images/linknovajanelaicon.png";
 
+	private Router router;
+	private static final String IMG_LINKNOVAJANELAICON = "/sigatp/public/images/linknovajanelaicon.png";
 	public static final ActiveRecord<RequisicaoTransporte> AR = new ActiveRecord<>(RequisicaoTransporte.class);
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "hibernate_sequence_generator")
 	@SequenceGenerator(name = "hibernate_sequence_generator", sequenceName = "SIGATP.hibernate_sequence")
-	public Long id;
+	private Long id;
 
 	@Sequence(propertieOrgao = "cpOrgaoUsuario", siglaDocumento = SiglaDocumentoType.RTP)
 	@Column(updatable = false)
-	public Long numero;
+	private Long numero;
 
-	@As(lang = { "*" }, value = { "dd/MM/yyyy HH:mm" })
 	@ValidarAnoData(descricaoCampo = "Data/Hora")
-	public Calendar dataHora;
+	private Calendar dataHora;
 
-	@Required
-	@As(lang = { "*" }, value = { "dd/MM/yyyy HH:mm" })
+	@NotNull
 	@ValidarAnoData(descricaoCampo = "Data/Hora Saida Prevista")
-	public Calendar dataHoraSaidaPrevista;
+	private Calendar dataHoraSaidaPrevista;
 
-	@As(lang = { "*" }, value = { "dd/MM/yyyy HH:mm" })
 	@ValidarAnoData(descricaoCampo = "Data/Hora Retorno Previsto")
-	public Calendar dataHoraRetornoPrevisto;
+	private Calendar dataHoraRetornoPrevisto;
 
-	@Required
+	@NotNull
 	@Enumerated(EnumType.STRING)
-	public TipoRequisicao tipoRequisicao;
+	private TipoRequisicao tipoRequisicao;
 
 	@ElementCollection(targetClass = TipoDePassageiro.class)
 	@JoinTable(name = "requisicao_tipopassageiro", joinColumns = @JoinColumn(name = "requisicaoTransporte_Id"))
 	@Column(name = "tipoPassageiro", nullable = false)
 	@Enumerated(EnumType.STRING)
-	public List<TipoDePassageiro> tiposDePassageiro;
+	private List<TipoDePassageiro> tiposDePassageiro;
 
-	@Required
+	@NotNull
 	@ManyToOne
 	@JoinColumn(name = "ID_FINALIDADE")
-	public FinalidadeRequisicao tipoFinalidade;
+	private FinalidadeRequisicao tipoFinalidade;
 
-	public String finalidade;
+	private String finalidade;
 
-	public String passageiros;
+	private String passageiros;
 
-	@Required
-	public String itinerarios;
+	@NotNull
+	private String itinerarios;
 
 	@OneToMany(orphanRemoval = true, mappedBy = "requisicaoTransporte")
-	public List<Andamento> andamentos;
+	private List<Andamento> andamentos;
 
 	@Transient
 	private Andamento ultimoAndamento;
 
 	@Transient
-	public EstadoRequisicao ultimoEstado;
+	private EstadoRequisicao ultimoEstado;
 
 	@ManyToMany(cascade = CascadeType.ALL)
 	@JoinTable(name = "missao_requisTransporte", joinColumns = @JoinColumn(name = "requisicaoTransporte_Id"), inverseJoinColumns = @JoinColumn(name = "missao_Id"))
-	public List<Missao> missoes;
+	private List<Missao> missoes;
 
 	@Audited(targetAuditMode = RelationTargetAuditMode.NOT_AUDITED)
 	@ManyToOne
 	@JoinColumn(name = "ID_ORGAO_USU")
-	public CpOrgaoUsuario cpOrgaoUsuario;
+	private CpOrgaoUsuario cpOrgaoUsuario;
 
 	@Audited(targetAuditMode = RelationTargetAuditMode.NOT_AUDITED)
 	@ManyToOne
 	@JoinColumn(name = "ID_SOLICITANTE")
-	public DpPessoa solicitante;
+	private DpPessoa solicitante;
 
 	@Audited(targetAuditMode = RelationTargetAuditMode.NOT_AUDITED)
 	@ManyToOne
 	@JoinColumn(name = "ID_COMPLEXO")
-	public CpComplexo cpComplexo;
+	private CpComplexo cpComplexo;
 
 	@OneToOne(fetch = FetchType.LAZY, optional = true, mappedBy = "requisicaoTransporte")
-	public ServicoVeiculo servicoVeiculo;
+	private ServicoVeiculo servicoVeiculo;
 
-	public Integer numeroDePassageiros;
+	private Integer numeroDePassageiros;
 
-	@Required
-	public boolean origemExterna;
+	@NotNull
+	private boolean origemExterna;
 
 	@Transient
-	public Long idSolicitante;
+	private Long idSolicitante;
+
+	public Long getNumero() {
+		return numero;
+	}
+
+	public void setNumero(Long numero) {
+		this.numero = numero;
+	}
+
+	public Calendar getDataHora() {
+		return dataHora;
+	}
+
+	public void setDataHora(Calendar dataHora) {
+		this.dataHora = dataHora;
+	}
+
+	public Calendar getDataHoraSaidaPrevista() {
+		return dataHoraSaidaPrevista;
+	}
+
+	public void setDataHoraSaidaPrevista(Calendar dataHoraSaidaPrevista) {
+		this.dataHoraSaidaPrevista = dataHoraSaidaPrevista;
+	}
+
+	public Calendar getDataHoraRetornoPrevisto() {
+		return dataHoraRetornoPrevisto;
+	}
+
+	public void setDataHoraRetornoPrevisto(Calendar dataHoraRetornoPrevisto) {
+		this.dataHoraRetornoPrevisto = dataHoraRetornoPrevisto;
+	}
+
+	public TipoRequisicao getTipoRequisicao() {
+		return tipoRequisicao;
+	}
+
+	public void setTipoRequisicao(TipoRequisicao tipoRequisicao) {
+		this.tipoRequisicao = tipoRequisicao;
+	}
+
+	public List<TipoDePassageiro> getTiposDePassageiro() {
+		return tiposDePassageiro;
+	}
+
+	public void setTiposDePassageiro(List<TipoDePassageiro> tiposDePassageiro) {
+		this.tiposDePassageiro = tiposDePassageiro;
+	}
+
+	public FinalidadeRequisicao getTipoFinalidade() {
+		return tipoFinalidade;
+	}
+
+	public void setTipoFinalidade(FinalidadeRequisicao tipoFinalidade) {
+		this.tipoFinalidade = tipoFinalidade;
+	}
+
+	public String getFinalidade() {
+		return finalidade;
+	}
+
+	public void setFinalidade(String finalidade) {
+		this.finalidade = finalidade;
+	}
+
+	public String getPassageiros() {
+		return passageiros;
+	}
+
+	public void setPassageiros(String passageiros) {
+		this.passageiros = passageiros;
+	}
+
+	public String getItinerarios() {
+		return itinerarios;
+	}
+
+	public void setItinerarios(String itinerarios) {
+		this.itinerarios = itinerarios;
+	}
+
+	public List<Andamento> getAndamentos() {
+		return andamentos;
+	}
+
+	public void setAndamentos(List<Andamento> andamentos) {
+		this.andamentos = andamentos;
+	}
+
+	public List<Missao> getMissoes() {
+		return missoes;
+	}
+
+	public void setMissoes(List<Missao> missoes) {
+		this.missoes = missoes;
+	}
+
+	public CpOrgaoUsuario getCpOrgaoUsuario() {
+		return cpOrgaoUsuario;
+	}
+
+	public void setCpOrgaoUsuario(CpOrgaoUsuario cpOrgaoUsuario) {
+		this.cpOrgaoUsuario = cpOrgaoUsuario;
+	}
+
+	public DpPessoa getSolicitante() {
+		return solicitante;
+	}
+
+	public void setSolicitante(DpPessoa solicitante) {
+		this.solicitante = solicitante;
+	}
+
+	public CpComplexo getCpComplexo() {
+		return cpComplexo;
+	}
+
+	public void setCpComplexo(CpComplexo cpComplexo) {
+		this.cpComplexo = cpComplexo;
+	}
+
+	public ServicoVeiculo getServicoVeiculo() {
+		return servicoVeiculo;
+	}
+
+	public void setServicoVeiculo(ServicoVeiculo servicoVeiculo) {
+		this.servicoVeiculo = servicoVeiculo;
+	}
+
+	public Integer getNumeroDePassageiros() {
+		return numeroDePassageiros;
+	}
+
+	public void setNumeroDePassageiros(Integer numeroDePassageiros) {
+		this.numeroDePassageiros = numeroDePassageiros;
+	}
+
+	public boolean isOrigemExterna() {
+		return origemExterna;
+	}
+
+	public void setOrigemExterna(boolean origemExterna) {
+		this.origemExterna = origemExterna;
+	}
+
+	public Long getIdSolicitante() {
+		return idSolicitante;
+	}
+
+	public void setIdSolicitante(Long idSolicitante) {
+		this.idSolicitante = idSolicitante;
+	}
+
+	public void setId(Long id) {
+		this.id = id;
+	}
+
+	public void setUltimoEstado(EstadoRequisicao ultimoEstado) {
+		this.ultimoEstado = ultimoEstado;
+	}
+
+	public RequisicaoTransporte(Router router){
+		this.router = router;
+
+		new RequisicaoTransporte();
+	}
 
 	public RequisicaoTransporte() {
 		id = new Long(0);
@@ -161,8 +325,6 @@ public class RequisicaoTransporte extends TpModel implements Comparable<Requisic
 	public String getDescricaoCompleta() throws Exception {
 		StringBuffer saida = new StringBuffer();
 		saida.append(getSequence().toString());
-		// saida.append(" - ");
-		// saida.append(passageiros.toString());
 
 		boolean temTipoPassageiro = false;
 		for (Iterator<TipoDePassageiro> iterator = tiposDePassageiro.iterator(); iterator.hasNext();) {
@@ -176,16 +338,14 @@ public class RequisicaoTransporte extends TpModel implements Comparable<Requisic
 			saida.append(tipo.getDescricao());
 		}
 
-		// saida.append(" - ");
-		// saida.append(itinerarios.toString());
-
 		if (servicoVeiculo != null) {
 			Map<String, Object> param = new HashMap<String, Object>();
 			param.put("sequence", servicoVeiculo.getSequence());
 			param.put("popUp", true);
 
 			FormataCaminhoDoContextoUrl formata = new FormataCaminhoDoContextoUrl();
-			String caminhoUrl = formata.retornarCaminhoContextoUrl(Router.getFullUrl("ServicosVeiculo.buscarServico", param));
+
+			String caminhoUrl = formata.retornarCaminhoContextoUrl(urlFor(ServicosVeiculo.class, "buscarServico", param));
 
 			saida.append(" - ");
 			saida.append("Servi&ccedil;o: " + servicoVeiculo.getSequence() + " <a href=\"#\" onclick=\"javascript:window.open('" + caminhoUrl + "');\">");
@@ -198,6 +358,10 @@ public class RequisicaoTransporte extends TpModel implements Comparable<Requisic
 		}
 
 		return saida.toString();
+	}
+
+	private String urlFor(Class<?> classe, String metodo, Map<String, Object> param) {
+		return router.urlFor(classe, Resources.getMethod(classe, metodo), param);
 	}
 
 	@Override
@@ -220,7 +384,7 @@ public class RequisicaoTransporte extends TpModel implements Comparable<Requisic
 		qrl = qrl + " and r.cpOrgaoUsuario.id = rt.cpOrgaoUsuario.id";
 		qrl = qrl + " and YEAR(r.dataHora) = YEAR(rt.dataHora)";
 		qrl = qrl + ")";
-		Query qry = JPA.em().createQuery(qrl);
+		Query qry = AR.em().createQuery(qrl);
 		try {
 			Object obj = qry.getSingleResult();
 			this.numero = ((RequisicaoTransporte) obj).numero + 1;
@@ -242,7 +406,7 @@ public class RequisicaoTransporte extends TpModel implements Comparable<Requisic
 			partesDoCodigo = codigoRequisicao.split("[-/]");
 
 		} catch (Exception e) {
-			throw new Exception(Messages.get("requisicaoTransporte.codigoRequisicao.exception", codigoRequisicao));
+			throw new Exception(new I18nMessage(codigoRequisicao, "requisicaoTransporte.codigoRequisicao.exception").getMessage());
 		}
 
 		CpOrgaoUsuario cpOrgaoUsuario = CpOrgaoUsuario.AR.find("acronimoOrgaoUsu", partesDoCodigo[0]).first();
@@ -250,13 +414,13 @@ public class RequisicaoTransporte extends TpModel implements Comparable<Requisic
 		Long numero = new Long(Integer.parseInt(partesDoCodigo[3]));
 		String siglaDocumento = partesDoCodigo[4] + partesDoCodigo[1];
 		if (!Reflexao.recuperaAnotacaoField(requisicaoTransporte).equals(siglaDocumento)) {
-			throw new Exception(Messages.get("requisicaoTransporte.siglaDocumento.exception", codigoRequisicao));
+			throw new Exception(new I18nMessage(codigoRequisicao, "requisicaoTransporte.siglaDocumento.exception").getMessage());
 		}
 		List<RequisicaoTransporte> requisicoesTransporte = RequisicaoTransporte.AR.find("cpOrgaoUsuario = ? and numero = ? and YEAR(dataHora) = ?", cpOrgaoUsuario, numero, ano).fetch();
 		if (requisicoesTransporte.size() > 1)
-			throw new Exception(Messages.get("requisicaoTransporte.codigoDuplicado.exception"));
+			throw new Exception(new I18nMessage("requisicao", "requisicaoTransporte.codigoDuplicado.exception").getMessage());
 		if (requisicoesTransporte.size() == 0)
-			throw new Exception(Messages.get("requisicaoTransporte.codigoInvalido.exception"));
+			throw new Exception(new I18nMessage("requisicao", "requisicaoTransporte.codigoInvalido.exception").getMessage());
 		return requisicoesTransporte.get(0);
 	}
 
@@ -319,7 +483,7 @@ public class RequisicaoTransporte extends TpModel implements Comparable<Requisic
 		qrl += "ORDER BY req.id";
 
 		try {
-			Query qry = JPA.em().createQuery(qrl);
+			Query qry = AR.em().createQuery(qrl);
 			requisicoes = (List<RequisicaoTransporte>) qry.getResultList();
 		} catch (NoResultException ex) {
 			requisicoes = null;
@@ -346,7 +510,7 @@ public class RequisicaoTransporte extends TpModel implements Comparable<Requisic
 		qrl += "ORDER BY req.id";
 
 		try {
-			Query qry = JPA.em().createQuery(qrl);
+			Query qry = AR.em().createQuery(qrl);
 			requisicoes = (List<RequisicaoTransporte>) qry.getResultList();
 		} catch (NoResultException ex) {
 			requisicoes = null;
@@ -418,11 +582,11 @@ public class RequisicaoTransporte extends TpModel implements Comparable<Requisic
 				if (servicoVeiculo != null) {
 					servicoVeiculo.delete();
 				} else {
-					throw new SigaTpException(Messages.get("requisicaoTransporte.naoEhRequisicaoServico.exception"));
+					throw new SigaTpException(new I18nMessage("requisicao", "requisicaoTransporte.naoEhRequisicaoServico.exception").getMessage());
 				}
 			} else {
 				if (servicoVeiculo != null) {
-					throw new SigaTpException(Messages.get("requisicaoTransporte.ehRequisicaoServico.exception"));
+					throw new SigaTpException(new I18nMessage("requisicao", "requisicaoTransporte.ehRequisicaoServico.exception").getMessage());
 				}
 			}
 
@@ -432,9 +596,9 @@ public class RequisicaoTransporte extends TpModel implements Comparable<Requisic
 		}
 
 		if (!ehRequisicaoServico) {
-			throw new SigaTpException(Messages.get("requisicaoTransporte.naoPodeSerExcluida.exception"));
+			throw new SigaTpException(new I18nMessage("requisicao", "requisicaoTransporte.naoPodeSerExcluida.exception").getMessage());
 		} else {
-			throw new SigaTpException(Messages.get("requisicaoTransporte.favorCancelarServico.exception"));
+			throw new SigaTpException(new I18nMessage("requisicao", "requisicaoTransporte.favorCancelarServico.exception").getMessage());
 		}
 	}
 
@@ -453,7 +617,6 @@ public class RequisicaoTransporte extends TpModel implements Comparable<Requisic
 	public boolean getPodeAlterar() throws Exception {
 		Andamento ultAnd = getUltimoAndamento();
 		return (ultAnd.estadoRequisicao == EstadoRequisicao.ABERTA && this.origemExterna == false);
-		// return ultAnd.estadoRequisicao.comparar(EstadoRequisicao.ABERTA) <= 0;
 	}
 
 	@Override

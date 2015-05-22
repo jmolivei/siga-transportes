@@ -39,3 +39,6 @@ siga-uteis-play-module/tmp
 *.rej
 *.project
 sigatp/.project
+siga-uteis-play-module/app/rebel.xml
+sigatp/.tern-project
+sigatp/src/main/resources/rebel.xml

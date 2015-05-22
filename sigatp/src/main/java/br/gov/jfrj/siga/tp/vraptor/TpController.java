@@ -16,6 +16,7 @@ import br.gov.jfrj.siga.cp.CpSituacaoConfiguracao;
 import br.gov.jfrj.siga.cp.CpTipoConfiguracao;
 import br.gov.jfrj.siga.dp.DpPessoa;
 import br.gov.jfrj.siga.dp.dao.CpDao;
+import br.gov.jfrj.siga.tp.auth.AutorizacaoGI;
 import br.gov.jfrj.siga.tp.model.TpDao;
 import br.gov.jfrj.siga.vraptor.SigaController;
 import br.gov.jfrj.siga.vraptor.SigaObjects;
@@ -38,6 +39,10 @@ public class TpController extends SigaController {
 
 	protected CpComplexo recuperarComplexoPadrao() throws Exception {
 		return recuperarComplexoPadrao(getTitular());
+	}
+
+	protected CpComplexo getComplexoAdministrado() {
+		return (CpComplexo) getRequest().getAttribute(AutorizacaoGI.CP_COMPLEXO_ADMINISTRADOR);
 	}
 
 	public CpComplexo recuperarComplexoPadrao(DpPessoa dpPessoa) throws Exception {
