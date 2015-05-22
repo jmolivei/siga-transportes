@@ -67,7 +67,7 @@ public class Andamentos extends Controller {
 	private static void redirecionarSeErroAoSalvar(Andamento andamento) {
 		if(Validation.hasErrors()) 
 		{
-			MenuMontador.instance().recuperarMenuRequisicoes(andamento.getRequisicaoTransporte().id, false, false);
+			MenuMontador.instance().recuperarMenuRequisicoes(andamento.getRequisicaoTransporte().getId(), false, false);
 			String template="";
 			switch (andamento.getEstadoRequisicao()) {
 			case AUTORIZADA:

@@ -16,7 +16,7 @@ public class MenuMontador {
 		this.result = result;
 	}
 // Atualizado após OSI 17 métodos abaixo João Luis
-	public void RecuperarMenuVeiculos(Long id, ItemMenu menuVeiculos) {
+	public void recuperarMenuVeiculos(Long id, ItemMenu menuVeiculos) {
 		RenderArgs.current().put("idVeiculo", id);
 		RenderArgs.current().put("menuVeiculosIncluir", (id == 0));
 		RenderArgs.current().put("menuVeiculosEditar", (id != 0) && (menuVeiculos != ItemMenu.DADOSCADASTRAIS));
@@ -29,7 +29,7 @@ public class MenuMontador {
 	}
 	
 	
-	public void RecuperarMenuCondutores(Long id, ItemMenu menuCondutor) {
+	public void recuperarMenuCondutores(Long id, ItemMenu menuCondutor) {
 		RenderArgs.current().put("idCondutor", id);
 		RenderArgs.current().put("menuCondutoresIncluir", (id == 0));
 		RenderArgs.current().put("menuCondutoresEditar", (id != 0) && (menuCondutor != ItemMenu.DADOSCADASTRAIS));
@@ -40,7 +40,7 @@ public class MenuMontador {
 		RenderArgs.current().put("menuInfracoes", (id != 0) && (menuCondutor != ItemMenu.INFRACOES));
 	}
 	
-	public void RecuperarMenuRequisicoes(Long id, boolean popUp, boolean mostrarBotaoRequisicao) {
+	public void recuperarMenuRequisicoes(Long id, boolean popUp, boolean mostrarBotaoRequisicao) {
 		RenderArgs.current().put("idRequisicao", id);
 		RenderArgs.current().put("popUp", popUp);
 		if(!popUp) {
@@ -104,10 +104,10 @@ public class MenuMontador {
 		return RenderArgs.current();
 	}
 	
-	public RenderArgs  RecuperarMenuMissao(Long id, EstadoMissao estado) {
+	public RenderArgs  recuperarMenuMissao(Long id, EstadoMissao estado) {
 		RenderArgs.current().put("idMissao", id);
 		RenderArgs.current().put("menuMissaoEditar", ((estado == EstadoMissao.PROGRAMADA) || (estado == EstadoMissao.INICIADA)));
-		if (AutorizacaoGI.ehAdministrador()) {
+		if (AutorizacaoGIAntigo.ehAdministrador()) {
 			RenderArgs.current().put("menuMissaoCancelar", (estado == EstadoMissao.PROGRAMADA));
 		} else {
 			RenderArgs.current().put("menuMissaoCancelar", false);
@@ -119,7 +119,7 @@ public class MenuMontador {
 	
 	
 	public static MenuMontador instance() {
-		return new MenuMontador();
+		return new MenuMontador(null);
 	}
 
 	public RenderArgs RecuperarMenuServicoVeiculo(Long id, EstadoServico estado) {
