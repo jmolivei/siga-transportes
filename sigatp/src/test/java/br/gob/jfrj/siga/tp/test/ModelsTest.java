@@ -430,10 +430,10 @@ public class ModelsTest {
 		requisicaoTransporte1.refresh();
 		Assert.assertNotSame(new Long(0), requisicaoTransporte1.id);
 
-		andamento1.descricao = "Nova requisição";
-		andamento1.dataAndamento = Calendar.getInstance();
-		andamento1.estadoRequisicao = EstadoRequisicao.ABERTA;
-		andamento1.requisicaoTransporte = requisicaoTransporte1;
+		andamento1.setDescricao("Nova requisição");
+		andamento1.setDataAndamento(Calendar.getInstance());
+		andamento1.setEstadoRequisicao(EstadoRequisicao.ABERTA);
+		andamento1.setRequisicaoTransporte(requisicaoTransporte1);
 		andamento1.save();
 
 		requisicaoTransporte2.cpOrgaoUsuario = cpOrgaoUsuario;
@@ -448,10 +448,10 @@ public class ModelsTest {
 		requisicaoTransporte2.refresh();
 		Assert.assertNotSame(new Long(0), requisicaoTransporte2.id);
 
-		andamento2.descricao = "Nova requisição";
-		andamento2.dataAndamento = Calendar.getInstance();
-		andamento2.estadoRequisicao = EstadoRequisicao.ABERTA;
-		andamento2.requisicaoTransporte = requisicaoTransporte2;
+		andamento2.setDescricao("Nova requisição");
+		andamento2.setDataAndamento(Calendar.getInstance());
+		andamento2.setEstadoRequisicao(EstadoRequisicao.ABERTA); 
+		andamento2.setRequisicaoTransporte(requisicaoTransporte2); 
 		andamento2.save();
 
 		requisicaoTransporte3.cpOrgaoUsuario = cpOrgaoUsuario;
@@ -466,10 +466,10 @@ public class ModelsTest {
 		requisicaoTransporte3.refresh();
 		Assert.assertNotSame(new Long(0), requisicaoTransporte3.id);
 
-		andamento3.descricao = "Nova requisição";
-		andamento3.dataAndamento = Calendar.getInstance();
-		andamento3.estadoRequisicao = EstadoRequisicao.ABERTA;
-		andamento3.requisicaoTransporte = requisicaoTransporte3;
+		andamento3.setDescricao("Nova requisição");
+		andamento3.setDataAndamento(Calendar.getInstance());
+		andamento3.setEstadoRequisicao(EstadoRequisicao.ABERTA); 
+		andamento3.setRequisicaoTransporte(requisicaoTransporte3);
 		andamento3.save();
 
 		requisicaoTransporte7.cpOrgaoUsuario = cpOrgaoUsuario;
@@ -484,10 +484,10 @@ public class ModelsTest {
 		requisicaoTransporte7.refresh();
 		Assert.assertNotSame(new Long(0), requisicaoTransporte7.id);
 
-		andamento7.descricao = "Nova requisição";
-		andamento7.dataAndamento = Calendar.getInstance();
-		andamento7.estadoRequisicao = EstadoRequisicao.ABERTA;
-		andamento7.requisicaoTransporte = requisicaoTransporte7;
+		andamento7.setDescricao("Nova requisição");
+		andamento7.setDataAndamento(Calendar.getInstance());
+		andamento7.setEstadoRequisicao(EstadoRequisicao.ABERTA); 
+		andamento7.setRequisicaoTransporte(requisicaoTransporte7);
 		andamento7.save();
 
 		requisicaoTransporte8.cpOrgaoUsuario = cpOrgaoUsuario;
@@ -502,11 +502,12 @@ public class ModelsTest {
 		requisicaoTransporte8.refresh();
 		Assert.assertNotSame(new Long(0), requisicaoTransporte8.id);
 
-		andamento8.descricao = "Nova requisição";
-		andamento8.dataAndamento = Calendar.getInstance();
-		andamento8.estadoRequisicao = EstadoRequisicao.ABERTA;
-		andamento8.requisicaoTransporte = requisicaoTransporte8;
+		andamento8.setDescricao("Nova requisição");
+		andamento8.setDataAndamento(Calendar.getInstance());
+		andamento8.setEstadoRequisicao(EstadoRequisicao.ABERTA); 
+		andamento8.setRequisicaoTransporte(requisicaoTransporte8);
 		andamento8.save();
+		
 
 		requisicaoTransporte9.cpOrgaoUsuario = cpOrgaoUsuario;
 		requisicaoTransporte9.dataHora = new GregorianCalendar(2014, Calendar.JANUARY, 12, 8, 1);
@@ -520,10 +521,10 @@ public class ModelsTest {
 		requisicaoTransporte9.refresh();
 		Assert.assertNotSame(new Long(0), requisicaoTransporte9.id);
 
-		andamento9.descricao = "Nova requisição";
-		andamento9.dataAndamento = Calendar.getInstance();
-		andamento9.estadoRequisicao = EstadoRequisicao.ABERTA;
-		andamento9.requisicaoTransporte = requisicaoTransporte9;
+		andamento9.setDescricao("Nova requisição");
+		andamento9.setDataAndamento(Calendar.getInstance());
+		andamento9.setEstadoRequisicao(EstadoRequisicao.ABERTA);
+		andamento9.setRequisicaoTransporte(requisicaoTransporte9);
 		andamento9.save();
 
 		cpOrgaoUsuario = CpOrgaoUsuario.AR.findById(Long.valueOf(2));
@@ -539,10 +540,10 @@ public class ModelsTest {
 		requisicaoTransporte4.refresh();
 		Assert.assertNotSame(new Long(0), requisicaoTransporte4.id);
 
-		andamento4.descricao = "Nova requisição";
-		andamento4.dataAndamento = Calendar.getInstance();
-		andamento4.estadoRequisicao = EstadoRequisicao.ABERTA;
-		andamento4.requisicaoTransporte = requisicaoTransporte4;
+		andamento4.setDescricao("Nova requisição");
+		andamento4.setDataAndamento(Calendar.getInstance());
+		andamento4.setEstadoRequisicao(EstadoRequisicao.ABERTA);
+		andamento4.setRequisicaoTransporte(requisicaoTransporte4);
 		andamento4.save();
 
 		requisicaoTransporte5.cpOrgaoUsuario = cpOrgaoUsuario;
@@ -557,10 +558,10 @@ public class ModelsTest {
 		requisicaoTransporte5.refresh();
 		Assert.assertNotSame(new Long(0), requisicaoTransporte5.id);
 
-		andamento5.descricao = "Nova requisição";
-		andamento5.dataAndamento = Calendar.getInstance();
-		andamento5.estadoRequisicao = EstadoRequisicao.ABERTA;
-		andamento5.requisicaoTransporte = requisicaoTransporte5;
+		andamento5.setDescricao("Nova requisição");
+		andamento5.setDataAndamento(Calendar.getInstance());
+		andamento5.setEstadoRequisicao(EstadoRequisicao.ABERTA);
+		andamento5.setRequisicaoTransporte(requisicaoTransporte5);
 		andamento5.save();
 
 		requisicaoTransporte6.cpOrgaoUsuario = cpOrgaoUsuario;
@@ -575,10 +576,10 @@ public class ModelsTest {
 		requisicaoTransporte6.refresh();
 		Assert.assertNotSame(new Long(0), requisicaoTransporte6.id);
 
-		andamento6.descricao = "Nova requisição";
-		andamento6.dataAndamento = Calendar.getInstance();
-		andamento6.estadoRequisicao = EstadoRequisicao.ABERTA;
-		andamento6.requisicaoTransporte = requisicaoTransporte6;
+		andamento6.setDescricao("Nova requisição");
+		andamento6.setDataAndamento(Calendar.getInstance());
+		andamento6.setEstadoRequisicao(EstadoRequisicao.ABERTA);
+		andamento6.setRequisicaoTransporte(requisicaoTransporte6);
 		andamento6.save();
 
 		cpOrgaoUsuario = CpOrgaoUsuario.AR.findById(Long.valueOf(3));
@@ -594,10 +595,10 @@ public class ModelsTest {
 		requisicaoTransporte11.refresh();
 		Assert.assertNotSame(new Long(0), requisicaoTransporte11.id);
 
-		andamento11.descricao = "Nova requisição";
-		andamento11.dataAndamento = Calendar.getInstance();
-		andamento11.estadoRequisicao = EstadoRequisicao.ABERTA;
-		andamento11.requisicaoTransporte = requisicaoTransporte11;
+		andamento11.setDescricao("Nova requisição");
+		andamento11.setDataAndamento(Calendar.getInstance());
+		andamento11.setEstadoRequisicao(EstadoRequisicao.ABERTA);
+		andamento11.setRequisicaoTransporte(requisicaoTransporte11);
 		andamento11.save();
 
 		requisicaoTransporte12.cpOrgaoUsuario = cpOrgaoUsuario;
@@ -612,10 +613,10 @@ public class ModelsTest {
 		requisicaoTransporte12.refresh();
 		Assert.assertNotSame(new Long(0), requisicaoTransporte12.id);
 
-		andamento12.descricao = "Nova requisição";
-		andamento12.dataAndamento = Calendar.getInstance();
-		andamento12.estadoRequisicao = EstadoRequisicao.ABERTA;
-		andamento12.requisicaoTransporte = requisicaoTransporte12;
+		andamento12.setDescricao("Nova requisição");
+		andamento12.setDataAndamento(Calendar.getInstance());
+		andamento12.setEstadoRequisicao(EstadoRequisicao.ABERTA);
+		andamento12.setRequisicaoTransporte(requisicaoTransporte12);
 		andamento12.save();
 
 		requisicaoTransporte13.cpOrgaoUsuario = cpOrgaoUsuario;
@@ -630,10 +631,10 @@ public class ModelsTest {
 		requisicaoTransporte13.refresh();
 		Assert.assertNotSame(new Long(0), requisicaoTransporte13.id);
 
-		andamento13.descricao = "Nova requisição";
-		andamento13.dataAndamento = Calendar.getInstance();
-		andamento13.estadoRequisicao = EstadoRequisicao.ABERTA;
-		andamento13.requisicaoTransporte = requisicaoTransporte13;
+		andamento13.setDescricao("Nova requisição");
+		andamento13.setDataAndamento(Calendar.getInstance());
+		andamento13.setEstadoRequisicao(EstadoRequisicao.ABERTA);
+		andamento13.setRequisicaoTransporte(requisicaoTransporte13);
 		andamento13.save();
 	}
 
@@ -644,10 +645,10 @@ public class ModelsTest {
 		requisicaoTransporte1.refresh();
 
 		andamento1 = new Andamento();
-		andamento1.descricao = "Requisicao autorizada";
-		andamento1.dataAndamento = Calendar.getInstance();
-		andamento1.estadoRequisicao = EstadoRequisicao.AUTORIZADA;
-		andamento1.requisicaoTransporte = requisicaoTransporte1;
+		andamento1.setDescricao("Requisicao autorizada"); 
+		andamento1.setDataAndamento(Calendar.getInstance());
+		andamento1.setEstadoRequisicao(EstadoRequisicao.AUTORIZADA);
+		andamento1.setRequisicaoTransporte(requisicaoTransporte1);
 		andamento1.save();
 
 		requisicaoTransporte2 = RequisicaoTransporte.AR.findById(requisicaoTransporte2.id);
@@ -655,10 +656,10 @@ public class ModelsTest {
 		requisicaoTransporte2.refresh();
 
 		andamento2 = new Andamento();
-		andamento2.descricao = "Requisicao autorizada";
-		andamento2.dataAndamento = Calendar.getInstance();
-		andamento2.estadoRequisicao = EstadoRequisicao.AUTORIZADA;
-		andamento2.requisicaoTransporte = requisicaoTransporte2;
+		andamento2.setDescricao("Requisicao autorizada");
+		andamento2.setDataAndamento(Calendar.getInstance());
+		andamento2.setEstadoRequisicao(EstadoRequisicao.AUTORIZADA);
+		andamento2.setRequisicaoTransporte(requisicaoTransporte2);
 		andamento2.save();
 
 		requisicaoTransporte3 = RequisicaoTransporte.AR.findById(requisicaoTransporte3.id);
@@ -666,10 +667,10 @@ public class ModelsTest {
 		requisicaoTransporte3.refresh();
 
 		andamento3 = new Andamento();
-		andamento3.descricao = "Requisicao autorizada";
-		andamento3.dataAndamento = Calendar.getInstance();
-		andamento3.estadoRequisicao = EstadoRequisicao.AUTORIZADA;
-		andamento3.requisicaoTransporte = requisicaoTransporte3;
+		andamento3.setDescricao("Requisicao autorizada");
+		andamento3.setDataAndamento(Calendar.getInstance());
+		andamento3.setEstadoRequisicao(EstadoRequisicao.AUTORIZADA);
+		andamento3.setRequisicaoTransporte(requisicaoTransporte3);
 		andamento3.save();
 	}
 
@@ -680,10 +681,10 @@ public class ModelsTest {
 		requisicaoTransporte7.refresh();
 
 		andamento7 = new Andamento();
-		andamento7.descricao = "Requisicao rejeitada";
-		andamento7.dataAndamento = Calendar.getInstance();
-		andamento7.estadoRequisicao = EstadoRequisicao.REJEITADA;
-		andamento7.requisicaoTransporte = requisicaoTransporte7;
+		andamento7.setDescricao("Requisicao rejeitada");
+		andamento7.setDataAndamento(Calendar.getInstance());
+		andamento7.setEstadoRequisicao(EstadoRequisicao.REJEITADA);
+		andamento7.setRequisicaoTransporte(requisicaoTransporte7);
 		andamento7.save();
 
 		requisicaoTransporte8 = RequisicaoTransporte.AR.findById(requisicaoTransporte8.id);
@@ -691,10 +692,10 @@ public class ModelsTest {
 		requisicaoTransporte8.refresh();
 
 		andamento8 = new Andamento();
-		andamento8.descricao = "Requisicao rejeitada";
-		andamento8.dataAndamento = Calendar.getInstance();
-		andamento8.estadoRequisicao = EstadoRequisicao.REJEITADA;
-		andamento8.requisicaoTransporte = requisicaoTransporte8;
+		andamento8.setDescricao("Requisicao rejeitada");
+		andamento8.setDataAndamento(Calendar.getInstance());
+		andamento8.setDescricao("Requisicao rejeitada");
+		andamento8.setRequisicaoTransporte(requisicaoTransporte8);
 		andamento8.save();
 
 		requisicaoTransporte9 = RequisicaoTransporte.AR.findById(requisicaoTransporte9.id);
@@ -702,10 +703,10 @@ public class ModelsTest {
 		requisicaoTransporte9.refresh();
 
 		andamento9 = new Andamento();
-		andamento9.descricao = "Requisicao rejeitada";
-		andamento9.dataAndamento = Calendar.getInstance();
-		andamento9.estadoRequisicao = EstadoRequisicao.REJEITADA;
-		andamento9.requisicaoTransporte = requisicaoTransporte9;
+		andamento9.setDescricao("Requisicao rejeitada");
+		andamento9.setDataAndamento(Calendar.getInstance());
+		andamento9.setDescricao("Requisicao rejeitada");
+		andamento9.setRequisicaoTransporte(requisicaoTransporte9);
 		andamento9.save();
 	}
 

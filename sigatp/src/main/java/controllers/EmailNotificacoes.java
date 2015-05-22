@@ -169,7 +169,7 @@ public class EmailNotificacoes extends Job<Object>  {
 		Comparator<DpPessoa> comp = null;
 		
 		for(RequisicaoTransporte item : requisicoes) {
-			aprovador = item.getUltimoAndamento().responsavel;
+			aprovador = item.getUltimoAndamento().getResponsavel();
 			int index = Arrays.binarySearch(arrayAprovador, aprovador, comp);
 			DpPessoa chave = lstAprovadores.get(index);
 			String sequencia = item.getSequence() + " " + item.id + ",";

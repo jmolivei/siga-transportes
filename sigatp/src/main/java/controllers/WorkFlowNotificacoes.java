@@ -44,7 +44,7 @@ public class WorkFlowNotificacoes extends Job<Object>  {
 		try {
 			Calendar calendar = Calendar.getInstance();
 			calendar.add(Calendar.DAY_OF_YEAR, -7);
-			andamentos = Andamento.find("dataNotificacaoWorkFlow IS NULL and requisicaoTransporte in (select r from RequisicaoTransporte where origemExterna = true").fetch();
+			andamentos = Andamento.AR.find("dataNotificacaoWorkFlow IS NULL and requisicaoTransporte in (select r from RequisicaoTransporte where origemExterna = true").fetch();
 			notificarAndamentos(andamentos, tituloEmail, tipoNotificacao);
 
 		} catch (Exception ex) {
@@ -59,7 +59,7 @@ public class WorkFlowNotificacoes extends Job<Object>  {
 		HashMap<Condutor, String> dadosCondutor = new HashMap<Condutor, String>();
 		
 		for(Andamento item : andamentos) {
-			String sequencia = item.requisicaoTransporte.getSequence() + " " + item.requisicaoTransporte.id + ",";
+			String sequencia = item.getRequisicaoTransporte().getSequence() + " " + item.getRequisicaoTransporte().id + ",";
 
 			if (dadosCondutor.containsKey(condutor)) {
 				dadosCondutor.put(condutor, dadosCondutor.get(condutor) + sequencia);
