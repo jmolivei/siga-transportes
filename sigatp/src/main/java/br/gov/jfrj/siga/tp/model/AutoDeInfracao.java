@@ -21,7 +21,7 @@ import org.hibernate.envers.Audited;
 import br.gov.jfrj.siga.model.ActiveRecord;
 import br.gov.jfrj.siga.tp.util.PerguntaSimNao;
 import br.gov.jfrj.siga.tp.validation.annotation.Data;
-import br.gov.jfrj.siga.vraptor.converter.ConvertableEntity;
+import br.gov.jfrj.siga.tp.vraptor.ConvertableEntity;
 import br.jus.jfrj.siga.uteis.UpperCase;
 
 @Entity
@@ -43,8 +43,15 @@ public class AutoDeInfracao extends TpModel implements ConvertableEntity, Compar
 	@ManyToOne
 	@NotNull
 	private Veiculo veiculo;
-
+	
+	//  Incluido depois da OSI17 - Joao Luis
+	
+	@ManyToOne
 	@NotNull
+	@JoinColumn(name = "PENALIDADE_ID")
+	public Penalidade penalidade;
+
+	/* Comentado apos OSI17 - Joao Luis @NotNull
 	private String codigoDaAutuacao;
 
 	@NotNull
@@ -60,7 +67,7 @@ public class AutoDeInfracao extends TpModel implements ConvertableEntity, Compar
 
 	@NotNull
 	@UpperCase
-	private String enquadramento;
+	private String enquadramento; */
 
 	@NotNull
 	@UpperCase
@@ -120,7 +127,18 @@ public class AutoDeInfracao extends TpModel implements ConvertableEntity, Compar
 	public void setVeiculo(Veiculo veiculo) {
 		this.veiculo = veiculo;
 	}
+	
+	//  Incluido depois da OSI17 - Joao Luis
+	
+	public Penalidade getPenalidade() {
+		return penalidade;
+	}
 
+	public void setPenalidade(Penalidade penalidade) {
+		this.penalidade = penalidade;
+	}
+
+	/*  Comentado depois da OSI17 - Joao Luis
 	public String getCodigoDaAutuacao() {
 		return codigoDaAutuacao;
 	}
@@ -159,7 +177,7 @@ public class AutoDeInfracao extends TpModel implements ConvertableEntity, Compar
 
 	public void setEnquadramento(String enquadramento) {
 		this.enquadramento = enquadramento;
-	}
+	} */
 
 	public String getLocal() {
 		return local;

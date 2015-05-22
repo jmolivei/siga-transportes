@@ -13,6 +13,9 @@
 			<module name="org.hibernate" />
 			<module name="org.infinispan" />
 			<module name="org.hibernate.commons-annotations" />
+			<!-- Incluido depois da OSI17 João Luis -->
+			<module name="sigadoc.org.bouncycastle" export="true"/>
+			<!-- Fim -->			
 			<module name="sigadoc.play" export="true" slot="sigatp" />
 		</dependencies>
 	</deployment>

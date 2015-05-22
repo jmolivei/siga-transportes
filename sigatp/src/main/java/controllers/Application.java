@@ -9,6 +9,14 @@ import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import models.Condutor;
+import models.EstadoMissao;
+import models.EstadoRequisicao;
+import models.EstadoServico;
+import models.Missao;
+import models.RequisicaoTransporte;
+import models.SelecaoDocumento;
+import models.ServicoVeiculo;
 import play.i18n.Messages;
 
 import org.apache.commons.lang.StringUtils;
@@ -16,6 +24,8 @@ import org.apache.commons.lang.StringUtils;
 import play.mvc.Controller;
 import play.mvc.Router;
 import play.mvc.With;
+import uteis.CondutorFiltro;
+import uteis.FormataCaminhoDoContextoUrl;
 import br.gov.jfrj.siga.dp.DpLotacao;
 import br.gov.jfrj.siga.dp.DpPessoa;
 import br.gov.jfrj.siga.tp.model.Condutor;
@@ -33,18 +43,22 @@ import com.google.common.base.Predicate;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
 
+@With(AutorizacaoGI.class)
 @With(AutorizacaoGIAntigo.class)
 public class Application extends Controller {
 
 	public static void index() throws Exception {
+		if (AutorizacaoGI.ehAdministrador() || AutorizacaoGI.ehAdministradorMissao() || AutorizacaoGI.ehAdministradorMissaoPorComplexo() ) {
 		if (AutorizacaoGIAntigo.ehAdministrador() || AutorizacaoGIAntigo.ehAdministradorMissao() || AutorizacaoGIAntigo.ehAdministradorMissaoPorComplexo() ) {
 			Requisicoes.listarFiltrado(EstadoRequisicao.AUTORIZADA,EstadoRequisicao.NAOATENDIDA);
 		}
 
+		if (AutorizacaoGI.ehAgente()) {
 		if (AutorizacaoGIAntigo.ehAgente()) {
 			Requisicoes.listarFiltrado(EstadoRequisicao.AUTORIZADA,EstadoRequisicao.NAOATENDIDA);
 		}
 
+		if (AutorizacaoGI.ehAprovador()) {
 		if (AutorizacaoGIAntigo.ehAprovador()) {
 			Requisicoes.listarPAprovar();
 		}
@@ -76,16 +90,19 @@ public class Application extends Controller {
 
 		if (partesDoCodigo[1].equals("TP")) {
 			if (partesDoCodigo[4].equals("M")) {
+				Missoes.recuperarPelaSigla(sigla,!AutorizacaoGI.ehAdministrador());
 				Missoes.recuperarPelaSigla(sigla,!AutorizacaoGIAntigo.ehAdministrador());
 			}
 
 			if (partesDoCodigo[4].equals("R")) {
+				RequisicaoTransporte req = Requisicoes.recuperarPelaSigla(sigla, !AutorizacaoGI.ehAdministrador());
 				RequisicaoTransporte req = Requisicoes.recuperarPelaSigla(sigla, !AutorizacaoGIAntigo.ehAdministrador());
 				Requisicoes.carregarTiposDeCarga(req);
 				Requisicoes.carregarFinalidades();
 			}
 
 			if (partesDoCodigo[4].equals("S")) {
+				ServicosVeiculo.recuperarPelaSigla(sigla, ! AutorizacaoGI.ehAdministrador());
 				ServicosVeiculo.recuperarPelaSigla(sigla, ! AutorizacaoGIAntigo.ehAdministrador());
 			}
 		}
@@ -120,6 +137,7 @@ public class Application extends Controller {
 				retorno = m.group(1).toString();
 			}
 			else {		
+				retorno = AutorizacaoGI.cadastrante().getOrgaoUsuario().getAcronimoOrgaoUsu().replace("-","").toString();
 				retorno = AutorizacaoGIAntigo.cadastrante().getOrgaoUsuario().getAcronimoOrgaoUsu().replace("-","").toString();
 			}
 
@@ -192,10 +210,12 @@ public class Application extends Controller {
 	public static void gadget() {
 		try {
 			String titulo = "";
+			Long idOrgaoUsu = Long.valueOf(AutorizacaoGI.titular().getOrgaoUsuario().getIdOrgaoUsu());
 			Long idOrgaoUsu = Long.valueOf(AutorizacaoGIAntigo.titular().getOrgaoUsuario().getIdOrgaoUsu());
 			List<String[]> lista = new ArrayList<String[]>();
 			int total = 0;
 
+			if (equals(true, AutorizacaoGI.ehAdministrador(), AutorizacaoGI.ehAdministradorMissao(), AutorizacaoGI.ehAdministradorMissaoPorComplexo())) {
 			if (equals(true, AutorizacaoGIAntigo.ehAdministrador(), AutorizacaoGIAntigo.ehAdministradorMissao(), AutorizacaoGIAntigo.ehAdministradorMissaoPorComplexo())) {
 				EstadoRequisicao[] estados = {EstadoRequisicao.AUTORIZADA, EstadoRequisicao.NAOATENDIDA};
 				List<RequisicaoTransporte> requisicoes = RequisicaoTransporte.listar(estados);
@@ -209,10 +229,13 @@ public class Application extends Controller {
 				}
 			}
 
+			else if (equals(true, AutorizacaoGI.ehAgente())) {
+				Long idCondutor = Condutor.recuperarLogado(AutorizacaoGI.titular(),AutorizacaoGI.titular().getOrgaoUsuario()).id;
 			else if (equals(true, AutorizacaoGIAntigo.ehAgente())) {
 				Long idCondutor = Condutor.recuperarLogado(AutorizacaoGIAntigo.titular(),AutorizacaoGIAntigo.titular().getOrgaoUsuario()).getId();
 				EstadoMissao[] estados = {EstadoMissao.PROGRAMADA, EstadoMissao.INICIADA};
 				String query = "condutor.id = ? and cpOrgaoUsuario.idOrgaoUsu = ? and (estadoMissao = ? or estadoMissao = ?)";
+				List<ServicosVeiculo> missoes = Missao.find(query, idCondutor, idOrgaoUsu, estados[0], estados[1]).fetch();
 				List<ServicosVeiculo> missoes = Missao.AR.find(query, idCondutor, idOrgaoUsu, estados[0], estados[1]).fetch();
 
 				for (EstadoMissao item : estados) {
@@ -224,6 +247,7 @@ public class Application extends Controller {
 				}
 			}
 
+			else if (equals(true, AutorizacaoGI.ehAprovador())) {
 			else if (equals(true, AutorizacaoGIAntigo.ehAprovador())) {
 				EstadoRequisicao estado = EstadoRequisicao.ABERTA;
 				List<RequisicaoTransporte> requisicoes = RequisicaoTransporte.listar(estado);
@@ -232,6 +256,7 @@ public class Application extends Controller {
 				}
 			}
 
+			else if (equals(true, AutorizacaoGI.ehAdministradorFrota())) {
 			else if (equals(true, AutorizacaoGIAntigo.ehAdministradorFrota())) {
 				EstadoServico[] estados = {EstadoServico.AGENDADO, EstadoServico.INICIADO};
 				String query = "cpOrgaoUsuario.idOrgaoUsu=? and (situacaoServico = ? or situacaoServico = ?)"; 
@@ -247,6 +272,7 @@ public class Application extends Controller {
 			}
 
 			else {
+				List<RequisicaoTransporte> requisicoes = RequisicaoTransporte.listarParaAgendamento(AutorizacaoGI.titular().getOrgaoUsuario());
 				List<RequisicaoTransporte> requisicoes = RequisicaoTransporte.listarParaAgendamento(AutorizacaoGIAntigo.titular().getOrgaoUsuario());
 				total = totalizarItemLista(requisicoes, "");
 				if (requisicoes.size() > 0) {
@@ -276,10 +302,12 @@ public class Application extends Controller {
 			Map<String,Object> param=new HashMap<String,Object>();
 			param.put(parametro, valor);
 			return formata.retornarCaminhoContextoUrl(Router.reverse(template,param).url);
+
 		}
 		else {
 			return formata.retornarCaminhoContextoUrl(Router.reverse(template).url);
 		}
+
 	}
 
 	private static Boolean equals(Object item, Object ... search) {
@@ -309,10 +337,12 @@ public class Application extends Controller {
 							RequisicaoTransporte requisicao = ((RequisicaoTransporte) objeto);
 							if (descricao.equals("")) {
 								return (requisicao.dataHoraSaidaPrevista.after(ultimos7dias) && 
+										requisicao.cpOrgaoUsuario.getIdOrgaoUsu().equals(AutorizacaoGI.titular().getOrgaoUsuario().getIdOrgaoUsu()));
 										requisicao.cpOrgaoUsuario.getIdOrgaoUsu().equals(AutorizacaoGIAntigo.titular().getOrgaoUsuario().getIdOrgaoUsu()));
 							} else {
 								return (requisicao.ultimoEstado.getDescricao().equals(descricao) &&
 										requisicao.dataHoraSaidaPrevista.after(ultimos7dias) && 
+										requisicao.cpOrgaoUsuario.getIdOrgaoUsu().equals(AutorizacaoGI.titular().getOrgaoUsuario().getIdOrgaoUsu()));
 										requisicao.cpOrgaoUsuario.getIdOrgaoUsu().equals(AutorizacaoGIAntigo.titular().getOrgaoUsuario().getIdOrgaoUsu()));
 							}
 						}

@@ -127,4 +127,18 @@ public class Andamento extends TpModel implements Comparable<Andamento> {
 		
 		return retorno;
 	}
+	
+	public static List<Andamento> listarPorDataNotificacaoWorkFlow() throws Exception {
+		Calendar calendar = Parametros.formatarDataParametro("cron.dataInicioPesquisaw") ;
+		Object[] parametros = {calendar, EstadoRequisicao.ABERTA, EstadoRequisicao.AUTORIZADA,EstadoRequisicao.PROGRAMADA,EstadoRequisicao.REJEITADA};
+		return Andamento.find("dataNotificacaoWorkFlow is null " +
+						"and dataAndamento >= ? " +
+						"and estadoRequisicao in (?,?,?,?)", parametros).fetch();
+	}
+	
+	public static void gravarDataNotificacaoWorkFlow(Long id) throws Exception {
+		Andamento andamento = Andamento.findById(id);
+		andamento.dataNotificacaoWorkFlow = Calendar.getInstance();
+		andamento.save();
+	}
 }

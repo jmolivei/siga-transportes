@@ -76,10 +76,10 @@ public class AutoDeInfracaoController extends TpController{
 	@RoleAdminMissaoComplexo
 	@Path("/editar/{id}")
 	public void editar(Long id, String notificacao) throws Exception {
-		List<Veiculo> veiculos = Veiculo.listarTodos(getTitular().getOrgaoUsuario());
-		List<Condutor> condutores = Condutor.listarTodos(getTitular().getOrgaoUsuario());
 		AutoDeInfracao autoDeInfracao;
 		TipoDeNotificacao tipoNotificacao;
+		
+		renderVeiculosCondutoresEPenalidades();
 		
 		if(id >0) {
 			autoDeInfracao = AutoDeInfracao.AR.findById(id);
@@ -91,8 +91,6 @@ public class AutoDeInfracaoController extends TpController{
 		}
 		
 		result.include("autoDeInfracao", autoDeInfracao);
-		result.include("veiculos", veiculos);
-		result.include("condutores", condutores);
 		result.include("tipoNotificacao", tipoNotificacao);
 	}
 
@@ -108,12 +106,9 @@ public class AutoDeInfracaoController extends TpController{
  				, "dataPagamento", "veiculo.autosDeInfracao.dataDePagamento.validation");
 
 		if (validator.hasErrors()) {
-			List<Veiculo> veiculos = Veiculo.listarTodos(getTitular().getOrgaoUsuario());
-			List<Condutor> condutores = Condutor.listarTodos(getTitular().getOrgaoUsuario());
+			renderVeiculosCondutoresEPenalidades();
 			
 			result.include("autoDeInfracao", autoDeInfracao);
-			result.include("veiculos", veiculos);
-			result.include("condutores", condutores);
 			result.include("tipoNotificacao", tipoNotificacao);
 				
 			if(autoDeInfracao.getId()  > 0)
@@ -136,5 +131,39 @@ public class AutoDeInfracaoController extends TpController{
 		autoDeInfracao.delete();
 		
 		result.redirectTo(this).listar();
+	}
+	
+	// Incluido após OSI17(1. grupo) antes de enviar para a OSI (2.grupo de Migracao) - João Luis 
+	// Incluido metodos abaixo e alterado em métodos acima para chamar o metodo renderVeiculosCondutoresEPenalidades
+	
+	private void renderVeiculosCondutoresEPenalidades() throws Exception {
+		List<Veiculo> veiculos = Veiculo.listarTodos(getTitular().getOrgaoUsuario());
+		List<Condutor> condutores = Condutor.listarTodos(getTitular().getOrgaoUsuario());
+    	List<Penalidade> penalidades = Penalidade.listarTodos();
+    	result.include("veiculos", veiculos);
+    	result.include("condutores", condutores);
+    	result.include("penalidades", penalidades);
+    }
+	
+		/* Método AJAX */
+	@RoleAdmin
+	@RoleAdminMissao
+	@RoleAdminMissaoComplexo
+	@RoleAgente
+	public static void listarValorPenalidade(Long idPenalidade) throws Exception {
+		Penalidade penalidade = Penalidade.AR.findById(idPenalidade);		
+		String formataMoedaBrasileiraSemSimbolo = CustomJavaExtensions.formataMoedaBrasileiraSemSimbolo(penalidade.valor);		
+		renderText(formataMoedaBrasileiraSemSimbolo);
+	}
+	
+	
+	/* Método AJAX */
+	@RoleAdmin
+	@RoleAdminMissao
+	@RoleAdminMissaoComplexo
+	@RoleAgente
+	public static void listarClassificacaoPenalidade(Long idPenalidade) throws Exception {
+		Penalidade penalidade = Penalidade.AR.findById(idPenalidade);	
+		renderText(penalidade.classificacao.getDescricao());
 	}
 }

@@ -201,7 +201,7 @@
 	       	<input type="text" id="inputdataHoraSaida" name="missao.dataHoraSaida" value="${missao.dataHoraSaida?.format('dd/MM/yyyy HH:mm')}" size="14" class="dataHora" />
 	    	#{if mostrarDadosIniciada}
 		       	<div>
-					<label for="odometroSaidaEmKm" class="obrigatorio">Odômetro</label>
+					<label for="odometroSaidaEmKm" class="obrigatorio">Od&ocirc;metro</label>
 					<input id="odometroSaidaEmKm" type="text" name="missao.odometroSaidaEmKm" value="${missao.odometroSaidaEmKm}" size="12" class="decimal" />
 		        	<label for="nivelCombustivelSaida" class="obrigatorio">N&iacute;vel Combust&iacute;vel</label>
 					#{select 'missao.nivelCombustivelSaida',
@@ -219,7 +219,7 @@
     		#{/if}
 		</div>
 	 	<div class="coluna margemDireitaG">
-        	<label for="veiculosDisponiveis" class="obrigatorio">Veículo</label>
+        	<label for="veiculosDisponiveis" class="obrigatorio">Ve&iacute;culo</label>
 			<div id="veiculosDisponiveis">
 				  #{if (!exibirMenuAdministrar && !exibirMenuAdministrarMissao && !exibirMenuAdministrarMissaoComplexo)}
 	        		  #{select 'missao.veiculo.id', 
@@ -253,7 +253,7 @@
 			         		  labelProperty:'resposta',
 			         		  value:missao?.triangulos}
 				    #{/select}
-		        	<label for="cartaoSeguro" class="obrigatorio">Cartão Seguro</label>
+		        	<label for="cartaoSeguro" class="obrigatorio">Cart&atilde;o Seguro</label>
 					#{select 'missao.cartaoSeguro',
 			         		  items:missao.cartaoSeguro.values(),
 			         		  labelProperty:'resposta',
@@ -299,7 +299,7 @@
 				         		  labelProperty:'resposta',
 				         		  value:missao?.extintor}
 					    #{/select}
-			        	<label for="cartaoAbastecimento" class="obrigatorio">Cartão Abastecimento</label>
+			        	<label for="cartaoAbastecimento" class="obrigatorio">Cart&atilde;o Abastecimento</label>
 						#{select 'missao.cartaoAbastecimento',
 				         		  items:missao.cartaoAbastecimento.values(),
 				         		  labelProperty:'resposta',
@@ -319,7 +319,7 @@
 				         		  labelProperty:'resposta',
 				         		  value:missao?.ferramentas}
 					    #{/select}
-			        	<label for="cartaoSaida" class="obrigatorio">Cartão Saída</label>
+			        	<label for="cartaoSaida" class="obrigatorio">Cart&atilde;o Sa&iacute;da</label>
 						#{select 'missao.cartaoSaida',
 				         		  items:missao.cartaoSaida.values(),
 				         		  labelProperty:'resposta',
@@ -345,7 +345,7 @@
 			    #{/select}
 			</div>
 			<div class="coluna">     
-		    	<label for="odometroRetornoEmKm" class="obrigatorio">Odômetro</label>
+		    	<label for="odometroRetornoEmKm" class="obrigatorio">Od&ocirc;metro</label>
 	       		<input type="text" name="missao.odometroRetornoEmKm" value="${missao.odometroRetornoEmKm}" size="12" class="decimal" />
 		        <label for="avariasAparentesRetorno" class="obrigatorio">Avarias Aparentes</label>
 				#{select 'missao.avariasAparentesRetorno',
@@ -355,9 +355,9 @@
 			    #{/select}
 			</div>
 		</div>
-		<label for="ocorrencias" class="obrigatorio">Ocorrências</label>
+		<label for="ocorrencias" class="obrigatorio">Ocorr&ecirc;ncias</label>
 		<textarea name="missao.ocorrencias" rows="7" cols="80">${missao?.ocorrencias}</textarea>
-		<label for="itinerarioCompleto" class="obrigatorio">Itinerário Completo</label>
+		<label for="itinerarioCompleto" class="obrigatorio">Itiner&aacute;rio Completo</label>
 		<textarea name="missao.itinerarioCompleto" rows="7" cols="80">${missao?.itinerarioCompleto}</textarea>
 	</div>
 	#{/if}

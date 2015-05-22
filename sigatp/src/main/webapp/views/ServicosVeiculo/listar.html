@@ -4,7 +4,21 @@
 
 <div class="gt-bd clearfix">
 	<div class="gt-content clearfix">
-		<h2>Servi&ccedil;os de Ve&iacute;culos</h2>
+		#{if !menuServicosVeiculoMostrarTodos} 
+			<h2>Todos os Servi&ccedil;os de Ve&iacute;culos</h2>			
+		#{/if}
+		#{elseif !menuServicosVeiculoMostrarAgendados}
+			<h2>Servi&ccedil;os de Ve&iacute;culos Agendados</h2>
+		#{/elseif}
+		#{elseif !menuServicosVeiculoMostrarIniciados}
+			<h2>Servi&ccedil;os de Ve&iacute;culos Iniciados</h2>
+		#{/elseif}
+		#{elseif !menuServicosVeiculoMostrarRealizados}
+			<h2>Servi&ccedil;os de Ve&iacute;culos Realizados</h2>
+		#{/elseif}
+		#{elseif !menuServicosVeiculoMostrarCancelados}
+			<h2>Servi&ccedil;os de Ve&iacute;culos Cancelados</h2>
+		#{/elseif}
 		
 		#{include 'ServicosVeiculo/menu.html' /}
 
