@@ -1,9 +1,12 @@
 package br.gov.jfrj.siga.tp.model;
 
+import java.math.BigDecimal;
+import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.List;
+import java.util.Locale;
 
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
@@ -17,19 +20,17 @@ import javax.persistence.NoResultException;
 import javax.persistence.Query;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
+import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 
 import org.hibernate.envers.Audited;
 import org.hibernate.envers.RelationTargetAuditMode;
+import org.hibernate.validator.constraints.NotEmpty;
 
-import play.data.binding.As;
-import play.data.validation.Min;
-import play.data.validation.Required;
-import play.db.jpa.JPA;
-import play.modules.br.jus.jfrj.siga.uteis.validadores.validarAnoData.ValidarAnoData;
 import br.gov.jfrj.siga.dp.CpOrgaoUsuario;
 import br.gov.jfrj.siga.dp.DpPessoa;
 import br.gov.jfrj.siga.model.ActiveRecord;
+import br.gov.jfrj.siga.validation.ValidarAnoData;
 
 @SuppressWarnings("serial")
 @Entity
@@ -43,42 +44,37 @@ public class Abastecimento extends TpModel implements Comparable<Abastecimento> 
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "hibernate_sequence_generator") 
 	@SequenceGenerator(name = "hibernate_sequence_generator", sequenceName="SIGATP.hibernate_sequence") 
 	private Long id;
-	
-	@Required
+
+	@NotNull
 	@ValidarAnoData(descricaoCampo="Data/Hora")
-	@As(lang={"*"}, value={"dd/MM/yyyy HH:mm"})
 	private Calendar dataHora;
-	
-	@Required
+
 	@ManyToOne
 	@NotNull
 	private Fornecedor fornecedor;
 	
-	@Required
-	@Enumerated(EnumType.STRING)
 	@NotNull
+	@Enumerated(EnumType.STRING)
 	private TipoDeCombustivel tipoDeCombustivel;
-	
-	@Required
+
+	@NotNull
 	@Min(value=1, message="abastecimento.quantidadeEmLitros.min")
 	private double quantidadeEmLitros;
 	
-	@Required
-//	@As(binder=PriceBinder.class)
+	@NotNull
 	private double precoPorLitro;
 	
-	@Required
+	@NotNull
 	private double valorTotalDaNotaFiscal;
 	
-	@Required
+	@NotNull
+	@NotEmpty
 	private String numeroDaNotaFiscal;
 	
-	@Required
 	@ManyToOne
 	@NotNull
 	private Veiculo veiculo;
 	
-	@Required
 	@ManyToOne
 	@NotNull
 	private Condutor condutor;	
@@ -86,13 +82,13 @@ public class Abastecimento extends TpModel implements Comparable<Abastecimento> 
 	@Enumerated(EnumType.STRING)
 	private NivelDeCombustivel nivelDeCombustivel;
 	
-	@Required
+	@NotNull
 	private double odometroEmKm;
 	
-	@Required
+	@NotNull
 	private double distanciaPercorridaEmKm;
 	
-	@Required
+	@NotNull
 	private double consumoMedioEmKmPorLitro;
 	
  	@Audited(targetAuditMode = RelationTargetAuditMode.NOT_AUDITED)
@@ -109,6 +105,17 @@ public class Abastecimento extends TpModel implements Comparable<Abastecimento> 
 	@ManyToOne
 	@JoinColumn(name = "ID_ORGAO_USU")
 	private CpOrgaoUsuario orgao;
+
+ 	public String formataValorExponencialParaDecimal(double number) {
+		return BigDecimal.valueOf((Double) number).toPlainString();
+	}
+
+ 	public String formataMoedaBrasileiraSemSimbolo(double number) {
+		Locale defaultLocale = new Locale("pt", "BR", "BRL");
+		NumberFormat nf = NumberFormat.getCurrencyInstance(defaultLocale);
+		String moeda =  nf.format(number).replace("R$", "").trim();
+		return moeda;
+	}
 	
 	public Long getId() {
 		return id;
@@ -320,7 +327,7 @@ public class Abastecimento extends TpModel implements Comparable<Abastecimento> 
 				+ "t.lotacao.idLotacaoIni = " + admin.getLotacao().getIdInicial()
 				+ ") and t.dataFimPessoa IS NULL)";
 		
-		Query qry = JPA.em().createQuery(query);
+		Query qry = AR.em().createQuery(query);
 		try {
 			retorno = (List<Abastecimento>) qry.getResultList();
 		} catch(NoResultException ex) {
@@ -341,7 +348,7 @@ public class Abastecimento extends TpModel implements Comparable<Abastecimento> 
 					+ "t.lotacao.idLotacaoIni = " + agente.getLotacao().getIdInicial()
 					+ ") and t.dataFimPessoa IS NULL)";
 				 
-		Query qry = JPA.em().createQuery(query);
+		Query qry = AR.em().createQuery(query);
 		try {
 			retorno = (List<Abastecimento>) qry.getResultList();
 		} catch(NoResultException ex) {
@@ -356,7 +363,7 @@ public class Abastecimento extends TpModel implements Comparable<Abastecimento> 
 		String query = "select a from Abastecimento a "
 					+ "where orgao.id = " + admin.getOrgaoUsuario().getId();
 				 
-		Query qry = JPA.em().createQuery(query);
+		Query qry = AR.em().createQuery(query);
 		try {
 			retorno = (List<Abastecimento>) qry.getResultList();
 		} catch(NoResultException ex) {
