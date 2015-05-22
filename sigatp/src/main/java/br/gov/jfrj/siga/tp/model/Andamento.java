@@ -16,49 +16,111 @@ import javax.validation.constraints.NotNull;
 import org.hibernate.envers.Audited;
 import org.hibernate.envers.RelationTargetAuditMode;
 
-import play.data.binding.As;
-import play.data.validation.Required;
 import play.db.jpa.GenericModel;
 import br.gov.jfrj.siga.dp.DpPessoa;
+import br.gov.jfrj.siga.model.ActiveRecord;
 import br.jus.jfrj.siga.uteis.UpperCase;
 
 @SuppressWarnings("serial")
 @Entity
 @Audited
 @Table(schema = "SIGATP")
-public class Andamento extends GenericModel implements Comparable<Andamento> {
+public class Andamento extends TpModel implements Comparable<Andamento> {
 
+	public static final ActiveRecord<Andamento> AR = new ActiveRecord<>(Andamento.class);
+	
 	@Id
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "hibernate_sequence_generator") @SequenceGenerator(name = "hibernate_sequence_generator", sequenceName="SIGATP.hibernate_sequence") 
-	public Long id;
+	private Long id;
 	
 	@UpperCase
-	public String descricao;
+	private String descricao;
 	
 	@NotNull
-	@As(lang={"*"}, value={"dd/MM/yyyy"})
-	public Calendar dataAndamento;
+	private Calendar dataAndamento;
 	
- 	@As(lang={"*"}, value={"dd/MM/yyyy"})
- 	public Calendar dataNotificacaoWorkFlow;
+	private Calendar dataNotificacaoWorkFlow;
 	
-	@Required
-	@NotNull
+ 	@NotNull
 	@Enumerated(EnumType.STRING)
-	public EstadoRequisicao estadoRequisicao;
+ 	private EstadoRequisicao estadoRequisicao;
 	
 	@NotNull
 	@ManyToOne
-	public RequisicaoTransporte requisicaoTransporte;
+	private RequisicaoTransporte requisicaoTransporte;
 	
 	@ManyToOne
-	public Missao missao;
+	private Missao missao;
 	
 	@NotNull
 	@Audited(targetAuditMode = RelationTargetAuditMode.NOT_AUDITED)
 	@ManyToOne
-	public DpPessoa responsavel;
+	private DpPessoa responsavel;
 	
+	public Long getId() {
+		return id;
+	}
+
+	public void setId(Long id) {
+		this.id = id;
+	}
+
+	public String getDescricao() {
+		return descricao;
+	}
+
+	public void setDescricao(String descricao) {
+		this.descricao = descricao;
+	}
+
+	public Calendar getDataAndamento() {
+		return dataAndamento;
+	}
+
+	public void setDataAndamento(Calendar dataAndamento) {
+		this.dataAndamento = dataAndamento;
+	}
+
+	public Calendar getDataNotificacaoWorkFlow() {
+		return dataNotificacaoWorkFlow;
+	}
+
+	public void setDataNotificacaoWorkFlow(Calendar dataNotificacaoWorkFlow) {
+		this.dataNotificacaoWorkFlow = dataNotificacaoWorkFlow;
+	}
+
+	public EstadoRequisicao getEstadoRequisicao() {
+		return estadoRequisicao;
+	}
+
+	public void setEstadoRequisicao(EstadoRequisicao estadoRequisicao) {
+		this.estadoRequisicao = estadoRequisicao;
+	}
+
+	public RequisicaoTransporte getRequisicaoTransporte() {
+		return requisicaoTransporte;
+	}
+
+	public void setRequisicaoTransporte(RequisicaoTransporte requisicaoTransporte) {
+		this.requisicaoTransporte = requisicaoTransporte;
+	}
+
+	public Missao getMissao() {
+		return missao;
+	}
+
+	public void setMissao(Missao missao) {
+		this.missao = missao;
+	}
+
+	public DpPessoa getResponsavel() {
+		return responsavel;
+	}
+
+	public void setResponsavel(DpPessoa responsavel) {
+		this.responsavel = responsavel;
+	}
+
 	@Override
 	public int compareTo(Andamento o) {
 		int retorno = this.dataAndamento.compareTo(o.dataAndamento);
