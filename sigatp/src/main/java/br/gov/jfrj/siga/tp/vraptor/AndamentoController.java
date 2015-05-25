@@ -10,26 +10,19 @@ import play.data.validation.Valid;
 import play.i18n.Messages;
 import play.mvc.Before;
 import play.mvc.Http;
-import controllers.Application;
-import controllers.AutorizacaoGIAntigo;
-import controllers.Requisicoes;
 import br.com.caelum.vraptor.Path;
 import br.com.caelum.vraptor.Resource;
 import br.com.caelum.vraptor.Result;
 import br.com.caelum.vraptor.Validator;
 import br.com.caelum.vraptor.validator.I18nMessage;
 import br.gov.jfrj.siga.dp.DpPessoa;
-import br.gov.jfrj.siga.tp.auth.AutorizacaoGI;
-import br.gov.jfrj.siga.tp.auth.annotation.RoleAdmin;
-import br.gov.jfrj.siga.tp.auth.annotation.RoleAdminFrota;
-import br.gov.jfrj.siga.tp.auth.annotation.RoleAdminMissao;
-import br.gov.jfrj.siga.tp.auth.annotation.RoleAprovador;
 import br.gov.jfrj.siga.tp.model.Andamento;
 import br.gov.jfrj.siga.tp.model.EstadoRequisicao;
 import br.gov.jfrj.siga.tp.model.RequisicaoTransporte;
 import br.gov.jfrj.siga.tp.model.TpDao;
-import br.gov.jfrj.siga.tp.util.MenuMontador;
 import br.gov.jfrj.siga.vraptor.SigaObjects;
+import controllers.Application;
+import controllers.Requisicoes;
 
 @Path("/app/andamento/")
 @Resource
