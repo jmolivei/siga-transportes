@@ -7,8 +7,8 @@
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 <%@ taglib prefix="sigatp" tagdir="/WEB-INF/tags/"%>
 
-<jsp:include page="../tags/calendario.jsp" />
-<jsp:include page="../tags/decimal.jsp" />
+<sigatp:calendario/>
+<sigatp:decimal/>
 
 <siga:pagina titulo="Transportes">
 	<div class="gt-bd clearfix">

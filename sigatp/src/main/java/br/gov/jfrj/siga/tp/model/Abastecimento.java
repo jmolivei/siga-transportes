@@ -30,7 +30,7 @@ import org.hibernate.validator.constraints.NotEmpty;
 import br.gov.jfrj.siga.dp.CpOrgaoUsuario;
 import br.gov.jfrj.siga.dp.DpPessoa;
 import br.gov.jfrj.siga.model.ActiveRecord;
-import br.gov.jfrj.siga.validation.ValidarAnoData;
+import br.gov.jfrj.siga.tp.validation.annotation.Data;
 
 @SuppressWarnings("serial")
 @Entity
@@ -46,7 +46,7 @@ public class Abastecimento extends TpModel implements Comparable<Abastecimento> 
 	private Long id;
 
 	@NotNull
-	@ValidarAnoData(descricaoCampo="Data/Hora")
+	@Data(descricaoCampo="dataHora")
 	private Calendar dataHora;
 
 	@ManyToOne
@@ -59,13 +59,13 @@ public class Abastecimento extends TpModel implements Comparable<Abastecimento> 
 
 	@NotNull
 	@Min(value=1, message="abastecimento.quantidadeEmLitros.min")
-	private double quantidadeEmLitros;
+	private Double quantidadeEmLitros;
 	
 	@NotNull
-	private double precoPorLitro;
+	private Double precoPorLitro;
 	
 	@NotNull
-	private double valorTotalDaNotaFiscal;
+	private Double valorTotalDaNotaFiscal;
 	
 	@NotNull
 	@NotEmpty
@@ -83,13 +83,13 @@ public class Abastecimento extends TpModel implements Comparable<Abastecimento> 
 	private NivelDeCombustivel nivelDeCombustivel;
 	
 	@NotNull
-	private double odometroEmKm;
+	private Double odometroEmKm;
 	
 	@NotNull
-	private double distanciaPercorridaEmKm;
-	
+	private Double distanciaPercorridaEmKm;
+
 	@NotNull
-	private double consumoMedioEmKmPorLitro;
+	private Double consumoMedioEmKmPorLitro;
 	
  	@Audited(targetAuditMode = RelationTargetAuditMode.NOT_AUDITED)
 	@ManyToOne
@@ -106,11 +106,11 @@ public class Abastecimento extends TpModel implements Comparable<Abastecimento> 
 	@JoinColumn(name = "ID_ORGAO_USU")
 	private CpOrgaoUsuario orgao;
 
- 	public String formataValorExponencialParaDecimal(double number) {
+ 	public String formataValorExponencialParaDecimal(Double number) {
 		return BigDecimal.valueOf((Double) number).toPlainString();
 	}
 
- 	public String formataMoedaBrasileiraSemSimbolo(double number) {
+ 	public String formataMoedaBrasileiraSemSimbolo(Double number) {
 		Locale defaultLocale = new Locale("pt", "BR", "BRL");
 		NumberFormat nf = NumberFormat.getCurrencyInstance(defaultLocale);
 		String moeda =  nf.format(number).replace("R$", "").trim();
@@ -149,27 +149,27 @@ public class Abastecimento extends TpModel implements Comparable<Abastecimento> 
 		this.tipoDeCombustivel = tipoDeCombustivel;
 	}
 
-	public double getQuantidadeEmLitros() {
+	public Double getQuantidadeEmLitros() {
 		return quantidadeEmLitros;
 	}
 
-	public void setQuantidadeEmLitros(double quantidadeEmLitros) {
+	public void setQuantidadeEmLitros(Double quantidadeEmLitros) {
 		this.quantidadeEmLitros = quantidadeEmLitros;
 	}
 
-	public double getPrecoPorLitro() {
+	public Double getPrecoPorLitro() {
 		return precoPorLitro;
 	}
 
-	public void setPrecoPorLitro(double precoPorLitro) {
+	public void setPrecoPorLitro(Double precoPorLitro) {
 		this.precoPorLitro = precoPorLitro;
 	}
 
-	public double getValorTotalDaNotaFiscal() {
+	public Double getValorTotalDaNotaFiscal() {
 		return valorTotalDaNotaFiscal;
 	}
 
-	public void setValorTotalDaNotaFiscal(double valorTotalDaNotaFiscal) {
+	public void setValorTotalDaNotaFiscal(Double valorTotalDaNotaFiscal) {
 		this.valorTotalDaNotaFiscal = valorTotalDaNotaFiscal;
 	}
 
@@ -205,27 +205,27 @@ public class Abastecimento extends TpModel implements Comparable<Abastecimento> 
 		this.nivelDeCombustivel = nivelDeCombustivel;
 	}
 
-	public double getOdometroEmKm() {
+	public Double getOdometroEmKm() {
 		return odometroEmKm;
 	}
 
-	public void setOdometroEmKm(double odometroEmKm) {
+	public void setOdometroEmKm(Double odometroEmKm) {
 		this.odometroEmKm = odometroEmKm;
 	}
 
-	public double getDistanciaPercorridaEmKm() {
+	public Double getDistanciaPercorridaEmKm() {
 		return distanciaPercorridaEmKm;
 	}
 
-	public void setDistanciaPercorridaEmKm(double distanciaPercorridaEmKm) {
+	public void setDistanciaPercorridaEmKm(Double distanciaPercorridaEmKm) {
 		this.distanciaPercorridaEmKm = distanciaPercorridaEmKm;
 	}
 
-	public double getConsumoMedioEmKmPorLitro() {
+	public Double getConsumoMedioEmKmPorLitro() {
 		return consumoMedioEmKmPorLitro;
 	}
 
-	public void setConsumoMedioEmKmPorLitro(double consumoMedioEmKmPorLitro) {
+	public void setConsumoMedioEmKmPorLitro(Double consumoMedioEmKmPorLitro) {
 		this.consumoMedioEmKmPorLitro = consumoMedioEmKmPorLitro;
 	}
 
@@ -253,6 +253,7 @@ public class Abastecimento extends TpModel implements Comparable<Abastecimento> 
 		this.orgao = orgao;
 	}
 
+	@SuppressWarnings("unchecked")
 	public static List<Abastecimento> listarTodos() {
 		List<Abastecimento> abastecimentos = Abastecimento.AR.findAll();
 		Collections.sort(abastecimentos, Collections.reverseOrder());
@@ -283,28 +284,6 @@ public class Abastecimento extends TpModel implements Comparable<Abastecimento> 
 		this.nivelDeCombustivel = NivelDeCombustivel.I;
 	}
 
-	public Abastecimento(Long id, Calendar dataHora, Fornecedor fornecedor,
-			TipoDeCombustivel tipoDeCombustivel, double quantidadeEmLitros,
-			double precoPorLitro, double valorTotalDaNotaFiscal,
-			String numeroDaNotaFiscal, Veiculo veiculo, Condutor condutor, 
-			NivelDeCombustivel nivelDeCombustivel, double odometroEmKm,
-			double distanciaPercorridaEmKm, double consumoMedioEmKmPorLitro) {
-		super();
-		this.id = id;
-		this.dataHora = dataHora;
-		this.fornecedor = fornecedor;
-		this.tipoDeCombustivel = tipoDeCombustivel;
-		this.quantidadeEmLitros = quantidadeEmLitros;
-		this.precoPorLitro = precoPorLitro;
-		this.valorTotalDaNotaFiscal = valorTotalDaNotaFiscal;
-		this.numeroDaNotaFiscal = numeroDaNotaFiscal;
-		this.veiculo = veiculo;
-		this.condutor = condutor;
-		this.nivelDeCombustivel = nivelDeCombustivel;
-		this.odometroEmKm = odometroEmKm;
-		this.distanciaPercorridaEmKm = distanciaPercorridaEmKm;
-		this.consumoMedioEmKmPorLitro = consumoMedioEmKmPorLitro;
-	}
 
 	@Override
 	public int compareTo(Abastecimento o) {
@@ -317,6 +296,7 @@ public class Abastecimento extends TpModel implements Comparable<Abastecimento> 
 		return abastecimentos;
 	}
 	
+	@SuppressWarnings("unchecked")
 	public static List<Abastecimento> listarParaAdminGabinete(DpPessoa admin) {
 		List<Abastecimento> retorno;
 		String query = "select a from Abastecimento a "
@@ -329,7 +309,7 @@ public class Abastecimento extends TpModel implements Comparable<Abastecimento> 
 		
 		Query qry = AR.em().createQuery(query);
 		try {
-			retorno = (List<Abastecimento>) qry.getResultList();
+			retorno = ((List<Abastecimento>) qry.getResultList());
 		} catch(NoResultException ex) {
 			retorno =null;
 		}
@@ -337,6 +317,7 @@ public class Abastecimento extends TpModel implements Comparable<Abastecimento> 
 		return retorno;
 	}
 
+	@SuppressWarnings("unchecked")
 	public static List<Abastecimento> listarParaAgente(DpPessoa agente) {
 		List<Abastecimento> retorno;
 		String query = "select a from Abastecimento a "
@@ -350,7 +331,7 @@ public class Abastecimento extends TpModel implements Comparable<Abastecimento> 
 				 
 		Query qry = AR.em().createQuery(query);
 		try {
-			retorno = (List<Abastecimento>) qry.getResultList();
+			retorno = ((List<Abastecimento>) qry.getResultList());
 		} catch(NoResultException ex) {
 			retorno =null;
 		}
@@ -358,6 +339,7 @@ public class Abastecimento extends TpModel implements Comparable<Abastecimento> 
 		return retorno;
 	}
 
+	@SuppressWarnings("unchecked")
 	public static List<Abastecimento> listarTodos(DpPessoa admin) {
 		List<Abastecimento> retorno;
 		String query = "select a from Abastecimento a "
@@ -365,7 +347,7 @@ public class Abastecimento extends TpModel implements Comparable<Abastecimento> 
 				 
 		Query qry = AR.em().createQuery(query);
 		try {
-			retorno = (List<Abastecimento>) qry.getResultList();
+			retorno = ((List<Abastecimento>) qry.getResultList());
 		} catch(NoResultException ex) {
 			retorno =null;
 		}
