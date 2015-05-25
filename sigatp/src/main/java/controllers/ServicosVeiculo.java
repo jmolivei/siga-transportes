@@ -215,18 +215,18 @@ public class ServicosVeiculo extends Controller {
 	
 	private static RequisicaoTransporte gravarRequisicao(ServicoVeiculo servico) throws Exception {
 		RequisicaoTransporte requisicaoTransporte = new RequisicaoTransporte();
-		requisicaoTransporte.cpOrgaoUsuario = AutorizacaoGIAntigo.titular().getOrgaoUsuario();
-		requisicaoTransporte.setSequence(requisicaoTransporte.cpOrgaoUsuario);
-		requisicaoTransporte.solicitante = AutorizacaoGIAntigo.cadastrante();
-		requisicaoTransporte.dataHoraSaidaPrevista = servico.dataHoraInicioPrevisto;
-		requisicaoTransporte.dataHoraRetornoPrevisto = servico.dataHoraFimPrevisto;
-		requisicaoTransporte.finalidade = servico.descricao;
-		requisicaoTransporte.passageiros = "Requisicao para Servico";
-		requisicaoTransporte.itinerarios = "Requisicao para Servico";
-		requisicaoTransporte.cpComplexo = AutorizacaoGIAntigo.recuperarComplexoPadrao();
+		requisicaoTransporte.setCpOrgaoUsuario(AutorizacaoGIAntigo.titular().getOrgaoUsuario());
+		requisicaoTransporte.setSequence(requisicaoTransporte.getCpOrgaoUsuario());
+		requisicaoTransporte.setSolicitante(AutorizacaoGIAntigo.cadastrante());
+		requisicaoTransporte.setDataHoraSaidaPrevista(servico.dataHoraInicioPrevisto);
+		requisicaoTransporte.setDataHoraRetornoPrevisto(servico.dataHoraFimPrevisto);
+		requisicaoTransporte.setFinalidade(servico.descricao);
+		requisicaoTransporte.setPassageiros("Requisicao para Servico");
+		requisicaoTransporte.setItinerarios("Requisicao para Servico");
+		requisicaoTransporte.setCpComplexo(AutorizacaoGIAntigo.recuperarComplexoPadrao());
 
-		if(requisicaoTransporte.id == 0) {
-			requisicaoTransporte.dataHora = Calendar.getInstance();
+		if(requisicaoTransporte.getId() == 0) {
+			requisicaoTransporte.setDataHora(Calendar.getInstance());
 		}
 		
 		requisicaoTransporte.save();

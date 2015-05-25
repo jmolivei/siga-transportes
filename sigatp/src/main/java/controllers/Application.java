@@ -308,12 +308,12 @@ public class Application extends Controller {
 							ultimos7dias.add(Calendar.DATE, -7);
 							RequisicaoTransporte requisicao = ((RequisicaoTransporte) objeto);
 							if (descricao.equals("")) {
-								return (requisicao.dataHoraSaidaPrevista.after(ultimos7dias) && 
-										requisicao.cpOrgaoUsuario.getIdOrgaoUsu().equals(AutorizacaoGIAntigo.titular().getOrgaoUsuario().getIdOrgaoUsu()));
+								return (requisicao.getDataHoraSaidaPrevista().after(ultimos7dias) && 
+										requisicao.getCpOrgaoUsuario().getIdOrgaoUsu().equals(AutorizacaoGIAntigo.titular().getOrgaoUsuario().getIdOrgaoUsu()));
 							} else {
-								return (requisicao.ultimoEstado.getDescricao().equals(descricao) &&
-										requisicao.dataHoraSaidaPrevista.after(ultimos7dias) && 
-										requisicao.cpOrgaoUsuario.getIdOrgaoUsu().equals(AutorizacaoGIAntigo.titular().getOrgaoUsuario().getIdOrgaoUsu()));
+								return (requisicao.getUltimoEstado().getDescricao().equals(descricao) &&
+										requisicao.getDataHoraSaidaPrevista().after(ultimos7dias) && 
+										requisicao.getCpOrgaoUsuario().getIdOrgaoUsu().equals(AutorizacaoGIAntigo.titular().getOrgaoUsuario().getIdOrgaoUsu()));
 							}
 						}
 						if (objeto instanceof ServicoVeiculo) {

@@ -99,7 +99,7 @@ public class EmailNotificacoes extends Job<Object>  {
 				List<RequisicaoTransporte> requisicoesFiltradas = 
 						Lists.newArrayList(Iterables.filter(requisicoes, new Predicate<RequisicaoTransporte>() {
 							public boolean apply(RequisicaoTransporte requisicao) {
-								return requisicao.dataHoraSaidaPrevista.after(calendar);
+								return requisicao.getDataHoraSaidaPrevista().after(calendar);
 							}
 						}
 				));	
@@ -172,7 +172,7 @@ public class EmailNotificacoes extends Job<Object>  {
 			aprovador = item.getUltimoAndamento().getResponsavel();
 			int index = Arrays.binarySearch(arrayAprovador, aprovador, comp);
 			DpPessoa chave = lstAprovadores.get(index);
-			String sequencia = item.getSequence() + " " + item.id + ",";
+			String sequencia = item.getSequence() + " " + item.getId() + ",";
 
 			if (dadosAprovador.containsKey(lstAprovadores.get(index))) {
 				dadosAprovador.put(chave, dadosAprovador.get(chave) + sequencia);

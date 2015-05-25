@@ -128,8 +128,8 @@ public class RelatoriosRanking extends Controller {
 				setMissao.add((Missao) Missao.AR.findById(missao.getId()));
 
 				requisicao = new RequisicaoTransporte();
-				requisicao.id = Long.parseLong(lista.get(i)[2].toString());
-				setRequisicao.add((RequisicaoTransporte) RequisicaoTransporte.AR.findById(requisicao.id));
+				requisicao.setId(Long.parseLong(lista.get(i)[2].toString()));
+				setRequisicao.add((RequisicaoTransporte) RequisicaoTransporte.AR.findById(requisicao.getId()));
 
 				if (i < lista.size() - 1) {
 					idProximoCondutor = Long.parseLong(lista.get(i + 1)[0].toString());
@@ -193,8 +193,8 @@ public class RelatoriosRanking extends Controller {
 				veiculo.setId(Long.parseLong(lista.get(i)[0].toString()));
 
 				requisicao = new RequisicaoTransporte();
-				requisicao.id = Long.parseLong(lista.get(i)[1].toString());
-				setRequisicao.add((RequisicaoTransporte) RequisicaoTransporte.AR.findById(requisicao.id));
+				requisicao.setId(Long.parseLong(lista.get(i)[1].toString()));
+				setRequisicao.add((RequisicaoTransporte) RequisicaoTransporte.AR.findById(requisicao.getId()));
 
 				if (i < lista.size() - 1) {
 					idProximoVeiculo = Long.parseLong(lista.get(i + 1)[0].toString());
@@ -284,7 +284,7 @@ public class RelatoriosRanking extends Controller {
 				if (lista.size() > 0) {
 					List<RequisicaoTransporte> requisicoesFiltradas = Lists.newArrayList(Iterables.filter(lista, new Predicate<RequisicaoTransporte>() {
 						public boolean apply(RequisicaoTransporte requisicao) {
-							return requisicao.tiposDePassageiro.contains(tipoPassageiro);
+							return requisicao.getTiposDePassageiro().contains(tipoPassageiro);
 						}
 					}));
 

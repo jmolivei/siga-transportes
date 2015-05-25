@@ -17,7 +17,7 @@ public class RequisicaoTransporteRest {
 	private RequisicaoTransporte requisicaoTransporte;
 	
 	public Long getId() {
-		return requisicaoTransporte.id;
+		return requisicaoTransporte.getId();
 	}
 	
 	public String getSequence() {
@@ -26,19 +26,19 @@ public class RequisicaoTransporteRest {
 	
 	public String getDataHoraSaidaPrevista() {
 		SimpleDateFormat formatar = new SimpleDateFormat("dd/MM/yyyy HH:mm");
-		return formatar.format(requisicaoTransporte.dataHoraSaidaPrevista.getTime());
+		return formatar.format(requisicaoTransporte.getDataHoraSaidaPrevista().getTime());
 	}
 
 	public String getDataHoraRetornoPrevisto() {
-		if(requisicaoTransporte.dataHoraRetornoPrevisto == null) {
+		if(requisicaoTransporte.getDataHoraRetornoPrevisto() == null) {
 			return null;
 		}
 		SimpleDateFormat formatar = new SimpleDateFormat("dd/MM/yyyy HH:mm");
-		return formatar.format(requisicaoTransporte.dataHoraRetornoPrevisto.getTime());
+		return formatar.format(requisicaoTransporte.getDataHoraRetornoPrevisto().getTime());
 	}
 	
 	public String getFinalidade() {
-		return requisicaoTransporte.tipoFinalidade.getDescricao();
+		return requisicaoTransporte.getTipoFinalidade().getDescricao();
 	}
 
 	public static RequisicaoTransporteRest recuperar(Long id) throws Exception {
@@ -60,16 +60,16 @@ public class RequisicaoTransporteRest {
 	}
 	
 	public String getDetalhesFinalidade() {
-		return requisicaoTransporte.finalidade;
+		return requisicaoTransporte.getFinalidade();
 	}
 	
 	public String getPassageiros() {
-		return requisicaoTransporte.passageiros;
+		return requisicaoTransporte.getPassageiros();
 	}
 	
 	public String[] getTiposDePassageiros() {
 		List<String> retorno = new ArrayList<String>();
-		for (Iterator<TipoDePassageiro> it = requisicaoTransporte.tiposDePassageiro.iterator(); it.hasNext();) {
+		for (Iterator<TipoDePassageiro> it = requisicaoTransporte.getTiposDePassageiro().iterator(); it.hasNext();) {
 			TipoDePassageiro tp = (TipoDePassageiro) it.next();
 			retorno.add(tp.name());
 		}
@@ -77,7 +77,7 @@ public class RequisicaoTransporteRest {
 	}
 	
 	public Integer getNumeroDePassageiros() {
-		return requisicaoTransporte.numeroDePassageiros;
+		return requisicaoTransporte.getNumeroDePassageiros();
 	}
 
 	public String getUltimoAndamento() {
@@ -85,7 +85,7 @@ public class RequisicaoTransporteRest {
 	}
 	
 	public Long getIdInicialDpPessoaSolicitante() {
-		return requisicaoTransporte.solicitante.getIdInicial();
+		return requisicaoTransporte.getSolicitante().getIdInicial();
 	}
 	
 	// fim proxy propriedades
@@ -93,20 +93,20 @@ public class RequisicaoTransporteRest {
 	// inicio procedimentos
 	
 	public static void converterParaRequisicao(RequisicaoTransporte requisicaoAPreencher, Map<String, String> map) throws Exception {
-		requisicaoAPreencher.dataHoraSaidaPrevista = converterParaData(map.get("dataHoraSaidaPrevista"));
-		requisicaoAPreencher.dataHoraRetornoPrevisto = converterParaData(map.get("dataHoraRetornoPrevisto"));
-		requisicaoAPreencher.tipoFinalidade = FinalidadeRequisicao.buscar(map.get("finalidade"));
-		requisicaoAPreencher.finalidade = map.get("detalhesFinalidade");
-		requisicaoAPreencher.itinerarios = map.get("itinerarios");
-		requisicaoAPreencher.tiposDePassageiro = converterParaTiposPassageiros(tratarTiposPassageiros(map.get("tiposDePassageiros")));
-		requisicaoAPreencher.numeroDePassageiros = Integer.parseInt(map.get("numeroDePassageiros"));
-		requisicaoAPreencher.passageiros = map.get("passageiros");
+		requisicaoAPreencher.setDataHoraSaidaPrevista(converterParaData(map.get("dataHoraSaidaPrevista")));
+		requisicaoAPreencher.setDataHoraRetornoPrevisto(converterParaData(map.get("dataHoraRetornoPrevisto")));
+		requisicaoAPreencher.setTipoFinalidade(FinalidadeRequisicao.buscar(map.get("finalidade")));
+		requisicaoAPreencher.setFinalidade(map.get("detalhesFinalidade"));
+		requisicaoAPreencher.setItinerarios(map.get("itinerarios"));
+		requisicaoAPreencher.setTiposDePassageiro(converterParaTiposPassageiros(tratarTiposPassageiros(map.get("tiposDePassageiros"))));
+		requisicaoAPreencher.setNumeroDePassageiros(Integer.parseInt(map.get("numeroDePassageiros")));				
+		requisicaoAPreencher.setPassageiros(map.get("passageiros"));
 		
-		if(requisicaoAPreencher.id.equals(new Long(0))) {
-			requisicaoAPreencher.idSolicitante = Long.parseLong(map.get("idInicialDpPessoaSolicitante"));
+		if(requisicaoAPreencher.getId().equals(new Long(0))) {
+			requisicaoAPreencher.setIdSolicitante(Long.parseLong(map.get("idInicialDpPessoaSolicitante")));
 		}
 		
-		requisicaoAPreencher.origemExterna = true;
+		requisicaoAPreencher.setOrigemExterna(true);
 	}
 	
 	private static List<TipoDePassageiro> converterParaTiposPassageiros(String[] tipos) {

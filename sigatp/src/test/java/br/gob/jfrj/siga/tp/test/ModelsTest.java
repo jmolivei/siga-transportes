@@ -417,18 +417,18 @@ public class ModelsTest {
 	@Test
 	public void incluiRequisicoes() throws Exception {
 		CpOrgaoUsuario cpOrgaoUsuario = CpOrgaoUsuario.AR.findById(Long.valueOf(3));
-		requisicaoTransporte1.cpOrgaoUsuario = cpOrgaoUsuario;
-		requisicaoTransporte1.dataHora = new GregorianCalendar(2014, Calendar.JANUARY, 11, 8, 1);
-		requisicaoTransporte1.dataHoraSaidaPrevista = new GregorianCalendar(2014, Calendar.JANUARY, 11, 13, 10);
-		requisicaoTransporte1.dataHoraRetornoPrevisto = new GregorianCalendar(2014, Calendar.JANUARY, 11, 15, 10);
-		requisicaoTransporte1.finalidade = "CURSO EXTERNO";
-		requisicaoTransporte1.itinerarios = "RUA DO ACRE - AV.ALMEIRANTE BARROSO";
-		requisicaoTransporte1.passageiros = "BAYLON, FERNANDO, PERALBA";
+		requisicaoTransporte1.setCpOrgaoUsuario(cpOrgaoUsuario);
+		requisicaoTransporte1.setDataHora(new GregorianCalendar(2014, Calendar.JANUARY, 11, 8, 1));
+		requisicaoTransporte1.setDataHoraSaidaPrevista(new GregorianCalendar(2014, Calendar.JANUARY, 11, 13, 10));
+		requisicaoTransporte1.setDataHoraRetornoPrevisto(new GregorianCalendar(2014, Calendar.JANUARY, 11, 15, 10));
+		requisicaoTransporte1.setFinalidade("CURSO EXTERNO");
+		requisicaoTransporte1.setItinerarios("RUA DO ACRE - AV.ALMEIRANTE BARROSO");
+		requisicaoTransporte1.setPassageiros("BAYLON, FERNANDO, PERALBA");
 		requisicaoTransporte1.setSequence(cpOrgaoUsuario);
 
 		requisicaoTransporte1.save();
 		requisicaoTransporte1.refresh();
-		Assert.assertNotSame(new Long(0), requisicaoTransporte1.id);
+		Assert.assertNotSame(new Long(0), requisicaoTransporte1.getId());
 
 		andamento1.setDescricao("Nova requisição");
 		andamento1.setDataAndamento(Calendar.getInstance());
@@ -436,17 +436,17 @@ public class ModelsTest {
 		andamento1.setRequisicaoTransporte(requisicaoTransporte1);
 		andamento1.save();
 
-		requisicaoTransporte2.cpOrgaoUsuario = cpOrgaoUsuario;
-		requisicaoTransporte2.dataHora = new GregorianCalendar(2014, Calendar.JANUARY, 12, 8, 1);
-		requisicaoTransporte2.dataHoraSaidaPrevista = new GregorianCalendar(2014, Calendar.JANUARY, 12, 13, 10);
-		requisicaoTransporte2.dataHoraRetornoPrevisto = new GregorianCalendar(2014, Calendar.JANUARY, 12, 15, 10);
-		requisicaoTransporte2.finalidade = "CONGRESSO EM BRASILIA";
-		requisicaoTransporte2.itinerarios = "RUA DO ACRE - AEROPORTO SANTOS DUMONT";
-		requisicaoTransporte2.passageiros = "PERALBA, DR.PAULO";
+		requisicaoTransporte2.setCpOrgaoUsuario(cpOrgaoUsuario);
+		requisicaoTransporte2.setDataHora(new GregorianCalendar(2014, Calendar.JANUARY, 11, 8, 1));
+		requisicaoTransporte2.setDataHoraSaidaPrevista(new GregorianCalendar(2014, Calendar.JANUARY, 11, 13, 10));
+		requisicaoTransporte2.setDataHoraRetornoPrevisto(new GregorianCalendar(2014, Calendar.JANUARY, 11, 15, 10));
+		requisicaoTransporte2.setFinalidade("CONGRESSO EM BRASILIA");
+		requisicaoTransporte2.setItinerarios("RUA DO ACRE - AEROPORTO SANTOS DUMONT");
+		requisicaoTransporte2.setPassageiros("PERALBA, DR.PAULO");
 
 		requisicaoTransporte2.save();
 		requisicaoTransporte2.refresh();
-		Assert.assertNotSame(new Long(0), requisicaoTransporte2.id);
+		Assert.assertNotSame(new Long(0), requisicaoTransporte2.getId());
 
 		andamento2.setDescricao("Nova requisição");
 		andamento2.setDataAndamento(Calendar.getInstance());
@@ -454,17 +454,17 @@ public class ModelsTest {
 		andamento2.setRequisicaoTransporte(requisicaoTransporte2); 
 		andamento2.save();
 
-		requisicaoTransporte3.cpOrgaoUsuario = cpOrgaoUsuario;
-		requisicaoTransporte3.dataHora = new GregorianCalendar(2014, Calendar.JANUARY, 12, 8, 1);
-		requisicaoTransporte3.dataHoraSaidaPrevista = new GregorianCalendar(2014, Calendar.JANUARY, 12, 13, 10);
-		requisicaoTransporte3.dataHoraRetornoPrevisto = new GregorianCalendar(2014, Calendar.JANUARY, 12, 15, 10);
-		requisicaoTransporte3.finalidade = "CONGRESSO EM FORTALEZA";
-		requisicaoTransporte3.itinerarios = "RUA DO ACRE - AEROPORTO GALEAO";
-		requisicaoTransporte3.passageiros = "ALBERTO, KATIA";
+		requisicaoTransporte3.setCpOrgaoUsuario(cpOrgaoUsuario);
+		requisicaoTransporte3.setDataHora(new GregorianCalendar(2014, Calendar.JANUARY, 11, 8, 1));
+		requisicaoTransporte3.setDataHoraSaidaPrevista(new GregorianCalendar(2014, Calendar.JANUARY, 11, 13, 10));
+		requisicaoTransporte3.setDataHoraRetornoPrevisto(new GregorianCalendar(2014, Calendar.JANUARY, 11, 15, 10));
+		requisicaoTransporte3.setFinalidade("CONGRESSO EM FORTALEZA");
+		requisicaoTransporte3.setItinerarios("RUA DO ACRE - AEROPORTO GALEAO");
+		requisicaoTransporte3.setPassageiros("ALBERTO, KATIA");
 		requisicaoTransporte1.setSequence(cpOrgaoUsuario);
 		requisicaoTransporte3.save();
 		requisicaoTransporte3.refresh();
-		Assert.assertNotSame(new Long(0), requisicaoTransporte3.id);
+		Assert.assertNotSame(new Long(0), requisicaoTransporte3.getId());
 
 		andamento3.setDescricao("Nova requisição");
 		andamento3.setDataAndamento(Calendar.getInstance());
@@ -472,17 +472,17 @@ public class ModelsTest {
 		andamento3.setRequisicaoTransporte(requisicaoTransporte3);
 		andamento3.save();
 
-		requisicaoTransporte7.cpOrgaoUsuario = cpOrgaoUsuario;
-		requisicaoTransporte7.dataHora = new GregorianCalendar(2014, Calendar.JANUARY, 11, 8, 1);
-		requisicaoTransporte7.dataHoraSaidaPrevista = new GregorianCalendar(2014, Calendar.JANUARY, 12, 13, 10);
-		requisicaoTransporte7.dataHoraRetornoPrevisto = new GregorianCalendar(2014, Calendar.JANUARY, 12, 15, 10);
-		requisicaoTransporte7.finalidade = "VOLTA PARA CASA";
-		requisicaoTransporte7.itinerarios = "RUA DO ACRE - RUA URUGUAI";
-		requisicaoTransporte7.passageiros = "FERNANDO";
+		requisicaoTransporte7.setCpOrgaoUsuario(cpOrgaoUsuario);
+		requisicaoTransporte7.setDataHora(new GregorianCalendar(2014, Calendar.JANUARY, 11, 8, 1));
+		requisicaoTransporte7.setDataHoraSaidaPrevista(new GregorianCalendar(2014, Calendar.JANUARY, 11, 13, 10));
+		requisicaoTransporte7.setDataHoraRetornoPrevisto(new GregorianCalendar(2014, Calendar.JANUARY, 11, 15, 10));
+		requisicaoTransporte7.setFinalidade("VOLTA PARA CASA");
+		requisicaoTransporte7.setItinerarios("RUA DO ACRE - RUA URUGUAI");
+		requisicaoTransporte7.setPassageiros("FERNANDO");
 		requisicaoTransporte1.setSequence(cpOrgaoUsuario);
 		requisicaoTransporte7.save();
 		requisicaoTransporte7.refresh();
-		Assert.assertNotSame(new Long(0), requisicaoTransporte7.id);
+		Assert.assertNotSame(new Long(0), requisicaoTransporte7.getId());
 
 		andamento7.setDescricao("Nova requisição");
 		andamento7.setDataAndamento(Calendar.getInstance());
@@ -490,17 +490,17 @@ public class ModelsTest {
 		andamento7.setRequisicaoTransporte(requisicaoTransporte7);
 		andamento7.save();
 
-		requisicaoTransporte8.cpOrgaoUsuario = cpOrgaoUsuario;
-		requisicaoTransporte8.dataHora = new GregorianCalendar(2014, Calendar.JANUARY, 12, 8, 1);
-		requisicaoTransporte8.dataHoraSaidaPrevista = new GregorianCalendar(2014, Calendar.JANUARY, 12, 13, 10);
-		requisicaoTransporte8.dataHoraRetornoPrevisto = new GregorianCalendar(2014, Calendar.JANUARY, 12, 15, 10);
-		requisicaoTransporte8.finalidade = "VOLTA PARA CASA";
-		requisicaoTransporte8.itinerarios = "RUA DO ACRE - RUA VOLUNTARIOS DA PATRIA";
-		requisicaoTransporte8.passageiros = "BAYLON,PERALBA";
+		requisicaoTransporte8.setCpOrgaoUsuario(cpOrgaoUsuario);
+		requisicaoTransporte8.setDataHora(new GregorianCalendar(2014, Calendar.JANUARY, 11, 8, 1));
+		requisicaoTransporte8.setDataHoraSaidaPrevista(new GregorianCalendar(2014, Calendar.JANUARY, 11, 13, 10));
+		requisicaoTransporte8.setDataHoraRetornoPrevisto(new GregorianCalendar(2014, Calendar.JANUARY, 11, 15, 10));
+		requisicaoTransporte8.setFinalidade("VOLTA PARA CASA");
+		requisicaoTransporte8.setItinerarios("RUA DO ACRE - RUA VOLUNTARIOS DA PATRIA");
+		requisicaoTransporte8.setPassageiros("BAYLON,PERALBA");
 		requisicaoTransporte1.setSequence(cpOrgaoUsuario);
 		requisicaoTransporte8.save();
 		requisicaoTransporte8.refresh();
-		Assert.assertNotSame(new Long(0), requisicaoTransporte8.id);
+		Assert.assertNotSame(new Long(0), requisicaoTransporte8.getId());
 
 		andamento8.setDescricao("Nova requisição");
 		andamento8.setDataAndamento(Calendar.getInstance());
@@ -509,17 +509,17 @@ public class ModelsTest {
 		andamento8.save();
 		
 
-		requisicaoTransporte9.cpOrgaoUsuario = cpOrgaoUsuario;
-		requisicaoTransporte9.dataHora = new GregorianCalendar(2014, Calendar.JANUARY, 12, 8, 1);
-		requisicaoTransporte9.dataHoraSaidaPrevista = new GregorianCalendar(2014, Calendar.JANUARY, 12, 13, 10);
-		requisicaoTransporte9.dataHoraRetornoPrevisto = new GregorianCalendar(2014, Calendar.JANUARY, 12, 15, 10);
-		requisicaoTransporte9.finalidade = "VOLTA PARA CASA";
-		requisicaoTransporte9.itinerarios = "RUA DO ACRE - VILA DA PENHA";
-		requisicaoTransporte9.passageiros = "ALBERTO, KATIA";
+		requisicaoTransporte9.setCpOrgaoUsuario(cpOrgaoUsuario);
+		requisicaoTransporte9.setDataHora(new GregorianCalendar(2014, Calendar.JANUARY, 11, 8, 1));
+		requisicaoTransporte9.setDataHoraSaidaPrevista(new GregorianCalendar(2014, Calendar.JANUARY, 11, 13, 10));
+		requisicaoTransporte9.setDataHoraRetornoPrevisto(new GregorianCalendar(2014, Calendar.JANUARY, 11, 15, 10));
+		requisicaoTransporte9.setFinalidade("VOLTA PARA CASA");
+		requisicaoTransporte9.setItinerarios("RUA DO ACRE - VILA DA PENHA");
+		requisicaoTransporte9.setPassageiros("ALBERTO, KATIA");
 		requisicaoTransporte1.setSequence(cpOrgaoUsuario);
 		requisicaoTransporte9.save();
 		requisicaoTransporte9.refresh();
-		Assert.assertNotSame(new Long(0), requisicaoTransporte9.id);
+		Assert.assertNotSame(new Long(0), requisicaoTransporte9.getId());
 
 		andamento9.setDescricao("Nova requisição");
 		andamento9.setDataAndamento(Calendar.getInstance());
@@ -528,17 +528,17 @@ public class ModelsTest {
 		andamento9.save();
 
 		cpOrgaoUsuario = CpOrgaoUsuario.AR.findById(Long.valueOf(2));
-		requisicaoTransporte4.cpOrgaoUsuario = cpOrgaoUsuario;
-		requisicaoTransporte4.dataHora = new GregorianCalendar(2014, Calendar.JANUARY, 11, 8, 1);
-		requisicaoTransporte4.dataHoraSaidaPrevista = new GregorianCalendar(2014, Calendar.JANUARY, 11, 13, 10);
-		requisicaoTransporte4.dataHoraRetornoPrevisto = new GregorianCalendar(2014, Calendar.JANUARY, 11, 15, 10);
-		requisicaoTransporte4.finalidade = "CURSO TRF";
-		requisicaoTransporte4.itinerarios = "AV.ALMEIRANTE BARROSO-RUA DO ACRE";
-		requisicaoTransporte4.passageiros = "CAROL, DJALMA, ANDERSON";
+		requisicaoTransporte4.setCpOrgaoUsuario(cpOrgaoUsuario);
+		requisicaoTransporte4.setDataHora(new GregorianCalendar(2014, Calendar.JANUARY, 11, 8, 1));
+		requisicaoTransporte4.setDataHoraSaidaPrevista(new GregorianCalendar(2014, Calendar.JANUARY, 11, 13, 10));
+		requisicaoTransporte4.setDataHoraRetornoPrevisto(new GregorianCalendar(2014, Calendar.JANUARY, 11, 15, 10));
+		requisicaoTransporte4.setFinalidade("CURSO TRF");
+		requisicaoTransporte4.setItinerarios("AV.ALMEIRANTE BARROSO-RUA DO ACRE");
+		requisicaoTransporte4.setPassageiros("CAROL, DJALMA, ANDERSON");
 		requisicaoTransporte1.setSequence(cpOrgaoUsuario);
 		requisicaoTransporte4.save();
 		requisicaoTransporte4.refresh();
-		Assert.assertNotSame(new Long(0), requisicaoTransporte4.id);
+		Assert.assertNotSame(new Long(0), requisicaoTransporte4.getId());
 
 		andamento4.setDescricao("Nova requisição");
 		andamento4.setDataAndamento(Calendar.getInstance());
@@ -546,17 +546,17 @@ public class ModelsTest {
 		andamento4.setRequisicaoTransporte(requisicaoTransporte4);
 		andamento4.save();
 
-		requisicaoTransporte5.cpOrgaoUsuario = cpOrgaoUsuario;
-		requisicaoTransporte5.dataHora = new GregorianCalendar(2014, Calendar.JANUARY, 12, 8, 1);
-		requisicaoTransporte5.dataHoraSaidaPrevista = new GregorianCalendar(2014, Calendar.JANUARY, 11, 13, 10);
-		requisicaoTransporte5.dataHoraRetornoPrevisto = new GregorianCalendar(2014, Calendar.JANUARY, 11, 15, 10);
-		requisicaoTransporte5.finalidade = "CURSO TRF";
-		requisicaoTransporte5.itinerarios = "AV.ALMEIRANTE BARROSO-RUA DO ACRE";
-		requisicaoTransporte5.passageiros = "VINICIUS, CARLINHOS";
+		requisicaoTransporte5.setCpOrgaoUsuario(cpOrgaoUsuario);
+		requisicaoTransporte5.setDataHora(new GregorianCalendar(2014, Calendar.JANUARY, 11, 8, 1));
+		requisicaoTransporte5.setDataHoraSaidaPrevista(new GregorianCalendar(2014, Calendar.JANUARY, 11, 13, 10));
+		requisicaoTransporte5.setDataHoraRetornoPrevisto(new GregorianCalendar(2014, Calendar.JANUARY, 11, 15, 10));
+		requisicaoTransporte5.setFinalidade("CURSO TRF");
+		requisicaoTransporte5.setItinerarios("AV.ALMEIRANTE BARROSO-RUA DO ACRE");
+		requisicaoTransporte5.setPassageiros("VINICIUS, CARLINHOS");
 		requisicaoTransporte1.setSequence(cpOrgaoUsuario);
 		requisicaoTransporte5.save();
 		requisicaoTransporte5.refresh();
-		Assert.assertNotSame(new Long(0), requisicaoTransporte5.id);
+		Assert.assertNotSame(new Long(0), requisicaoTransporte5.getId());
 
 		andamento5.setDescricao("Nova requisição");
 		andamento5.setDataAndamento(Calendar.getInstance());
@@ -564,17 +564,17 @@ public class ModelsTest {
 		andamento5.setRequisicaoTransporte(requisicaoTransporte5);
 		andamento5.save();
 
-		requisicaoTransporte6.cpOrgaoUsuario = cpOrgaoUsuario;
-		requisicaoTransporte6.dataHora = new GregorianCalendar(2014, Calendar.JANUARY, 12, 8, 1);
-		requisicaoTransporte6.dataHoraSaidaPrevista = new GregorianCalendar(2014, Calendar.JANUARY, 12, 13, 10);
-		requisicaoTransporte6.dataHoraRetornoPrevisto = new GregorianCalendar(2014, Calendar.JANUARY, 12, 15, 10);
-		requisicaoTransporte6.finalidade = "CONGRESSO EM FORTALEZA";
-		requisicaoTransporte6.itinerarios = "AV.ALMEIRANTE BARROSO - AEROPORTO GALEAO";
-		requisicaoTransporte6.passageiros = "DJALMA, CAROL";
+		requisicaoTransporte6.setCpOrgaoUsuario(cpOrgaoUsuario);
+		requisicaoTransporte6.setDataHora(new GregorianCalendar(2014, Calendar.JANUARY, 11, 8, 1));
+		requisicaoTransporte6.setDataHoraSaidaPrevista(new GregorianCalendar(2014, Calendar.JANUARY, 11, 13, 10));
+		requisicaoTransporte6.setDataHoraRetornoPrevisto(new GregorianCalendar(2014, Calendar.JANUARY, 11, 15, 10));
+		requisicaoTransporte6.setFinalidade("CONGRESSO EM FORTALEZA");
+		requisicaoTransporte6.setItinerarios("AV.ALMEIRANTE BARROSO - AEROPORTO GALEAO");
+		requisicaoTransporte6.setPassageiros("DJALMA, CAROL");
 		requisicaoTransporte1.setSequence(cpOrgaoUsuario);
 		requisicaoTransporte6.save();
 		requisicaoTransporte6.refresh();
-		Assert.assertNotSame(new Long(0), requisicaoTransporte6.id);
+		Assert.assertNotSame(new Long(0), requisicaoTransporte6.getId());
 
 		andamento6.setDescricao("Nova requisição");
 		andamento6.setDataAndamento(Calendar.getInstance());
@@ -583,17 +583,17 @@ public class ModelsTest {
 		andamento6.save();
 
 		cpOrgaoUsuario = CpOrgaoUsuario.AR.findById(Long.valueOf(3));
-		requisicaoTransporte11.cpOrgaoUsuario = cpOrgaoUsuario;
-		requisicaoTransporte11.dataHora = new GregorianCalendar(2014, Calendar.JANUARY, 12, 8, 1);
-		requisicaoTransporte11.dataHoraSaidaPrevista = new GregorianCalendar(2014, Calendar.JANUARY, 13, 13, 10);
-		requisicaoTransporte11.dataHoraRetornoPrevisto = new GregorianCalendar(2014, Calendar.JANUARY, 13, 15, 10);
-		requisicaoTransporte11.finalidade = "VOLTA PARA CASA";
-		requisicaoTransporte11.itinerarios = "RUA DO ACRE - RUA URUGUAI";
-		requisicaoTransporte11.passageiros = "FERNANDO";
+		requisicaoTransporte11.setCpOrgaoUsuario(cpOrgaoUsuario);
+		requisicaoTransporte11.setDataHora(new GregorianCalendar(2014, Calendar.JANUARY, 11, 8, 1));
+		requisicaoTransporte11.setDataHoraSaidaPrevista(new GregorianCalendar(2014, Calendar.JANUARY, 13, 13, 10));
+		requisicaoTransporte11.setDataHoraRetornoPrevisto(new GregorianCalendar(2014, Calendar.JANUARY, 13, 15, 10));
+		requisicaoTransporte11.setFinalidade("VOLTA PARA CASA");
+		requisicaoTransporte11.setItinerarios("RUA DO ACRE - RUA URUGUAI");
+		requisicaoTransporte11.setPassageiros("FERNANDO");
 		requisicaoTransporte1.setSequence(cpOrgaoUsuario);
 		requisicaoTransporte11.save();
 		requisicaoTransporte11.refresh();
-		Assert.assertNotSame(new Long(0), requisicaoTransporte11.id);
+		Assert.assertNotSame(new Long(0), requisicaoTransporte11.getId());
 
 		andamento11.setDescricao("Nova requisição");
 		andamento11.setDataAndamento(Calendar.getInstance());
@@ -601,17 +601,17 @@ public class ModelsTest {
 		andamento11.setRequisicaoTransporte(requisicaoTransporte11);
 		andamento11.save();
 
-		requisicaoTransporte12.cpOrgaoUsuario = cpOrgaoUsuario;
-		requisicaoTransporte12.dataHora = new GregorianCalendar(2014, Calendar.JANUARY, 13, 8, 1);
-		requisicaoTransporte12.dataHoraSaidaPrevista = new GregorianCalendar(2014, Calendar.JANUARY, 13, 16, 10);
-		requisicaoTransporte12.dataHoraRetornoPrevisto = new GregorianCalendar(2014, Calendar.JANUARY, 13, 17, 10);
-		requisicaoTransporte12.finalidade = "VOLTA PARA CASA";
-		requisicaoTransporte12.itinerarios = "RUA DO ACRE - RUA VOLUNTARIOS DA PATRIA";
-		requisicaoTransporte12.passageiros = "BAYLON,PERALBA";
+		requisicaoTransporte12.setCpOrgaoUsuario(cpOrgaoUsuario);
+		requisicaoTransporte12.setDataHora(new GregorianCalendar(2014, Calendar.JANUARY, 13, 8, 1));
+		requisicaoTransporte12.setDataHoraSaidaPrevista(new GregorianCalendar(2014, Calendar.JANUARY, 13, 16, 10));
+		requisicaoTransporte12.setDataHoraRetornoPrevisto(new GregorianCalendar(2014, Calendar.JANUARY, 13, 17, 10));
+		requisicaoTransporte12.setFinalidade("VOLTA PARA CASA");
+		requisicaoTransporte12.setItinerarios("RUA DO ACRE - RUA VOLUNTARIOS DA PATRIA");
+		requisicaoTransporte12.setPassageiros("BAYLON,PERALBA");
 		requisicaoTransporte1.setSequence(cpOrgaoUsuario);
 		requisicaoTransporte12.save();
 		requisicaoTransporte12.refresh();
-		Assert.assertNotSame(new Long(0), requisicaoTransporte12.id);
+		Assert.assertNotSame(new Long(0), requisicaoTransporte12.getId());
 
 		andamento12.setDescricao("Nova requisição");
 		andamento12.setDataAndamento(Calendar.getInstance());
@@ -619,17 +619,17 @@ public class ModelsTest {
 		andamento12.setRequisicaoTransporte(requisicaoTransporte12);
 		andamento12.save();
 
-		requisicaoTransporte13.cpOrgaoUsuario = cpOrgaoUsuario;
-		requisicaoTransporte13.dataHora = new GregorianCalendar(2014, Calendar.JANUARY, 13, 8, 1);
-		requisicaoTransporte13.dataHoraSaidaPrevista = new GregorianCalendar(2014, Calendar.JANUARY, 13, 17, 30);
-		requisicaoTransporte13.dataHoraRetornoPrevisto = new GregorianCalendar(2014, Calendar.JANUARY, 13, 18, 30);
-		requisicaoTransporte13.finalidade = "VOLTA PARA CASA";
-		requisicaoTransporte13.itinerarios = "RUA DO ACRE - VILA DA PENHA";
-		requisicaoTransporte13.passageiros = "ALBERTO, KATIA";
+		requisicaoTransporte13.setCpOrgaoUsuario(cpOrgaoUsuario);
+		requisicaoTransporte13.setDataHora(new GregorianCalendar(2014, Calendar.JANUARY, 13, 8, 1));
+		requisicaoTransporte13.setDataHoraSaidaPrevista(new GregorianCalendar(2014, Calendar.JANUARY, 13, 17, 30));
+		requisicaoTransporte13.setDataHoraRetornoPrevisto(new GregorianCalendar(2014, Calendar.JANUARY, 13, 18, 30));
+		requisicaoTransporte13.setFinalidade("VOLTA PARA CASA");
+		requisicaoTransporte13.setItinerarios("RUA DO ACRE - VILA DA PENHA");
+		requisicaoTransporte13.setPassageiros("ALBERTO, KATIA");
 		requisicaoTransporte1.setSequence(cpOrgaoUsuario);
 		requisicaoTransporte13.save();
 		requisicaoTransporte13.refresh();
-		Assert.assertNotSame(new Long(0), requisicaoTransporte13.id);
+		Assert.assertNotSame(new Long(0), requisicaoTransporte13.getId());
 
 		andamento13.setDescricao("Nova requisição");
 		andamento13.setDataAndamento(Calendar.getInstance());
@@ -640,7 +640,7 @@ public class ModelsTest {
 
 	@Test
 	public void autorizarRequisicao() throws Exception {
-		requisicaoTransporte1 = RequisicaoTransporte.AR.findById(requisicaoTransporte1.id);
+		requisicaoTransporte1 = RequisicaoTransporte.AR.findById(requisicaoTransporte1.getId());
 		requisicaoTransporte1.save();
 		requisicaoTransporte1.refresh();
 
@@ -651,7 +651,7 @@ public class ModelsTest {
 		andamento1.setRequisicaoTransporte(requisicaoTransporte1);
 		andamento1.save();
 
-		requisicaoTransporte2 = RequisicaoTransporte.AR.findById(requisicaoTransporte2.id);
+		requisicaoTransporte2 = RequisicaoTransporte.AR.findById(requisicaoTransporte2.getId());
 		requisicaoTransporte2.save();
 		requisicaoTransporte2.refresh();
 
@@ -662,7 +662,7 @@ public class ModelsTest {
 		andamento2.setRequisicaoTransporte(requisicaoTransporte2);
 		andamento2.save();
 
-		requisicaoTransporte3 = RequisicaoTransporte.AR.findById(requisicaoTransporte3.id);
+		requisicaoTransporte3 = RequisicaoTransporte.AR.findById(requisicaoTransporte3.getId());
 		requisicaoTransporte3.save();
 		requisicaoTransporte3.refresh();
 
@@ -676,7 +676,7 @@ public class ModelsTest {
 
 	@Test
 	public void rejeitarRequisicao() throws Exception {
-		requisicaoTransporte7 = RequisicaoTransporte.AR.findById(requisicaoTransporte7.id);
+		requisicaoTransporte7 = RequisicaoTransporte.AR.findById(requisicaoTransporte7.getId());
 		requisicaoTransporte7.save();
 		requisicaoTransporte7.refresh();
 
@@ -687,7 +687,7 @@ public class ModelsTest {
 		andamento7.setRequisicaoTransporte(requisicaoTransporte7);
 		andamento7.save();
 
-		requisicaoTransporte8 = RequisicaoTransporte.AR.findById(requisicaoTransporte8.id);
+		requisicaoTransporte8 = RequisicaoTransporte.AR.findById(requisicaoTransporte8.getId());
 		requisicaoTransporte8.save();
 		requisicaoTransporte8.refresh();
 
@@ -698,7 +698,7 @@ public class ModelsTest {
 		andamento8.setRequisicaoTransporte(requisicaoTransporte8);
 		andamento8.save();
 
-		requisicaoTransporte9 = RequisicaoTransporte.AR.findById(requisicaoTransporte9.id);
+		requisicaoTransporte9 = RequisicaoTransporte.AR.findById(requisicaoTransporte9.getId());
 		requisicaoTransporte9.save();
 		requisicaoTransporte9.refresh();
 

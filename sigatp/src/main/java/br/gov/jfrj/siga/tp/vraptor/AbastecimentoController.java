@@ -145,7 +145,7 @@ public class AbastecimentoController extends TpController {
 		
 	}
 	
-	protected static DpPessoa cadastrante() {
+	protected DpPessoa cadastrante() {
 		return (DpPessoa) RenderArgs.current().get("cadastrante");
 	}
 

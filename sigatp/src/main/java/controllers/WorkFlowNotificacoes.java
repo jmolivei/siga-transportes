@@ -59,7 +59,7 @@ public class WorkFlowNotificacoes extends Job<Object>  {
 		HashMap<Condutor, String> dadosCondutor = new HashMap<Condutor, String>();
 		
 		for(Andamento item : andamentos) {
-			String sequencia = item.getRequisicaoTransporte().getSequence() + " " + item.getRequisicaoTransporte().id + ",";
+			String sequencia = item.getRequisicaoTransporte().getSequence() + " " + item.getRequisicaoTransporte().getId() + ",";
 
 			if (dadosCondutor.containsKey(condutor)) {
 				dadosCondutor.put(condutor, dadosCondutor.get(condutor) + sequencia);

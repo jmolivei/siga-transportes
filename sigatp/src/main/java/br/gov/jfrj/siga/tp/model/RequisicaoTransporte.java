@@ -53,7 +53,7 @@ import br.jus.jfrj.siga.uteis.SiglaDocumentoType;
 @SuppressWarnings("serial")
 @Entity
 @Audited
-@Table(schema = "SIGATP")
+@Table(name = "REQUISICAOTRANPORTE", schema = "SIGATP")
 public class RequisicaoTransporte extends TpModel implements Comparable<RequisicaoTransporte>, SequenceMethods {
 	private static final String IMG_LINKNOVAJANELAICON = "/sigatp/public/images/linknovajanelaicon.png";
 
@@ -62,85 +62,246 @@ public class RequisicaoTransporte extends TpModel implements Comparable<Requisic
 	@Id
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "hibernate_sequence_generator")
 	@SequenceGenerator(name = "hibernate_sequence_generator", sequenceName = "SIGATP.hibernate_sequence")
-	public Long id;
+	private Long id;
+
 
 	@Sequence(propertieOrgao = "cpOrgaoUsuario", siglaDocumento = SiglaDocumentoType.RTP)
 	@Column(updatable = false)
-	public Long numero;
+	private Long numero;
 
 	@As(lang = { "*" }, value = { "dd/MM/yyyy HH:mm" })
 	@ValidarAnoData(descricaoCampo = "Data/Hora")
-	public Calendar dataHora;
+	private Calendar dataHora;
 
 	@Required
 	@As(lang = { "*" }, value = { "dd/MM/yyyy HH:mm" })
 	@ValidarAnoData(descricaoCampo = "Data/Hora Saida Prevista")
-	public Calendar dataHoraSaidaPrevista;
+	private Calendar dataHoraSaidaPrevista;
 
 	@As(lang = { "*" }, value = { "dd/MM/yyyy HH:mm" })
 	@ValidarAnoData(descricaoCampo = "Data/Hora Retorno Previsto")
-	public Calendar dataHoraRetornoPrevisto;
+	private Calendar dataHoraRetornoPrevisto;
 
 	@Required
 	@Enumerated(EnumType.STRING)
-	public TipoRequisicao tipoRequisicao;
+	private TipoRequisicao tipoRequisicao;
 
 	@ElementCollection(targetClass = TipoDePassageiro.class)
 	@JoinTable(name = "requisicao_tipopassageiro", joinColumns = @JoinColumn(name = "requisicaoTransporte_Id"))
 	@Column(name = "tipoPassageiro", nullable = false)
 	@Enumerated(EnumType.STRING)
-	public List<TipoDePassageiro> tiposDePassageiro;
+	private List<TipoDePassageiro> tiposDePassageiro;
 
 	@Required
 	@ManyToOne
 	@JoinColumn(name = "ID_FINALIDADE")
-	public FinalidadeRequisicao tipoFinalidade;
+	private FinalidadeRequisicao tipoFinalidade;
 
-	public String finalidade;
+	private String finalidade;
 
-	public String passageiros;
+	private String passageiros;
 
 	@Required
-	public String itinerarios;
+	private String itinerarios;
 
 	@OneToMany(orphanRemoval = true, mappedBy = "requisicaoTransporte")
-	public List<Andamento> andamentos;
+	private List<Andamento> andamentos;
 
 	@Transient
 	private Andamento ultimoAndamento;
 
 	@Transient
-	public EstadoRequisicao ultimoEstado;
+	private EstadoRequisicao ultimoEstado;
 
 	@ManyToMany(cascade = CascadeType.ALL)
 	@JoinTable(name = "missao_requisTransporte", joinColumns = @JoinColumn(name = "requisicaoTransporte_Id"), inverseJoinColumns = @JoinColumn(name = "missao_Id"))
-	public List<Missao> missoes;
+	private List<Missao> missoes;
 
 	@Audited(targetAuditMode = RelationTargetAuditMode.NOT_AUDITED)
 	@ManyToOne
 	@JoinColumn(name = "ID_ORGAO_USU")
-	public CpOrgaoUsuario cpOrgaoUsuario;
+	private CpOrgaoUsuario cpOrgaoUsuario;
 
 	@Audited(targetAuditMode = RelationTargetAuditMode.NOT_AUDITED)
 	@ManyToOne
 	@JoinColumn(name = "ID_SOLICITANTE")
-	public DpPessoa solicitante;
+	private DpPessoa solicitante;
 
 	@Audited(targetAuditMode = RelationTargetAuditMode.NOT_AUDITED)
 	@ManyToOne
 	@JoinColumn(name = "ID_COMPLEXO")
-	public CpComplexo cpComplexo;
+	private CpComplexo cpComplexo;
 
 	@OneToOne(fetch = FetchType.LAZY, optional = true, mappedBy = "requisicaoTransporte")
-	public ServicoVeiculo servicoVeiculo;
+	private ServicoVeiculo servicoVeiculo;
 
-	public Integer numeroDePassageiros;
+	private Integer numeroDePassageiros;
 
 	@Required
-	public boolean origemExterna;
+	private boolean origemExterna;
 
 	@Transient
-	public Long idSolicitante;
+	private Long idSolicitante;
+	
+	public Long getNumero() {
+		return numero;
+	}
+
+	public void setNumero(Long numero) {
+		this.numero = numero;
+	}
+
+	public Calendar getDataHora() {
+		return dataHora;
+	}
+
+	public void setDataHora(Calendar dataHora) {
+		this.dataHora = dataHora;
+	}
+
+	public Calendar getDataHoraSaidaPrevista() {
+		return dataHoraSaidaPrevista;
+	}
+
+	public void setDataHoraSaidaPrevista(Calendar dataHoraSaidaPrevista) {
+		this.dataHoraSaidaPrevista = dataHoraSaidaPrevista;
+	}
+
+	public Calendar getDataHoraRetornoPrevisto() {
+		return dataHoraRetornoPrevisto;
+	}
+
+	public void setDataHoraRetornoPrevisto(Calendar dataHoraRetornoPrevisto) {
+		this.dataHoraRetornoPrevisto = dataHoraRetornoPrevisto;
+	}
+
+	public TipoRequisicao getTipoRequisicao() {
+		return tipoRequisicao;
+	}
+
+	public void setTipoRequisicao(TipoRequisicao tipoRequisicao) {
+		this.tipoRequisicao = tipoRequisicao;
+	}
+
+	public List<TipoDePassageiro> getTiposDePassageiro() {
+		return tiposDePassageiro;
+	}
+
+	public void setTiposDePassageiro(List<TipoDePassageiro> tiposDePassageiro) {
+		this.tiposDePassageiro = tiposDePassageiro;
+	}
+
+	public FinalidadeRequisicao getTipoFinalidade() {
+		return tipoFinalidade;
+	}
+
+	public void setTipoFinalidade(FinalidadeRequisicao tipoFinalidade) {
+		this.tipoFinalidade = tipoFinalidade;
+	}
+
+	public String getFinalidade() {
+		return finalidade;
+	}
+
+	public void setFinalidade(String finalidade) {
+		this.finalidade = finalidade;
+	}
+
+	public String getPassageiros() {
+		return passageiros;
+	}
+
+	public void setPassageiros(String passageiros) {
+		this.passageiros = passageiros;
+	}
+
+	public String getItinerarios() {
+		return itinerarios;
+	}
+
+	public void setItinerarios(String itinerarios) {
+		this.itinerarios = itinerarios;
+	}
+
+	public List<Andamento> getAndamentos() {
+		return andamentos;
+	}
+
+	public void setAndamentos(List<Andamento> andamentos) {
+		this.andamentos = andamentos;
+	}
+
+	public List<Missao> getMissoes() {
+		return missoes;
+	}
+
+	public void setMissoes(List<Missao> missoes) {
+		this.missoes = missoes;
+	}
+
+	public CpOrgaoUsuario getCpOrgaoUsuario() {
+		return cpOrgaoUsuario;
+	}
+
+	public void setCpOrgaoUsuario(CpOrgaoUsuario cpOrgaoUsuario) {
+		this.cpOrgaoUsuario = cpOrgaoUsuario;
+	}
+
+	public DpPessoa getSolicitante() {
+		return solicitante;
+	}
+
+	public void setSolicitante(DpPessoa solicitante) {
+		this.solicitante = solicitante;
+	}
+
+	public CpComplexo getCpComplexo() {
+		return cpComplexo;
+	}
+
+	public void setCpComplexo(CpComplexo cpComplexo) {
+		this.cpComplexo = cpComplexo;
+	}
+
+	public ServicoVeiculo getServicoVeiculo() {
+		return servicoVeiculo;
+	}
+
+	public void setServicoVeiculo(ServicoVeiculo servicoVeiculo) {
+		this.servicoVeiculo = servicoVeiculo;
+	}
+
+	public Integer getNumeroDePassageiros() {
+		return numeroDePassageiros;
+	}
+
+	public void setNumeroDePassageiros(int numeroDePassageiros) {
+		this.numeroDePassageiros = numeroDePassageiros;
+	}
+
+	public boolean isOrigemExterna() {
+		return origemExterna;
+	}
+
+	public void setOrigemExterna(boolean origemExterna) {
+		this.origemExterna = origemExterna;
+	}
+
+	public Long getIdSolicitante() {
+		return idSolicitante;
+	}
+
+	public void setIdSolicitante(Long idSolicitante) {
+		this.idSolicitante = idSolicitante;
+	}
+
+	public void setId(Long id) {
+		this.id = id;
+	}
+
+	public void setUltimoEstado(EstadoRequisicao ultimoEstado) {
+		this.ultimoEstado = ultimoEstado;
+	}
 
 	public RequisicaoTransporte() {
 		id = new Long(0);
