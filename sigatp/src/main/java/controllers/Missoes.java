@@ -206,11 +206,11 @@ public class Missoes extends Controller {
 	/*
 	 * private static void checarAcesso(Missao missao) throws Exception { if (! AutorizacaoGI.ehAdministrador() && ! AutorizacaoGI.ehAdministradorMissao()) { if (missao.getId() == 0) { throw new
 	 * Exception("Voce nao tem acesso para incluir Missao"); }
-	 * 
+	 *
 	 * if (! AutorizacaoGI.titular().equivale(missao.condutor.dpPessoa)) { try { throw new Exception("Voce nao tem acesso a esta miss�o"); } catch (Exception e) { AutorizacaoGI.tratarExcecoes(e); } }
 	 * }
-	 * 
-	 * 
+	 *
+	 *
 	 * }
 	 */
 
@@ -927,23 +927,23 @@ public class Missoes extends Controller {
 	@SuppressWarnings("unchecked")
 	protected static List<Missao> buscarPorCondutoreseEscala(EscalaDeTrabalho escala) {
 		SimpleDateFormat formatar = new SimpleDateFormat("dd/MM/yyyy HH:mm");
-		String dataFormatadaFimOracle;	
+		String dataFormatadaFimOracle;
 		if (escala.getDataVigenciaFim() == null) {
 			@SuppressWarnings("unused")
 			Calendar dataFim = Calendar.getInstance();
 			dataFormatadaFimOracle = "to_date('31/12/9999 23:59', 'DD/MM/YYYY HH24:mi')";
 		} else {
 			String dataFim = formatar.format(escala.getDataVigenciaFim().getTime());
-			dataFormatadaFimOracle = "to_date('" + dataFim + "', 'DD/MM/YYYY HH24:mi')";		
+			dataFormatadaFimOracle = "to_date('" + dataFim + "', 'DD/MM/YYYY HH24:mi')";
 		}
 		String dataInicio = formatar.format(escala.getDataVigenciaInicio().getTime());
 		String dataFormatadaInicioOracle = "to_date('" + dataInicio + "', 'DD/MM/YYYY HH24:mi')";
-		List<Missao> missoes = null; 
+		List<Missao> missoes = null;
 		String qrl = 	"SELECT p FROM Missao p" +
 		" WHERE  p.condutor.id = " + escala.getCondutor().getId() +
 		" AND    p.estadoMissao NOT IN ('" + EstadoMissao.CANCELADA + "','" + EstadoMissao.FINALIZADA + "')" +
 		" AND   (p.dataHoraSaida >= " + dataFormatadaInicioOracle +
-		" AND    p.dataHoraSaida <= " + dataFormatadaFimOracle + "))"; 
+		" AND    p.dataHoraSaida <= " + dataFormatadaFimOracle + "))";
 
 		Query qry = JPA.em().createQuery(qrl);
 		try {

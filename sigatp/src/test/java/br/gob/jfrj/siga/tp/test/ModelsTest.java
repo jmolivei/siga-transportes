@@ -22,7 +22,6 @@ import br.gov.jfrj.siga.tp.model.Condutor;
 import br.gov.jfrj.siga.tp.model.Cor;
 import br.gov.jfrj.siga.tp.model.EstadoRequisicao;
 import br.gov.jfrj.siga.tp.model.Fornecedor;
-import br.gov.jfrj.siga.tp.model.Gravidade;
 import br.gov.jfrj.siga.tp.model.Grupo;
 import br.gov.jfrj.siga.tp.model.LotacaoVeiculo;
 import br.gov.jfrj.siga.tp.model.Missao;
@@ -375,11 +374,11 @@ public class ModelsTest {
 	@Test
 	public void incluiAutoDeInfracao() throws Exception {
 		autoDeInfracao1.setDataHora(new GregorianCalendar(2011, Calendar.OCTOBER, 11, 8, 0));
-		autoDeInfracao1.setCodigoDaAutuacao("123456789012345");
-		autoDeInfracao1.setCodigoDaPenalidade("123456789012345");
-		autoDeInfracao1.setDescricao("xxxxxxxxxxxxx");
-		autoDeInfracao1.setGravidade(Gravidade.GRAVISSIMA);
-		autoDeInfracao1.setEnquadramento("xxxxxxxxxxxxx");
+//		autoDeInfracao1.setCodigoDaAutuacao("123456789012345");
+//		autoDeInfracao1.setCodigoDaPenalidade("123456789012345");
+//		autoDeInfracao1.setDescricao("xxxxxxxxxxxxx");
+//		autoDeInfracao1.setGravidade(Gravidade.GRAVISSIMA);
+//		autoDeInfracao1.setEnquadramento("xxxxxxxxxxxxx");
 		autoDeInfracao1.setLocal("xxxxxxxxxxxxx");
 		autoDeInfracao1.setFoiRecebido(PerguntaSimNao.SIM);
 		autoDeInfracao1.setValor(500.00D);
@@ -437,9 +436,9 @@ public class ModelsTest {
 		andamento1.save();
 
 		requisicaoTransporte2.setCpOrgaoUsuario(cpOrgaoUsuario);
-		requisicaoTransporte2.setDataHora(new GregorianCalendar(2014, Calendar.JANUARY, 11, 8, 1));
-		requisicaoTransporte2.setDataHoraSaidaPrevista(new GregorianCalendar(2014, Calendar.JANUARY, 11, 13, 10));
-		requisicaoTransporte2.setDataHoraRetornoPrevisto(new GregorianCalendar(2014, Calendar.JANUARY, 11, 15, 10));
+		requisicaoTransporte2.setDataHora(new GregorianCalendar(2014, Calendar.JANUARY, 12, 8, 1));
+		requisicaoTransporte2.setDataHoraSaidaPrevista(new GregorianCalendar(2014, Calendar.JANUARY, 12, 13, 10));
+		requisicaoTransporte2.setDataHoraRetornoPrevisto(new GregorianCalendar(2014, Calendar.JANUARY, 12, 15, 10));
 		requisicaoTransporte2.setFinalidade("CONGRESSO EM BRASILIA");
 		requisicaoTransporte2.setItinerarios("RUA DO ACRE - AEROPORTO SANTOS DUMONT");
 		requisicaoTransporte2.setPassageiros("PERALBA, DR.PAULO");
@@ -450,14 +449,14 @@ public class ModelsTest {
 
 		andamento2.setDescricao("Nova requisição");
 		andamento2.setDataAndamento(Calendar.getInstance());
-		andamento2.setEstadoRequisicao(EstadoRequisicao.ABERTA); 
-		andamento2.setRequisicaoTransporte(requisicaoTransporte2); 
+		andamento2.setEstadoRequisicao(EstadoRequisicao.ABERTA);
+		andamento2.setRequisicaoTransporte(requisicaoTransporte2);
 		andamento2.save();
 
 		requisicaoTransporte3.setCpOrgaoUsuario(cpOrgaoUsuario);
-		requisicaoTransporte3.setDataHora(new GregorianCalendar(2014, Calendar.JANUARY, 11, 8, 1));
-		requisicaoTransporte3.setDataHoraSaidaPrevista(new GregorianCalendar(2014, Calendar.JANUARY, 11, 13, 10));
-		requisicaoTransporte3.setDataHoraRetornoPrevisto(new GregorianCalendar(2014, Calendar.JANUARY, 11, 15, 10));
+		requisicaoTransporte3.setDataHora(new GregorianCalendar(2014, Calendar.JANUARY, 12, 8, 1));
+		requisicaoTransporte3.setDataHoraSaidaPrevista(new GregorianCalendar(2014, Calendar.JANUARY, 12, 13, 10));
+		requisicaoTransporte3.setDataHoraRetornoPrevisto(new GregorianCalendar(2014, Calendar.JANUARY, 12, 15, 10));
 		requisicaoTransporte3.setFinalidade("CONGRESSO EM FORTALEZA");
 		requisicaoTransporte3.setItinerarios("RUA DO ACRE - AEROPORTO GALEAO");
 		requisicaoTransporte3.setPassageiros("ALBERTO, KATIA");
@@ -468,14 +467,14 @@ public class ModelsTest {
 
 		andamento3.setDescricao("Nova requisição");
 		andamento3.setDataAndamento(Calendar.getInstance());
-		andamento3.setEstadoRequisicao(EstadoRequisicao.ABERTA); 
+		andamento3.setEstadoRequisicao(EstadoRequisicao.ABERTA);
 		andamento3.setRequisicaoTransporte(requisicaoTransporte3);
 		andamento3.save();
 
 		requisicaoTransporte7.setCpOrgaoUsuario(cpOrgaoUsuario);
 		requisicaoTransporte7.setDataHora(new GregorianCalendar(2014, Calendar.JANUARY, 11, 8, 1));
-		requisicaoTransporte7.setDataHoraSaidaPrevista(new GregorianCalendar(2014, Calendar.JANUARY, 11, 13, 10));
-		requisicaoTransporte7.setDataHoraRetornoPrevisto(new GregorianCalendar(2014, Calendar.JANUARY, 11, 15, 10));
+		requisicaoTransporte7.setDataHoraSaidaPrevista(new GregorianCalendar(2014, Calendar.JANUARY, 12, 13, 10));
+		requisicaoTransporte7.setDataHoraRetornoPrevisto(new GregorianCalendar(2014, Calendar.JANUARY, 12, 15, 10));
 		requisicaoTransporte7.setFinalidade("VOLTA PARA CASA");
 		requisicaoTransporte7.setItinerarios("RUA DO ACRE - RUA URUGUAI");
 		requisicaoTransporte7.setPassageiros("FERNANDO");
@@ -486,14 +485,14 @@ public class ModelsTest {
 
 		andamento7.setDescricao("Nova requisição");
 		andamento7.setDataAndamento(Calendar.getInstance());
-		andamento7.setEstadoRequisicao(EstadoRequisicao.ABERTA); 
+		andamento7.setEstadoRequisicao(EstadoRequisicao.ABERTA);
 		andamento7.setRequisicaoTransporte(requisicaoTransporte7);
 		andamento7.save();
 
 		requisicaoTransporte8.setCpOrgaoUsuario(cpOrgaoUsuario);
-		requisicaoTransporte8.setDataHora(new GregorianCalendar(2014, Calendar.JANUARY, 11, 8, 1));
-		requisicaoTransporte8.setDataHoraSaidaPrevista(new GregorianCalendar(2014, Calendar.JANUARY, 11, 13, 10));
-		requisicaoTransporte8.setDataHoraRetornoPrevisto(new GregorianCalendar(2014, Calendar.JANUARY, 11, 15, 10));
+		requisicaoTransporte8.setDataHora(new GregorianCalendar(2014, Calendar.JANUARY, 12, 8, 1));
+		requisicaoTransporte8.setDataHoraSaidaPrevista(new GregorianCalendar(2014, Calendar.JANUARY, 12, 13, 10));
+		requisicaoTransporte8.setDataHoraRetornoPrevisto(new GregorianCalendar(2014, Calendar.JANUARY, 12, 15, 10));
 		requisicaoTransporte8.setFinalidade("VOLTA PARA CASA");
 		requisicaoTransporte8.setItinerarios("RUA DO ACRE - RUA VOLUNTARIOS DA PATRIA");
 		requisicaoTransporte8.setPassageiros("BAYLON,PERALBA");
@@ -504,15 +503,15 @@ public class ModelsTest {
 
 		andamento8.setDescricao("Nova requisição");
 		andamento8.setDataAndamento(Calendar.getInstance());
-		andamento8.setEstadoRequisicao(EstadoRequisicao.ABERTA); 
+		andamento8.setEstadoRequisicao(EstadoRequisicao.ABERTA);
 		andamento8.setRequisicaoTransporte(requisicaoTransporte8);
 		andamento8.save();
-		
+
 
 		requisicaoTransporte9.setCpOrgaoUsuario(cpOrgaoUsuario);
-		requisicaoTransporte9.setDataHora(new GregorianCalendar(2014, Calendar.JANUARY, 11, 8, 1));
-		requisicaoTransporte9.setDataHoraSaidaPrevista(new GregorianCalendar(2014, Calendar.JANUARY, 11, 13, 10));
-		requisicaoTransporte9.setDataHoraRetornoPrevisto(new GregorianCalendar(2014, Calendar.JANUARY, 11, 15, 10));
+		requisicaoTransporte9.setDataHora(new GregorianCalendar(2014, Calendar.JANUARY, 12, 8, 1));
+		requisicaoTransporte9.setDataHoraSaidaPrevista(new GregorianCalendar(2014, Calendar.JANUARY, 12, 13, 10));
+		requisicaoTransporte9.setDataHoraRetornoPrevisto(new GregorianCalendar(2014, Calendar.JANUARY, 12, 15, 10));
 		requisicaoTransporte9.setFinalidade("VOLTA PARA CASA");
 		requisicaoTransporte9.setItinerarios("RUA DO ACRE - VILA DA PENHA");
 		requisicaoTransporte9.setPassageiros("ALBERTO, KATIA");
@@ -547,7 +546,7 @@ public class ModelsTest {
 		andamento4.save();
 
 		requisicaoTransporte5.setCpOrgaoUsuario(cpOrgaoUsuario);
-		requisicaoTransporte5.setDataHora(new GregorianCalendar(2014, Calendar.JANUARY, 11, 8, 1));
+		requisicaoTransporte5.setDataHora(new GregorianCalendar(2014, Calendar.JANUARY, 12, 8, 1));
 		requisicaoTransporte5.setDataHoraSaidaPrevista(new GregorianCalendar(2014, Calendar.JANUARY, 11, 13, 10));
 		requisicaoTransporte5.setDataHoraRetornoPrevisto(new GregorianCalendar(2014, Calendar.JANUARY, 11, 15, 10));
 		requisicaoTransporte5.setFinalidade("CURSO TRF");
@@ -565,9 +564,9 @@ public class ModelsTest {
 		andamento5.save();
 
 		requisicaoTransporte6.setCpOrgaoUsuario(cpOrgaoUsuario);
-		requisicaoTransporte6.setDataHora(new GregorianCalendar(2014, Calendar.JANUARY, 11, 8, 1));
-		requisicaoTransporte6.setDataHoraSaidaPrevista(new GregorianCalendar(2014, Calendar.JANUARY, 11, 13, 10));
-		requisicaoTransporte6.setDataHoraRetornoPrevisto(new GregorianCalendar(2014, Calendar.JANUARY, 11, 15, 10));
+		requisicaoTransporte6.setDataHora(new GregorianCalendar(2014, Calendar.JANUARY, 12, 8, 1));
+		requisicaoTransporte6.setDataHoraSaidaPrevista(new GregorianCalendar(2014, Calendar.JANUARY, 12, 13, 10));
+		requisicaoTransporte6.setDataHoraRetornoPrevisto(new GregorianCalendar(2014, Calendar.JANUARY, 12, 15, 10));
 		requisicaoTransporte6.setFinalidade("CONGRESSO EM FORTALEZA");
 		requisicaoTransporte6.setItinerarios("AV.ALMEIRANTE BARROSO - AEROPORTO GALEAO");
 		requisicaoTransporte6.setPassageiros("DJALMA, CAROL");
@@ -584,7 +583,7 @@ public class ModelsTest {
 
 		cpOrgaoUsuario = CpOrgaoUsuario.AR.findById(Long.valueOf(3));
 		requisicaoTransporte11.setCpOrgaoUsuario(cpOrgaoUsuario);
-		requisicaoTransporte11.setDataHora(new GregorianCalendar(2014, Calendar.JANUARY, 11, 8, 1));
+		requisicaoTransporte11.setDataHora(new GregorianCalendar(2014, Calendar.JANUARY, 12, 8, 1));
 		requisicaoTransporte11.setDataHoraSaidaPrevista(new GregorianCalendar(2014, Calendar.JANUARY, 13, 13, 10));
 		requisicaoTransporte11.setDataHoraRetornoPrevisto(new GregorianCalendar(2014, Calendar.JANUARY, 13, 15, 10));
 		requisicaoTransporte11.setFinalidade("VOLTA PARA CASA");
@@ -645,7 +644,7 @@ public class ModelsTest {
 		requisicaoTransporte1.refresh();
 
 		andamento1 = new Andamento();
-		andamento1.setDescricao("Requisicao autorizada"); 
+		andamento1.setDescricao("Requisicao autorizada");
 		andamento1.setDataAndamento(Calendar.getInstance());
 		andamento1.setEstadoRequisicao(EstadoRequisicao.AUTORIZADA);
 		andamento1.setRequisicaoTransporte(requisicaoTransporte1);

@@ -44,7 +44,6 @@ import br.gov.jfrj.siga.tp.vraptor.i18n.MessagesBundle;
 import br.gov.jfrj.siga.vraptor.converter.ConvertableEntity;
 
 @Entity
-// @Table(name = "VEICULO_2", schema="SIGAOR")
 @Audited
 @Table(schema = "SIGATP")
 @Unique(message = "{veiculo.placa.unique}", field = "placa")

@@ -10,6 +10,7 @@ import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
@@ -21,7 +22,7 @@ import org.hibernate.envers.Audited;
 import br.gov.jfrj.siga.model.ActiveRecord;
 import br.gov.jfrj.siga.tp.util.PerguntaSimNao;
 import br.gov.jfrj.siga.tp.validation.annotation.Data;
-import br.gov.jfrj.siga.vraptor.converter.ConvertableEntity;
+import br.gov.jfrj.siga.tp.vraptor.ConvertableEntity;
 import br.jus.jfrj.siga.uteis.UpperCase;
 
 @Entity
@@ -44,7 +45,14 @@ public class AutoDeInfracao extends TpModel implements ConvertableEntity, Compar
 	@NotNull
 	private Veiculo veiculo;
 
+	//  Incluido depois da OSI17 - Joao Luis
+
+	@ManyToOne
 	@NotNull
+	@JoinColumn(name = "PENALIDADE_ID")
+	public Penalidade penalidade;
+
+	/* Comentado apos OSI17 - Joao Luis @NotNull
 	private String codigoDaAutuacao;
 
 	@NotNull
@@ -60,7 +68,7 @@ public class AutoDeInfracao extends TpModel implements ConvertableEntity, Compar
 
 	@NotNull
 	@UpperCase
-	private String enquadramento;
+	private String enquadramento; */
 
 	@NotNull
 	@UpperCase
@@ -121,6 +129,17 @@ public class AutoDeInfracao extends TpModel implements ConvertableEntity, Compar
 		this.veiculo = veiculo;
 	}
 
+	//  Incluido depois da OSI17 - Joao Luis
+
+	public Penalidade getPenalidade() {
+		return penalidade;
+	}
+
+	public void setPenalidade(Penalidade penalidade) {
+		this.penalidade = penalidade;
+	}
+
+	/*  Comentado depois da OSI17 - Joao Luis
 	public String getCodigoDaAutuacao() {
 		return codigoDaAutuacao;
 	}
@@ -159,7 +178,7 @@ public class AutoDeInfracao extends TpModel implements ConvertableEntity, Compar
 
 	public void setEnquadramento(String enquadramento) {
 		this.enquadramento = enquadramento;
-	}
+	} */
 
 	public String getLocal() {
 		return local;
@@ -268,7 +287,7 @@ public class AutoDeInfracao extends TpModel implements ConvertableEntity, Compar
 
 	public AutoDeInfracao() {
 		this.id = new Long(0);
-		this.gravidade = Gravidade.LEVE;
+//		this.gravidade = Gravidade.LEVE;
 		this.foiRecebido = PerguntaSimNao.NAO;
 	}
 
@@ -279,11 +298,11 @@ public class AutoDeInfracao extends TpModel implements ConvertableEntity, Compar
 		this.id = id;
 		this.dataHora = dataHora;
 		this.veiculo = veiculo;
-		this.codigoDaAutuacao = codigoDaAutuacao;
-		this.codigoDaPenalidade = codigoDaPenalidade;
-		this.descricao = descricao;
-		this.gravidade = gravidade;
-		this.enquadramento = enquadramento;
+//		this.codigoDaAutuacao = codigoDaAutuacao;
+//		this.codigoDaPenalidade = codigoDaPenalidade;
+//		this.descricao = descricao;
+//		this.gravidade = gravidade;
+//		this.enquadramento = enquadramento;
 		this.local = local;
 		this.foiRecebido = foiRecebido;
 		this.valor = valor;

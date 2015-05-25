@@ -14,13 +14,14 @@ import br.gov.jfrj.siga.model.ActiveRecord;
 import br.gov.jfrj.siga.vraptor.converter.ConvertableEntity;
 
 @Entity
-// @Table(name = "COR_2", schema="SIGAOR")
 @Audited
 @Table(schema = "SIGATP")
 public class Cor extends TpModel implements ConvertableEntity {
 
+	private static final long serialVersionUID = 1L;
+
 	public static final ActiveRecord<Cor> AR = new ActiveRecord<>(Cor.class);
-	
+
 	@Id
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "hibernate_sequence_generator")
 	@SequenceGenerator(name = "hibernate_sequence_generator", sequenceName = "SIGATP.hibernate_sequence")

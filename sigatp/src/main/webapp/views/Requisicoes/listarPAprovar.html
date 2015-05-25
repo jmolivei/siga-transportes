@@ -38,8 +38,18 @@
 
 <div class="gt-bd clearfix">
 	<div class="gt-content clearfix">
-		<h2>Lista de Requisi&ccedil;&otilde;es</h2>
-		
+		#{if menuRequisicoesMostrarAbertas && menuRequisicoesMostrarAutorizadas && menuRequisicoesMostrarRejeitadas} 
+			<h2>Lista de Todas as Requisi&ccedil;&otilde;es</h2>
+		#{/if}
+		#{elseif !menuRequisicoesMostrarAbertas}
+			<h2>Lista de Requisi&ccedil;&otilde;es Abertas</h2>
+		#{/elseif}
+		#{elseif !menuRequisicoesMostrarAutorizadas}
+			<h2>Lista de Requisi&ccedil;&otilde;es Autorizadas</h2>
+		#{/elseif}
+		#{elseif !menuRequisicoesMostrarRejeitadas}
+			<h2>Lista de Requisi&ccedil;&otilde;es Rejeitadas</h2>
+		#{/elseif}
 #{form @Requisicoes.salvarNovoComplexo(), id:'formSalvarNovoComplexo', enctype:'multipart/form-data'}
 
 #{include 'Requisicoes/menuListarPAprovar.html' /}

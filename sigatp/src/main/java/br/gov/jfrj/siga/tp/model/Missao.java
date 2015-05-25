@@ -28,6 +28,7 @@ import org.hibernate.envers.RelationTargetAuditMode;
 
 import play.data.binding.As;
 import play.data.validation.Required;
+import play.db.jpa.JPA;
 import play.i18n.Messages;
 import play.modules.br.jus.jfrj.siga.uteis.validadores.sequence.SequenceMethods;
 import play.modules.br.jus.jfrj.siga.uteis.validadores.upperCase.UpperCase;
@@ -44,6 +45,7 @@ import br.jus.jfrj.siga.uteis.SiglaDocumentoType;
 
 @SuppressWarnings("serial")
 @Entity
+//@Table(name = "VEICULO_2", schema="SIGAOR")
 // @Table(name = "VEICULO_2", schema="SIGAOR")
 @Audited
 @Table(schema = "SIGATP")
@@ -52,12 +54,14 @@ public class Missao extends TpModel implements ConvertableEntity, Comparable<Mis
 	public static ActiveRecord<Missao> AR = new ActiveRecord<>(Missao.class);
 
 	@Id
+	@Sequence(propertieOrgao="cpOrgaoUsuario",siglaDocumento=SiglaDocumentoType.MTP)
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "hibernate_sequence_generator")
 	@SequenceGenerator(name = "hibernate_sequence_generator", sequenceName = "SIGATP.hibernate_sequence")
 	private Long id;
 
-	@Sequence(propertieOrgao = "cpOrgaoUsuario", siglaDocumento = SiglaDocumentoType.MTP)
-	@Column(updatable = false)
+    @Column(updatable = false)
+ 	@Audited(targetAuditMode = RelationTargetAuditMode.NOT_AUDITED)
+ 	@Sequence(propertieOrgao = "cpOrgaoUsuario", siglaDocumento = SiglaDocumentoType.MTP)
 	private Long numero;
 
 	@Audited(targetAuditMode = RelationTargetAuditMode.NOT_AUDITED)
@@ -69,14 +73,18 @@ public class Missao extends TpModel implements ConvertableEntity, Comparable<Mis
 	public Calendar dataHora;
 
 	@Transient
+//	@As(binder=DoubleBinder.class)
 	public double distanciaPercorridaEmKm;
+
 
 	@Transient
 	@As(lang = { "*" }, value = { "HH:mm" })
 	@ValidarAnoData(descricaoCampo = "Data/Hora")
 	public Calendar tempoBruto;
 
+//	@As(binder=DoubleBinder.class)
 	public double consumoEmLitros;
+
 
 	@Required
 	@NotNull
@@ -84,37 +92,49 @@ public class Missao extends TpModel implements ConvertableEntity, Comparable<Mis
 	@ValidarAnoData(descricaoCampo = "Data/Hora")
 	public Calendar dataHoraSaida;
 
+//	@As(binder=DoubleBinder.class)
 	public double odometroSaidaEmKm;
+
 
 	@Enumerated(EnumType.STRING)
 	public PerguntaSimNao estepe;
 
+
 	@Enumerated(EnumType.STRING)
 	public PerguntaSimNao avariasAparentesSaida;
+
 
 	@Enumerated(EnumType.STRING)
 	public PerguntaSimNao limpeza;
 
+
 	@Enumerated(EnumType.STRING)
 	public NivelDeCombustivel nivelCombustivelSaida;
+
 
 	@Enumerated(EnumType.STRING)
 	public PerguntaSimNao triangulos;
 
+
 	@Enumerated(EnumType.STRING)
 	public PerguntaSimNao extintor;
+
 
 	@Enumerated(EnumType.STRING)
 	public PerguntaSimNao ferramentas;
 
+
 	@Enumerated(EnumType.STRING)
 	public PerguntaSimNao licenca;
+
 
 	@Enumerated(EnumType.STRING)
 	public PerguntaSimNao cartaoSeguro;
 
+
 	@Enumerated(EnumType.STRING)
 	public PerguntaSimNao cartaoAbastecimento;
+
 
 	@Enumerated(EnumType.STRING)
 	public PerguntaSimNao cartaoSaida;
@@ -123,16 +143,21 @@ public class Missao extends TpModel implements ConvertableEntity, Comparable<Mis
 	@ValidarAnoData(descricaoCampo = "Data/Hora Retorno")
 	public Calendar dataHoraRetorno;
 
+//	@As(binder=DoubleBinder.class)
 	public double odometroRetornoEmKm;
+
 
 	@Enumerated(EnumType.STRING)
 	public PerguntaSimNao avariasAparentesRetorno;
 
+
 	@Enumerated(EnumType.STRING)
 	public NivelDeCombustivel nivelCombustivelRetorno;
 
+
 	@UpperCase
 	public String ocorrencias;
+
 
 	@UpperCase
 	public String itinerarioCompleto;
@@ -146,7 +171,6 @@ public class Missao extends TpModel implements ConvertableEntity, Comparable<Mis
 	@NotNull
 	@ManyToMany
 	@JoinTable(name = "missao_requisTransporte", joinColumns = @JoinColumn(name = "missao_Id"), inverseJoinColumns = @JoinColumn(name = "requisicaoTransporte_Id"))
-	// @JoinTable(name = "missao_requisTransporte", joinColumns = @JoinColumn(name = "missao_Id"))
 	public List<RequisicaoTransporte> requisicoesTransporte;
 
 	@Required
@@ -193,6 +217,7 @@ public class Missao extends TpModel implements ConvertableEntity, Comparable<Mis
 		this.inicioRapido = PerguntaSimNao.NAO;
 	}
 
+
 	public String getDadosParaExibicao() {
 		return this.numero.toString();
 	}
@@ -205,9 +230,11 @@ public class Missao extends TpModel implements ConvertableEntity, Comparable<Mis
 	@Override
 	public String getSequence() {
 		if (this.numero != 0) {
-			return cpOrgaoUsuario.getAcronimoOrgaoUsu().replace("-", "").toString() + "-" + Reflexao.recuperaAnotacaoField(this).substring(1) + "-"
-					+ String.format("%04d", this.dataHora.get(Calendar.YEAR)) + "/" + String.format("%05d", numero) + "-" + Reflexao.recuperaAnotacaoField(this).substring(0, 1);
-
+			return cpOrgaoUsuario.getAcronimoOrgaoUsu().replace("-","").toString() +  "-" +
+				   Reflexao.recuperaAnotacaoField(this).substring(1) + "-" +
+				   String.format("%04d",this.dataHora.get(Calendar.YEAR)) + "/" +
+				   String.format("%05d", numero) + "-" +
+				   Reflexao.recuperaAnotacaoField(this).substring(0,1);
 		} else {
 			return "";
 		}
@@ -238,20 +265,23 @@ public class Missao extends TpModel implements ConvertableEntity, Comparable<Mis
 	}
 
 	public static Missao buscar(String sequence) throws Exception {
+		// TODO Auto-generated method stub
 		String[] partesDoCodigo = null;
 		Missao missao = new Missao();
 		try {
+			 partesDoCodigo = sequence.split("[-/]");
+
 			partesDoCodigo = sequence.split("[-/]");
 
 		} catch (Exception e) {
 			throw new Exception(Messages.get("missao.buscar.sequence.exception", sequence));
 		}
 
-		CpOrgaoUsuario cpOrgaoUsuario = TpDao.find(CpOrgaoUsuario.class, "acronimoOrgaoUsu", partesDoCodigo[0]).first();
+		CpOrgaoUsuario cpOrgaoUsuario = CpOrgaoUsuario.AR.find("acronimoOrgaoUsu",partesDoCodigo[0]).first();
 		Integer ano = new Integer(Integer.parseInt(partesDoCodigo[2]));
 		Long numero = new Long(Integer.parseInt(partesDoCodigo[3]));
 		String siglaDocumento = partesDoCodigo[4] + partesDoCodigo[1];
-		if (!Reflexao.recuperaAnotacaoField(missao).equals(siglaDocumento)) {
+		if (! Reflexao.recuperaAnotacaoField(missao).equals(siglaDocumento)) {
 			throw new Exception(Messages.get("missao.buscar.siglaDocumento.exception", sequence));
 		}
 		List<Missao> missoes = Missao.AR.find("cpOrgaoUsuario = ? and numero = ? and YEAR(dataHora) = ?", cpOrgaoUsuario, numero, ano).fetch();
@@ -272,21 +302,16 @@ public class Missao extends TpModel implements ConvertableEntity, Comparable<Mis
 	}
 
 	public static List<Missao> buscarTodasAsMissoesPorCondutor(Condutor condutor) {
-		if (condutor == null) {
+		if (condutor == null)
 			return new ArrayList<Missao>();
-		}
-		;
 		return Missao.AR.find("condutor.id = ? order by dataHoraSaida desc", condutor.getId()).fetch();
 	}
 
 	public static List<Missao> buscarPorVeiculos(Long IdVeiculo, String dataHoraInicio) {
-
 		return filtrarMissoes("veiculo", IdVeiculo, dataHoraInicio);
-
 	}
 
 	public static List<Missao> buscarPorCondutores(Long IdCondutor, String dataHoraInicio) {
-
 		return filtrarMissoes("condutor", IdCondutor, dataHoraInicio);
 	}
 
@@ -294,6 +319,7 @@ public class Missao extends TpModel implements ConvertableEntity, Comparable<Mis
 	private static List<Missao> filtrarMissoes(String entidade, Long idEntidade, String dataHoraInicio) {
 		String filtroEntidade = "";
 		if (idEntidade != null) {
+			filtroEntidade = entidade + ".id = " + idEntidade + " AND ";
 			filtroEntidade = entidade + ".id = " + idEntidade + " AND ";
 		}
 
@@ -315,24 +341,30 @@ public class Missao extends TpModel implements ConvertableEntity, Comparable<Mis
 		return missoes;
 	}
 
+
 	@SuppressWarnings("unchecked")
 	public static List<Missao> retornarMissoes(String entidade, Long idEntidade, Long usuarioId, Calendar dataHoraInicio, Calendar dataHoraFim) {
 		String filtroEntidade = "";
 		if (idEntidade != null) {
 			filtroEntidade = entidade + " = " + idEntidade;
+			filtroEntidade = entidade + " = " + idEntidade;
 		}
 
+
 		String qrl = "SELECT m FROM Missao m";
+		qrl += " WHERE " + filtroEntidade;
 		qrl += " WHERE " + filtroEntidade;
 		SimpleDateFormat formatar = new SimpleDateFormat("dd/MM/yyyy HH:mm");
 		String dataInicioFormatadaOracle = "to_date('" + formatar.format(dataHoraInicio.getTime()) + "', 'DD/MM/YYYY HH24:MI')";
 		String dataFimFormatadaOracle = dataHoraFim == null ? "" : "to_date('" + formatar.format(dataHoraFim.getTime()) + "', 'DD/MM/YYYY HH24:MI')";
+
 
 		if (!dataFimFormatadaOracle.isEmpty()) {
 			qrl += " AND dataHoraSaida BETWEEN " + dataInicioFormatadaOracle + " AND " + dataFimFormatadaOracle;
 		} else {
 			qrl += " AND trunc(dataHoraSaida) <= trunc(" + dataInicioFormatadaOracle + ")";
 		}
+
 
 		qrl += " AND cpOrgaoUsuario.id = " + usuarioId;
 

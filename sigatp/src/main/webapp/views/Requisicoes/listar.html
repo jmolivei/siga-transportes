@@ -79,7 +79,36 @@
 
 <div class="gt-bd clearfix">
 	<div class="gt-content clearfix">
-		<h2>Lista de Requisi&ccedil;&otilde;es</h2>
+		#{if !menuRequisicoesMostrarTodas} 
+			<h2>Lista de Todas as Requisi&ccedil;&otilde;es</h2>			
+		#{/if}
+		#{elseif !menuRequisicoesMostrarAutorizadasENaoAtendidas && menuRequisicoesMostrarAutorizadas && menuRequisicoesMostrarNaoAtendidas}
+			<h2>Lista de Requisi&ccedil;&otilde;es Autorizadas e N&atilde;o Atendidas</h2>
+		#{/elseif}
+		#{elseif !menuRequisicoesMostrarAbertas} 
+			<h2>Lista de Requisi&ccedil;&otilde;es Abertas</h2>
+		#{/elseif}
+		#{elseif !menuRequisicoesMostrarAutorizadas}
+			<h2>Lista de Requisi&ccedil;&otilde;es Autorizadas</h2>
+		#{/elseif}
+		#{elseif !menuRequisicoesMostrarRejeitadas} 
+			<h2>Lista de Requisi&ccedil;&otilde;es Rejeitadas</h2>
+		#{/elseif}
+		#{elseif !menuRequisicoesMostrarProgramadas} 
+			<h2>Lista de Requisi&ccedil;&otilde;es Programadas</h2>
+		#{/elseif}
+		#{elseif !menuRequisicoesMostrarEmAtendimento} 
+			<h2>Lista de Requisi&ccedil;&otilde;es em Atendimento</h2>
+		#{/elseif}
+		#{elseif !menuRequisicoesMostrarAtendidas} 
+			<h2>Lista de Requisi&ccedil;&otilde;es Atendidas</h2>
+		#{/elseif}
+		#{elseif !menuRequisicoesMostrarNaoAtendidas} 
+			<h2>Lista de Requisi&ccedil;&otilde;es N&atilde;o Atendidas</h2>
+		#{/elseif}
+		#{elseif !menuRequisicoesMostrarCanceladas} 
+			<h2>Lista de Requisi&ccedil;&otilde;es Canceladas</h2>
+		#{/elseif}
 
 #{form @Missoes.incluirComRequisicoes(), id:'formIncluirMissao', enctype:'multipart/form-data'}
 
