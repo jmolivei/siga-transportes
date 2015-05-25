@@ -29,17 +29,15 @@ import javax.persistence.Query;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.persistence.Transient;
+import javax.validation.constraints.NotNull;
 
 import org.hibernate.envers.Audited;
 import org.hibernate.envers.RelationTargetAuditMode;
 
-import play.data.binding.As;
-import play.data.validation.Required;
-import play.db.jpa.JPA;
-import play.i18n.Messages;
+import controllers.ServicosVeiculo;
 import play.modules.br.jus.jfrj.siga.uteis.validadores.sequence.SequenceMethods;
 import play.modules.br.jus.jfrj.siga.uteis.validadores.validarAnoData.ValidarAnoData;
-import play.mvc.Router;
+import br.com.caelum.vraptor.validator.I18nMessage;
 import br.gov.jfrj.siga.cp.CpComplexo;
 import br.gov.jfrj.siga.dp.CpOrgaoUsuario;
 import br.gov.jfrj.siga.dp.DpPessoa;
@@ -47,13 +45,14 @@ import br.gov.jfrj.siga.model.ActiveRecord;
 import br.gov.jfrj.siga.tp.util.FormataCaminhoDoContextoUrl;
 import br.gov.jfrj.siga.tp.util.Reflexao;
 import br.gov.jfrj.siga.tp.util.SigaTpException;
+import br.gov.jfrj.siga.vraptor.handler.Resources;
 import br.jus.jfrj.siga.uteis.Sequence;
 import br.jus.jfrj.siga.uteis.SiglaDocumentoType;
 
 @SuppressWarnings("serial")
 @Entity
 @Audited
-@Table(name = "REQUISICAOTRANPORTE", schema = "SIGATP")
+@Table(name = "REQUISICAOTRANSPORTE", schema = "SIGATP")
 public class RequisicaoTransporte extends TpModel implements Comparable<RequisicaoTransporte>, SequenceMethods {
 	private static final String IMG_LINKNOVAJANELAICON = "/sigatp/public/images/linknovajanelaicon.png";
 
@@ -69,20 +68,17 @@ public class RequisicaoTransporte extends TpModel implements Comparable<Requisic
 	@Column(updatable = false)
 	private Long numero;
 
-	@As(lang = { "*" }, value = { "dd/MM/yyyy HH:mm" })
 	@ValidarAnoData(descricaoCampo = "Data/Hora")
 	private Calendar dataHora;
 
-	@Required
-	@As(lang = { "*" }, value = { "dd/MM/yyyy HH:mm" })
+	@NotNull
 	@ValidarAnoData(descricaoCampo = "Data/Hora Saida Prevista")
 	private Calendar dataHoraSaidaPrevista;
 
-	@As(lang = { "*" }, value = { "dd/MM/yyyy HH:mm" })
 	@ValidarAnoData(descricaoCampo = "Data/Hora Retorno Previsto")
 	private Calendar dataHoraRetornoPrevisto;
 
-	@Required
+	@NotNull
 	@Enumerated(EnumType.STRING)
 	private TipoRequisicao tipoRequisicao;
 
@@ -92,7 +88,7 @@ public class RequisicaoTransporte extends TpModel implements Comparable<Requisic
 	@Enumerated(EnumType.STRING)
 	private List<TipoDePassageiro> tiposDePassageiro;
 
-	@Required
+	@NotNull
 	@ManyToOne
 	@JoinColumn(name = "ID_FINALIDADE")
 	private FinalidadeRequisicao tipoFinalidade;
@@ -101,7 +97,7 @@ public class RequisicaoTransporte extends TpModel implements Comparable<Requisic
 
 	private String passageiros;
 
-	@Required
+	@NotNull
 	private String itinerarios;
 
 	@OneToMany(orphanRemoval = true, mappedBy = "requisicaoTransporte")
@@ -137,12 +133,12 @@ public class RequisicaoTransporte extends TpModel implements Comparable<Requisic
 
 	private Integer numeroDePassageiros;
 
-	@Required
+	@NotNull
 	private boolean origemExterna;
 
 	@Transient
 	private Long idSolicitante;
-	
+
 	public Long getNumero() {
 		return numero;
 	}
@@ -322,8 +318,6 @@ public class RequisicaoTransporte extends TpModel implements Comparable<Requisic
 	public String getDescricaoCompleta() throws Exception {
 		StringBuffer saida = new StringBuffer();
 		saida.append(getSequence().toString());
-		// saida.append(" - ");
-		// saida.append(passageiros.toString());
 
 		boolean temTipoPassageiro = false;
 		for (Iterator<TipoDePassageiro> iterator = tiposDePassageiro.iterator(); iterator.hasNext();) {
@@ -331,14 +325,11 @@ public class RequisicaoTransporte extends TpModel implements Comparable<Requisic
 			if (!temTipoPassageiro) {
 				saida.append(" - ");
 				temTipoPassageiro = true;
-			} else {
+			} else
 				saida.append("; ");
-			}
+
 			saida.append(tipo.getDescricao());
 		}
-
-		// saida.append(" - ");
-		// saida.append(itinerarios.toString());
 
 		if (servicoVeiculo != null) {
 			Map<String, Object> param = new HashMap<String, Object>();
@@ -346,7 +337,7 @@ public class RequisicaoTransporte extends TpModel implements Comparable<Requisic
 			param.put("popUp", true);
 
 			FormataCaminhoDoContextoUrl formata = new FormataCaminhoDoContextoUrl();
-			String caminhoUrl = formata.retornarCaminhoContextoUrl(Router.getFullUrl("ServicosVeiculo.buscarServico", param));
+			String caminhoUrl = formata.retornarCaminhoContextoUrl(Resources.urlFor(ServicosVeiculo.class, "buscarServico", param));
 
 			saida.append(" - ");
 			saida.append("Servi&ccedil;o: " + servicoVeiculo.getSequence() + " <a href=\"#\" onclick=\"javascript:window.open('" + caminhoUrl + "');\">");
@@ -363,12 +354,10 @@ public class RequisicaoTransporte extends TpModel implements Comparable<Requisic
 
 	@Override
 	public String getSequence() {
-		if (this.numero != null && this.numero != 0) {
-			return cpOrgaoUsuario.getAcronimoOrgaoUsu().replace("-", "").toString() + "-" + Reflexao.recuperaAnotacaoField(this).substring(1) + "-"
-					+ String.format("%04d", this.dataHora.get(Calendar.YEAR)) + "/" + String.format("%05d", numero) + "-" + Reflexao.recuperaAnotacaoField(this).substring(0, 1);
-		} else {
+		if (this.numero != null && this.numero != 0)
+			return cpOrgaoUsuario.getAcronimoOrgaoUsu().replace("-", "").toString() + "-" + Reflexao.recuperaAnotacaoField(this).substring(1) + "-" + String.format("%04d", this.dataHora.get(Calendar.YEAR)) + "/" + String.format("%05d", numero) + "-" + Reflexao.recuperaAnotacaoField(this).substring(0, 1);
+		else
 			return "";
-		}
 	}
 
 	public void setSequence(Object cpOrgaoUsuarioObject) {
@@ -381,7 +370,7 @@ public class RequisicaoTransporte extends TpModel implements Comparable<Requisic
 		qrl = qrl + " and r.cpOrgaoUsuario.id = rt.cpOrgaoUsuario.id";
 		qrl = qrl + " and YEAR(r.dataHora) = YEAR(rt.dataHora)";
 		qrl = qrl + ")";
-		Query qry = JPA.em().createQuery(qrl);
+		Query qry = AR.em().createQuery(qrl);
 		try {
 			Object obj = qry.getSingleResult();
 			this.numero = ((RequisicaoTransporte) obj).numero + 1;
@@ -403,42 +392,44 @@ public class RequisicaoTransporte extends TpModel implements Comparable<Requisic
 			partesDoCodigo = codigoRequisicao.split("[-/]");
 
 		} catch (Exception e) {
-			throw new Exception(Messages.get("requisicaoTransporte.codigoRequisicao.exception", codigoRequisicao));
+			throw new Exception(new I18nMessage("requisicaoTransporte", "requisicaoTransporte.codigoRequisicao.exception", codigoRequisicao).getMessage());
 		}
 
 		CpOrgaoUsuario cpOrgaoUsuario = CpOrgaoUsuario.AR.find("acronimoOrgaoUsu", partesDoCodigo[0]).first();
 		Integer ano = new Integer(Integer.parseInt(partesDoCodigo[2]));
 		Long numero = new Long(Integer.parseInt(partesDoCodigo[3]));
 		String siglaDocumento = partesDoCodigo[4] + partesDoCodigo[1];
-		if (!Reflexao.recuperaAnotacaoField(requisicaoTransporte).equals(siglaDocumento)) {
-			throw new Exception(Messages.get("requisicaoTransporte.siglaDocumento.exception", codigoRequisicao));
-		}
+		if (!Reflexao.recuperaAnotacaoField(requisicaoTransporte).equals(siglaDocumento))
+			throw new Exception(new I18nMessage("requisicaoTransporte", "requisicaoTransporte.siglaDocumento.exception", codigoRequisicao).getMessage());
+
 		List<RequisicaoTransporte> requisicoesTransporte = RequisicaoTransporte.AR.find("cpOrgaoUsuario = ? and numero = ? and YEAR(dataHora) = ?", cpOrgaoUsuario, numero, ano).fetch();
+
 		if (requisicoesTransporte.size() > 1)
-			throw new Exception(Messages.get("requisicaoTransporte.codigoDuplicado.exception"));
+			throw new Exception(new I18nMessage("requisicaoTransporte", "requisicaoTransporte.codigoDuplicado.exception").getMessage());
+
 		if (requisicoesTransporte.size() == 0)
-			throw new Exception(Messages.get("requisicaoTransporte.codigoInvalido.exception"));
+			throw new Exception(new I18nMessage("requisicaoTransporte", "requisicaoTransporte.codigoInvalido.exception").getMessage());
+
 		return requisicoesTransporte.get(0);
 	}
 
 	public Andamento getUltimoAndamento() {
-		if (andamentos != null && andamentos.size() > 0) {
+		if (andamentos != null && andamentos.size() > 0)
 			ordenarAndamentosESetarUltimo();
-		} else {
-			if (!this.recarregarAndamentos()) {
+		else
+			if (!this.recarregarAndamentos())
 				setUltimoAndamento(new Andamento());
-			} else {
+			else
 				ordenarAndamentosESetarUltimo();
-			}
-		}
+
 		return this.ultimoAndamento;
 	}
 
 	private boolean recarregarAndamentos() {
 		this.andamentos = Andamento.AR.find("", this.id).fetch();
-		if (this.andamentos == null || this.andamentos.isEmpty()) {
+		if (this.andamentos == null || this.andamentos.isEmpty())
 			return false;
-		}
+
 		return true;
 	}
 
@@ -450,14 +441,15 @@ public class RequisicaoTransporte extends TpModel implements Comparable<Requisic
 	public EstadoRequisicao getUltimoEstadoNestaMissao(Long idMissao) throws Exception {
 		Missao missao = Missao.AR.findById(idMissao);
 		Andamento andamento = Andamento.AR.find("missao=? order by id desc", missao).first();
+
 		return andamento.getEstadoRequisicao();
 	}
 
 	public EstadoRequisicao getUltimoEstado() {
 		Andamento andamento = getUltimoAndamento();
-		if (andamento.getId() == null) {
+		if (andamento.getId() == null)
 			return null;
-		}
+
 		return andamento.getEstadoRequisicao();
 	}
 
@@ -472,15 +464,14 @@ public class RequisicaoTransporte extends TpModel implements Comparable<Requisic
 		String qrl = "SELECT req from RequisicaoTransporte req," + "Andamento an1 " + "WHERE req.id = an1.requisicaoTransporte.id " + "AND (an1.requisicaoTransporte.id, an1.dataAndamento) IN ("
 				+ "SELECT an1.requisicaoTransporte.id, max(an1.dataAndamento) " + "FROM Andamento an1 " + "GROUP BY an1.requisicaoTransporte.id) " + "AND (";
 
-		for (EstadoRequisicao estado : estadoRequisicao) {
+		for (EstadoRequisicao estado : estadoRequisicao)
 			qrl += "an1.estadoRequisicao = '" + estado.getDescricao() + "' OR ";
-		}
 
 		qrl = qrl.substring(0, qrl.length() - 3) + ")";
 		qrl += "ORDER BY req.id";
 
 		try {
-			Query qry = JPA.em().createQuery(qrl);
+			Query qry = AR.em().createQuery(qrl);
 			requisicoes = (List<RequisicaoTransporte>) qry.getResultList();
 		} catch (NoResultException ex) {
 			requisicoes = null;
@@ -497,17 +488,15 @@ public class RequisicaoTransporte extends TpModel implements Comparable<Requisic
 				+ cpOrgaoUsuario.getIdOrgaoUsu() + " " + "AND (an1.requisicaoTransporte.id, an1.dataAndamento) IN (" + "SELECT an1.requisicaoTransporte.id, max(an1.dataAndamento) "
 				+ "FROM Andamento an1 " + "GROUP BY an1.requisicaoTransporte.id) " + "AND (";
 
-		for (EstadoRequisicao estado : Arrays.asList(EstadoRequisicao.values())) {
-			if (estado.podeAgendar()) {
+		for (EstadoRequisicao estado : Arrays.asList(EstadoRequisicao.values()))
+			if (estado.podeAgendar())
 				qrl += "an1.estadoRequisicao = '" + estado.getDescricao() + "' OR ";
-			}
-		}
 
 		qrl = qrl.substring(0, qrl.length() - 3) + ")";
 		qrl += "ORDER BY req.id";
 
 		try {
-			Query qry = JPA.em().createQuery(qrl);
+			Query qry = AR.em().createQuery(qrl);
 			requisicoes = (List<RequisicaoTransporte>) qry.getResultList();
 		} catch (NoResultException ex) {
 			requisicoes = null;
@@ -531,23 +520,19 @@ public class RequisicaoTransporte extends TpModel implements Comparable<Requisic
 		if (ultimoAndamentoRequisicao == EstadoRequisicao.PROGRAMADA) {
 			Boolean missaoAlterada = false;
 			for (Missao missao : missoes) {
-
 				for (Iterator<RequisicaoTransporte> iterator = missao.requisicoesTransporte.iterator(); iterator.hasNext();) {
 					RequisicaoTransporte requisicaoTransporte = (RequisicaoTransporte) iterator.next();
 					if (requisicaoTransporte.id == this.id) {
 						iterator.remove();
 						missaoAlterada = true;
 					}
-
 				}
 
-				if (missao.requisicoesTransporte.size() == 0) {
+				if (missao.requisicoesTransporte.size() == 0)
 					missao.estadoMissao = EstadoMissao.CANCELADA;
-				}
 
-				if (missaoAlterada) {
+				if (missaoAlterada)
 					missao.save();
-				}
 			}
 		}
 
@@ -563,6 +548,7 @@ public class RequisicaoTransporte extends TpModel implements Comparable<Requisic
 			setUltimoAndamento(andamento);
 			return true;
 		}
+
 		return false;
 	}
 
@@ -576,37 +562,31 @@ public class RequisicaoTransporte extends TpModel implements Comparable<Requisic
 		if (ultimoAndamentoRequisicao == EstadoRequisicao.ABERTA || ultimoAndamentoRequisicao == EstadoRequisicao.REJEITADA || ultimoAndamentoRequisicao == EstadoRequisicao.AUTORIZADA) {
 
 			if (ehRequisicaoServico) {
-				if (servicoVeiculo != null) {
+				if (servicoVeiculo != null)
 					servicoVeiculo.delete();
-				} else {
-					throw new SigaTpException(Messages.get("requisicaoTransporte.naoEhRequisicaoServico.exception"));
-				}
-			} else {
-				if (servicoVeiculo != null) {
-					throw new SigaTpException(Messages.get("requisicaoTransporte.ehRequisicaoServico.exception"));
-				}
-			}
+				else
+					throw new SigaTpException(new I18nMessage("requisicaoTransporte", "requisicaoTransporte.naoEhRequisicaoServico.exception").getMessage());
+			} else
+				if (servicoVeiculo != null)
+					throw new SigaTpException(new I18nMessage("requisicaoTransporte", "requisicaoTransporte.ehRequisicaoServico.exception").getMessage());
 
 			this.refresh();
 			this.delete();
 			return;
 		}
 
-		if (!ehRequisicaoServico) {
-			throw new SigaTpException(Messages.get("requisicaoTransporte.naoPodeSerExcluida.exception"));
-		} else {
-			throw new SigaTpException(Messages.get("requisicaoTransporte.favorCancelarServico.exception"));
-		}
+		if (!ehRequisicaoServico)
+			throw new SigaTpException(new I18nMessage("requisicaoTransporte", "requisicaoTransporte.naoPodeSerExcluida.exception").getMessage());
+		else
+			throw new SigaTpException(new I18nMessage("requisicaoTransporte", "requisicaoTransporte.favorCancelarServico.exception").getMessage());
 	}
 
 	public boolean contemTipoDePassageiro(TipoDePassageiro tipo) {
-		if (tiposDePassageiro == null || tiposDePassageiro.isEmpty()) {
+		if (tiposDePassageiro == null || tiposDePassageiro.isEmpty())
 			return false;
-		}
 
-		if (tiposDePassageiro.contains(tipo)) {
+		if (tiposDePassageiro.contains(tipo))
 			return true;
-		}
 
 		return false;
 	}
@@ -614,7 +594,6 @@ public class RequisicaoTransporte extends TpModel implements Comparable<Requisic
 	public boolean getPodeAlterar() throws Exception {
 		Andamento ultAnd = getUltimoAndamento();
 		return (ultAnd.getEstadoRequisicao() == EstadoRequisicao.ABERTA && this.origemExterna == false);
-		// return ultAnd.estadoRequisicao.comparar(EstadoRequisicao.ABERTA) <= 0;
 	}
 
 	@Override
