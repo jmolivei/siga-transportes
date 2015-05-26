@@ -35,7 +35,7 @@
 										<td>${controleGabinete.odometroEmKmRetorno}</td>
 										<td>${controleGabinete.condutor.getDadosParaExibicao()}</td>
 										<td><a
-											href="${linkTo[ControleGabineteController].editarcontroleGabinete.id]}">Editar</a></td>
+											href="${linkTo[ControleGabineteController].editar[controleGabinete.id]}">Editar</a></td>
 										<td><a
 											onclick="javascript:return confirm('Tem certeza de que deseja excluir este controle?');"
 											href="${linkTo[ControleGabineteController].excluir[controleGabinete.id]}">Excluir</a></td>
@@ -52,7 +52,7 @@
 				</c:otherwise>
 			</c:choose>
 			<div class="gt-table-buttons">
-				<a href="${linkTo[ControleGabineteController].incluir[]}"
+				<a href="${linkTo[ControleGabineteController].incluir}"
 					class="gt-btn-medium gt-btn-left"><fmt:message key="views.botoes.incluir"/></a>
 			</div>
 		</div>
