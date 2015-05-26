@@ -29,50 +29,13 @@ $(function() {
 			<siga:selecao tipo="pessoa" propriedade="pessoa" tema="simple" modulo="siga" urlAcao="buscar" siglaInicial="${cpConfiguracao.dpPessoa}" idInicial="${cpConfiguracao.dpPessoa.id}" descricaoInicial="${cpConfiguracao.dpPessoa.descricao}"/>
 							
 		    <label for= "cpConfiguracao.cpSituacaoConfiguracao class="obrigatorio">  Situa&ccedil;&atilde;o Configura&ccedil;&atilde;o</label>	
-<!-- 			<select name="cpConfiguracao.cpSituacaoConfiguracao" size="1" > -->
-<%-- 				<c:forEach items="${cpSituacoesConfiguracao}" var="cpSituacaoConfiguracao"> --%>
-<%-- 					<c:choose> --%>
-<%-- 						<c:when test="${cpConfiguracao.cpSituacaoConfiguracao != null && cpSituacaoConfiguracao.idSitConfiguracao == cpConfiguracao.cpSituacaoConfiguracao.idSitConfiguracao}"> --%>
-<%--   								<option value="${cpSituacaoConfiguracao.idSitConfiguracao}" selected=selected>${cpSituacaoConfiguracao.dscSitConfiguracao}</option> --%>
-<%-- 						</c:when> --%>
-<%-- 						<c:otherwise> --%>
-<%-- 		     		 		<option value="${cpSituacaoConfiguracao.idSitConfiguracao}" >${cpSituacaoConfiguracao.dscSitConfiguracao}</option> --%>
-<%-- 						</c:otherwise> --%>
-<%-- 					</c:choose> --%>
-<%-- 				</c:forEach> --%>
-<!--    			</select> -->
-   			
    			<siga:select id="cpSituacaoConfiguracao" name="cpConfiguracao.cpSituacaoConfiguracao" list="cpSituacoesConfiguracao" listKey="idSitConfiguracao" listValue="dscSitConfiguracao" value="${cpConfiguracao.cpSituacaoConfiguracao.idSitConfiguracao}" headerKey="0" headerValue=""/>
 			
 			<label for= "cpConfiguracao.cpTipoConfiguracao" class= "obrigatorio"> Tipo de Configura&ccedil;&atilde;o</label>	
    			<siga:select id="cpTipoConfiguracao" name="cpConfiguracao.cpTipoConfiguracao" list="cpTiposConfiguracao" listKey="idTpConfiguracao" listValue="dscTpConfiguracao" value="${cpConfiguracao.cpTipoConfiguracao.idTpConfiguracao}" headerKey="0" headerValue=""/>
-<!-- 			<select name="cpConfiguracao.cpTipoConfiguracao" size="1" > -->
-<%-- 				<c:forEach items="${cpTiposConfiguracao}" var="cpTipoConfiguracao"> --%>
-<%-- 					<c:choose> --%>
-<%-- 						<c:when test="${cpConfiguracao.cpTipoConfiguracao != null && cpTipoConfiguracao.idTpConfiguracao == cpConfiguracao.cpTipoConfiguracao.idTpConfiguracao}"> --%>
-<%--  							<option value="${cpTipoConfiguracao.idTpConfiguracao}" selected=selected>${cpTipoConfiguracao.dscTpConfiguracao}</option> --%>
-<%-- 						</c:when> --%>
-<%-- 						<c:otherwise> --%>
-<%--  							<option value="${cpTipoConfiguracao.idTpConfiguracao}" >${cpTipoConfiguracao.dscTpConfiguracao}</option> --%>
-<%-- 						</c:otherwise> --%>
-<%-- 					</c:choose> --%>
-<%-- 				</c:forEach> --%>
-<!-- 			</select> -->
 			
 			<label for= "cpConfiguracao.complexo" class= "obrigatorio">Complexo</label>	
    			<siga:select id="complexo" name="cpConfiguracao.complexo" list="cpComplexos" listKey="idComplexo" listValue="nomeComplexo" value="${cpConfiguracao.complexo.idComplexo}" headerKey="0" headerValue=""/>
-<!-- 			<select name="cpConfiguracao.complexo" size="1" > -->
-<%-- 				<c:forEach items="${cpComplexos}" var="cpComplexo"> --%>
-<%-- 					<c:choose> --%>
-<%-- 						<c:when test="${cpConfiguracao.complexo != null && cpComplexo.idComplexo == cpConfiguracao.complexo.idComplexo}"> --%>
-<%-- 								<option value="${cpComplexo.idComplexo}" selected=selected>${cpComplexo.nomeComplexo}</option> --%>
-<%-- 						</c:when> --%>
-<%-- 						<c:otherwise> --%>
-<%-- 							<option value="${cpComplexo.idComplexo}" >${cpComplexo.nomeComplexo}</option> --%>
-<%-- 						</c:otherwise> --%>
-<%-- 					</c:choose> --%>
-<%-- 				</c:forEach> --%>
-<!-- 			</select> -->
 		</div>
 	</div>
 	

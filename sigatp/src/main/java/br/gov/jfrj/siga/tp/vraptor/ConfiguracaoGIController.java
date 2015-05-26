@@ -12,6 +12,7 @@ import br.com.caelum.vraptor.Path;
 import br.com.caelum.vraptor.Resource;
 import br.com.caelum.vraptor.Result;
 import br.com.caelum.vraptor.Validator;
+import br.com.caelum.vraptor.view.Results;
 import br.gov.jfrj.siga.cp.CpComplexo;
 import br.gov.jfrj.siga.cp.CpConfiguracao;
 import br.gov.jfrj.siga.cp.CpServico;
@@ -132,10 +133,7 @@ public class ConfiguracaoGIController extends TpController {
 		cpTiposConfiguracao.add(tpConf1);
 
 		List<CpSituacaoConfiguracao> cpSituacoesConfiguracao = CpSituacaoConfiguracao.AR.findAll();
-
-		// TODO  HD refatorar
 		List<CpComplexo> cpComplexos = CpComplexo.AR.find(" orgaoUsuario.idOrgaoUsu = ? ", idOrgaoUsu).fetch();
-//		List<CpComplexo> cpComplexos = TpDao.find(CpComplexo.class, "orgaoUsuario = ?", cpOrgaoUsuario).fetch();
 
 		result.include("cpOrgaoUsuario",cpOrgaoUsuario);
 		result.include("cpTiposConfiguracao",cpTiposConfiguracao);
@@ -155,8 +153,8 @@ public class ConfiguracaoGIController extends TpController {
 	public void salvar(@Valid CpConfiguracao cpConfiguracao) throws Exception {
 		if(validator.hasErrors()) {
 			carregarDadosPerifericos(cpConfiguracao.getOrgaoUsuario().getIdOrgaoUsu());
-			// TODO  HD arrumar!
-//			render(cpConfiguracao);
+			//TODO  HD listagem ou edição?
+			validator.onErrorUse(Results.page()).of(ConfiguracaoGIController.class).editar(cpConfiguracao.getOrgaoUsuario().getIdOrgaoUsu());
 		}
 		CpConfiguracao cpConfiguracaoNova = new CpConfiguracao();
 		CpConfiguracao cpConfiguracaoAnterior = CpConfiguracao.AR.findById(cpConfiguracao.getId());
