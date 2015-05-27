@@ -33,10 +33,9 @@ import javax.validation.constraints.NotNull;
 
 import org.hibernate.envers.Audited;
 import org.hibernate.envers.RelationTargetAuditMode;
+import org.hibernate.validator.constraints.NotEmpty;
 
 import controllers.ServicosVeiculo;
-import play.modules.br.jus.jfrj.siga.uteis.validadores.sequence.SequenceMethods;
-import play.modules.br.jus.jfrj.siga.uteis.validadores.validarAnoData.ValidarAnoData;
 import br.com.caelum.vraptor.validator.I18nMessage;
 import br.gov.jfrj.siga.cp.CpComplexo;
 import br.gov.jfrj.siga.dp.CpOrgaoUsuario;
@@ -45,6 +44,8 @@ import br.gov.jfrj.siga.model.ActiveRecord;
 import br.gov.jfrj.siga.tp.util.FormataCaminhoDoContextoUrl;
 import br.gov.jfrj.siga.tp.util.Reflexao;
 import br.gov.jfrj.siga.tp.util.SigaTpException;
+import br.gov.jfrj.siga.tp.validation.annotation.Data;
+import br.gov.jfrj.siga.tp.vraptor.ConvertableEntity;
 import br.gov.jfrj.siga.vraptor.handler.Resources;
 import br.jus.jfrj.siga.uteis.Sequence;
 import br.jus.jfrj.siga.uteis.SiglaDocumentoType;
@@ -53,7 +54,7 @@ import br.jus.jfrj.siga.uteis.SiglaDocumentoType;
 @Entity
 @Audited
 @Table(name = "REQUISICAOTRANSPORTE", schema = "SIGATP")
-public class RequisicaoTransporte extends TpModel implements Comparable<RequisicaoTransporte>, SequenceMethods {
+public class RequisicaoTransporte extends TpModel implements Comparable<RequisicaoTransporte>, ConvertableEntity {
 	private static final String IMG_LINKNOVAJANELAICON = "/sigatp/public/images/linknovajanelaicon.png";
 
 	public static final ActiveRecord<RequisicaoTransporte> AR = new ActiveRecord<>(RequisicaoTransporte.class);
@@ -68,14 +69,14 @@ public class RequisicaoTransporte extends TpModel implements Comparable<Requisic
 	@Column(updatable = false)
 	private Long numero;
 
-	@ValidarAnoData(descricaoCampo = "Data/Hora")
+	@Data(descricaoCampo = "dataHora")
 	private Calendar dataHora;
 
 	@NotNull
-	@ValidarAnoData(descricaoCampo = "Data/Hora Saida Prevista")
+	@Data(descricaoCampo = "dataHoraSaidaPrevista")
 	private Calendar dataHoraSaidaPrevista;
 
-	@ValidarAnoData(descricaoCampo = "Data/Hora Retorno Previsto")
+	@Data(descricaoCampo = "dataHoraRetornoPrevisto")
 	private Calendar dataHoraRetornoPrevisto;
 
 	@NotNull
@@ -93,11 +94,16 @@ public class RequisicaoTransporte extends TpModel implements Comparable<Requisic
 	@JoinColumn(name = "ID_FINALIDADE")
 	private FinalidadeRequisicao tipoFinalidade;
 
+	@NotNull
+	@NotEmpty
 	private String finalidade;
 
+	@NotNull
+	@NotEmpty
 	private String passageiros;
 
 	@NotNull
+	@NotEmpty
 	private String itinerarios;
 
 	@OneToMany(orphanRemoval = true, mappedBy = "requisicaoTransporte")
@@ -317,7 +323,7 @@ public class RequisicaoTransporte extends TpModel implements Comparable<Requisic
 
 	public String getDescricaoCompleta() throws Exception {
 		StringBuffer saida = new StringBuffer();
-		saida.append(getSequence().toString());
+		saida.append(buscarSequence().toString());
 
 		boolean temTipoPassageiro = false;
 		for (Iterator<TipoDePassageiro> iterator = tiposDePassageiro.iterator(); iterator.hasNext();) {
@@ -352,8 +358,7 @@ public class RequisicaoTransporte extends TpModel implements Comparable<Requisic
 		return saida.toString();
 	}
 
-	@Override
-	public String getSequence() {
+	public String buscarSequence() {
 		if (this.numero != null && this.numero != 0)
 			return cpOrgaoUsuario.getAcronimoOrgaoUsu().replace("-", "").toString() + "-" + Reflexao.recuperaAnotacaoField(this).substring(1) + "-" + String.format("%04d", this.dataHora.get(Calendar.YEAR)) + "/" + String.format("%05d", numero) + "-" + Reflexao.recuperaAnotacaoField(this).substring(0, 1);
 		else

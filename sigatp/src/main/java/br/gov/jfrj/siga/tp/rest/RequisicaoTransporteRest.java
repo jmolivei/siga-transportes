@@ -21,7 +21,7 @@ public class RequisicaoTransporteRest {
 	}
 	
 	public String getSequence() {
-		return requisicaoTransporte.getSequence();
+		return requisicaoTransporte.buscarSequence();
 	}
 	
 	public String getDataHoraSaidaPrevista() {

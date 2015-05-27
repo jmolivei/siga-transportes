@@ -1,5 +1,4 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
-<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%>
 <%@ taglib prefix="siga" uri="http://localhost/jeetags"%>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 <%@ taglib prefix="sigatp" tagdir="/WEB-INF/tags/"%>
@@ -127,7 +126,7 @@
 			</c:choose>
 
 			<form id="formIncluirMissao" action="${linkTo[MissaoController].incluirComRequisicoes}" enctype="multipart/form-data">
-				<jsp:include page="../requisicao/menuListar.jsp"></jsp:include>
+				<jsp:include page="menuListar.jsp"></jsp:include>
 				<c:choose>
 					<c:when test="${requisicoesTransporte.size() > 0}">
 						<div class="gt-content-box gt-for-table">
@@ -146,19 +145,23 @@
 								<tbody>
 									<c:forEach items="${requisicoesTransporte}" var="requisicaoTransporte">
 									   	<tr id ="row_${requisicaoTransporte.id}">
-						 			   	   	<td><fmt:formatDate pattern="dd/MM/yyyy" value="${requisicaoTransporte.dataHoraSaidaPrevista.getTime()}" /></td>
+						 			   	   	<td><fmt:formatDate pattern="dd/MM/yyyy HH:mm" value="${requisicaoTransporte.dataHoraSaidaPrevista.time}" /></td>
 								    		<td>
 								    			<c:choose>
 								    				<c:when test="${requisicaoTransporte.dataHoraRetornoPrevisto != null}">
-								    					<fmt:formatDate pattern="dd/MM/yyyy" value="${requisicaoTransporte.dataHoraRetornoPrevisto.getTime()}" />
+								    					<fmt:formatDate pattern="dd/MM/yyyy HH:mm" value="${requisicaoTransporte.dataHoraRetornoPrevisto.time}" />
 								    				</c:when>
 								    				<c:otherwise>
-								    					N&atilde;o
+								    					<fmt:message key="no"/>
 								    				</c:otherwise>
 								    			</c:choose>
 								    		</td>
 									   	    <td>
-									   	    	<tptags:link texto="${requisicaoTransporte.descricaoCompleta}" parteTextoLink="${requisicaoTransporte.sequence}" comando="${linkTo[RequisicaoController].buscarPelaSequence[requisicaoTransporte.sequence][true]}" ehEditavel="true"></tptags:link>
+									   	    	<tptags:link texto="${requisicaoTransporte.descricaoCompleta}"
+									   	    				 parteTextoLink="${requisicaoTransporte.buscarSequence()}"
+									   	    				 comando="${linkTo[RequisicaoController].buscarPelaSequence[true][requisicaoTransporte.buscarSequence()]}"
+									   	    				 ehEditavel="true">
+									   	    	</tptags:link>
 											</td>
 											<td>
 												<c:forEach items="${requisicaoTransporte.missoesOrdenadas}" var="missao">
@@ -167,7 +170,7 @@
 														<span class="status_${requisicaoTransporte.getUltimoEstadoNestaMissao(missao.id).primeiraLetra()}" alt="${requisicaoTransporte.getUltimoEstadoNestaMissao(missao.id)}" title="${requisicaoTransporte.getUltimoEstadoNestaMissao(missao.id)}">
 															${requisicaoTransporte.getUltimoEstadoNestaMissao(missao.id).primeiraLetra()}
 														</span>
-														<a href="#" onclick="javascript:window.open('${linkTo[MissaoController].buscarPelaSequence[missao.sequence][true]}');">
+														<a href="#" onclick="javascript:window.open('${linkTo[MissaoController].buscarPelaSequence[true][missao.sequence]}');">
 															<img src="/sigatp/public/images/linknovajanelaicon.png" alt="Abrir em uma nova janela" title="Abrir em uma nova janela">
 														</a>
 													</nobr>

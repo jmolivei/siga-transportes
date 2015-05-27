@@ -7,7 +7,6 @@ import javax.servlet.jsp.JspWriter;
 import javax.servlet.jsp.tagext.TagSupport;
 
 import br.com.caelum.vraptor.validator.I18nMessage;
-import br.gov.jfrj.siga.tp.util.FormataCaminhoDoContextoUrl;
 
 public class LinkTag extends TagSupport {
 
@@ -43,9 +42,7 @@ public class LinkTag extends TagSupport {
 		else
 			out.append(parteTextoLink);
 
-		FormataCaminhoDoContextoUrl formata = new FormataCaminhoDoContextoUrl();
-		String caminhoUrl = formata.retornarCaminhoContextoUrl(comando);
-		out.append(" <a href=\"#\" onclick=\"javascript:window.open('" + caminhoUrl + "');\">");
+		out.append(" <a href=\"#\" onclick=\"javascript:window.open('" + comando + "');\">");
 		out.append("<img src=\"" + IMG_LINKNOVAJANELAICON + "\" alt=\"Abrir em uma nova janela\" title=\"Abrir em uma nova janela\"></a> ");
 		out.append(texto.replace(parteTextoLink, ""));
 

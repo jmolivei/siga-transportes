@@ -27,6 +27,7 @@ import br.gov.jfrj.siga.tp.model.EstadoRequisicao;
 import br.gov.jfrj.siga.tp.model.FinalidadeRequisicao;
 import br.gov.jfrj.siga.tp.model.RequisicaoTransporte;
 import br.gov.jfrj.siga.tp.model.TipoDePassageiro;
+import br.gov.jfrj.siga.tp.model.TipoRequisicao;
 import br.gov.jfrj.siga.tp.model.TpDao;
 import br.gov.jfrj.siga.tp.util.SigaTpException;
 import br.gov.jfrj.siga.vraptor.SigaObjects;
@@ -82,7 +83,7 @@ public class RequisicaoController extends TpController {
 		result.redirectTo(this).listarPAprovar();
 	}
 
-
+	@Path("/listarFiltrado")
 	public void listarFiltrado(EstadoRequisicao estadoRequisicao, EstadoRequisicao estadoRequisicaoP) throws Exception {
 		if (estadoRequisicaoP == null) { estadoRequisicaoP = estadoRequisicao; }
 		EstadoRequisicao estadosRequisicao[] = {estadoRequisicao,estadoRequisicaoP};
@@ -98,6 +99,7 @@ public class RequisicaoController extends TpController {
 	@RoleAdminMissao
 	@RoleAdminMissaoComplexo
 	@RoleAprovador
+	@Path("/listarPAprovarFiltrado/{estadoRequisicao}")
 	public void listarPAprovarFiltrado(EstadoRequisicao estadoRequisicao) throws Exception {
 		EstadoRequisicao estadosRequisicao[] = {estadoRequisicao};
 		carregarRequisicoesUltimosSeteDiasPorEstados(estadosRequisicao);
@@ -108,26 +110,10 @@ public class RequisicaoController extends TpController {
 		result.redirectTo(this).listarPAprovar();
 	}
 
+	@Path("/salvar")
 	public void salvar(RequisicaoTransporte requisicaoTransporte, TipoDePassageiro[] tiposDePassageiros, boolean checkRetorno, boolean checkSemPassageiros) throws Exception {
-		if ((requisicaoTransporte.getDataHoraSaidaPrevista() != null) && (requisicaoTransporte.getDataHoraRetornoPrevisto() != null) && (!requisicaoTransporte.ordemDeDatasCorreta()))
-			validator.add(new I18nMessage("dataHoraRetornoPrevisto", "requisicaoTransporte.dataHoraRetornoPrevisto.validation"));
-
-		if(!checkSemPassageiros)
-			if((tiposDePassageiros == null) || (tiposDePassageiros.length == 0))
-				validator.add(new I18nMessage("tiposDePassageiros", "requisicaoTransporte.tiposDePassageiros.validation"));
-
+		validar(requisicaoTransporte, checkSemPassageiros, tiposDePassageiros, checkRetorno);
 		requisicaoTransporte.setTiposDePassageiro(converterTiposDePassageiros(tiposDePassageiros));
-
-		if(checkRetorno && requisicaoTransporte.getDataHoraRetornoPrevisto() == null)
-			validator.add(new I18nMessage("dataHoraRetornoPrevisto", "requisicaoTransporte.dataHoraRetornoPrevisto.validation"));
-
-		if(!checkSemPassageiros && (requisicaoTransporte.getPassageiros() == null || requisicaoTransporte.getPassageiros().isEmpty()))
-			validator.add(new I18nMessage("passageiros", "requisicaoTransporte.passageiros.validation"));
-
-		if(requisicaoTransporte.getTipoFinalidade().ehOutra() && requisicaoTransporte.getFinalidade().isEmpty())
-			validator.add(new I18nMessage("finalidade", "requisicaoTransporte.finalidade.validation"));
-
-		validator.validate(requisicaoTransporte);
 		redirecionarSeErroAoSalvar(requisicaoTransporte, checkRetorno, checkSemPassageiros);
 
 		DpPessoa dpPessoa = recuperaPessoa(requisicaoTransporte.getIdSolicitante());
@@ -148,7 +134,8 @@ public class RequisicaoController extends TpController {
 		requisicaoTransporte.setSolicitante(recuperaPessoa(requisicaoTransporte.getIdSolicitante()));
 
 		requisicaoTransporte.save();
-		requisicaoTransporte.refresh();
+		//requisicaoTransporte.refresh();
+
 		if (novaRequisicao) {
 			Andamento andamento = new Andamento();
 			andamento.setDescricao("NOVA REQUISICAO");
@@ -160,6 +147,27 @@ public class RequisicaoController extends TpController {
 		}
 
 		result.redirectTo(this).listar();
+	}
+
+	private void validar(RequisicaoTransporte requisicaoTransporte, boolean checkSemPassageiros, TipoDePassageiro[] tiposDePassageiros, boolean checkRetorno) {
+
+		if ((requisicaoTransporte.getDataHoraSaidaPrevista() != null) && (requisicaoTransporte.getDataHoraRetornoPrevisto() != null) && (!requisicaoTransporte.ordemDeDatasCorreta()))
+			validator.add(new I18nMessage("dataHoraRetornoPrevisto", "requisicaoTransporte.dataHoraRetornoPrevisto.validation"));
+
+		if(!checkSemPassageiros)
+			if((tiposDePassageiros == null) || (tiposDePassageiros.length == 0))
+				validator.add(new I18nMessage("tiposDePassageiros", "requisicaoTransporte.tiposDePassageiros.validation"));
+
+		if(checkRetorno && requisicaoTransporte.getDataHoraRetornoPrevisto() == null)
+			validator.add(new I18nMessage("dataHoraRetornoPrevisto", "requisicaoTransporte.dataHoraRetornoPrevisto.validation"));
+
+		if(!checkSemPassageiros && (requisicaoTransporte.getPassageiros() == null || requisicaoTransporte.getPassageiros() == null))
+			validator.add(new I18nMessage("passageiros", "requisicaoTransporte.passageiros.validation"));
+
+		if(requisicaoTransporte.getTipoFinalidade().ehOutra() && requisicaoTransporte.getFinalidade() == null)
+			validator.add(new I18nMessage("finalidade", "requisicaoTransporte.finalidade.validation"));
+
+		validator.validate(requisicaoTransporte);
 	}
 
 	private void carregarRequisicoesUltimosSeteDiasPorEstados(EstadoRequisicao[] estadosRequisicao) throws Exception {
@@ -239,6 +247,7 @@ public class RequisicaoController extends TpController {
 		return tiposParaSalvar;
 	}
 
+	@Path("/salvarAndamentos")
 	public void salvarAndamentos(@Valid RequisicaoTransporte requisicaoTransporte, boolean checkRetorno, boolean checkSemPassageiros) throws Exception {
 		redirecionarSeErroAoSalvar(requisicaoTransporte, checkRetorno, checkSemPassageiros);
 		checarSolicitante(requisicaoTransporte.getSolicitante().getIdInicial(), requisicaoTransporte.getCpComplexo().getIdComplexo(), true);
@@ -271,10 +280,9 @@ public class RequisicaoController extends TpController {
 			result.include("checkSemPassageiros", checkSemPassageiros);
 
 			if(requisicaoTransporte.getId() > 0)
-				result.forwardTo(RequisicaoController.class).editar(requisicaoTransporte.getId());
+				validator.onErrorForwardTo(RequisicaoController.class).editar(requisicaoTransporte.getId());
 			else
-				result.forwardTo(RequisicaoController.class).incluir();
-
+				validator.onErrorForwardTo(RequisicaoController.class).incluir();
 		}
 	}
 
@@ -282,6 +290,7 @@ public class RequisicaoController extends TpController {
 		result.include("finalidades", FinalidadeRequisicao.listarTodos());
 	}
 
+	@Path("/incluir")
 	public void incluir(){
 		RequisicaoTransporte requisicaoTransporte = new RequisicaoTransporte();
 		DpPessoa dpPessoa = getTitular();
@@ -292,9 +301,13 @@ public class RequisicaoController extends TpController {
 
 		carregarFinalidades();
 
+
+		result.include("opcoesDeTiposDePassageiro", TipoDePassageiro.values());
+		result.include("tiposRequisicao", TipoRequisicao.values());
 		result.include("requisicaoTransporte", requisicaoTransporte);
 	}
 
+	@Path("/editar/{id}")
 	public void editar(Long id) throws Exception {
 		RequisicaoTransporte requisicaoTransporte = RequisicaoTransporte.AR.findById(id);
 		checarSolicitante(requisicaoTransporte.getSolicitante().getIdInicial(), requisicaoTransporte.getCpComplexo().getIdComplexo(), true);
@@ -304,8 +317,10 @@ public class RequisicaoController extends TpController {
 		carregarFinalidades();
 		boolean checkRetorno = (requisicaoTransporte.getDataHoraRetornoPrevisto() == null ? false : true);
 
+		result.include("esconderBotoes", false);
 		result.include("requisicaoTransporte", requisicaoTransporte);
 		result.include("checkRetorno", checkRetorno);
+		result.include("tiposRequisicao", TipoRequisicao.values());
 	}
 
 	private void checarSolicitante(
@@ -344,6 +359,7 @@ public class RequisicaoController extends TpController {
 		}
 	}
 
+	@Path("/ler/{id}")
 	public void ler(Long id) throws Exception {
 		RequisicaoTransporte requisicaoTransporte = RequisicaoTransporte.AR.findById(id);
 		checarSolicitante(requisicaoTransporte.getSolicitante().getIdInicial(), requisicaoTransporte.getCpComplexo().getIdComplexo(), false);
@@ -356,26 +372,30 @@ public class RequisicaoController extends TpController {
 	}
 
 	protected void carregarTiposDeCarga(RequisicaoTransporte req) {
-		TipoDePassageiro tipoDePassageiro = TipoDePassageiro.CARGA;
+	//	TipoDePassageiro tipoDePassageiro = TipoDePassageiro.CARGA;
 		boolean checkSemPassageiros = false;
 
 		if( (req != null) && (req.getTiposDePassageiro() != null) )
 			checkSemPassageiros = req.getTiposDePassageiro().contains(TipoDePassageiro.NENHUM);
 
-		result.include("tipoDePassageiro", tipoDePassageiro);
+		result.include("opcoesDeTiposDePassageiro", TipoDePassageiro.values());
 		result.include("checkSemPassageiros", checkSemPassageiros);
 	}
 
+	@Path("/ler")
 	public void ler() {
-		// Redireciona para a view ler.jsp
+		result.include("esconderBotoes", true);
 	}
 
-	public void buscarPelaSequence(String sequence, boolean popUp) throws Exception {
-		RequisicaoTransporte req = recuperarPelaSigla(sequence, popUp);
-		carregarTiposDeCarga(req);
+	@Path("/buscarPelaSequence/{popUp}/{sequence*}")
+	public void buscarPelaSequence(boolean popUp, String sequence) throws Exception {
+		RequisicaoTransporte requisicaoTransporte = recuperarPelaSigla(sequence, popUp);
+		carregarTiposDeCarga(requisicaoTransporte);
 		carregarFinalidades();
 
-		result.redirectTo(this).ler();
+		result.include("tiposRequisicao", TipoRequisicao.values());
+		result.include("requisicaoTransporte", requisicaoTransporte);
+		result.forwardTo(this).ler();
 	}
 
 	protected RequisicaoTransporte recuperarPelaSigla(String sequence, boolean popUp) throws Exception {
@@ -396,6 +416,7 @@ public class RequisicaoController extends TpController {
 		return requisicaoTransporte;
 	}
 
+	@Path("/excluir/{id}")
 	public void excluir(Long id) throws Exception {
 		RequisicaoTransporte requisicaoTransporte = RequisicaoTransporte.AR.findById(id);
 		checarSolicitante(requisicaoTransporte.getSolicitante().getIdInicial(), requisicaoTransporte.getCpComplexo().getIdComplexo(), true);
