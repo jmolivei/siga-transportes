@@ -16,8 +16,6 @@ import br.com.caelum.vraptor.validator.I18nMessage;
 import br.com.caelum.vraptor.view.Results;
 import br.gov.jfrj.siga.dp.dao.CpDao;
 import br.gov.jfrj.siga.tp.auth.AutorizacaoGI;
-import br.gov.jfrj.siga.tp.auth.annotation.RoleAdminGabinete;
-import br.gov.jfrj.siga.tp.auth.annotation.RoleGabinete;
 import br.gov.jfrj.siga.tp.model.Condutor;
 import br.gov.jfrj.siga.tp.model.ControleGabinete;
 import br.gov.jfrj.siga.tp.model.ItemMenu;
@@ -131,7 +129,7 @@ public class ControleGabineteController extends TpController {
 		double ultimoOdometroDesteVeiculo = ControleGabinete.buscarUltimoOdometroPorVeiculo(controleGabinete.getVeiculo(), controleGabinete);
 		if (controleGabinete.getOdometroEmKmSaida() < ultimoOdometroDesteVeiculo) 
 			validator.add(new I18nMessage("odometroEmKmSaida", "controlesGabinete.odometroEmKmSaida.validation"));
-	}
+	} 
 
 //	@RoleGabinete
 //	@RoleAdminGabinete

@@ -19,11 +19,12 @@ import org.hibernate.envers.RelationTargetAuditMode;
 import br.gov.jfrj.siga.dp.DpPessoa;
 import br.gov.jfrj.siga.model.ActiveRecord;
 import br.gov.jfrj.siga.tp.validation.annotation.Data;
+import br.gov.jfrj.siga.vraptor.converter.ConvertableEntity;
 
 @Entity
 @Audited
 @Table(schema = "SIGATP")
-public class ControleGabinete extends TpModel {
+public class ControleGabinete extends TpModel implements ConvertableEntity {
 	
 	private static final long serialVersionUID = 5270396853989326489L;
 
@@ -71,7 +72,6 @@ public class ControleGabinete extends TpModel {
 	@JoinColumn(name = "ID_TITULAR")
 	private DpPessoa titular;
 	
-	@NotNull
 	@Audited(targetAuditMode = RelationTargetAuditMode.NOT_AUDITED)
 	@ManyToOne
 	@JoinColumn(name = "ID_SOLICITANTE")
