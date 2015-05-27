@@ -31,12 +31,13 @@ import br.gov.jfrj.siga.dp.CpOrgaoUsuario;
 import br.gov.jfrj.siga.dp.DpPessoa;
 import br.gov.jfrj.siga.model.ActiveRecord;
 import br.gov.jfrj.siga.tp.validation.annotation.Data;
+import br.gov.jfrj.siga.vraptor.converter.ConvertableEntity;
 
 @SuppressWarnings("serial")
 @Entity
 @Audited
 @Table(schema = "SIGATP")
-public class Abastecimento extends TpModel implements Comparable<Abastecimento> {
+public class Abastecimento extends TpModel implements Comparable<Abastecimento>, ConvertableEntity {
 	
 	public static final ActiveRecord<Abastecimento> AR = new ActiveRecord<>(Abastecimento.class);
 	
