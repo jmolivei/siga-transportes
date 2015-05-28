@@ -172,7 +172,7 @@ public class EmailNotificacoes extends Job<Object>  {
 			aprovador = item.getUltimoAndamento().getResponsavel();
 			int index = Arrays.binarySearch(arrayAprovador, aprovador, comp);
 			DpPessoa chave = lstAprovadores.get(index);
-			String sequencia = item.getSequence() + " " + item.getId() + ",";
+			String sequencia = item.buscarSequence() + " " + item.getId() + ",";
 
 			if (dadosAprovador.containsKey(lstAprovadores.get(index))) {
 				dadosAprovador.put(chave, dadosAprovador.get(chave) + sequencia);

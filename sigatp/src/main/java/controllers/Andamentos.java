@@ -110,7 +110,7 @@ public class Andamentos extends Controller {
 			if (andamento.getRequisicaoTransporte().getUltimoAndamento().getEstadoRequisicao() != EstadoRequisicao.AUTORIZADA &&
 				andamento.getRequisicaoTransporte().getUltimoAndamento().getEstadoRequisicao() != EstadoRequisicao.REJEITADA &&
 				andamento.getRequisicaoTransporte().getUltimoAndamento().getEstadoRequisicao() != EstadoRequisicao.ABERTA) {
-				throw new Exception(Messages.get("andamentos.autorizarOuCancelar.exception", andamento.getRequisicaoTransporte().getSequence()));
+				throw new Exception(Messages.get("andamentos.autorizarOuCancelar.exception", andamento.getRequisicaoTransporte().buscarSequence()));
 			}
 		}
 		render();
@@ -125,7 +125,7 @@ public class Andamentos extends Controller {
 			if (andamento.getRequisicaoTransporte().getUltimoAndamento().getEstadoRequisicao() != EstadoRequisicao.AUTORIZADA &&
 				andamento.getRequisicaoTransporte().getUltimoAndamento().getEstadoRequisicao() != EstadoRequisicao.REJEITADA &&
 				andamento.getRequisicaoTransporte().getUltimoAndamento().getEstadoRequisicao() != EstadoRequisicao.ABERTA) {
-				throw new Exception(Messages.get("andamentos.autorizarOuCancelar.exception", andamento.getRequisicaoTransporte().getSequence()));
+				throw new Exception(Messages.get("andamentos.autorizarOuCancelar.exception", andamento.getRequisicaoTransporte().buscarSequence()));
 			}
 		}
 		render();

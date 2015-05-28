@@ -16,78 +16,179 @@ import javax.validation.constraints.NotNull;
 import org.hibernate.envers.Audited;
 import org.hibernate.envers.RelationTargetAuditMode;
 
-import play.data.binding.As;
-import play.data.validation.Required;
-import play.db.jpa.GenericModel;
-import play.modules.br.jus.jfrj.siga.uteis.validadores.validarAnoData.ValidarAnoData;
 import br.gov.jfrj.siga.dp.DpPessoa;
+import br.gov.jfrj.siga.model.ActiveRecord;
+import br.gov.jfrj.siga.tp.validation.annotation.Data;
+import br.gov.jfrj.siga.vraptor.converter.ConvertableEntity;
 
 @Entity
 @Audited
 @Table(schema = "SIGATP")
-public class ControleGabinete extends GenericModel {
+public class ControleGabinete extends TpModel implements ConvertableEntity {
+	
+	private static final long serialVersionUID = 5270396853989326489L;
+
+	public static final ActiveRecord<ControleGabinete> AR = new ActiveRecord<>(ControleGabinete.class);
 	
 	@Id
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "hibernate_sequence_generator") @SequenceGenerator(name = "hibernate_sequence_generator", sequenceName="SIGATP.hibernate_sequence") 
-	public Long id;
+	private Long id;
 	
-	@As(lang={"*"}, value={"dd/MM/yyyy HH:mm"})
-	@ValidarAnoData(descricaoCampo="Data/Hora")
-	public Calendar dataHora;
+	@Data(descricaoCampo="Data/Hora")
+	private Calendar dataHora;
 	
-	@Required
-	@As(lang={"*"}, value={"dd/MM/yyyy HH:mm"})
-	@ValidarAnoData(descricaoCampo="Data/Hora Saida")
-	public Calendar dataHoraSaida;
-	
-	@Required
-	@As(lang={"*"}, value={"dd/MM/yyyy HH:mm"})
-	@ValidarAnoData(descricaoCampo="Data/Hora Retorno")
-	public Calendar dataHoraRetorno;
-	
-	@Required
-	public String itinerario;
-	
-	@Required
-	@ManyToOne
 	@NotNull
-	public Veiculo veiculo;
+	@Data(descricaoCampo="Data/Hora Saida")
+	private Calendar dataHoraSaida;
 	
-	@Required
-	@ManyToOne
 	@NotNull
-	public Condutor condutor;	
+	@Data(descricaoCampo="Data/Hora Retorno")
+	private Calendar dataHoraRetorno;
 	
-	@Required
-	public double odometroEmKmSaida;
+	@NotNull
+	private String itinerario;
 	
-	@Required
-	public double odometroEmKmRetorno;
+	@NotNull
+	@ManyToOne
+	private Veiculo veiculo;
 	
-	@Required
-	public String naturezaDoServico;
+	@NotNull
+	@ManyToOne
+	private Condutor condutor;	
+
+	@NotNull
+	private double odometroEmKmSaida;
+
+	@NotNull
+	private double odometroEmKmRetorno;
 	
-	public String ocorrencias;
+	@NotNull
+	private String naturezaDoServico;
+	
+	private String ocorrencias;
 	
 	@Audited(targetAuditMode = RelationTargetAuditMode.NOT_AUDITED)
 	@ManyToOne
 	@JoinColumn(name = "ID_TITULAR")
-	public DpPessoa titular;
+	private DpPessoa titular;
 	
-	@NotNull
 	@Audited(targetAuditMode = RelationTargetAuditMode.NOT_AUDITED)
 	@ManyToOne
 	@JoinColumn(name = "ID_SOLICITANTE")
-	public DpPessoa solicitante;
+	private DpPessoa solicitante;
 	
+	public Long getId() {
+		return id;
+	}
+
+	public void setId(Long id) {
+		this.id = id;
+	}
+
+	public Calendar getDataHora() {
+		return dataHora;
+	}
+
+	public void setDataHora(Calendar dataHora) {
+		this.dataHora = dataHora;
+	}
+
+	public Calendar getDataHoraSaida() {
+		return dataHoraSaida;
+	}
+
+	public void setDataHoraSaida(Calendar dataHoraSaida) {
+		this.dataHoraSaida = dataHoraSaida;
+	}
+
+	public Calendar getDataHoraRetorno() {
+		return dataHoraRetorno;
+	}
+
+	public void setDataHoraRetorno(Calendar dataHoraRetorno) {
+		this.dataHoraRetorno = dataHoraRetorno;
+	}
+
+	public String getItinerario() {
+		return itinerario;
+	}
+
+	public void setItinerario(String itinerario) {
+		this.itinerario = itinerario;
+	}
+
+	public Veiculo getVeiculo() {
+		return veiculo;
+	}
+
+	public void setVeiculo(Veiculo veiculo) {
+		this.veiculo = veiculo;
+	}
+
+	public Condutor getCondutor() {
+		return condutor;
+	}
+
+	public void setCondutor(Condutor condutor) {
+		this.condutor = condutor;
+	}
+
+	public double getOdometroEmKmSaida() {
+		return odometroEmKmSaida;
+	}
+
+	public void setOdometroEmKmSaida(double odometroEmKmSaida) {
+		this.odometroEmKmSaida = odometroEmKmSaida;
+	}
+
+	public double getOdometroEmKmRetorno() {
+		return odometroEmKmRetorno;
+	}
+
+	public void setOdometroEmKmRetorno(double odometroEmKmRetorno) {
+		this.odometroEmKmRetorno = odometroEmKmRetorno;
+	}
+
+	public String getNaturezaDoServico() {
+		return naturezaDoServico;
+	}
+
+	public void setNaturezaDoServico(String naturezaDoServico) {
+		this.naturezaDoServico = naturezaDoServico;
+	}
+
+	public String getOcorrencias() {
+		return ocorrencias;
+	}
+
+	public void setOcorrencias(String ocorrencias) {
+		this.ocorrencias = ocorrencias;
+	}
+
+	public DpPessoa getTitular() {
+		return titular;
+	}
+
+	public void setTitular(DpPessoa titular) {
+		this.titular = titular;
+	}
+
+	public DpPessoa getSolicitante() {
+		return solicitante;
+	}
+
+	public void setSolicitante(DpPessoa solicitante) {
+		this.solicitante = solicitante;
+	}
+
 	public static List<ControleGabinete> buscarTodosPorVeiculo(Veiculo veiculo){
-		return ControleGabinete.find("veiculo", veiculo).fetch();
+		return ControleGabinete.AR.find("veiculo", veiculo).fetch();
 	}
 	
 	public static double buscarUltimoOdometroPorVeiculo(Veiculo veiculo, ControleGabinete controleGabinete){
 		double retorno = 0;
 		try {
-			retorno = ((ControleGabinete) ControleGabinete.find("veiculo = ? and id <> ? order by id desc", veiculo, controleGabinete.id).fetch().get(0)).odometroEmKmRetorno;
+			retorno = ((ControleGabinete) ControleGabinete.AR.find("veiculo = ? and id <> ? order by id desc", veiculo, controleGabinete.id).fetch().get(0)).odometroEmKmRetorno;
 		} catch (Exception e) {
 		}
 		return retorno;
@@ -97,11 +198,12 @@ public class ControleGabinete extends GenericModel {
 		this.id = new Long(0);
 	}
 
+	@SuppressWarnings("unchecked")
 	public static List<ControleGabinete> listarTodos() {
-		return ControleGabinete.findAll();
+		return ControleGabinete.AR.findAll();
 	}
 
 	public static List<ControleGabinete> listarPorCondutor(Condutor condutor) {
-		return ControleGabinete.find("condutor", condutor).fetch();
+		return ControleGabinete.AR.find("condutor", condutor).fetch();
 	}
 }

@@ -45,7 +45,7 @@ public class RelatoriosRankingTest {
 				linha += "Requisicoes : ";
 
 				for (RequisicaoTransporte requisicao : item.requisicoes) {
-					linha += requisicao.getSequence() + " ";
+					linha += requisicao.buscarSequence() + " ";
 				}
 
 				System.out.println(linha);
@@ -72,7 +72,7 @@ public class RelatoriosRankingTest {
 				linha += "Requisicoes : ";
 
 				for (RequisicaoTransporte requisicao : item.requisicoes) {
-					linha += requisicao.getSequence() + " ";
+					linha += requisicao.buscarSequence() + " ";
 				}
 
 				System.out.println(linha);

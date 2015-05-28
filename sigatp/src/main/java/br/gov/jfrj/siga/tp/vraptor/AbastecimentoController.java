@@ -131,14 +131,15 @@ public class AbastecimentoController extends TpController {
 			result.include(CONDUTORES, condutores);
 			validator.onErrorUse(Results.page()).of(AbastecimentoController.class).editar(abastecimento.getId());
 		} else {
-
+			
 			abastecimento.setTitular(getTitular());
 			abastecimento.setSolicitante(getCadastrante());
-
 			if(abastecimento.getId().equals(new Long(0))) { 
 				abastecimento.setOrgao(getTitular().getOrgaoUsuario());
 			}
 
+			abastecimento.setConsumoMedioEmKmPorLitro(0D);
+			abastecimento.setDistanciaPercorridaEmKm(0D);
 			abastecimento.save();
 			result.redirectTo(this).listar();
 		}

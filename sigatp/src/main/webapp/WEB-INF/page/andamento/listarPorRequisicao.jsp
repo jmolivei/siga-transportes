@@ -7,8 +7,8 @@
 		<div class="gt-content clearfix">
 			<c:choose>
 				<c:when test="${andamentos.size() > 0}">
-					<h2>Rela&ccedil;&atilde;o de Andamentos da requisi&ccedil;&atilde;o ${andamentos.get(0).requisicaoTransporte.sequence} </h2>
-					<jsp:include page="../requisicao/menu.html" ></jsp:include>
+					<h2>Rela&ccedil;&atilde;o de Andamentos da requisi&ccedil;&atilde;o ${andamentos.get(0).requisicaoTransporte.buscarSequence()} </h2>
+					<jsp:include page="../requisicao/menu.jsp" ></jsp:include>
 					<div class="gt-content-box gt-for-table">     
 					 	<table id="htmlgrid" class="gt-table" >
 					    	<tr style="font-weight: bold;">
@@ -30,7 +30,7 @@
 				</c:when>
 				<c:otherwise>
 					<h2>Rela&ccedil;&atilde;o de Andamentos</h2>
-					<jsp:include page="../requisicao/menu.html" ></jsp:include>
+					<jsp:include page="../requisicao/menu.jsp" ></jsp:include>
 				</c:otherwise>
 			</c:choose>
 	</div>

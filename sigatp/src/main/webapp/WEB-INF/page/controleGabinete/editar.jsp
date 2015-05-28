@@ -5,16 +5,20 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
 <%@ taglib prefix="sigatp" tagdir="/WEB-INF/tags/" %>
 
-<siga:pagina titulo="Transportes">
+<jsp:include page="../tags/calendario.jsp" />
+<sigatp:decimal/>
+
+<siga:pagina titulo="Trasnporte">
 	<div class="gt-bd clearfix">
 		<div class="gt-content clearfix">
-			<h2>Editar Configura&ccedil;&atilde;o no GI para o &Oacute;rg&atilde;o - ${cpOrgaoUsuario.nmOrgaoUsu}</h2>
+			<h2>Editar Uso de Transporte pelo Gabinete</h2>
 			<sigatp:erros />
 			<br />
 			<jsp:include page="form.jsp" />
 		</div>
 	</div>
 </siga:pagina>
+
 
 
 

@@ -35,7 +35,7 @@
 		<tag-class>br.gov.jfrj.siga.tp.tag.LinkTag</tag-class>
 		<attribute>
 			<name>texto</name>
-			<required>false</required>
+			<required>true</required>
 			<rtexprvalue>true</rtexprvalue>
 		</attribute>
 		<attribute>

@@ -55,8 +55,7 @@ public class TpController extends SigaController {
 
 		// Recuperando Configuração Pode para uma lotação específica
 		Object[] parametros = { dpPessoa.getLotacao().getIdLotacaoIni(), cpSituacaoConfiguracaoPode, dpPessoa.getOrgaoUsuario(), tpConf };
-		configuracoes = TpDao.find(CpConfiguracao.class, "((lotacao.idLotacaoIni = ? and cpSituacaoConfiguracao = ?) and orgaoUsuario = ?  and cpTipoConfiguracao = ? and hisIdcFim is null  )",
-				parametros).fetch();
+		configuracoes = TpDao.find(CpConfiguracao.class, "((lotacao.idLotacaoIni = ? and cpSituacaoConfiguracao = ?) and orgaoUsuario = ?  and cpTipoConfiguracao = ? and hisIdcFim is null  )", parametros).fetch();
 		if (configuracoes != null && !configuracoes.isEmpty()) {
 			cpComplexo = configuracoes.get(0).getComplexo();
 		} else {

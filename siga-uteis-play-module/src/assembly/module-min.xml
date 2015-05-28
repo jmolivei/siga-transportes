@@ -40,8 +40,8 @@
 -->
   <fileSets>
    <fileSet>
-    <directory>/app</directory>
-    <outputDirectory>/app</outputDirectory>
+    <directory>app</directory>
+    <outputDirectory>app</outputDirectory>
    </fileSet>
    
  
@@ -52,8 +52,8 @@
    </fileSet>
 -->
    <fileSet>
-    <directory>/conf</directory>
-    <outputDirectory>/conf</outputDirectory>
+    <directory>conf</directory>
+    <outputDirectory>conf</outputDirectory>
    </fileSet>
 
   </fileSets>
