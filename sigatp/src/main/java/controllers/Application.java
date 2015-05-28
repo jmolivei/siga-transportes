@@ -57,7 +57,7 @@ public class Application extends Controller {
 		SelecaoDocumento sel = new SelecaoDocumento();
 		sel.sigla = montarSigla(sigla);
 		sel.id = 0L;
-		sel.descricao = "";    	
+		sel.descricao = "";
 		render("@selecionar", sel);
 		render();
 	}
@@ -66,7 +66,7 @@ public class Application extends Controller {
 
 		String[] partesDoCodigo=null;
 		try {
-			partesDoCodigo = sigla.split("[-/]");			
+			partesDoCodigo = sigla.split("[-/]");
 
 		} catch (Exception e) {
 			throw new Exception(Messages.get("application.exibir.sigla.exception", sigla));
@@ -119,7 +119,7 @@ public class Application extends Controller {
 			if (m.group(1) != null) {
 				retorno = m.group(1).toString();
 			}
-			else {		
+			else {
 				retorno = AutorizacaoGIAntigo.cadastrante().getOrgaoUsuario().getAcronimoOrgaoUsu().replace("-","").toString();
 			}
 
@@ -134,7 +134,7 @@ public class Application extends Controller {
 					c1.set(Calendar.YEAR, Integer.valueOf(m.group(3)));
 					c1.set(Calendar.DAY_OF_YEAR, 1);
 				}
-			}	
+			}
 
 			retorno = retorno + "-" + String.format("%04d",c1.get(Calendar.YEAR));
 
@@ -234,8 +234,8 @@ public class Application extends Controller {
 
 			else if (equals(true, AutorizacaoGIAntigo.ehAdministradorFrota())) {
 				EstadoServico[] estados = {EstadoServico.AGENDADO, EstadoServico.INICIADO};
-				String query = "cpOrgaoUsuario.idOrgaoUsu=? and (situacaoServico = ? or situacaoServico = ?)"; 
-				List<ServicosVeiculo> servicos = ServicoVeiculo.find(query, idOrgaoUsu, estados[0],estados[1]).fetch();
+				String query = "cpOrgaoUsuario.idOrgaoUsu=? and (situacaoServico = ? or situacaoServico = ?)";
+				List<ServicosVeiculo> servicos = ServicoVeiculo.AR.find(query, idOrgaoUsu, estados[0],estados[1]).fetch();
 
 				for (EstadoServico item : estados) {
 					titulo = "Servi&ccedil;os " + (item.equals(EstadoServico.AGENDADO) ? "agendados" : "iniciados");
@@ -299,7 +299,7 @@ public class Application extends Controller {
 			if (lista.size() > 0) {
 				List<T> itemFiltrado = Lists.newArrayList(Iterables.filter(lista, new Predicate<T>() {
 					public boolean apply(T objeto) {
-						if (objeto instanceof Missao) { 
+						if (objeto instanceof Missao) {
 							Missao missao = ((Missao) objeto);
 							return missao.estadoMissao.getDescricao().equals(descricao);
 						}
@@ -308,24 +308,24 @@ public class Application extends Controller {
 							ultimos7dias.add(Calendar.DATE, -7);
 							RequisicaoTransporte requisicao = ((RequisicaoTransporte) objeto);
 							if (descricao.equals("")) {
-								return (requisicao.getDataHoraSaidaPrevista().after(ultimos7dias) && 
+								return (requisicao.getDataHoraSaidaPrevista().after(ultimos7dias) &&
 										requisicao.getCpOrgaoUsuario().getIdOrgaoUsu().equals(AutorizacaoGIAntigo.titular().getOrgaoUsuario().getIdOrgaoUsu()));
 							} else {
 								return (requisicao.getUltimoEstado().getDescricao().equals(descricao) &&
-										requisicao.getDataHoraSaidaPrevista().after(ultimos7dias) && 
+										requisicao.getDataHoraSaidaPrevista().after(ultimos7dias) &&
 										requisicao.getCpOrgaoUsuario().getIdOrgaoUsu().equals(AutorizacaoGIAntigo.titular().getOrgaoUsuario().getIdOrgaoUsu()));
 							}
 						}
 						if (objeto instanceof ServicoVeiculo) {
-							ServicoVeiculo servico = ((ServicoVeiculo) objeto); 
-							return servico.situacaoServico.getDescricao().equals(descricao);
+							ServicoVeiculo servico = ((ServicoVeiculo) objeto);
+							return servico.getSituacaoServico().getDescricao().equals(descricao);
 						}
 						return false;
 					}
 				}));
 
 				total = itemFiltrado.size();
-			} 
+			}
 		} catch (Exception ex) {
 			ex.printStackTrace();
 		}
