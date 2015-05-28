@@ -33,8 +33,8 @@ public class ServicosVeiculo extends Controller {
 	public static void incluir() throws Exception {
 		ServicoVeiculo servico = new ServicoVeiculo();
 		EstadoServico estadoServico = EstadoServico.AGENDADO;
-		MenuMontador.instance().recuperarMenuServicoVeiculo(servico.id, estadoServico);
-	 	montarCombos(servico.id);
+		MenuMontador.instance().recuperarMenuServicoVeiculo(servico.getId(), estadoServico);
+	 	montarCombos(servico.getId());
 		render(servico, estadoServico);
 	}
 
@@ -43,8 +43,8 @@ public class ServicosVeiculo extends Controller {
 	public static void cancelar() throws Exception {
 		ServicoVeiculo servico = new ServicoVeiculo();
 		EstadoServico estadoServico = EstadoServico.CANCELADO;
-		MenuMontador.instance().recuperarMenuServicoVeiculo(servico.id, estadoServico);
-	 	montarCombos(servico.id);
+		MenuMontador.instance().recuperarMenuServicoVeiculo(servico.getId(), estadoServico);
+	 	montarCombos(servico.getId());
 		render(servico, estadoServico);
 	}
 
@@ -52,26 +52,26 @@ public class ServicosVeiculo extends Controller {
 	@RoleAdminFrota
 	public static void salvar(@Valid ServicoVeiculo servico, List<Avaria> avarias) throws Exception {
 		DpPessoa dpPessoa = AutorizacaoGIAntigo.cadastrante();
-		servico.cpOrgaoUsuario = AutorizacaoGIAntigo.titular().getOrgaoUsuario();
-		servico.setSequence(servico.cpOrgaoUsuario);
-		servico.executor = dpPessoa;
+		servico.setCpOrgaoUsuario(AutorizacaoGIAntigo.titular().getOrgaoUsuario());
+		servico.setSequence(servico.getCpOrgaoUsuario());
+		servico.setExecutor(dpPessoa);
 		String template;
 		boolean novoServico = false;
 
-		if (servico.id == 0) {
+		if (servico.getId() == 0) {
 			novoServico = true;
-			servico.dataHora = Calendar.getInstance();
-			servico.situacaoServico = EstadoServico.AGENDADO;
-			servico.dataHoraInicio = servico.dataHoraInicioPrevisto;
-			servico.dataHoraFim = servico.dataHoraFimPrevisto;
+			servico.setDataHora(Calendar.getInstance());
+			servico.setSituacaoServico(EstadoServico.AGENDADO);
+			servico.setDataHoraInicio(servico.getDataHoraInicioPrevisto());
+			servico.setDataHoraFim(servico.getDataHoraFimPrevisto());
 			template = "@incluir";
 		}
 		else{
-			servico.ultimaAlteracao = Calendar.getInstance();
+			servico.setUltimaAlteracao(Calendar.getInstance());
 			template = "@editar";
 		}
 
-		if (servico.situacaoServico == EstadoServico.REALIZADO) {
+		if (servico.getSituacaoServico() == EstadoServico.REALIZADO) {
 			if (avarias != null && avarias.size() > 0) {
 				for (Avaria avaria : avarias) {
 					avaria = Avaria.AR.findById(avaria.getId());
@@ -82,34 +82,34 @@ public class ServicosVeiculo extends Controller {
 			}
 		}
 
-		if(servico.dataHoraInicioPrevisto != null & servico.dataHoraFimPrevisto != null && (!servico.ordemDeDatasPrevistas(servico.dataHoraInicioPrevisto, servico.dataHoraFimPrevisto))){
+		if(servico.getDataHoraInicioPrevisto() != null & servico.getDataHoraFimPrevisto() != null && (!servico.ordemDeDatasPrevistas(servico.getDataHoraInicioPrevisto(), servico.getDataHoraFimPrevisto()))){
 			Validation.addError("dataHoraFimPrevisto", "servicosVeiculo.dataHoraFimPrevisto.validation");
 			redirecionarSeErroAoSalvar(servico, template);
 		}
 
-		if (servico.situacaoServico == EstadoServico.CANCELADO) {
+		if (servico.getSituacaoServico() == EstadoServico.CANCELADO) {
 			verificarMotivoCancelamentoPreenchido(servico);
-			if (servico.tiposDeServico.getGeraRequisicao()) {
+			if (servico.getTiposDeServico().getGeraRequisicao()) {
 				String descricaoRequisicao = "Cancelado pelo servico " + servico.getSequence();
-				servico.requisicaoTransporte.cancelar(dpPessoa, descricaoRequisicao);
+				servico.getRequisicaoTransporte().cancelar(dpPessoa, descricaoRequisicao);
 			}
 			redirecionarSeErroAoSalvar(servico, template);
 		}
 
-		if (servico.dataHoraInicio != null && servico.dataHoraFim != null) {
-			if (!servico.ordemDeDatasPrevistas(servico.dataHoraInicio, servico.dataHoraFim)){
+		if (servico.getDataHoraInicio() != null && servico.getDataHoraFim() != null) {
+			if (!servico.ordemDeDatasPrevistas(servico.getDataHoraInicio(), servico.getDataHoraFim())){
 				Validation.addError("dataHoraFim", "servicosVeiculo.dataHoraFim.validation");
 			}
 			redirecionarSeErroAoSalvar(servico, template);
 		}
 
-		if (novoServico && servico.tiposDeServico.getGeraRequisicao())
+		if (novoServico && servico.getTiposDeServico().getGeraRequisicao())
 		{
 			verificarDescricaoPreenchida(servico);
 			redirecionarSeErroAoSalvar(servico, template);
 
-			List<Missao> missoes = 	Missao.retornarMissoes("veiculo.id", servico.veiculo.getId(), servico.cpOrgaoUsuario.getId(),
-									   servico.dataHoraInicio,servico.dataHoraFim);
+			List<Missao> missoes = 	Missao.retornarMissoes("veiculo.id", servico.getVeiculo().getId(), servico.getCpOrgaoUsuario().getId(),
+									   servico.getDataHoraInicio(),servico.getDataHoraFim());
 			String listaMissoes = "";
 
 			String delimitador="";
@@ -124,25 +124,25 @@ public class ServicosVeiculo extends Controller {
     		}
 			redirecionarSeErroAoSalvar(servico, template);
 
-			servico.requisicaoTransporte = gravarRequisicao(servico);
+			servico.setRequisicaoTransporte(gravarRequisicao(servico));
 
 			String descricaoRequisicao = "Aberta para o servico " + servico.getSequence();
         	gravarAndamentosRequisicao(EstadoRequisicao.ABERTA, dpPessoa, descricaoRequisicao,
-        							   servico.requisicaoTransporte);
+        							   servico.getRequisicaoTransporte());
 
         	descricaoRequisicao = "Autorizada para o servico " + servico.getSequence();
         	gravarAndamentosRequisicao(EstadoRequisicao.AUTORIZADA, dpPessoa, descricaoRequisicao,
-        							   servico.requisicaoTransporte);
+        							   servico.getRequisicaoTransporte());
 		}
 
 		servico.save();
-	 	montarCombos(servico.id);
-		listarFiltrado(servico.situacaoServico);
+	 	montarCombos(servico.getId());
+		listarFiltrado(servico.getSituacaoServico());
 	}
 
 	public static void listar() {
 	 	CpOrgaoUsuario cpOrgaoUsuario = AutorizacaoGIAntigo.titular().getOrgaoUsuario();
-		List<ServicoVeiculo> servicos = ServicoVeiculo.find("cpOrgaoUsuario", cpOrgaoUsuario).fetch();
+		List<ServicoVeiculo> servicos = ServicoVeiculo.AR.find("cpOrgaoUsuario", cpOrgaoUsuario).fetch();
 	  	EstadoServico situacaoServico = EstadoServico.AGENDADO;
 	  	MenuMontador.instance().recuperarMenuServicosVeiculo(null);
 	  	Collections.sort(servicos);
@@ -155,7 +155,7 @@ public class ServicosVeiculo extends Controller {
 		}
 
 		CpOrgaoUsuario cpOrgaoUsuario = AutorizacaoGIAntigo.titular().getOrgaoUsuario();
-	  	List<ServicoVeiculo> servicos = ServicoVeiculo.find("cpOrgaoUsuario=? and situacaoServico = ?", cpOrgaoUsuario, estado).fetch();
+	  	List<ServicoVeiculo> servicos = ServicoVeiculo.AR.find("cpOrgaoUsuario=? and situacaoServico = ?", cpOrgaoUsuario, estado).fetch();
 	  	EstadoServico situacaoServico = EstadoServico.AGENDADO;
 	  	MenuMontador.instance().recuperarMenuServicosVeiculo(estado);
 	  	renderTemplate("@listar", servicos, situacaoServico);
@@ -165,7 +165,7 @@ public class ServicosVeiculo extends Controller {
 		Boolean erro = false;
 
 		try {
-			if (servico.motivoCancelamento.isEmpty()) {
+			if (servico.getMotivoCancelamento().isEmpty()) {
 				erro = true;
 			}
 		} catch (NullPointerException ex) {
@@ -181,7 +181,7 @@ public class ServicosVeiculo extends Controller {
 		Boolean erro = false;
 
 		try {
-			if (servico.descricao.isEmpty()) {
+			if (servico.getDescricao().isEmpty()) {
 				erro = true;
 			}
 		} catch (NullPointerException ex) {
@@ -196,9 +196,9 @@ public class ServicosVeiculo extends Controller {
 	@RoleAdmin
 	@RoleAdminFrota
 	public static void editar(Long id) throws Exception {
-		ServicoVeiculo servico = ServicoVeiculo.findById(id);
-	 	montarCombos(servico.id);
-		MenuMontador.instance().recuperarMenuServicoVeiculo(id, servico.situacaoServico);
+		ServicoVeiculo servico = ServicoVeiculo.AR.findById(id);
+	 	montarCombos(servico.getId());
+		MenuMontador.instance().recuperarMenuServicoVeiculo(id, servico.getSituacaoServico());
 		render(servico);
 	}
 
@@ -218,9 +218,9 @@ public class ServicosVeiculo extends Controller {
 		requisicaoTransporte.setCpOrgaoUsuario(AutorizacaoGIAntigo.titular().getOrgaoUsuario());
 		requisicaoTransporte.setSequence(requisicaoTransporte.getCpOrgaoUsuario());
 		requisicaoTransporte.setSolicitante(AutorizacaoGIAntigo.cadastrante());
-		requisicaoTransporte.setDataHoraSaidaPrevista(servico.dataHoraInicioPrevisto);
-		requisicaoTransporte.setDataHoraRetornoPrevisto(servico.dataHoraFimPrevisto);
-		requisicaoTransporte.setFinalidade(servico.descricao);
+		requisicaoTransporte.setDataHoraSaidaPrevista(servico.getDataHoraInicioPrevisto());
+		requisicaoTransporte.setDataHoraRetornoPrevisto(servico.getDataHoraFimPrevisto());
+		requisicaoTransporte.setFinalidade(servico.getDescricao());
 		requisicaoTransporte.setPassageiros("Requisicao para Servico");
 		requisicaoTransporte.setItinerarios("Requisicao para Servico");
 		requisicaoTransporte.setCpComplexo(AutorizacaoGIAntigo.recuperarComplexoPadrao());
@@ -236,12 +236,12 @@ public class ServicosVeiculo extends Controller {
 	@RoleAdmin
 	@RoleAdminFrota
 	public static void excluir(Long id) throws Exception {
-		ServicoVeiculo servico = ServicoVeiculo.findById(id);
+		ServicoVeiculo servico = ServicoVeiculo.AR.findById(id);
 
         if(! Validation.hasErrors()) {
-        	if (servico.tiposDeServico != TiposDeServico.MANUTENCAOINTERNA) {
+        	if (servico.getTiposDeServico() != TiposDeServico.MANUTENCAOINTERNA) {
         		try {
-        			servico.requisicaoTransporte.excluir(true);
+        			servico.getRequisicaoTransporte().excluir(true);
         		} catch(SigaTpException ex) {
 	        		Validation.addError("requisicaoTransporte", ex.getMessage());
 	        		redirecionarSeErroAoSalvar(servico, "@ler");
@@ -261,17 +261,17 @@ public class ServicosVeiculo extends Controller {
 	}
 
 	public static void ler(Long id) throws Exception {
-		ServicoVeiculo servico = ServicoVeiculo.findById(id);
-		MenuMontador.instance().recuperarMenuServicoVeiculo(id, servico.situacaoServico);
-	 	montarCombos(servico.id);
+		ServicoVeiculo servico = ServicoVeiculo.AR.findById(id);
+		MenuMontador.instance().recuperarMenuServicoVeiculo(id, servico.getSituacaoServico());
+	 	montarCombos(servico.getId());
 	  	render();
 	}
 
 	private static void redirecionarSeErroAoSalvar(ServicoVeiculo servico, String template) throws Exception {
 		if(Validation.hasErrors())
 		{
-		 	MenuMontador.instance().recuperarMenuServicosVeiculo(servico.situacaoServico);
-		 	montarCombos(servico.id);
+		 	MenuMontador.instance().recuperarMenuServicosVeiculo(servico.getSituacaoServico());
+		 	montarCombos(servico.getId());
 		 	renderTemplate(template, servico);
 		}
 	}
@@ -286,18 +286,18 @@ public class ServicosVeiculo extends Controller {
 			estadosServico = (Arrays.asList(EstadoServico.AGENDADO));
 		}
 		else {
-			ServicoVeiculo servico = ServicoVeiculo.findById(id);
+			ServicoVeiculo servico = ServicoVeiculo.AR.findById(id);
 
-			avarias = Avaria.buscarPendentesPorVeiculo(servico.veiculo);
+			avarias = Avaria.buscarPendentesPorVeiculo(servico.getVeiculo());
 
-			if (servico.situacaoServico.equals(EstadoServico.AGENDADO)) {
+			if (servico.getSituacaoServico().equals(EstadoServico.AGENDADO)) {
 				estadosServico = (Arrays.asList(EstadoServico.getValuesComboIniciarServico()));
 			}
-			else if (servico.situacaoServico.equals(EstadoServico.INICIADO)) {
+			else if (servico.getSituacaoServico().equals(EstadoServico.INICIADO)) {
 				estadosServico = (Arrays.asList(EstadoServico.getValuesComboFinalizarServico()));
 			}
 			else {
-				estadosServico = (Arrays.asList(servico.situacaoServico));
+				estadosServico = (Arrays.asList(servico.getSituacaoServico()));
 			}
 		}
 
@@ -309,7 +309,7 @@ public class ServicosVeiculo extends Controller {
 
 	protected static void recuperarPelaSigla(String sigla, Boolean popUp) throws Exception {
 		ServicoVeiculo servico = ServicoVeiculo.buscar(sigla);
-		MenuMontador.instance().recuperarMenuServicoVeiculo(servico.id, servico.situacaoServico);
+		MenuMontador.instance().recuperarMenuServicoVeiculo(servico.getId(), servico.getSituacaoServico());
 		if(popUp != null) {
 			renderArgs.put("mostrarMenu", !popUp);
 		} else {

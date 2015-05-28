@@ -349,7 +349,7 @@ public class RequisicaoTransporte extends TpModel implements Comparable<Requisic
 			saida.append("Servi&ccedil;o: " + servicoVeiculo.getSequence() + " <a href=\"#\" onclick=\"javascript:window.open('" + caminhoUrl + "');\">");
 			saida.append("<img src=\"" + IMG_LINKNOVAJANELAICON + "\" alt=\"Abrir em uma nova janela\" title=\"Abrir em uma nova janela\"></a>");
 			saida.append(" (");
-			saida.append(servicoVeiculo.veiculo.getDadosParaExibicao() + ")");
+			saida.append(servicoVeiculo.getVeiculo().getDadosParaExibicao() + ")");
 		} else {
 			saida.append(" - ");
 			saida.append(itinerarios.toString());

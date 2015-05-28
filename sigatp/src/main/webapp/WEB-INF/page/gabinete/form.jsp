@@ -2,6 +2,7 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <%@ taglib uri="http://localhost/jeetags" prefix="siga"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt"%>
+<%@ taglib prefix="siga" uri="http://localhost/jeetags"%>
 <%@ taglib prefix="sigatp" tagdir="/WEB-INF/tags/" %>
 
 <fmt:setLocale value="pt_BR"/>
@@ -13,9 +14,11 @@
 	cssClass="form" enctype="multipart/form-data"> 
 	<sigatp:erros />
 
-	<input type="hidden" name="abastecimento.id" value="${abastecimento.id}" />
+	<input type="hidden" name="abastecimento" value="${abastecimento.id}" />
 	<input type="hidden" name="abastecimento.titular" value="${abastecimento.titular.id}" />
 	<input type="hidden" name="abastecimento.orgao" value="${abastecimento.orgao.id}" />
+	<input type="hidden" name="abastecimento.distanciaPercorridaEmKm" value="0" />
+	<input type="hidden" name="abastecimento.consumoMedioEmKmPorLitro" value="0" />
 
 	<div class="gt-content-box gt-form clearfix">
 		<div class="coluna margemDireitaG">
@@ -24,13 +27,14 @@
 				value="<fmt:formatDate pattern="dd/MM/yyyy HH:mm" value="${abastecimento.dataHora.time}" />"
 				size="16" class="dataHora" /> 
 
-			<label for="abastecimento.condutor.id" class="obrigatorio">Condutor</label>
-			<siga:select name="abastecimento.condutor.id" list="condutores"
-				listKey="id" listValue="dadosParaExibicao"
-				value="${abastecimento.condutor.id}" headerKey="0" headerValue=" " />
-
-			<label for= "abastecimento.veiculo.id" class= "obrigatorio">Ve&iacute;culo</label>
-			<siga:select name="abastecimento.veiculo.id" list="veiculos"
+			<label for="abastecimento.condutor" class="obrigatorio">Condutor</label>
+			<siga:select id="condutores" name="abastecimento.condutor" list="condutores" listKey="id" listValue="dadosParaExibicao" value="${abastecimento.condutor.id}" headerKey="0" headerValue=""/>
+<%-- 			<siga:select name="abastecimento.condutor" list="condutores" --%>
+<%-- 				listKey="id" listValue="dadosParaExibicao" --%>
+<%-- 				value="${abastecimento.condutor.id}" headerKey="0" headerValue=" " /> --%>
+   			
+			<label for= "abastecimento.veiculo" class= "obrigatorio">Ve&iacute;culo</label>
+			<siga:select name="abastecimento.veiculo" list="veiculos"
 				listKey="id" listValue="dadosParaExibicao"
 				value="${abastecimento.veiculo.id}" headerKey="0" headerValue=" " />
 
@@ -44,8 +48,8 @@
 				listKey="descricao" listValue="descricao"
 				value="${abastecimento.tipoDeCombustivel}" headerKey="0" headerValue=" " />
 
-			<label for="abastecimento.fornecedor.id" class= "obrigatorio">Fornecedor</label>
-			<siga:select name="abastecimento.fornecedor.id" list="fornecedores"
+			<label for="abastecimento.fornecedor" class= "obrigatorio">Fornecedor</label>
+			<siga:select name="abastecimento.fornecedor" list="fornecedores"
 				listKey="id" listValue="razaoSocial"
 				value="${abastecimento.fornecedor.id}" headerKey="0" headerValue=" " />
 
@@ -66,7 +70,7 @@
 	       	<label for="abastecimento.valorTotalDaNotaFiscal" class= "obrigatorio">Valor da Nota Fiscal (R$) </label>
 	       	<input type="text" name="abastecimento.valorTotalDaNotaFiscal" 
 	       		value="${abastecimento.valorTotalDaNotaFiscal}" class="valor_numerico decimal" />
-	      	<label for="abastecimento.numeroDaNotaFiscal" class= "obrigatorio">N&uacute;mero da Nota Fiscal</label>
+	      	<label for="abastecimento.numeroDaNotaFiscal" class="obrigatorio">N&uacute;mero da Nota Fiscal</label>
 	       	<input type="text" name="abastecimento.numeroDaNotaFiscal" value="${abastecimento.numeroDaNotaFiscal}" class="valor_numerico" />
 		</div>
 		

@@ -225,9 +225,9 @@ public class Missoes extends Controller {
 			if (req.getServicoVeiculo() != null) {
 				temRequisicaoDeServico = true;
 				if (veiculoInicial == null) {
-					veiculoInicial = req.getServicoVeiculo().veiculo;
+					veiculoInicial = req.getServicoVeiculo().getVeiculo();
 				} else {
-					if (!veiculoInicial.equals(req.getServicoVeiculo().veiculo)) {
+					if (!veiculoInicial.equals(req.getServicoVeiculo().getVeiculo())) {
 						Validation.addError("veiculo", "missoes.veiculo.validation");
 						redirecionarSeErroAoSalvar(missao, template);
 					}
@@ -698,7 +698,7 @@ public class Missoes extends Controller {
 		for (RequisicaoTransporte req : missao.requisicoesTransporte) {
 			if (req.getServicoVeiculo() != null) {
 				req = RequisicaoTransporte.AR.findById(req.getId());
-				veiculosDisp += req.getServicoVeiculo().veiculo.getId() + ", ";
+				veiculosDisp += req.getServicoVeiculo().getVeiculo().getId() + ", ";
 			}
 		}
 

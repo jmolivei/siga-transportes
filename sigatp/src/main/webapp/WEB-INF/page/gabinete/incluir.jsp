@@ -14,8 +14,7 @@
 	<div class="gt-bd clearfix">
 		<div class="gt-content clearfix">
 			<h2>Incluir Abastecimento</h2>
-
-			<jsp:include page="form.jsp" /> 
+			<jsp:include page="form.jsp" />
 		</div>
 	</div>
 </siga:pagina>
