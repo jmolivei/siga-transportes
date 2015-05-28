@@ -27,116 +27,146 @@ import br.gov.jfrj.siga.vraptor.SigaObjects;
 @Path("/app/controleGabinete")
 public class ControleGabineteController extends TpController {
 
+	private static final String CONTROLES_GABINETE = "controlesGabinete";
+	private static final String CONTROLE_GABINETE = "controleGabinete";
+	private static final String VEICULOS = "veiculos";
+	private static final String CONDUTORES = "condutores";
 	private AutorizacaoGI autorizacaoGI;
-	
-	public ControleGabineteController(HttpServletRequest request, Result result,
-			CpDao dao, Validator validator, SigaObjects so, EntityManager em, AutorizacaoGI autorizacaoGI) {
+
+	public ControleGabineteController(HttpServletRequest request,
+			Result result, CpDao dao, Validator validator, SigaObjects so,
+			EntityManager em, AutorizacaoGI autorizacaoGI) {
 		super(request, result, dao, validator, so, em);
 		this.autorizacaoGI = autorizacaoGI;
 	}
-	
-//	@RoleGabinete
-//	@RoleAdminGabinete
+
+	// @RoleGabinete
+	// @RoleAdminGabinete
 	@Path("/listar")
 	public void listar() {
 		List<ControleGabinete> controlesGabinete;
-		if (autorizacaoGI.ehAdminGabinete()) 
+		if (autorizacaoGI.ehAdminGabinete())
 			controlesGabinete = ControleGabinete.listarTodos();
-		else 
-			controlesGabinete = ControleGabinete.listarPorCondutor(Condutor.recuperarLogado(getTitular(), getTitular().getOrgaoUsuario()));
+		else
+			controlesGabinete = ControleGabinete.listarPorCondutor(Condutor
+					.recuperarLogado(getTitular(), getTitular()
+							.getOrgaoUsuario()));
 
-		result.include("controlesGabinete", controlesGabinete);
+		result.include(CONTROLES_GABINETE, controlesGabinete);
 	}
 
 	// Verificar se o MenuMontador é realmente utilizado
-//	@RoleGabinete
-//	@RoleAdminGabinete
+	// @RoleGabinete
+	// @RoleAdminGabinete
 	@Path("/listarPorVeiculo/{idVeiculo}")
 	public void listarPorVeiculo(Long idVeiculo) throws Exception {
 		Veiculo veiculo = Veiculo.AR.findById(idVeiculo);
-		List<ControleGabinete> controlesGabinete = ControleGabinete.buscarTodosPorVeiculo(veiculo);
-		MenuMontador.instance().recuperarMenuVeiculos(idVeiculo, ItemMenu.DADOSCADASTRAIS);
-		
-		result.include("controlesGabinete", controlesGabinete);
+		List<ControleGabinete> controlesGabinete = ControleGabinete
+				.buscarTodosPorVeiculo(veiculo);
+		MenuMontador.instance().recuperarMenuVeiculos(idVeiculo,
+				ItemMenu.DADOSCADASTRAIS);
+
+		result.include(CONTROLES_GABINETE, controlesGabinete);
 		result.include("veiculo", veiculo);
 	}
 
-//	@RoleGabinete
-//	@RoleAdminGabinete
+	// @RoleGabinete
+	// @RoleAdminGabinete
 	@Path("/incluir")
 	public void incluir() throws Exception {
 		List<Veiculo> veiculos = recuperarListaDeVeiculos();
 		List<Condutor> condutores = recuperarListaDeCondutores();
 
 		ControleGabinete controleGabinete = new ControleGabinete();
-		result.include("controleGabinete", controleGabinete);
-		result.include("veiculos", veiculos);
-		result.include("condutores", condutores);
+		result.include(CONTROLE_GABINETE, controleGabinete);
+		result.include(VEICULOS, veiculos);
+		result.include(CONDUTORES, condutores);
 	}
 
 	private List<Veiculo> recuperarListaDeVeiculos() throws Exception {
-		return Veiculo.listarFiltradoPor(getTitular().getOrgaoUsuario(), getTitular().getLotacao());
+		return Veiculo.listarFiltradoPor(getTitular().getOrgaoUsuario(),
+				getTitular().getLotacao());
 	}
 
 	private List<Condutor> recuperarListaDeCondutores() throws Exception {
 		List<Condutor> condutores;
 		if (autorizacaoGI.ehAdminGabinete())
-			condutores = Condutor.listarFiltradoPor(getTitular().getOrgaoUsuario(), getTitular().getLotacao());
+			condutores = Condutor.listarFiltradoPor(getTitular()
+					.getOrgaoUsuario(), getTitular().getLotacao());
 		else {
 			condutores = new ArrayList<Condutor>();
-			condutores.add(Condutor.recuperarLogado(getTitular(), getTitular().getOrgaoUsuario()));
+			condutores.add(Condutor.recuperarLogado(getTitular(), getTitular()
+					.getOrgaoUsuario()));
 		}
 		return condutores;
 	}
 
-//	@RoleGabinete
-//	@RoleAdminGabinete
+	// @RoleGabinete
+	// @RoleAdminGabinete
 	@Path("/editar/{id}")
 	public void editar(Long id) throws Exception {
 		ControleGabinete controleGabinete = ControleGabinete.AR.findById(id);
 		verificarAcesso(controleGabinete);
 		List<Veiculo> veiculos = recuperarListaDeVeiculos();
 		List<Condutor> condutores = recuperarListaDeCondutores();
-		
-		result.include("controleGabinete", controleGabinete);
-		result.include("veiculos", veiculos);
-		result.include("condutores", condutores);
+
+		result.include(CONTROLE_GABINETE, controleGabinete);
+		result.include(VEICULOS, veiculos);
+		result.include(CONDUTORES, condutores);
 	}
 
-	private void verificarAcesso(ControleGabinete controleGabinete) throws Exception {
-		if (!(autorizacaoGI.ehAdminGabinete() && getTitular().getLotacao().equivale(controleGabinete.getTitular().getLotacao()))
+	private void verificarAcesso(ControleGabinete controleGabinete)
+			throws Exception {
+		if (!(autorizacaoGI.ehAdminGabinete() && getTitular().getLotacao()
+				.equivale(controleGabinete.getTitular().getLotacao()))
 				&& !controleGabinete.getTitular().equivale(getTitular()))
-			throw new Exception(new I18nMessage("", "controlesGabinete.verificarAcesso.exception").getMessage());
+			throw new Exception(new I18nMessage("",
+					"controlesGabinete.verificarAcesso.exception").getMessage());
 	}
 
-	private void verificarOdometrosSaidaRetorno(ControleGabinete controleGabinete) {
-		if (controleGabinete.getOdometroEmKmSaida() > controleGabinete.getOdometroEmKmRetorno()) 
-			validator.add(new I18nMessage("odometroEmKmRetorno", "controlesGabinete.odometroEmKmRetorno.validation"));
+	private void verificarOdometrosSaidaRetorno(
+			ControleGabinete controleGabinete) {
+		if (controleGabinete.getOdometroEmKmSaida() > controleGabinete
+				.getOdometroEmKmRetorno())
+			validator.add(new I18nMessage("odometroEmKmRetorno",
+					"controlesGabinete.odometroEmKmRetorno.validation"));
 	}
 
-	private void verificarDatasInicialFinal(ControleGabinete controleGabinete) throws Exception {
-		if (controleGabinete.getDataHoraSaida() == null || controleGabinete.getDataHoraRetorno() == null)  {
-			validator.add(new I18nMessage("dataHoraSaida", "controlesGabinete.dataHoraSaida.validation"));
+	private void verificarDatasInicialFinal(ControleGabinete controleGabinete)
+			throws Exception {
+		if (controleGabinete.getDataHoraSaida() == null
+				|| controleGabinete.getDataHoraRetorno() == null) {
+			validator.add(new I18nMessage("dataHoraSaida",
+					"controlesGabinete.dataHoraSaida.validation"));
 			return;
 		}
-			
-		Boolean dataSaidaAntesDeDataRetorno = controleGabinete.getDataHoraSaida().before(controleGabinete.getDataHoraRetorno());
-		if (!dataSaidaAntesDeDataRetorno) 
-			validator.add(new I18nMessage("dataHoraRetorno", "controlesGabinete.dataSaidaAntesDeDataRetorno.validation"));
+
+		Boolean dataSaidaAntesDeDataRetorno = controleGabinete
+				.getDataHoraSaida().before(
+						controleGabinete.getDataHoraRetorno());
+		if (!dataSaidaAntesDeDataRetorno)
+			validator
+					.add(new I18nMessage("dataHoraRetorno",
+							"controlesGabinete.dataSaidaAntesDeDataRetorno.validation"));
 	}
 
-	private void verificarOdometroRetornoControleAnterior(ControleGabinete controleGabinete) {
-		double ultimoOdometroDesteVeiculo = ControleGabinete.buscarUltimoOdometroPorVeiculo(controleGabinete.getVeiculo(), controleGabinete);
-		if (controleGabinete.getOdometroEmKmSaida() < ultimoOdometroDesteVeiculo) 
-			validator.add(new I18nMessage("odometroEmKmSaida", "controlesGabinete.odometroEmKmSaida.validation"));
-	} 
+	private void verificarOdometroRetornoControleAnterior(
+			ControleGabinete controleGabinete) {
+		double ultimoOdometroDesteVeiculo = ControleGabinete
+				.buscarUltimoOdometroPorVeiculo(controleGabinete.getVeiculo(),
+						controleGabinete);
+		if (controleGabinete.getOdometroEmKmSaida() < ultimoOdometroDesteVeiculo)
+			validator.add(new I18nMessage("odometroEmKmSaida",
+					"controlesGabinete.odometroEmKmSaida.validation"));
+	}
 
-//	@RoleGabinete
-//	@RoleAdminGabinete
-	public void salvar(@Valid ControleGabinete controleGabinete) throws Exception {
-		if (!controleGabinete.getId().equals(new Long(0)))
+	// @RoleGabinete
+	// @RoleAdminGabinete
+	public void salvar(@Valid ControleGabinete controleGabinete)
+			throws Exception {
+		if (!controleGabinete.getId().equals(0L))
 			verificarAcesso(controleGabinete);
-		
+
 		verificarOdometroRetornoControleAnterior(controleGabinete);
 		verificarOdometrosSaidaRetorno(controleGabinete);
 		verificarDatasInicialFinal(controleGabinete);
@@ -144,16 +174,19 @@ public class ControleGabineteController extends TpController {
 		if (validator.hasErrors()) {
 			List<Veiculo> veiculos = recuperarListaDeVeiculos();
 			List<Condutor> condutores = recuperarListaDeCondutores();
-			
-			result.include("controleGabinete", controleGabinete);
-			result.include("veiculos", veiculos);
-			result.include("condutores", condutores);
-			
-			if(controleGabinete.getId() > 0)
-				validator.onErrorUse(Results.page()).of(ControleGabineteController.class).editar(controleGabinete.getId());
+
+			result.include(CONTROLE_GABINETE, controleGabinete);
+			result.include(VEICULOS, veiculos);
+			result.include(CONDUTORES, condutores);
+
+			if (controleGabinete.getId() > 0)
+				validator.onErrorUse(Results.page())
+						.of(ControleGabineteController.class)
+						.editar(controleGabinete.getId());
 			else
-				validator.onErrorUse(Results.page()).of(ControleGabineteController.class).incluir();
-				
+				validator.onErrorUse(Results.page())
+						.of(ControleGabineteController.class).incluir();
+
 		} else {
 			if (controleGabinete.getId() == 0)
 				controleGabinete.setDataHora(Calendar.getInstance());
@@ -166,14 +199,14 @@ public class ControleGabineteController extends TpController {
 		}
 	}
 
-//	@RoleGabinete
-//	@RoleAdminGabinete
+	// @RoleGabinete
+	// @RoleAdminGabinete
 	@Path("/excluir/{id}")
 	public void excluir(Long id) throws Exception {
 		ControleGabinete controleGabinete = ControleGabinete.AR.findById(id);
 		verificarAcesso(controleGabinete);
 		controleGabinete.delete();
-		
+
 		result.redirectTo(ControleGabineteController.class).listar();
 	}
 }
