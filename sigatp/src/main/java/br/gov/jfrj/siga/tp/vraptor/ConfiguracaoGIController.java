@@ -27,6 +27,14 @@ import br.gov.jfrj.siga.vraptor.SigaObjects;
 @Path("app/configuracaoGI")
 public class ConfiguracaoGIController extends TpController {
 	
+	private static final String CP_COMPLEXOS = "cpComplexos";
+	private static final String CP_SITUACOES_CONFIGURACAO = "cpSituacoesConfiguracao";
+	private static final String CP_TIPOS_CONFIGURACAO = "cpTiposConfiguracao";
+	private static final String CP_CONFIGURACAO = "cpConfiguracao";
+	private static final String CP_ORGAO_USUARIOS = "cpOrgaoUsuarios";
+	private static final String CP_ORGAO_USUARIO = "cpOrgaoUsuario";
+	private static final String CP_CONFIGURACOES = "cpConfiguracoes";
+
 	public ConfiguracaoGIController(HttpServletRequest request, Result result,
 			CpDao dao, Validator validator, SigaObjects so, EntityManager em) {
 		super(request, result, dao, validator, so, em);
@@ -69,9 +77,9 @@ public class ConfiguracaoGIController extends TpController {
 		cpConfiguracoes.addAll(cpConfiguracoesCl);
 		cpConfiguracoes.addAll(cpConfiguracoesCo);
 		
-		result.include("cpConfiguracoes", cpConfiguracoes);
-		result.include("cpOrgaoUsuario", cpOrgaoUsuario);
-		result.include("cpOrgaoUsuarios", cpOrgaoUsuarios);
+		result.include(CP_CONFIGURACOES, cpConfiguracoes);
+		result.include(CP_ORGAO_USUARIO, cpOrgaoUsuario);
+		result.include(CP_ORGAO_USUARIOS, cpOrgaoUsuarios);
 		
 		result.include("lotacaoSel", new DpLotacaoSelecao());
 	}
@@ -82,7 +90,7 @@ public class ConfiguracaoGIController extends TpController {
 
 		carregarDadosPerifericos(idOrgaoUsu);
 
-		cpConfiguracao.setOrgaoUsuario((CpOrgaoUsuario) result.included().get("cpOrgaoUsuario"));
+		cpConfiguracao.setOrgaoUsuario((CpOrgaoUsuario) result.included().get(CP_ORGAO_USUARIO));
 
 		/*
 		insert into corporativo.cp_configuracao (
@@ -99,8 +107,8 @@ public class ConfiguracaoGIController extends TpController {
 				(select id_pessoa from corporativo.dp_pessoa where matricula = '10596' and data_fim_pessoa is null and id_orgao_usu = 1),
 				1
 			); */
-		cpConfiguracao.setId(new Long(0L));
-		result.include("cpConfiguracao", cpConfiguracao);
+		cpConfiguracao.setId(0L);
+		result.include(CP_CONFIGURACAO, cpConfiguracao);
 	}
 	
 	@Path("/editar/{id}")
@@ -117,7 +125,7 @@ public class ConfiguracaoGIController extends TpController {
 			cpConfiguracao.setOrgaoUsuario(cpConfiguracao.getLotacao().getOrgaoUsuario());
 		}
 
-		result.include("cpConfiguracao", cpConfiguracao);
+		result.include(CP_CONFIGURACAO, cpConfiguracao);
 	}
 	
 	@SuppressWarnings("unchecked")
@@ -135,10 +143,10 @@ public class ConfiguracaoGIController extends TpController {
 		List<CpSituacaoConfiguracao> cpSituacoesConfiguracao = CpSituacaoConfiguracao.AR.findAll();
 		List<CpComplexo> cpComplexos = CpComplexo.AR.find(" orgaoUsuario.idOrgaoUsu = ? ", idOrgaoUsu).fetch();
 
-		result.include("cpOrgaoUsuario",cpOrgaoUsuario);
-		result.include("cpTiposConfiguracao",cpTiposConfiguracao);
-		result.include("cpSituacoesConfiguracao",cpSituacoesConfiguracao);
-		result.include("cpComplexos",cpComplexos);
+		result.include(CP_ORGAO_USUARIO,cpOrgaoUsuario);
+		result.include(CP_TIPOS_CONFIGURACAO,cpTiposConfiguracao);
+		result.include(CP_SITUACOES_CONFIGURACAO,cpSituacoesConfiguracao);
+		result.include(CP_COMPLEXOS,cpComplexos);
 	}
 	
 	@Path("/excluir/{id}")
