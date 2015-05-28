@@ -14,6 +14,7 @@ import br.com.caelum.vraptor.Resource;
 import br.com.caelum.vraptor.Result;
 import br.com.caelum.vraptor.Validator;
 import br.com.caelum.vraptor.validator.I18nMessage;
+import br.com.caelum.vraptor.view.Results;
 import br.gov.jfrj.siga.base.AplicacaoException;
 import br.gov.jfrj.siga.cp.CpComplexo;
 import br.gov.jfrj.siga.dp.DpPessoa;
@@ -48,6 +49,7 @@ public class RequisicaoController extends TpController {
 		carregarRequisicoesUltimosSeteDiasPorEstados(null);
 		result.include("estadoRequisicao",EstadoRequisicao.PROGRAMADA);
 		MenuMontador.instance(result).recuperarMenuListarRequisicoes(null);
+		result.include("estadosRequisicao", EstadoRequisicao.values());
 	}
 
 //	@RoleAprovador
@@ -83,7 +85,7 @@ public class RequisicaoController extends TpController {
 		result.redirectTo(this).listarPAprovar();
 	}
 
-	@Path("/listarFiltrado")
+	@Path("/listarFiltrado/{estadoRequisicao}/{estadoRequisicaoP}")
 	public void listarFiltrado(EstadoRequisicao estadoRequisicao, EstadoRequisicao estadoRequisicaoP) throws Exception {
 		if (estadoRequisicaoP == null) { estadoRequisicaoP = estadoRequisicao; }
 		EstadoRequisicao estadosRequisicao[] = {estadoRequisicao,estadoRequisicaoP};
@@ -107,7 +109,7 @@ public class RequisicaoController extends TpController {
 
 		result.include("estadoRequisicao", estadoRequisicao);
 
-		result.redirectTo(this).listarPAprovar();
+		result.use(Results.page()).of(RequisicaoController.class).listarPAprovar();
 	}
 
 	@Path("/salvar")

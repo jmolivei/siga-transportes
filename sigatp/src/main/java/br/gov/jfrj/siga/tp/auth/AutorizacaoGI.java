@@ -42,7 +42,7 @@ public class AutorizacaoGI {
 	 * @return
 	 * @throws Exception
 	 */
-	protected CpComplexo recuperarComplexoAdministrador() throws Exception {
+	public CpComplexo recuperarComplexoAdministrador() throws Exception {
 		String SERVICO_COMPLEXO_ADMINISTRADOR = "SIGA-TP-ADMMISSAOCOMPLEXO";
 		CpServico cpServico = TpDao.find(CpServico.class, "siglaServico", SERVICO_COMPLEXO_ADMINISTRADOR).first();
 		CpSituacaoConfiguracao cpSituacaoConfiguracaoPode = TpDao.findById(CpSituacaoConfiguracao.class, 1L);

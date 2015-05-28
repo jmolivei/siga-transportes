@@ -1,36 +1,3 @@
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 package br.gov.jfrj.siga.tp.vraptor;
 
 import java.text.SimpleDateFormat;
@@ -332,7 +299,9 @@ public class EscalaDeTrabalhoController extends TpController {
 	}
 
 	private boolean validarMissoesParaNovaEscala(EscalaDeTrabalho escala) throws Exception {
-		List<Missao> missoes = MissaoController.buscarPorCondutoreseEscala(escala);
+		result.of(MissaoController.class).buscarPorCondutoreseEscala(escala);
+		@SuppressWarnings("unchecked")
+		List<Missao> missoes = (List<Missao>) getRequest().getAttribute("missao");
 		SimpleDateFormat formatar = new SimpleDateFormat("dd/MM/yyyy HH:mm");
 		boolean valido = true;
 		StringBuilder listaMissoes = new StringBuilder();
