@@ -4,6 +4,7 @@
 <%@ taglib prefix="sigatp" tagdir="/WEB-INF/tags/" %>
 
 <siga:pagina titulo="Transportes">
+	<form id="formulario">
 	<div class="gt-bd clearfix">
 		<div class="gt-content clearfix">
 			<h2>Abastecimentos</h2>
@@ -64,4 +65,5 @@
 		</div>
 	</div>
 	<sigatp:motivoLog />
+	</form>
 </siga:pagina>
