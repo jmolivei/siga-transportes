@@ -284,10 +284,10 @@ public class Condutor extends TpModel implements ConvertableEntity, Comparable<C
 
 	public static Boolean estaDisponivel(Missao m) throws Exception {
 		SimpleDateFormat formatar = new SimpleDateFormat("dd/MM/yyyy HH:mm");
-		String dataHoraSaidaStr = formatar.format(m.dataHoraSaida.getTime());
-		List<Condutor> condutores = listarDisponiveis(dataHoraSaidaStr, m.getId(), m.cpOrgaoUsuario.getId(), m.inicioRapido);
+		String dataHoraSaidaStr = formatar.format(m.getDataHoraSaida().getTime());
+		List<Condutor> condutores = listarDisponiveis(dataHoraSaidaStr, m.getId(), m.getCpOrgaoUsuario().getId(), m.getInicioRapido());
 
-		if (condutores.contains(m.condutor)) {
+		if (condutores.contains(m.getCondutor())) {
 			return true;
 		}
 		return false;

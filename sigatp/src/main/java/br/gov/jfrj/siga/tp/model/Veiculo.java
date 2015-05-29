@@ -345,10 +345,10 @@ public class Veiculo extends TpModel implements ConvertableEntity, Comparable<Ve
 
 	public static Boolean estaDisponivel(Missao m) throws Exception {
 		SimpleDateFormat formatar = new SimpleDateFormat("dd/MM/yyyy HH:mm");
-		String dataHoraSaidaStr = formatar.format(m.dataHoraSaida.getTime());
-		List<Veiculo> veiculos = listarDisponiveis(dataHoraSaidaStr, m.getId(), m.cpOrgaoUsuario.getId());
+		String dataHoraSaidaStr = formatar.format(m.getDataHoraSaida().getTime());
+		List<Veiculo> veiculos = listarDisponiveis(dataHoraSaidaStr, m.getId(), m.getCpOrgaoUsuario().getId());
 		for (Veiculo veiculo : veiculos) {
-			if (veiculo.id.equals(m.veiculo.id)) {
+			if (veiculo.id.equals(m.getVeiculo().id)) {
 				return true;
 			}
 		}

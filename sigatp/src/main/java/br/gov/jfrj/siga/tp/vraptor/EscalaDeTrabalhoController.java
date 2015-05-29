@@ -309,10 +309,10 @@ public class EscalaDeTrabalhoController extends TpController {
 
 		if (missoes != null && !missoes.isEmpty()) {
 			for (Missao missao : missoes) {
-				String dataMissao = formatar.format(missao.dataHoraSaida.getTime());
+				String dataMissao = formatar.format(missao.getDataHoraSaida().getTime());
 				String dataFormatadaOracle = "to_date('" + dataMissao + "', 'DD/MM/YYYY HH24:mi')";
-				if (! missao.condutor.estaEscalado(dataMissao) &&
-					! missao.condutor.estaDePlantao(dataFormatadaOracle)	) {
+				if (! missao.getCondutor().estaEscalado(dataMissao) &&
+					! missao.getCondutor().estaDePlantao(dataFormatadaOracle)	) {
 					listaMissoes.append(delimitador).append(missao.getSequence());
 					delimitador=",";
 					valido = false;

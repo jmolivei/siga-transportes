@@ -301,7 +301,7 @@ public class Application extends Controller {
 					public boolean apply(T objeto) {
 						if (objeto instanceof Missao) {
 							Missao missao = ((Missao) objeto);
-							return missao.estadoMissao.getDescricao().equals(descricao);
+							return missao.getEstadoMissao().getDescricao().equals(descricao);
 						}
 						if (objeto instanceof RequisicaoTransporte) {
 							Calendar ultimos7dias = Calendar.getInstance();
