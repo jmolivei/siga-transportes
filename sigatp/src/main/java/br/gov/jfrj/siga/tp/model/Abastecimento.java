@@ -59,7 +59,7 @@ public class Abastecimento extends TpModel implements Comparable<Abastecimento>,
 	private TipoDeCombustivel tipoDeCombustivel;
 
 	@NotNull
-	@Min(value=1, message="abastecimento.quantidadeEmLitros.min")
+	@Min(value=1, message="{abastecimento.quantidadeEmLitros.min}")
 	private Double quantidadeEmLitros;
 	
 	@NotNull

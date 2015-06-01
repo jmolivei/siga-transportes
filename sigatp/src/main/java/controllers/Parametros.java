@@ -1,7 +1,5 @@
 package controllers;
 
-import java.text.ParseException;
-import java.util.Calendar;
 import java.util.List;
 
 import play.data.validation.Valid;
@@ -22,20 +20,20 @@ public class Parametros extends Controller {
 	private static final String ACTION_INCLUIR = "@incluir";
 
 	public static void listar() throws Exception {
-   		List<Parametro> parametros = Parametro.findAll();
+   		List<Parametro> parametros = Parametro.listarTodos();
 		render(parametros);
     }
 
 	@RoleAdmin
 	public static void editar(Long id) throws Exception {
-		Parametro parametro = Parametro.findById(id);
+		Parametro parametro = Parametro.buscar(id);
 		carregarDadosPerifericos();
     	render(parametro);
 	}
 
 	@RoleAdmin
 	public static void excluir(Long id) throws Exception {
-        Parametro parametro = Parametro.findById(id);
+        Parametro parametro = Parametro.buscar(id);
 
 		parametro.delete();
 		listar();
@@ -60,7 +58,7 @@ public class Parametros extends Controller {
 	public static void salvar(@Valid Parametro parametro) throws Exception {
     		if(Validation.hasErrors()) {
         		carregarDadosPerifericos();
-    			renderTemplate((parametro.id == 0? Parametros.ACTION_INCLUIR : Parametros.ACTION_EDITAR), parametro);
+    			renderTemplate((parametro.getId() == 0? Parametros.ACTION_INCLUIR : Parametros.ACTION_EDITAR), parametro);
     			return;
     		}
 

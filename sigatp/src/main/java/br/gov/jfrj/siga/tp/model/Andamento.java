@@ -1,7 +1,6 @@
 package br.gov.jfrj.siga.tp.model;
 
 import java.util.Calendar;
-import java.util.List;
 
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
@@ -20,7 +19,6 @@ import org.hibernate.envers.RelationTargetAuditMode;
 import br.gov.jfrj.siga.dp.DpPessoa;
 import br.gov.jfrj.siga.model.ActiveRecord;
 import br.jus.jfrj.siga.uteis.UpperCase;
-import controllers.Parametros;
 
 @SuppressWarnings("serial")
 @Entity
