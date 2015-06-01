@@ -69,6 +69,7 @@ public class Parametro extends TpModel implements ConvertableEntity {
 	@Data(descricaoCampo="Data do Fim")
  	private Calendar dataFim;
 	
+	@NotNull
 	private String descricao;
 	
 	public Parametro() {

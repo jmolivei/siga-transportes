@@ -2,11 +2,19 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	buffer="64kb"%>
 <%@ taglib prefix="siga" uri="http://localhost/jeetags"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 
 <siga:pagina>
 	<div class="gt-bd clearfix">
 		<div class="gt-content clearfix">
-			<h2>Editar Parametriza&ccedil;&atilde;o: ${parametro.nomeParametro}</h2>
+			<c:choose>
+				<c:when test="${parametro.id > 0 }">
+					<h2>Editar Parametriza&ccedil;&atilde;o: ${parametro.nomeParametro}</h2>
+				</c:when>
+				<c:otherwise>
+					<h2>Incluir Parametriza&ccedil;&atilde;o</h2>
+				</c:otherwise>
+			</c:choose>
 			<jsp:include page="form.jsp" />
 		</div>
 	</div>

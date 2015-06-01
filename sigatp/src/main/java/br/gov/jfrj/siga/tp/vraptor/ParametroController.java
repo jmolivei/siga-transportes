@@ -61,40 +61,33 @@ public class ParametroController extends TpController {
 	
 	// @RoleAdmin
 	public void salvar(@Valid Parametro parametro) throws Exception {
+		validaCamposNulos(parametro);
+		
 		if (validator.hasErrors()) {
 			carregarDadosPerifericos();
-			
 			validator.onErrorUse(Results.page()).of(ParametroController.class).editar(parametro.getId());
-			//TODO  HD mudar
-//			renderTemplate((parametro.id == 0 ? Parametros.ACTION_INCLUIR
-//					: Parametros.ACTION_EDITAR), parametro);
+			
 			return;
 		}
-
 		parametro.save();
 
 		result.redirectTo(ParametroController.class).listar();
 	}
+	
+	private void validaCamposNulos(Parametro parametro) {
+		if(parametro.getDpPessoa().getId() == null)
+			parametro.setDpPessoa(null);
+		if(parametro.getDpLotacao().getId() == null)
+			parametro.setDpLotacao(null);
+	}
 
+	@SuppressWarnings("unchecked")
 	private void carregarDadosPerifericos() {
 		List<CpOrgaoUsuario> cpOrgaoUsuarios = CpOrgaoUsuario.AR.findAll();
 		List<CpComplexo> cpComplexos = CpComplexo.AR.findAll();
 
 		result.include("cpOrgaoUsuarios", cpOrgaoUsuarios);
 		result.include("cpComplexos", cpComplexos);
-		// RenderArgs.current().put("cpOrgaoUsuarios", cpOrgaoUsuarios);
-		// RenderArgs.current().put("cpComplexos", cpComplexos);
 	}
 	
-	// TODO OSI22 - No merge das versoes houve problemas, procurar solucao.
-	// public static Calendar formatarDataParametro(String stringCron) throws
-	// ParseException {
-	// String stringData = Parametro.buscarConfigSistemaEmVigor(stringCron);
-	// String[] data = stringData.split("/");
-	// Calendar cal = Calendar.getInstance();
-	// cal.set(Calendar.DAY_OF_MONTH, Integer.parseInt(data[0]));
-	// cal.set(Calendar.MONTH, Integer.parseInt(data[1]));
-	// cal.set(Calendar.YEAR, Integer.parseInt(data[2]));
-	// return cal;
-	// }
 }
