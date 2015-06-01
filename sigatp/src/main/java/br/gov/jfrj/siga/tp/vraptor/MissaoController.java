@@ -86,29 +86,35 @@ public class MissaoController extends TpController {
 	}
 
 	private List<Missao> recuperarMissoes(StringBuilder criterioBusca, Object[] parametros) throws Exception {
-		Object[] parametrosFiltrado = new Object[parametros.length + 1];
+		Object[] parametrosParaBuscar = new Object[parametros.length + 1];
+		parametrosParaBuscar = parametros;
 
 		if (!autorizacaoGI.ehAdministrador() && !autorizacaoGI.ehAdministradorMissao() && !autorizacaoGI.ehAdministradorMissaoPorComplexo()) {
 			Condutor condutorLogado = Condutor.recuperarLogado(getTitular(), getTitular().getOrgaoUsuario());
 			if (condutorLogado != null) {
 				criterioBusca.append(" and condutor = ?");
+				Object[] parametrosFiltrado = new Object[parametros.length + 1];
 				for (int i = 0; i < parametros.length; i++) {
 					parametrosFiltrado[i] = parametros[i];
 				}
 				parametrosFiltrado[parametros.length] = condutorLogado;
+				parametrosParaBuscar = parametrosFiltrado;
 			}
 
 		} else if (autorizacaoGI.ehAdministradorMissaoPorComplexo()) {
 			criterioBusca.append(" and cpComplexo = ?");
+			Object[] parametrosFiltrado = new Object[parametros.length + 1];
 			for (int i = 0; i < parametros.length; i++) {
 				parametrosFiltrado[i] = parametros[i];
 			}
 			if (autorizacaoGI.ehAdministradorMissaoPorComplexo()) {
 				parametrosFiltrado[parametros.length] = getComplexoAdministrado();
 			}
+
+			parametrosParaBuscar = parametrosFiltrado;
 		}
 
-		return Missao.AR.find(criterioBusca.toString() + " order by dataHoraSaida desc", parametrosFiltrado).fetch();
+		return Missao.AR.find(criterioBusca.toString() + " order by dataHoraSaida desc", parametrosParaBuscar).fetch();
 	}
 
 	@RoleAgente
@@ -157,7 +163,7 @@ public class MissaoController extends TpController {
 	@RoleAdmin
 	@RoleAdminMissao
 	@RoleAdminMissaoComplexo
-	@Path("/listarFiltrado")
+	@Path("/listarFiltrado/{estado}")
 	public void listarFiltrado(EstadoMissao estado) throws Exception {
 		EstadoMissao estadoMissao = seEstadoNuloUsarDefault(estado);
 
@@ -169,10 +175,10 @@ public class MissaoController extends TpController {
 		Condutor condutor = new Condutor();
 
 		result.include(MISSOES_STR, missoes);
-		result.include(ESTADO_MISSAO_STR, estadoMissao);
+		result.include(ESTADO_MISSAO_STR, EstadoMissao.values());
 		result.include(CONDUTOR_STR, condutor);
 
-		result.redirectTo(this).listar();
+		result.use(Results.page()).of(MissaoController.class).listar();
 	}
 
 	private EstadoMissao seEstadoNuloUsarDefault(EstadoMissao estado) {
@@ -477,6 +483,10 @@ public class MissaoController extends TpController {
 		missaoPronta.save();
 		gravarAndamentos(dpPessoa, "INICIO RAPIDO PELA MISSAO N." + missaoPronta.getSequence(), missaoPronta.getRequisicoesTransporte(), missaoPronta, EstadoRequisicao.EMATENDIMENTO);
 
+		result.include("mostrarBotoesIniciarRapido", true);
+		result.include("mostrarDadosProgramada", true);
+		result.include("mostrarDadosIniciada", true);
+
 		result.redirectTo(this).buscarPelaSequence(false, missaoPronta.getSequence());
 	}
 
@@ -492,6 +502,9 @@ public class MissaoController extends TpController {
 		checarComplexo(missao.getCpComplexo().getIdComplexo());
 
 		result.include(MISSAO_STR, missao);
+		result.include("mostrarBotoesIniciar", true);
+		result.include("mostrarDadosProgramada", true);
+		result.include("mostrarDadosIniciada", true);
 	}
 
 	@RoleAdmin
@@ -869,6 +882,7 @@ public class MissaoController extends TpController {
 		MenuMontador.instance(result).recuperarMenuMissao(missao.getId(), missao.getEstadoMissao());
 
 		result.include(MISSAO_STR, missao);
+		result.include("mostrarBotoesEditar", true);
 	}
 
 	private void removerRequisicoesDoRenderArgs(List<RequisicaoTransporte> requisicoesTransporte) {
