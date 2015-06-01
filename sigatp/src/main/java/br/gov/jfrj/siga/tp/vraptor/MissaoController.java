@@ -247,8 +247,8 @@ public class MissaoController extends TpController {
 				if (veiculoInicial == null)
 					veiculoInicial = req.getServicoVeiculo().getVeiculo();
 				else if (!veiculoInicial.equals(req.getServicoVeiculo().getVeiculo())) {
-						validator.add(new I18nMessage("veiculo", "missoes.veiculo.validation"));
-						redirecionarSeErroAoSalvar(missao, template);
+					validator.add(new I18nMessage("veiculo", "missoes.veiculo.validation"));
+					redirecionarSeErroAoSalvar(missao, template);
 				}
 			}
 		}

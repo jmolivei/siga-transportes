@@ -108,6 +108,16 @@ public class VeiculoController extends TpController {
 		result.redirectTo(AvariaController.class).listarPorVeiculo(idVeiculo);
 	}
 
+	@Path("/buscarPeloId/{id}")
+	public void buscarPeloId(Long id) throws Exception {
+		Veiculo veiculo = Veiculo.AR.findById(id);
+		veiculo.configurarOdometroParaMudancaDeLotacao();
+		MenuMontador.instance(result).recuperarMenuVeiculos(id, ItemMenu.DADOSCADASTRAIS);
+		result.include("veiculo", veiculo);
+		result.include("esconderBotoes", true);
+		result.redirectTo(this).ler(id);
+	}
+
 	private List<DpLotacao> buscarDpLotacoes() {
 		CpOrgaoUsuario cpOrgaoUsuario = getTitular().getOrgaoUsuario();
 		List<DpLotacao> dpLotacoes = DpLotacao.AR.find("orgaoUsuario = ? and DATA_FIM_LOT is null order by NOME_LOTACAO", cpOrgaoUsuario).fetch();
@@ -182,8 +192,9 @@ public class VeiculoController extends TpController {
 		}
 		return null;
 	}
-	
+
 	private void labelIncluirOuEditar(Long id) {
 		result.include(TIPO_CADASTRO, (id == null || id == 0) ? LABEL_INCLUIR : LABEL_EDITAR);
 	}
+
 }
