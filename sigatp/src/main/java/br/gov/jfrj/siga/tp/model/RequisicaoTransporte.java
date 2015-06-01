@@ -1,5 +1,6 @@
 package br.gov.jfrj.siga.tp.model;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Collections;
@@ -89,7 +90,7 @@ public class RequisicaoTransporte extends TpModel implements Comparable<Requisic
 	@Enumerated(EnumType.STRING)
 	private List<TipoDePassageiro> tiposDePassageiro;
 
-	@NotNull
+//	@NotNull
 	@ManyToOne
 	@JoinColumn(name = "ID_FINALIDADE")
 	private FinalidadeRequisicao tipoFinalidade;
@@ -233,6 +234,10 @@ public class RequisicaoTransporte extends TpModel implements Comparable<Requisic
 		this.andamentos = andamentos;
 	}
 
+	public void addAndamento(Andamento andamento) {
+		this.andamentos.add(andamento);
+	}
+
 	public List<Missao> getMissoes() {
 		return missoes;
 	}
@@ -310,6 +315,7 @@ public class RequisicaoTransporte extends TpModel implements Comparable<Requisic
 		tipoRequisicao = TipoRequisicao.NORMAL;
 		ultimoAndamento = new Andamento();
 		this.origemExterna = false;
+		this.andamentos = new ArrayList<Andamento>();
 	}
 
 	public String getDadosParaExibicao() {
