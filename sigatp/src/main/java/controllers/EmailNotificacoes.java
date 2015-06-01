@@ -141,7 +141,7 @@ public class EmailNotificacoes extends Job<Object>  {
 		HashMap<Condutor, String> dadosCondutor = new HashMap<Condutor, String>();
 
 		for(Missao item : missoes) {
-			condutor = item.condutor;
+			condutor = item.getCondutor();
 			String sequencia = item.getSequence() + " " + item.getId() + ",";
 
 			if (dadosCondutor.containsKey(condutor)) {

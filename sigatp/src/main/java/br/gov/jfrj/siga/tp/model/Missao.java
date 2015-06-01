@@ -26,13 +26,7 @@ import javax.validation.constraints.NotNull;
 import org.hibernate.envers.Audited;
 import org.hibernate.envers.RelationTargetAuditMode;
 
-import play.data.binding.As;
-import play.data.validation.Required;
-import play.db.jpa.JPA;
-import play.i18n.Messages;
-import play.modules.br.jus.jfrj.siga.uteis.validadores.sequence.SequenceMethods;
-import play.modules.br.jus.jfrj.siga.uteis.validadores.upperCase.UpperCase;
-import play.modules.br.jus.jfrj.siga.uteis.validadores.validarAnoData.ValidarAnoData;
+import br.com.caelum.vraptor.validator.I18nMessage;
 import br.gov.jfrj.siga.cp.CpComplexo;
 import br.gov.jfrj.siga.dp.CpOrgaoUsuario;
 import br.gov.jfrj.siga.dp.DpPessoa;
@@ -40,8 +34,11 @@ import br.gov.jfrj.siga.model.ActiveRecord;
 import br.gov.jfrj.siga.model.ContextoPersistencia;
 import br.gov.jfrj.siga.tp.util.PerguntaSimNao;
 import br.gov.jfrj.siga.tp.util.Reflexao;
+import br.gov.jfrj.siga.tp.validation.annotation.Data;
+import br.gov.jfrj.siga.tp.validation.annotation.UpperCase;
 import br.gov.jfrj.siga.vraptor.converter.ConvertableEntity;
 import br.jus.jfrj.siga.uteis.Sequence;
+import br.jus.jfrj.siga.uteis.SequenceMethods;
 import br.jus.jfrj.siga.uteis.SiglaDocumentoType;
 
 @SuppressWarnings("serial")
@@ -52,7 +49,7 @@ import br.jus.jfrj.siga.uteis.SiglaDocumentoType;
 @Table(schema = "SIGATP")
 public class Missao extends TpModel implements ConvertableEntity, Comparable<Missao>, SequenceMethods {
 
-	public static ActiveRecord<Missao> AR = new ActiveRecord<>(Missao.class);
+	public static final ActiveRecord<Missao> AR = new ActiveRecord<>(Missao.class);
 
 	@Id
 	@Sequence(propertieOrgao="cpOrgaoUsuario",siglaDocumento=SiglaDocumentoType.MTP)
@@ -68,134 +65,108 @@ public class Missao extends TpModel implements ConvertableEntity, Comparable<Mis
 	@Audited(targetAuditMode = RelationTargetAuditMode.NOT_AUDITED)
 	@ManyToOne
 	@JoinColumn(name = "ID_PESSOA")
-	public DpPessoa responsavel;
+	private DpPessoa responsavel;
 
-	@As(lang = { "*" }, value = { "dd/MM/yyyy HH:mm" })
-	public Calendar dataHora;
-
-	@Transient
-//	@As(binder=DoubleBinder.class)
-	public double distanciaPercorridaEmKm;
-
+	@Data(descricaoCampo = "dataHora")
+	private Calendar dataHora;
 
 	@Transient
-	@As(lang = { "*" }, value = { "HH:mm" })
-	@ValidarAnoData(descricaoCampo = "Data/Hora")
-	public Calendar tempoBruto;
-
-//	@As(binder=DoubleBinder.class)
-	public double consumoEmLitros;
+	private double distanciaPercorridaEmKm;
 
 
-	@Required
+	@Transient
+	@Data(descricaoCampo = "tempoBruto")
+	private Calendar tempoBruto;
+
+	private double consumoEmLitros;
+
 	@NotNull
-	@As(lang = { "*" }, value = { "dd/MM/yyyy HH:mm" })
-	@ValidarAnoData(descricaoCampo = "Data/Hora")
-	public Calendar dataHoraSaida;
+	@Data(descricaoCampo = "dataHoraSaida")
+	private Calendar dataHoraSaida;
 
-//	@As(binder=DoubleBinder.class)
-	public double odometroSaidaEmKm;
-
+	private double odometroSaidaEmKm;
 
 	@Enumerated(EnumType.STRING)
-	public PerguntaSimNao estepe;
-
-
-	@Enumerated(EnumType.STRING)
-	public PerguntaSimNao avariasAparentesSaida;
-
+	private PerguntaSimNao estepe;
 
 	@Enumerated(EnumType.STRING)
-	public PerguntaSimNao limpeza;
-
-
-	@Enumerated(EnumType.STRING)
-	public NivelDeCombustivel nivelCombustivelSaida;
-
+	private PerguntaSimNao avariasAparentesSaida;
 
 	@Enumerated(EnumType.STRING)
-	public PerguntaSimNao triangulos;
-
-
-	@Enumerated(EnumType.STRING)
-	public PerguntaSimNao extintor;
-
+	private PerguntaSimNao limpeza;
 
 	@Enumerated(EnumType.STRING)
-	public PerguntaSimNao ferramentas;
-
-
-	@Enumerated(EnumType.STRING)
-	public PerguntaSimNao licenca;
-
+	private NivelDeCombustivel nivelCombustivelSaida;
 
 	@Enumerated(EnumType.STRING)
-	public PerguntaSimNao cartaoSeguro;
-
-
-	@Enumerated(EnumType.STRING)
-	public PerguntaSimNao cartaoAbastecimento;
-
+	private PerguntaSimNao triangulos;
 
 	@Enumerated(EnumType.STRING)
-	public PerguntaSimNao cartaoSaida;
-
-	@As(lang = { "*" }, value = { "dd/MM/yyyy HH:mm" })
-	@ValidarAnoData(descricaoCampo = "Data/Hora Retorno")
-	public Calendar dataHoraRetorno;
-
-//	@As(binder=DoubleBinder.class)
-	public double odometroRetornoEmKm;
-
+	private PerguntaSimNao extintor;
 
 	@Enumerated(EnumType.STRING)
-	public PerguntaSimNao avariasAparentesRetorno;
-
+	private PerguntaSimNao ferramentas;
 
 	@Enumerated(EnumType.STRING)
-	public NivelDeCombustivel nivelCombustivelRetorno;
+	private PerguntaSimNao licenca;
 
+	@Enumerated(EnumType.STRING)
+	private PerguntaSimNao cartaoSeguro;
+
+	@Enumerated(EnumType.STRING)
+	private PerguntaSimNao cartaoAbastecimento;
+
+	@Enumerated(EnumType.STRING)
+	private PerguntaSimNao cartaoSaida;
+
+	@Data(descricaoCampo = "dataHoraRetorno")
+	private Calendar dataHoraRetorno;
+
+	private double odometroRetornoEmKm;
+
+	@Enumerated(EnumType.STRING)
+	private PerguntaSimNao avariasAparentesRetorno;
+
+	@Enumerated(EnumType.STRING)
+	private NivelDeCombustivel nivelCombustivelRetorno;
 
 	@UpperCase
-	public String ocorrencias;
-
+	private String ocorrencias;
 
 	@UpperCase
-	public String itinerarioCompleto;
+	private String itinerarioCompleto;
 
 	@Audited(targetAuditMode = RelationTargetAuditMode.NOT_AUDITED)
 	@ManyToOne
 	@JoinColumn(name = "ID_ORGAO_USU")
-	public CpOrgaoUsuario cpOrgaoUsuario;
+	private CpOrgaoUsuario cpOrgaoUsuario;
 
-	@Required(message = "missao.requisicoesTransporte.required")
-	@NotNull
+	@NotNull(message = "missao.requisicoesTransporte.required")
 	@ManyToMany
 	@JoinTable(name = "missao_requisTransporte", joinColumns = @JoinColumn(name = "missao_Id"), inverseJoinColumns = @JoinColumn(name = "requisicaoTransporte_Id"))
-	public List<RequisicaoTransporte> requisicoesTransporte;
+	private List<RequisicaoTransporte> requisicoesTransporte;
 
-	@Required
-	@ManyToOne
-	public Veiculo veiculo;
-
-	@Required
 	@NotNull
 	@ManyToOne
-	public Condutor condutor;
+	private Veiculo veiculo;
+
+	@NotNull
+	@ManyToOne
+	private Condutor condutor;
 
 	@Enumerated(EnumType.STRING)
-	public EstadoMissao estadoMissao;
+	private EstadoMissao estadoMissao;
 
 	@UpperCase
-	public String justificativa;
+	private String justificativa;
 
 	@Enumerated(EnumType.STRING)
-	public PerguntaSimNao inicioRapido;
+	private PerguntaSimNao inicioRapido;
 
 	@Audited(targetAuditMode = RelationTargetAuditMode.NOT_AUDITED)
 	@ManyToOne
 	@JoinColumn(name = "ID_COMPLEXO")
-	public CpComplexo cpComplexo;
+	private CpComplexo cpComplexo;
 
 	public Missao() {
 		this.id = new Long(0);
@@ -266,7 +237,6 @@ public class Missao extends TpModel implements ConvertableEntity, Comparable<Mis
 	}
 
 	public static Missao buscar(String sequence) throws Exception {
-		// TODO Auto-generated method stub
 		String[] partesDoCodigo = null;
 		Missao missao = new Missao();
 		try {
@@ -275,7 +245,7 @@ public class Missao extends TpModel implements ConvertableEntity, Comparable<Mis
 			partesDoCodigo = sequence.split("[-/]");
 
 		} catch (Exception e) {
-			throw new Exception(Messages.get("missao.buscar.sequence.exception", sequence));
+			throw new Exception(new I18nMessage("missao", "missao.buscar.sequence.exception", sequence).getMessage());
 		}
 
 		CpOrgaoUsuario cpOrgaoUsuario = CpOrgaoUsuario.AR.find("acronimoOrgaoUsu",partesDoCodigo[0]).first();
@@ -283,13 +253,13 @@ public class Missao extends TpModel implements ConvertableEntity, Comparable<Mis
 		Long numero = new Long(Integer.parseInt(partesDoCodigo[3]));
 		String siglaDocumento = partesDoCodigo[4] + partesDoCodigo[1];
 		if (! Reflexao.recuperaAnotacaoField(missao).equals(siglaDocumento)) {
-			throw new Exception(Messages.get("missao.buscar.siglaDocumento.exception", sequence));
+			throw new Exception(new I18nMessage("missao", "missao.buscar.siglaDocumento.exception", sequence).getMessage());
 		}
 		List<Missao> missoes = Missao.AR.find("cpOrgaoUsuario = ? and numero = ? and YEAR(dataHora) = ?", cpOrgaoUsuario, numero, ano).fetch();
 		if (missoes.size() > 1)
-			throw new Exception(Messages.get("missao.buscar.codigoDuplicado.exception"));
+			throw new Exception(new I18nMessage("missao", "missao.buscar.codigoDuplicado.exception").getMessage());
 		if (missoes.size() == 0)
-			throw new Exception(Messages.get("missao.buscar.codigoInvalido.exception"));
+			throw new Exception(new I18nMessage("missao", "missao.buscar.codigoInvalido.exception").getMessage());
 		return missoes.get(0);
 	}
 
@@ -372,11 +342,278 @@ public class Missao extends TpModel implements ConvertableEntity, Comparable<Mis
 		return (List<Missao>) qry.getResultList();
 	}
 
+	@Override
 	public Long getId() {
 		return id;
 	}
 
 	public void setId(Long id) {
 		this.id = id;
+	}
+
+	public Long getNumero() {
+		return numero;
+	}
+
+	public void setNumero(Long numero) {
+		this.numero = numero;
+	}
+
+	public DpPessoa getResponsavel() {
+		return responsavel;
+	}
+
+	public void setResponsavel(DpPessoa responsavel) {
+		this.responsavel = responsavel;
+	}
+
+	public Calendar getDataHora() {
+		return dataHora;
+	}
+
+	public void setDataHora(Calendar dataHora) {
+		this.dataHora = dataHora;
+	}
+
+	public double getDistanciaPercorridaEmKm() {
+		return distanciaPercorridaEmKm;
+	}
+
+	public void setDistanciaPercorridaEmKm(double distanciaPercorridaEmKm) {
+		this.distanciaPercorridaEmKm = distanciaPercorridaEmKm;
+	}
+
+	public Calendar getTempoBruto() {
+		return tempoBruto;
+	}
+
+	public void setTempoBruto(Calendar tempoBruto) {
+		this.tempoBruto = tempoBruto;
+	}
+
+	public double getConsumoEmLitros() {
+		return consumoEmLitros;
+	}
+
+	public void setConsumoEmLitros(double consumoEmLitros) {
+		this.consumoEmLitros = consumoEmLitros;
+	}
+
+	public Calendar getDataHoraSaida() {
+		return dataHoraSaida;
+	}
+
+	public void setDataHoraSaida(Calendar dataHoraSaida) {
+		this.dataHoraSaida = dataHoraSaida;
+	}
+
+	public double getOdometroSaidaEmKm() {
+		return odometroSaidaEmKm;
+	}
+
+	public void setOdometroSaidaEmKm(double odometroSaidaEmKm) {
+		this.odometroSaidaEmKm = odometroSaidaEmKm;
+	}
+
+	public PerguntaSimNao getEstepe() {
+		return estepe;
+	}
+
+	public void setEstepe(PerguntaSimNao estepe) {
+		this.estepe = estepe;
+	}
+
+	public PerguntaSimNao getAvariasAparentesSaida() {
+		return avariasAparentesSaida;
+	}
+
+	public void setAvariasAparentesSaida(PerguntaSimNao avariasAparentesSaida) {
+		this.avariasAparentesSaida = avariasAparentesSaida;
+	}
+
+	public PerguntaSimNao getLimpeza() {
+		return limpeza;
+	}
+
+	public void setLimpeza(PerguntaSimNao limpeza) {
+		this.limpeza = limpeza;
+	}
+
+	public NivelDeCombustivel getNivelCombustivelSaida() {
+		return nivelCombustivelSaida;
+	}
+
+	public void setNivelCombustivelSaida(NivelDeCombustivel nivelCombustivelSaida) {
+		this.nivelCombustivelSaida = nivelCombustivelSaida;
+	}
+
+	public PerguntaSimNao getTriangulos() {
+		return triangulos;
+	}
+
+	public void setTriangulos(PerguntaSimNao triangulos) {
+		this.triangulos = triangulos;
+	}
+
+	public PerguntaSimNao getExtintor() {
+		return extintor;
+	}
+
+	public void setExtintor(PerguntaSimNao extintor) {
+		this.extintor = extintor;
+	}
+
+	public PerguntaSimNao getFerramentas() {
+		return ferramentas;
+	}
+
+	public void setFerramentas(PerguntaSimNao ferramentas) {
+		this.ferramentas = ferramentas;
+	}
+
+	public PerguntaSimNao getLicenca() {
+		return licenca;
+	}
+
+	public void setLicenca(PerguntaSimNao licenca) {
+		this.licenca = licenca;
+	}
+
+	public PerguntaSimNao getCartaoSeguro() {
+		return cartaoSeguro;
+	}
+
+	public void setCartaoSeguro(PerguntaSimNao cartaoSeguro) {
+		this.cartaoSeguro = cartaoSeguro;
+	}
+
+	public PerguntaSimNao getCartaoAbastecimento() {
+		return cartaoAbastecimento;
+	}
+
+	public void setCartaoAbastecimento(PerguntaSimNao cartaoAbastecimento) {
+		this.cartaoAbastecimento = cartaoAbastecimento;
+	}
+
+	public PerguntaSimNao getCartaoSaida() {
+		return cartaoSaida;
+	}
+
+	public void setCartaoSaida(PerguntaSimNao cartaoSaida) {
+		this.cartaoSaida = cartaoSaida;
+	}
+
+	public Calendar getDataHoraRetorno() {
+		return dataHoraRetorno;
+	}
+
+	public void setDataHoraRetorno(Calendar dataHoraRetorno) {
+		this.dataHoraRetorno = dataHoraRetorno;
+	}
+
+	public double getOdometroRetornoEmKm() {
+		return odometroRetornoEmKm;
+	}
+
+	public void setOdometroRetornoEmKm(double odometroRetornoEmKm) {
+		this.odometroRetornoEmKm = odometroRetornoEmKm;
+	}
+
+	public PerguntaSimNao getAvariasAparentesRetorno() {
+		return avariasAparentesRetorno;
+	}
+
+	public void setAvariasAparentesRetorno(PerguntaSimNao avariasAparentesRetorno) {
+		this.avariasAparentesRetorno = avariasAparentesRetorno;
+	}
+
+	public NivelDeCombustivel getNivelCombustivelRetorno() {
+		return nivelCombustivelRetorno;
+	}
+
+	public void setNivelCombustivelRetorno(
+			NivelDeCombustivel nivelCombustivelRetorno) {
+		this.nivelCombustivelRetorno = nivelCombustivelRetorno;
+	}
+
+	public String getOcorrencias() {
+		return ocorrencias;
+	}
+
+	public void setOcorrencias(String ocorrencias) {
+		this.ocorrencias = ocorrencias;
+	}
+
+	public String getItinerarioCompleto() {
+		return itinerarioCompleto;
+	}
+
+	public void setItinerarioCompleto(String itinerarioCompleto) {
+		this.itinerarioCompleto = itinerarioCompleto;
+	}
+
+	public CpOrgaoUsuario getCpOrgaoUsuario() {
+		return cpOrgaoUsuario;
+	}
+
+	public void setCpOrgaoUsuario(CpOrgaoUsuario cpOrgaoUsuario) {
+		this.cpOrgaoUsuario = cpOrgaoUsuario;
+	}
+
+	public List<RequisicaoTransporte> getRequisicoesTransporte() {
+		return requisicoesTransporte;
+	}
+
+	public void setRequisicoesTransporte(
+			List<RequisicaoTransporte> requisicoesTransporte) {
+		this.requisicoesTransporte = requisicoesTransporte;
+	}
+
+	public Veiculo getVeiculo() {
+		return veiculo;
+	}
+
+	public void setVeiculo(Veiculo veiculo) {
+		this.veiculo = veiculo;
+	}
+
+	public Condutor getCondutor() {
+		return condutor;
+	}
+
+	public void setCondutor(Condutor condutor) {
+		this.condutor = condutor;
+	}
+
+	public EstadoMissao getEstadoMissao() {
+		return estadoMissao;
+	}
+
+	public void setEstadoMissao(EstadoMissao estadoMissao) {
+		this.estadoMissao = estadoMissao;
+	}
+
+	public String getJustificativa() {
+		return justificativa;
+	}
+
+	public void setJustificativa(String justificativa) {
+		this.justificativa = justificativa;
+	}
+
+	public PerguntaSimNao getInicioRapido() {
+		return inicioRapido;
+	}
+
+	public void setInicioRapido(PerguntaSimNao inicioRapido) {
+		this.inicioRapido = inicioRapido;
+	}
+
+	public CpComplexo getCpComplexo() {
+		return cpComplexo;
+	}
+
+	public void setCpComplexo(CpComplexo cpComplexo) {
+		this.cpComplexo = cpComplexo;
 	}
 }

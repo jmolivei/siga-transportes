@@ -128,7 +128,7 @@ public class Missoes extends Controller {
 		/* Criada uma miss�o Fake somente passar o condutor */
 		Missao missao = new Missao();
 		missao.setId(-1L);
-		missao.condutor = condutorEscalado;
+		missao.setCondutor(condutorEscalado);
 		checarCondutorPeloUsuarioAutenticado(missao);
 	}
 
@@ -160,17 +160,17 @@ public class Missoes extends Controller {
 		DpPessoa dpPessoa = AutorizacaoGIAntigo.cadastrante();
 		String template;
 
-		missao.cpOrgaoUsuario = AutorizacaoGIAntigo.titular().getOrgaoUsuario();
+		missao.setCpOrgaoUsuario(AutorizacaoGIAntigo.titular().getOrgaoUsuario());
 
 		if (missao.getId() > 0) {
 			template = "@editar";
 		} else {
-			missao.setSequence(missao.cpOrgaoUsuario);
+			missao.setSequence(missao.getCpOrgaoUsuario());
 			template = "@incluir";
 		}
 
 		if (requisicoesTransporte_alt == null || requisicoesTransporte_alt.size() == 0) {
-			missao.requisicoesTransporte = requisicoesTransporte_alt;
+			missao.setRequisicoesTransporte(requisicoesTransporte_alt);
 			Validation.addError("requisicoesTransporte", "missao.requisicoesTransporte.validation");
 		}
 
@@ -178,14 +178,14 @@ public class Missoes extends Controller {
 
 		redirecionarSeErroAoSalvar(missao, template);
 
-		missao.responsavel = dpPessoa;
+		missao.setResponsavel(dpPessoa);
 
 		validarRequisicoesDeServico(missao, template);
 
 		boolean novaMissao = false;
 		if (missao.getId() == 0) {
 			novaMissao = true;
-			missao.dataHora = Calendar.getInstance();
+			missao.setDataHora(Calendar.getInstance());
 		}
 
 		checarCondutorPeloUsuarioAutenticado(missao);
@@ -195,12 +195,12 @@ public class Missoes extends Controller {
 		missao.save();
 
 		if (novaMissao) {
-			gravarAndamentos(dpPessoa, "PROGRAMADO", missao.requisicoesTransporte, missao, EstadoRequisicao.PROGRAMADA);
+			gravarAndamentos(dpPessoa, "PROGRAMADO", missao.getRequisicoesTransporte(), missao, EstadoRequisicao.PROGRAMADA);
 		} else {
 			deletarAndamentos(requisicoesTransporte_ant, missao);
 			atualizarAndamentos(missao);
 		}
-		listarFiltrado(missao.estadoMissao);
+		listarFiltrado(missao.getEstadoMissao());
 	}
 
 	/*
@@ -218,7 +218,7 @@ public class Missoes extends Controller {
 		Boolean temRequisicaoDeServico = false;
 		Veiculo veiculoInicial = null;
 
-		for (Iterator<RequisicaoTransporte> iterator = missao.requisicoesTransporte.iterator(); iterator.hasNext();) {
+		for (Iterator<RequisicaoTransporte> iterator = missao.getRequisicoesTransporte().iterator(); iterator.hasNext();) {
 			RequisicaoTransporte req = iterator.next();
 			req = RequisicaoTransporte.AR.findById(req.getId());
 
@@ -277,7 +277,7 @@ public class Missoes extends Controller {
 
 	private static void atualizarAndamentos(Missao missao) throws Exception {
 
-		for (RequisicaoTransporte requisicaoTransporte : missao.requisicoesTransporte) {
+		for (RequisicaoTransporte requisicaoTransporte : missao.getRequisicoesTransporte()) {
 			List<Andamento> andamentos = Andamento.AR.find("requisicaoTransporte.id = ? order by id desc", requisicaoTransporte.getId()).fetch();
 			for (Andamento andamento : andamentos) {
 				Boolean novoAndamento = true;
@@ -319,8 +319,8 @@ public class Missoes extends Controller {
 		checarCondutorPeloUsuarioAutenticado(missao);
 
 		Integer i = 0;
-		RequisicaoVsEstado[] requisicoesVsEstados = new RequisicaoVsEstado[missao.requisicoesTransporte.size()];
-		for (RequisicaoTransporte requisicaoTransporte : missao.requisicoesTransporte) {
+		RequisicaoVsEstado[] requisicoesVsEstados = new RequisicaoVsEstado[missao.getRequisicoesTransporte().size()];
+		for (RequisicaoTransporte requisicaoTransporte : missao.getRequisicoesTransporte()) {
 			RequisicaoVsEstado requisicaoVsEstados = new RequisicaoVsEstado();
 			requisicaoVsEstados.idRequisicaoTransporte = requisicaoTransporte.getId();
 			requisicaoVsEstados.estado = requisicaoTransporte.getUltimoEstado();
@@ -348,37 +348,37 @@ public class Missoes extends Controller {
 		renderArgs.put("requisicoesVsEstados", requisicoesVsEstados);
 		checarCategoriaCNHVeiculoCondutor(missao);
 		redirecionarSeErroAoSalvar(missao, "@finalizar");
-		missao.cpOrgaoUsuario = AutorizacaoGIAntigo.titular().getOrgaoUsuario();
-		missao.responsavel = dpPessoa;
-		missao.estadoMissao = EstadoMissao.FINALIZADA;
+		missao.setCpOrgaoUsuario(AutorizacaoGIAntigo.titular().getOrgaoUsuario());
+		missao.setResponsavel(dpPessoa);
+		missao.setEstadoMissao(EstadoMissao.FINALIZADA);
 		checarCondutorPeloUsuarioAutenticado(missao);
 		missao = recuperarComplexoPeloPerfil(missao);
 		missao.save();
 
-		RequisicaoTransporte[] requisicoes = missao.requisicoesTransporte.toArray(new RequisicaoTransporte[missao.requisicoesTransporte.size()]);
-		EstadoRequisicao[] estadosRequisicao = new EstadoRequisicao[missao.requisicoesTransporte.size()];
+		RequisicaoTransporte[] requisicoes = missao.getRequisicoesTransporte().toArray(new RequisicaoTransporte[missao.getRequisicoesTransporte().size()]);
+		EstadoRequisicao[] estadosRequisicao = new EstadoRequisicao[missao.getRequisicoesTransporte().size()];
 		for (int i = 0; i < requisicoes.length; i++) {
 			estadosRequisicao[i] = RequisicaoVsEstado.encontrarEstadoNaLista(requisicoesVsEstados, requisicoes[i].getId());
 		}
 
 		gravarAndamentos(dpPessoa, "PELA MISSAO N." + missao.getSequence(), requisicoes, missao, estadosRequisicao);
-		listarFiltrado(missao.estadoMissao);
+		listarFiltrado(missao.getEstadoMissao());
 	}
 
 	private static void verificarOdometrosSaidaRetorno(Missao missao) {
-		if (missao.odometroSaidaEmKm > missao.odometroRetornoEmKm) {
+		if (missao.getOdometroSaidaEmKm() > missao.getOdometroRetornoEmKm()) {
 			Validation.addError("odometroRetornoEmKm", "missoes.odometroRetornoEmKm.validation");
 		}
 	}
 
 	private static void verificarOdometroSaidaZerado(Missao missao) {
-		if (missao.odometroSaidaEmKm == 0) {
+		if (missao.getOdometroSaidaEmKm() == 0) {
 			Validation.addError("odometroRetornoEmKm", "O valor do od&ocirc;metro de sa&iacute;da deve ser maior que zero.");
 		}
 	}
 
 	private static void verificarOdometroRetornoZerado(Missao missao) {
-		if (missao.odometroRetornoEmKm == 0) {
+		if (missao.getOdometroRetornoEmKm() == 0) {
 			Validation.addError("odometroRetornoEmKm", "O valor do od&ocirc;metro de retorno deve ser maior que zero.");
 		}
 	}
@@ -394,7 +394,7 @@ public class Missoes extends Controller {
 		DpPessoa dpPessoa = AutorizacaoGIAntigo.cadastrante();
 
 		if (requisicoesTransporte_alt == null || requisicoesTransporte_alt.size() == 0) {
-			missao.requisicoesTransporte = requisicoesTransporte_alt;
+			missao.setRequisicoesTransporte(requisicoesTransporte_alt);
 			Validation.addError("requisicoesTransporte", "missao.requisicoesTransporte.validation");
 		}
 
@@ -408,26 +408,26 @@ public class Missoes extends Controller {
 			verificarDisponibilidadeDeVeiculo(missao);
 		}
 
-		missao.cpOrgaoUsuario = AutorizacaoGIAntigo.titular().getOrgaoUsuario();
-		missao.responsavel = dpPessoa;
-		missao.estadoMissao = EstadoMissao.INICIADA;
+		missao.setCpOrgaoUsuario(AutorizacaoGIAntigo.titular().getOrgaoUsuario());
+		missao.setResponsavel(dpPessoa);
+		missao.setEstadoMissao(EstadoMissao.INICIADA);
 
 		checarCondutorPeloUsuarioAutenticado(missao);
 		missao = recuperarComplexoPeloPerfil(missao);
-		checarComplexo(missao.cpComplexo.getIdComplexo());
+		checarComplexo(missao.getCpComplexo().getIdComplexo());
 
 		missao.save();
-		gravarAndamentos(dpPessoa, "PELA MISSAO N." + missao.getSequence(), missao.requisicoesTransporte, missao, EstadoRequisicao.EMATENDIMENTO);
+		gravarAndamentos(dpPessoa, "PELA MISSAO N." + missao.getSequence(), missao.getRequisicoesTransporte(), missao, EstadoRequisicao.EMATENDIMENTO);
 		// listarFiltrado(missao.estadoMissao);
 		buscarPelaSequence(missao.getSequence(), null);
 	}
 
 	protected static Missao recuperarComplexoPeloPerfil(Missao missao) throws Exception {
 		if (AutorizacaoGIAntigo.ehAgente() || AutorizacaoGIAntigo.ehAdministradorMissaoPorComplexo()) {
-			RequisicaoTransporte req1 = RequisicaoTransporte.AR.findById(missao.requisicoesTransporte.get(0).getId());
-			missao.cpComplexo = req1.getCpComplexo();
+			RequisicaoTransporte req1 = RequisicaoTransporte.AR.findById(missao.getRequisicoesTransporte().get(0).getId());
+			missao.setCpComplexo(req1.getCpComplexo());
 		} else {
-			missao.cpComplexo = AutorizacaoGIAntigo.recuperarComplexoPadrao();
+			missao.setCpComplexo(AutorizacaoGIAntigo.recuperarComplexoPadrao());
 		}
 
 		return missao;
@@ -440,14 +440,14 @@ public class Missoes extends Controller {
 		DpPessoa dpPessoa = AutorizacaoGIAntigo.cadastrante();
 		String template = "@inicioRapido";
 
-		missao.cpOrgaoUsuario = AutorizacaoGIAntigo.titular().getOrgaoUsuario();
+		missao.setCpOrgaoUsuario(AutorizacaoGIAntigo.titular().getOrgaoUsuario());
 
-		missao.setSequence(missao.cpOrgaoUsuario);
+		missao.setSequence(missao.getCpOrgaoUsuario());
 
-		missao.responsavel = dpPessoa;
+		missao.setResponsavel(dpPessoa);
 
 		if (requisicoesTransporte_alt == null || requisicoesTransporte_alt.size() == 0) {
-			missao.requisicoesTransporte = requisicoesTransporte_alt;
+			missao.setRequisicoesTransporte(requisicoesTransporte_alt);
 			Validation.addError("requisicoesTransporte", "missao.requisicoesTransporte.validation");
 		}
 
@@ -462,27 +462,27 @@ public class Missoes extends Controller {
 
 		redirecionarSeErroAoSalvar(missao, template);
 
-		missao.dataHora = Calendar.getInstance();
+		missao.setDataHora(Calendar.getInstance());
 
 		// marcar missao inicio rapido
-		missao.inicioRapido = PerguntaSimNao.SIM;
+		missao.setInicioRapido(PerguntaSimNao.SIM);
 
 		missao = recuperarComplexoPeloPerfil(missao);
 
 		checarCondutorPeloUsuarioAutenticado(missao);
-		checarComplexo(missao.cpComplexo.getIdComplexo());
+		checarComplexo(missao.getCpComplexo().getIdComplexo());
 
 		missao.save();
 
-		gravarAndamentos(dpPessoa, "PROGRAMADO POR INICIO RAPIDO PARA MISSAO NO. " + missao.getSequence(), missao.requisicoesTransporte, missao, EstadoRequisicao.PROGRAMADA);
+		gravarAndamentos(dpPessoa, "PROGRAMADO POR INICIO RAPIDO PARA MISSAO NO. " + missao.getSequence(), missao.getRequisicoesTransporte(), missao, EstadoRequisicao.PROGRAMADA);
 
 		validarRequisicoesDeServico(missao, template);
 
 		// iniciar
-		missao.estadoMissao = EstadoMissao.INICIADA;
+		missao.setEstadoMissao(EstadoMissao.INICIADA);
 
 		missao.save();
-		gravarAndamentos(dpPessoa, "INICIO RAPIDO PELA MISSAO N." + missao.getSequence(), missao.requisicoesTransporte, missao, EstadoRequisicao.EMATENDIMENTO);
+		gravarAndamentos(dpPessoa, "INICIO RAPIDO PELA MISSAO N." + missao.getSequence(), missao.getRequisicoesTransporte(), missao, EstadoRequisicao.EMATENDIMENTO);
 
 		buscarPelaSequence(missao.getSequence(), null);
 	}
@@ -498,7 +498,7 @@ public class Missoes extends Controller {
 		// TODO ver a necessidade de ter o menu
 		// MenuMontador.instance().RecuperarMenuMissao(id, missao.estadoMissao);
 		checarCondutorPeloUsuarioAutenticado(missao);
-		checarComplexo(missao.cpComplexo.getIdComplexo());
+		checarComplexo(missao.getCpComplexo().getIdComplexo());
 		render(missao);
 	}
 
@@ -511,7 +511,7 @@ public class Missoes extends Controller {
 		// TODO ver a necessidade de ter o menu
 		// MenuMontador.instance().RecuperarMenuMissao(id, missao.estadoMissao);
 		checarCondutorPeloUsuarioAutenticado(missao);
-		checarComplexo(missao.cpComplexo.getIdComplexo());
+		checarComplexo(missao.getCpComplexo().getIdComplexo());
 		render(missao);
 	}
 
@@ -523,21 +523,21 @@ public class Missoes extends Controller {
 
 		DpPessoa dpPessoa = AutorizacaoGIAntigo.cadastrante();
 		redirecionarSeErroAoCancelar(missao);
-		missao.cpOrgaoUsuario = AutorizacaoGIAntigo.titular().getOrgaoUsuario();
-		missao.responsavel = dpPessoa;
-		missao.estadoMissao = EstadoMissao.CANCELADA;
+		missao.setCpOrgaoUsuario(AutorizacaoGIAntigo.titular().getOrgaoUsuario());
+		missao.setResponsavel(dpPessoa);
+		missao.setEstadoMissao(EstadoMissao.CANCELADA);
 		checarCondutorPeloUsuarioAutenticado(missao);
-		checarComplexo(missao.cpComplexo.getIdComplexo());
-		missao.cpComplexo = missao.requisicoesTransporte.get(0).getCpComplexo();
+		checarComplexo(missao.getCpComplexo().getIdComplexo());
+		missao.setCpComplexo(missao.getRequisicoesTransporte().get(0).getCpComplexo());
 		missao.save();
 
-		gravarAndamentos(dpPessoa, "MISSAO CANCELADA", missao.requisicoesTransporte, missao, EstadoRequisicao.NAOATENDIDA);
+		gravarAndamentos(dpPessoa, "MISSAO CANCELADA", missao.getRequisicoesTransporte(), missao, EstadoRequisicao.NAOATENDIDA);
 
 		listarFiltrado(EstadoMissao.CANCELADA);
 	}
 
 	private static void verificarJustificativaPreenchida(Missao missao) {
-		if (missao.justificativa.isEmpty()) {
+		if (missao.getJustificativa().isEmpty()) {
 			Validation.addError("justificativa", "missoes.justificativa.validation");
 		}
 	}
@@ -545,7 +545,7 @@ public class Missoes extends Controller {
 	private static void verificarDisponibilidadeDeVeiculo(Missao m) throws Exception {
 		Boolean veiculoEstaDisponivel = Veiculo.estaDisponivel(m);
 		if (!veiculoEstaDisponivel) {
-			Validation.addError("veiculo", "missoes.veiculoEstaDisponivel.validation", m.veiculo.getDadosParaExibicao());
+			Validation.addError("veiculo", "missoes.veiculoEstaDisponivel.validation", m.getVeiculo().getDadosParaExibicao());
 		}
 
 	}
@@ -553,12 +553,12 @@ public class Missoes extends Controller {
 	private static void verificarDisponibilidadeDeCondutor(Missao m) throws Exception {
 		Boolean condutorEstaDisponivel = Condutor.estaDisponivel(m);
 		if (!condutorEstaDisponivel) {
-			Validation.addError("condutor", "missoes.condutorEstaDisponivel.validation", m.condutor.getDadosParaExibicao());
+			Validation.addError("condutor", "missoes.condutorEstaDisponivel.validation", m.getCondutor().getDadosParaExibicao());
 		}
 	}
 
 	private static void verificarDatasInicialFinal(Missao m) {
-		Boolean dataSaidaAntesDeDataRetorno = m.dataHoraSaida.before(m.dataHoraRetorno);
+		Boolean dataSaidaAntesDeDataRetorno = m.getDataHoraSaida().before(m.getDataHoraRetorno());
 		if (!dataSaidaAntesDeDataRetorno) {
 			Validation.addError("dataHoraRetorno", "missoes.dataSaidaAntesDeDataRetorno.validation");
 		}
@@ -571,34 +571,34 @@ public class Missoes extends Controller {
 				System.out.println(error.message() + " - " + error.getKey());
 			}
 			montarCombos();
-			if (missao.requisicoesTransporte != null) {
+			if (missao.getRequisicoesTransporte() != null) {
 				List<RequisicaoTransporte> requisicoesTransporte = (List<RequisicaoTransporte>) renderArgs.get("requisicoesTransporte");
-				for (int i = 0; i < missao.requisicoesTransporte.size(); i++) {
-					if (missao.requisicoesTransporte.get(i) != null) {
-						RequisicaoTransporte req = RequisicaoTransporte.AR.findById(missao.requisicoesTransporte.get(i).getId());
-						missao.requisicoesTransporte.set(i, req);
+				for (int i = 0; i < missao.getRequisicoesTransporte().size(); i++) {
+					if (missao.getRequisicoesTransporte().get(i) != null) {
+						RequisicaoTransporte req = RequisicaoTransporte.AR.findById(missao.getRequisicoesTransporte().get(i).getId());
+						missao.getRequisicoesTransporte().set(i, req);
 					}
 				}
 
-				requisicoesTransporte.removeAll(missao.requisicoesTransporte);
+				requisicoesTransporte.removeAll(missao.getRequisicoesTransporte());
 				renderArgs.put("requisicoesTransporte", requisicoesTransporte);
 
 				renderArgs.put("estadoRequisicao", EstadoRequisicao.ATENDIDA);
 
 			}
 
-			if (missao.dataHoraSaida != null) {
-				String dataHoraSaidaStr = JavaExtensions.format(missao.dataHoraSaida.getTime(), "dd/MM/yyyy HH:mm");
+			if (missao.getDataHoraSaida() != null) {
+				String dataHoraSaidaStr = JavaExtensions.format(missao.getDataHoraSaida().getTime(), "dd/MM/yyyy HH:mm");
 				if (!AutorizacaoGIAntigo.ehAdministrador() && !AutorizacaoGIAntigo.ehAdministradorMissao() && !AutorizacaoGIAntigo.ehAdministradorMissaoPorComplexo()) {
 					/* Fixa combos quando o perfil do usu�rio logado � agente */
 					List<Condutor> condutores = new ArrayList<Condutor>();
-					condutores.add(missao.condutor);
+					condutores.add(missao.getCondutor());
 					List<Veiculo> veiculos = new ArrayList<Veiculo>();
-					veiculos.add(missao.veiculo);
+					veiculos.add(missao.getVeiculo());
 					renderArgs.put("condutores", condutores);
 					renderArgs.put("veiculos", veiculos);
 				} else {
-					renderArgs.put("condutores", listarCondutoresDisponiveis(missao.getId(), AutorizacaoGIAntigo.titular().getOrgaoUsuario().getId(), dataHoraSaidaStr, missao.inicioRapido));
+					renderArgs.put("condutores", listarCondutoresDisponiveis(missao.getId(), AutorizacaoGIAntigo.titular().getOrgaoUsuario().getId(), dataHoraSaidaStr, missao.getInicioRapido()));
 					renderArgs.put("veiculos", listarVeiculosDisponiveis(missao.getId(), AutorizacaoGIAntigo.titular().getOrgaoUsuario().getId(), dataHoraSaidaStr));
 
 				}
@@ -621,8 +621,8 @@ public class Missoes extends Controller {
 	@RoleAdminMissaoComplexo
 	public static void incluir() {
 		Missao missao = new Missao();
-		missao.inicioRapido = PerguntaSimNao.NAO;
-		MenuMontador.instance().recuperarMenuMissao(missao.getId(), missao.estadoMissao);
+		missao.setInicioRapido(PerguntaSimNao.NAO);
+		MenuMontador.instance().recuperarMenuMissao(missao.getId(), missao.getEstadoMissao());
 
 		render(missao);
 	}
@@ -635,13 +635,13 @@ public class Missoes extends Controller {
 			incluir();
 		}
 		Missao missao = new Missao();
-		missao.inicioRapido = PerguntaSimNao.NAO;
-		missao.requisicoesTransporte = new ArrayList<RequisicaoTransporte>();
+		missao.setInicioRapido(PerguntaSimNao.NAO);
+		missao.setRequisicoesTransporte(new ArrayList<RequisicaoTransporte>());
 		for (int cont = 0; cont < req.length; cont++) {
-			missao.requisicoesTransporte.add((RequisicaoTransporte) RequisicaoTransporte.AR.findById(req[cont]));
+			missao.getRequisicoesTransporte().add((RequisicaoTransporte) RequisicaoTransporte.AR.findById(req[cont]));
 		}
 
-		removerRequisicoesDoRenderArgs(missao.requisicoesTransporte);
+		removerRequisicoesDoRenderArgs(missao.getRequisicoesTransporte());
 
 		renderTemplate("@incluir", missao);
 	}
@@ -654,13 +654,13 @@ public class Missoes extends Controller {
 			incluir();
 		}
 		Missao missao = new Missao();
-		missao.inicioRapido = PerguntaSimNao.SIM;
-		missao.requisicoesTransporte = new ArrayList<RequisicaoTransporte>();
+		missao.setInicioRapido(PerguntaSimNao.SIM);
+		missao.setRequisicoesTransporte(new ArrayList<RequisicaoTransporte>());
 		for (int cont = 0; cont < req.length; cont++) {
-			missao.requisicoesTransporte.add((RequisicaoTransporte) RequisicaoTransporte.AR.findById(req[cont]));
+			missao.getRequisicoesTransporte().add((RequisicaoTransporte) RequisicaoTransporte.AR.findById(req[cont]));
 		}
 
-		removerRequisicoesDoRenderArgs(missao.requisicoesTransporte);
+		removerRequisicoesDoRenderArgs(missao.getRequisicoesTransporte());
 
 		renderTemplate("@inicioRapido", missao);
 	}
@@ -675,14 +675,14 @@ public class Missoes extends Controller {
 	}
 
 	protected static void montarDadosParaAMissao(Missao missao) throws Exception {
-		removerRequisicoesDoRenderArgs(missao.requisicoesTransporte);
+		removerRequisicoesDoRenderArgs(missao.getRequisicoesTransporte());
 		SimpleDateFormat formatar = new SimpleDateFormat("dd/MM/yyyy HH:mm");
-		String dataHoraSaidaStr = formatar.format(missao.dataHoraSaida.getTime());
-		List<Condutor> condutores = listarCondutoresDisponiveis(missao.getId(), AutorizacaoGIAntigo.titular().getOrgaoUsuario().getId(), dataHoraSaidaStr, missao.inicioRapido);
+		String dataHoraSaidaStr = formatar.format(missao.getDataHoraSaida().getTime());
+		List<Condutor> condutores = listarCondutoresDisponiveis(missao.getId(), AutorizacaoGIAntigo.titular().getOrgaoUsuario().getId(), dataHoraSaidaStr, missao.getInicioRapido());
 		boolean encontrouCondutor = false;
 		if (condutores != null && !condutores.isEmpty()) {
 			for (Condutor condutor : condutores) {
-				if (condutor.getId().equals(missao.condutor.getId())) {
+				if (condutor.getId().equals(missao.getCondutor().getId())) {
 					encontrouCondutor = true;
 					break;
 				}
@@ -691,11 +691,11 @@ public class Missoes extends Controller {
 			condutores = new ArrayList<Condutor>();
 		}
 		if (!encontrouCondutor) {
-			condutores.add(missao.condutor);
+			condutores.add(missao.getCondutor());
 		}
 
 		String veiculosDisp = "";
-		for (RequisicaoTransporte req : missao.requisicoesTransporte) {
+		for (RequisicaoTransporte req : missao.getRequisicoesTransporte()) {
 			if (req.getServicoVeiculo() != null) {
 				req = RequisicaoTransporte.AR.findById(req.getId());
 				veiculosDisp += req.getServicoVeiculo().getVeiculo().getId() + ", ";
@@ -713,7 +713,7 @@ public class Missoes extends Controller {
 		boolean encontrouVeiculo = false;
 		if (veiculos != null && !veiculos.isEmpty()) {
 			for (Veiculo veiculo : veiculos) {
-				if (veiculo.getId().equals(missao.veiculo.getId())) {
+				if (veiculo.getId().equals(missao.getVeiculo().getId())) {
 					encontrouVeiculo = true;
 					break;
 				}
@@ -722,7 +722,7 @@ public class Missoes extends Controller {
 			veiculos = new ArrayList<Veiculo>();
 		}
 		if (!encontrouVeiculo) {
-			veiculos.add(missao.veiculo);
+			veiculos.add(missao.getVeiculo());
 		}
 
 		renderArgs.put("condutores", condutores);
@@ -732,7 +732,7 @@ public class Missoes extends Controller {
 		EstadoRequisicao estadoRequisicao = EstadoRequisicao.ATENDIDA;
 		EstadoMissao estadoMissao = EstadoMissao.PROGRAMADA;
 
-		EstadoRequisicao[] estados = new EstadoRequisicao[missao.requisicoesTransporte.size()];
+		EstadoRequisicao[] estados = new EstadoRequisicao[missao.getRequisicoesTransporte().size()];
 		for (int i = 0; i < estados.length; i++) {
 			estados[i] = EstadoRequisicao.ATENDIDA;
 		}
@@ -750,8 +750,8 @@ public class Missoes extends Controller {
 		Missao missao = Missao.AR.findById(id);
 		montarDadosParaAMissao(missao);
 		checarCondutorPeloUsuarioAutenticado(missao);
-		checarComplexo(missao.cpComplexo.getIdComplexo());
-		MenuMontador.instance().recuperarMenuMissao(id, missao.estadoMissao);
+		checarComplexo(missao.getCpComplexo().getIdComplexo());
+		MenuMontador.instance().recuperarMenuMissao(id, missao.getEstadoMissao());
 
 		render();
 	}
@@ -762,7 +762,7 @@ public class Missoes extends Controller {
 				throw new Exception(Messages.get("missoes.autorizacaoGI.ehAgente.exception"));
 			}
 
-			if (!AutorizacaoGIAntigo.titular().equivale(missao.condutor.getDpPessoa())) {
+			if (!AutorizacaoGIAntigo.titular().equivale(missao.getCondutor().getDpPessoa())) {
 				try {
 					throw new Exception(Messages.get("missoes.autorizacaoGI.semAcesso.exception"));
 				} catch (Exception e) {
@@ -786,14 +786,14 @@ public class Missoes extends Controller {
 	protected static void recuperarPelaSigla(String sequence, Boolean popUp) throws Exception {
 		Missao missao = Missao.buscar(sequence);
 		montarDadosParaAMissao(missao);
-		MenuMontador.instance().recuperarMenuMissao(missao.getId(), missao.estadoMissao);
+		MenuMontador.instance().recuperarMenuMissao(missao.getId(), missao.getEstadoMissao());
 		if (popUp != null) {
 			renderArgs.put("mostrarMenu", !popUp);
 		} else {
 			renderArgs.put("mostrarMenu", true);
 		}
 		checarCondutorPeloUsuarioAutenticado(missao);
-		checarComplexo(missao.cpComplexo.getIdComplexo());
+		checarComplexo(missao.getCpComplexo().getIdComplexo());
 	}
 
 	@RoleAdmin
@@ -803,9 +803,9 @@ public class Missoes extends Controller {
 	public static void ler(Long id, String veiculosDisp) throws Exception {
 		Missao missao = Missao.AR.findById(id);
 		montarDadosParaAMissao(missao);
-		MenuMontador.instance().recuperarMenuMissao(id, missao.estadoMissao);
+		MenuMontador.instance().recuperarMenuMissao(id, missao.getEstadoMissao());
 		checarCondutorPeloUsuarioAutenticado(missao);
-		checarComplexo(missao.cpComplexo.getIdComplexo());
+		checarComplexo(missao.getCpComplexo().getIdComplexo());
 		render();
 	}
 
@@ -832,7 +832,7 @@ public class Missoes extends Controller {
 	public static void excluir(Long id) throws Exception {
 		Missao missao = Missao.AR.findById(id);
 		checarCondutorPeloUsuarioAutenticado(missao);
-		checarComplexo(missao.cpComplexo.getIdComplexo());
+		checarComplexo(missao.getCpComplexo().getIdComplexo());
 		missao.delete();
 		listar();
 	}
@@ -865,7 +865,7 @@ public class Missoes extends Controller {
 		htmlSelectVeiculos.append(">");
 		for (Veiculo veiculo : veiculosDisponiveis) {
 			htmlSelectVeiculos.append("<option value='" + veiculo.getId() + "'");
-			if (missao != null && veiculo.equals(missao.veiculo)) {
+			if (missao != null && veiculo.equals(missao.getVeiculo())) {
 				htmlSelectVeiculos.append(opcaoSelecionada);
 			}
 			htmlSelectVeiculos.append(">" + veiculo.getDadosParaExibicao());
@@ -882,7 +882,7 @@ public class Missoes extends Controller {
 		htmlSelectCondutores.append(">");
 		for (Condutor condutor : condutoresDisponiveis) {
 			htmlSelectCondutores.append("<option value='" + condutor.getId() + "'");
-			if (missao != null && condutor.equals(missao.condutor)) {
+			if (missao != null && condutor.equals(missao.getCondutor())) {
 				htmlSelectCondutores.append(opcaoSelecionada);
 			}
 			htmlSelectCondutores.append(">" + condutor.getDadosParaExibicao());
@@ -979,8 +979,8 @@ public class Missoes extends Controller {
 		CategoriaCNH categoriaCondutor1 = null;
 		CategoriaCNH categoriaCondutor2 = null;
 
-		if (missao.condutor.getCategoriaCNH().getDescricao().length() == 2) {
-			switch (missao.condutor.getCategoriaCNH().getDescricao()) {
+		if (missao.getCondutor().getCategoriaCNH().getDescricao().length() == 2) {
+			switch (missao.getCondutor().getCategoriaCNH().getDescricao()) {
 			case "AB":
 				categoriaCondutor1 = CategoriaCNH.A;
 				categoriaCondutor2 = CategoriaCNH.B;
@@ -1001,12 +1001,12 @@ public class Missoes extends Controller {
 			// return false;
 			}
 			if (categoriaCondutor1 != null && categoriaCondutor2 != null) {
-				if (categoriaCondutor1.compareTo(missao.veiculo.getCategoriaCNH()) >= 0 || categoriaCondutor2.compareTo(missao.veiculo.getCategoriaCNH()) >= 0) {
+				if (categoriaCondutor1.compareTo(missao.getVeiculo().getCategoriaCNH()) >= 0 || categoriaCondutor2.compareTo(missao.getVeiculo().getCategoriaCNH()) >= 0) {
 					return;
 				}
 			}
 		} else {
-			if (missao.condutor.getCategoriaCNH().compareTo(missao.veiculo.getCategoriaCNH()) >= 0) {
+			if (missao.getCondutor().getCategoriaCNH().compareTo(missao.getVeiculo().getCategoriaCNH()) >= 0) {
 				return;
 			}
 		}

@@ -531,7 +531,7 @@ public class RequisicaoTransporte extends TpModel implements Comparable<Requisic
 		if (ultimoAndamentoRequisicao == EstadoRequisicao.PROGRAMADA) {
 			Boolean missaoAlterada = false;
 			for (Missao missao : missoes) {
-				for (Iterator<RequisicaoTransporte> iterator = missao.requisicoesTransporte.iterator(); iterator.hasNext();) {
+				for (Iterator<RequisicaoTransporte> iterator = missao.getRequisicoesTransporte().iterator(); iterator.hasNext();) {
 					RequisicaoTransporte requisicaoTransporte = (RequisicaoTransporte) iterator.next();
 					if (requisicaoTransporte.id == this.id) {
 						iterator.remove();
@@ -539,8 +539,8 @@ public class RequisicaoTransporte extends TpModel implements Comparable<Requisic
 					}
 				}
 
-				if (missao.requisicoesTransporte.size() == 0)
-					missao.estadoMissao = EstadoMissao.CANCELADA;
+				if (missao.getRequisicoesTransporte().size() == 0)
+					missao.setEstadoMissao(EstadoMissao.CANCELADA);
 
 				if (missaoAlterada)
 					missao.save();

@@ -59,7 +59,7 @@ public class Abastecimento extends TpModel implements Comparable<Abastecimento>,
 	private TipoDeCombustivel tipoDeCombustivel;
 
 	@NotNull
-	@Min(value=1, message="abastecimento.quantidadeEmLitros.min")
+	@Min(value=1, message="{abastecimento.quantidadeEmLitros.min}")
 	private Double quantidadeEmLitros;
 	
 	@NotNull
@@ -118,6 +118,7 @@ public class Abastecimento extends TpModel implements Comparable<Abastecimento>,
 		return moeda;
 	}
 	
+ 	@Override
 	public Long getId() {
 		return id;
 	}
@@ -280,7 +281,7 @@ public class Abastecimento extends TpModel implements Comparable<Abastecimento>,
 	}
 
 	public Abastecimento(){
-		this.id = new Long(0);
+		this.id = 0L;
 		this.tipoDeCombustivel = TipoDeCombustivel.GASOLINA;
 		this.nivelDeCombustivel = NivelDeCombustivel.I;
 	}
