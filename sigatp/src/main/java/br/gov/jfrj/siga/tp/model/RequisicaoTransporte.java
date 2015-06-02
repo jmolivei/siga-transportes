@@ -143,7 +143,7 @@ public class RequisicaoTransporte extends TpModel implements Comparable<Requisic
 	@NotNull
 	private boolean origemExterna;
 
-	@Transient
+    @Transient
 	private Long idSolicitante;
 
 	public Long getNumero() {
@@ -282,9 +282,9 @@ public class RequisicaoTransporte extends TpModel implements Comparable<Requisic
 		return numeroDePassageiros;
 	}
 
-	public void setNumeroDePassageiros(int numeroDePassageiros) {
-		this.numeroDePassageiros = numeroDePassageiros;
-	}
+	public void setNumeroDePassageiros(Integer numeroDePassageiros) {
+        this.numeroDePassageiros = numeroDePassageiros;
+    }
 
 	public boolean isOrigemExterna() {
 		return origemExterna;
