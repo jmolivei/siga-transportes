@@ -30,7 +30,7 @@
 		<a id="menuGabinetes" class="" href="#">Gabinetes</a>
 	  	<ul>
 			<li><a id="menuGabAbastecimentos" class="" href="${linkTo[AbastecimentoController].listar}">Abastecimentos</a></li>  	
-	 		<li><a id="menuGabinetesListar" class="" href="@{ControlesGabinete.listar()}">Controles de entrada / sa&iacute;da</a></li>
+	 		<li><a id="menuGabinetesListar" class="" href="${linkTo[ControleGabineteController].listar}">Controles de entrada / sa&iacute;da</a></li>
 	 		<li><a id="menuAdmFornecedores" class="" href="${linkTo[FornecedorController].listar}">Fornecedores</a></li>	
 		</ul>
 	</li>
