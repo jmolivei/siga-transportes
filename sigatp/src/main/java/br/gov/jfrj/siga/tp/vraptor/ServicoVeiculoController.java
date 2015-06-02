@@ -283,7 +283,7 @@ public class ServicoVeiculoController extends TpController {
     public void buscarServico(Boolean popUp, String sequence) throws Exception {
         ServicoVeiculo servico = recuperarPelaSigla(sequence, popUp);
         result.include(SERVICO_STR, servico);
-        result.redirectTo(this).ler(servico.getId());
+        result.forwardTo(ServicoVeiculoController.class).ler(servico.getId());
     }
 
     @Path("ler/{id}")
