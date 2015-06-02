@@ -4,7 +4,7 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt"%>
 <%@ taglib prefix="sigatp" tagdir="/WEB-INF/tags/" %>
 
-<sigatp:calendario />
+<jsp:include page="../tags/calendario.jsp" />
 <sigatp:decimal />
 
 <form id="formGabinete" action="${linkTo[ControleGabineteController].salvar}" method="post" cssClass="form" enctype="multipart/form-data">

@@ -5,8 +5,6 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
 <%@ taglib prefix="sigatp" tagdir="/WEB-INF/tags/" %>
 
-<jsp:include page="../tags/calendario.jsp" />
-
 <siga:pagina titulo="Trasnporte">
 	<div class="gt-bd clearfix">
 		<div class="gt-content clearfix">
