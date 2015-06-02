@@ -40,24 +40,23 @@ public class ConfiguracaoGIController extends TpController {
 		super(request, result, dao, validator, so, em);
 	}
 
-	@Path("/listarPorOrgaoUsuario")
-	public void listarPorOrgaoUsuario() throws Exception {
-		result.redirectTo(ConfiguracaoGIController.class).listarPorOrgaoUsuario(getTitular().getOrgaoUsuario().getIdOrgaoUsu());
+	@Path("/pesquisar")
+	public void pesquisar() throws Exception {
+		result.redirectTo(ConfiguracaoGIController.class).pesquisar(getTitular().getOrgaoUsuario().getIdOrgaoUsu());
 	}
 	
-	@Path("/listarPorOrgaoUsuario/{idOrgaoUsu}")
-	public void listarPorOrgaoUsuario(Long idOrgaoUsu) throws Exception {
-		pesquisar(idOrgaoUsu);
+	@Path("/pesquisar/{idOrgaoUsu}")
+	public void pesquisar(Long idOrgaoUsu) throws Exception {
+	    pesquisarPorOrgaoUsuario(idOrgaoUsu);
 	}
 
 	@SuppressWarnings("unchecked")
-	private void pesquisar(Long idOrgaoUsu) throws Exception {
+	private void pesquisarPorOrgaoUsuario(Long idOrgaoUsu) throws Exception {
 		CpOrgaoUsuario cpOrgaoUsuario = CpOrgaoUsuario.AR.findById(idOrgaoUsu);
 		List<CpOrgaoUsuario> cpOrgaoUsuarios = CpOrgaoUsuario.AR.findAll();
 		String SERVICO_COMPLEXO_ADMINISTRADOR = "SIGA-TP-ADMMISSAOCOMPLEXO";
 		CpServico cpServico = CpServico.AR.find("siglaServico",SERVICO_COMPLEXO_ADMINISTRADOR).first();
-		//TODO  HD martelada! #400
-		Long TIPO_CONFIG_COMPLEXO_PADRAO = 300L;
+		Long TIPO_CONFIG_COMPLEXO_PADRAO = 400L;
 		CpTipoConfiguracao tpConf = CpTipoConfiguracao.AR.findById(TIPO_CONFIG_COMPLEXO_PADRAO);
 		//	Object[] parametros =  {idOrgaoUsu,cpSituacaoConfiguracaoPode, cpServico};
 		//	List<CpConfiguracao> cpConfiguracoesCp =  CpConfiguracao.find("(dpPessoa in (select d from DpPessoa d where d.orgaoUsuario.idOrgaoUsu = ?) and cpSituacaoConfiguracao = ? and cpServico = ? and hisIdcFim is null )", parametros).fetch();
@@ -161,7 +160,6 @@ public class ConfiguracaoGIController extends TpController {
 	public void salvar(@Valid CpConfiguracao cpConfiguracao) throws Exception {
 		if(validator.hasErrors()) {
 			carregarDadosPerifericos(cpConfiguracao.getOrgaoUsuario().getIdOrgaoUsu());
-			//TODO  HD listagem ou edição?
 			validator.onErrorUse(Results.page()).of(ConfiguracaoGIController.class).editar(cpConfiguracao.getOrgaoUsuario().getIdOrgaoUsu());
 		}
 		CpConfiguracao cpConfiguracaoNova = new CpConfiguracao();
@@ -202,11 +200,11 @@ public class ConfiguracaoGIController extends TpController {
 
 	private void redirecionaParaListagem(CpConfiguracao cpConfiguracao) throws Exception {
 		if (cpConfiguracao.getOrgaoUsuario() != null ) 
-			result.redirectTo(this).listarPorOrgaoUsuario(cpConfiguracao.getOrgaoUsuario().getIdOrgaoUsu());
+			result.redirectTo(this).pesquisar(cpConfiguracao.getOrgaoUsuario().getIdOrgaoUsu());
 		else if (cpConfiguracao.getDpPessoa() != null) 
-			result.redirectTo(this).listarPorOrgaoUsuario(cpConfiguracao.getDpPessoa().getLotacao().getOrgaoUsuario().getIdOrgaoUsu());
+			result.redirectTo(this).pesquisar(cpConfiguracao.getDpPessoa().getLotacao().getOrgaoUsuario().getIdOrgaoUsu());
 		else if (cpConfiguracao.getLotacao() != null) 
-			result.redirectTo(this).listarPorOrgaoUsuario(cpConfiguracao.getLotacao().getOrgaoUsuario().getIdOrgaoUsu());
+			result.redirectTo(this).pesquisar(cpConfiguracao.getLotacao().getOrgaoUsuario().getIdOrgaoUsu());
 	}
 	
 }
