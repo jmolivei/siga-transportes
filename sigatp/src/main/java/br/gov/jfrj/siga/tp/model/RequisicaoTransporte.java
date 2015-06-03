@@ -36,7 +36,7 @@ import org.hibernate.envers.Audited;
 import org.hibernate.envers.RelationTargetAuditMode;
 import org.hibernate.validator.constraints.NotEmpty;
 
-import controllers.ServicosVeiculo;
+import br.com.caelum.vraptor.http.route.DefaultRouter;
 import br.com.caelum.vraptor.validator.I18nMessage;
 import br.gov.jfrj.siga.cp.CpComplexo;
 import br.gov.jfrj.siga.dp.CpOrgaoUsuario;
@@ -47,6 +47,7 @@ import br.gov.jfrj.siga.tp.util.Reflexao;
 import br.gov.jfrj.siga.tp.util.SigaTpException;
 import br.gov.jfrj.siga.tp.validation.annotation.Data;
 import br.gov.jfrj.siga.tp.vraptor.ConvertableEntity;
+import br.gov.jfrj.siga.tp.vraptor.ServicoVeiculoController;
 import br.gov.jfrj.siga.vraptor.handler.Resources;
 import br.jus.jfrj.siga.uteis.Sequence;
 import br.jus.jfrj.siga.uteis.SiglaDocumentoType;
@@ -56,8 +57,8 @@ import br.jus.jfrj.siga.uteis.SiglaDocumentoType;
 @Audited
 @Table(name = "REQUISICAOTRANSPORTE", schema = "SIGATP")
 public class RequisicaoTransporte extends TpModel implements Comparable<RequisicaoTransporte>, ConvertableEntity {
-	private static final String IMG_LINKNOVAJANELAICON = "/sigatp/public/images/linknovajanelaicon.png";
 
+    private static final String IMG_LINKNOVAJANELAICON = "/sigatp/public/images/linknovajanelaicon.png";
 	public static final ActiveRecord<RequisicaoTransporte> AR = new ActiveRecord<>(RequisicaoTransporte.class);
 
 	@Id
@@ -90,7 +91,7 @@ public class RequisicaoTransporte extends TpModel implements Comparable<Requisic
 	@Enumerated(EnumType.STRING)
 	private List<TipoDePassageiro> tiposDePassageiro;
 
-//	@NotNull
+	@NotNull
 	@ManyToOne
 	@JoinColumn(name = "ID_FINALIDADE")
 	private FinalidadeRequisicao tipoFinalidade;
@@ -144,13 +145,13 @@ public class RequisicaoTransporte extends TpModel implements Comparable<Requisic
 	private boolean origemExterna;
 
     @Transient
-	private Long idSolicitante;
+    private Long idSolicitante;
 
 	public Long getNumero() {
 		return numero;
 	}
 
-	public void setNumero(Long numero) {
+    public void setNumero(Long numero) {
 		this.numero = numero;
 	}
 
@@ -344,12 +345,7 @@ public class RequisicaoTransporte extends TpModel implements Comparable<Requisic
 		}
 
 		if (servicoVeiculo != null) {
-			Map<String, Object> param = new HashMap<String, Object>();
-			param.put("sequence", servicoVeiculo.getSequence());
-			param.put("popUp", true);
-
-			FormataCaminhoDoContextoUrl formata = new FormataCaminhoDoContextoUrl();
-			String caminhoUrl = formata.retornarCaminhoContextoUrl(Resources.urlFor(ServicosVeiculo.class, "buscarServico", param));
+			String caminhoUrl = Resources.getInstance().urlFor(ServicoVeiculoController.class, "buscarServico", true, servicoVeiculo.getSequence());
 
 			saida.append(" - ");
 			saida.append("Servi&ccedil;o: " + servicoVeiculo.getSequence() + " <a href=\"#\" onclick=\"javascript:window.open('" + caminhoUrl + "');\">");
