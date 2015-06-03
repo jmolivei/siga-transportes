@@ -28,7 +28,7 @@ $(function() {
 			<input type="hidden" name="cpConfiguracao.dpPessoa" value="" />
 			<siga:selecao tipo="pessoa" propriedade="pessoa" tema="simple" modulo="siga" urlAcao="buscar" siglaInicial="${cpConfiguracao.dpPessoa}" idInicial="${cpConfiguracao.dpPessoa.id}" descricaoInicial="${cpConfiguracao.dpPessoa.descricao}"/>
 							
-		    <label for= "cpConfiguracao.cpSituacaoConfiguracao class="obrigatorio">  Situa&ccedil;&atilde;o Configura&ccedil;&atilde;o</label>	
+		    <label for= "cpConfiguracao.cpSituacaoConfiguracao" class="obrigatorio">  Situa&ccedil;&atilde;o Configura&ccedil;&atilde;o</label>	
    			<siga:select id="cpSituacaoConfiguracao" name="cpConfiguracao.cpSituacaoConfiguracao" list="cpSituacoesConfiguracao" listKey="idSitConfiguracao" listValue="dscSitConfiguracao" value="${cpConfiguracao.cpSituacaoConfiguracao.idSitConfiguracao}" headerKey="0" headerValue=""/>
 			
 			<label for= "cpConfiguracao.cpTipoConfiguracao" class= "obrigatorio"> Tipo de Configura&ccedil;&atilde;o</label>	
@@ -42,6 +42,6 @@ $(function() {
 	<span class="alerta menor"><fmt:message key="views.erro.preenchimentoObrigatorio"/></span>
 	<div class="gt-table-buttons">
 		<input type="submit" value="<fmt:message key="views.botoes.salvar"/>" class="gt-btn-medium gt-btn-left" />
-		<input type="button" value="<fmt:message key="views.botoes.cancelar"/>" onClick="javascript:location.href='${linkTo[ConfiguracaoGIController].listarPorOrgaoUsuario[cpConfiguracao.orgaoUsuario.idOrgaoUsu]}'" class="gt-btn-medium gt-btn-left" />
+		<input type="button" value="<fmt:message key="views.botoes.cancelar"/>" onClick="javascript:location.href='${linkTo[ConfiguracaoGIController].pesquisar[cpConfiguracao.orgaoUsuario.idOrgaoUsu]}'" class="gt-btn-medium gt-btn-left" />
 	</div>
 </form>
