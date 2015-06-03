@@ -29,9 +29,9 @@
 	               <c:forEach items="${referencias}" var="referencia"> 
 						<tr>
 						    <td>${referencia}</td>
-						    <td><a href="@{PlantoesMensais.imprimir(referencia)}"><nobr>Visualizar para impress&atilde;o</nobr></a></td>
-						    <td><a href="@{PlantoesMensais.editar(referencia)}">Editar</a></td>
-						    <td><a href="@{PlantoesMensais.excluir(referencia)}" onclick="javascript:return confirm('Tem certeza de que deseja excluir TODOS os plantoes de 24h inseridos para este mes?');">Excluir</a></td>
+						    <td><a href="${linkTo[PlantoesMensaisController].imprimir}?referencia=${referencia}"><nobr>Visualizar para impress&atilde;o</nobr></a></td>
+						    <td><a href="${linkTo[PlantoesMensaisController].editar}?referencia=${referencia}">Editar</a></td>
+						    <td><a href="${linkTo[PlantoesMensaisController].excluir}?referencia=${referencia}" onclick="javascript:return confirm('Tem certeza de que deseja excluir TODOS os plantoes de 24h inseridos para este mes?');">Excluir</a></td>
                         </tr>
 	               </c:forEach>
 	             </tbody>
@@ -44,7 +44,7 @@
     	</c:otherwise>
 	</c:choose>
 	<div class="gt-table-buttons">
-	    <a href="@{PlantoesMensais.incluirInicio()}" class="gt-btn-medium gt-btn-left">${views.botoes.incluir}</a>
+	    <a href="${linkTo[PlantoesMensaisController].incluirInicio}" class="gt-btn-medium gt-btn-left"><fmt:message key="views.botoes.incluir"/></a>
 	</div>
 	    </div>
 	</div>

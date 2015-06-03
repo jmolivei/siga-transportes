@@ -15,7 +15,7 @@ import br.com.caelum.vraptor.Path;
 import br.com.caelum.vraptor.Resource;
 import br.com.caelum.vraptor.Result;
 import br.com.caelum.vraptor.Validator;
-import br.com.caelum.vraptor.validator.ValidationMessage;
+import br.com.caelum.vraptor.validator.I18nMessage;
 import br.gov.jfrj.siga.tp.auth.annotation.RoleAdmin;
 import br.gov.jfrj.siga.tp.auth.annotation.RoleAdminMissao;
 import br.gov.jfrj.siga.tp.auth.annotation.RoleAdminMissaoComplexo;
@@ -39,6 +39,7 @@ public class PlantoesMensaisController extends TpController {
     @RoleAdmin
     @RoleAdminMissao
     @RoleAdminMissaoComplexo
+    @Path("/imprimir")
     public void imprimir(String referencia) throws ParseException {
         List<Plantao> plantoes = Plantao.buscarTodosPorReferencia(referencia);
         ordenarPelaDataHoraInicioDoPlantao(plantoes);
@@ -53,6 +54,7 @@ public class PlantoesMensaisController extends TpController {
     @RoleAdmin
     @RoleAdminMissao
     @RoleAdminMissaoComplexo
+    @Path("/editar")
     public void editar(String referencia) {
         List<Plantao> plantoes = Plantao.buscarTodosPorReferencia(referencia);
         Collections.sort(plantoes);
@@ -84,12 +86,13 @@ public class PlantoesMensaisController extends TpController {
     @RoleAdmin
     @RoleAdminMissao
     @RoleAdminMissaoComplexo
+    @Path("/excluir")
     public void excluir(String referencia) {
         List<Plantao> plantoesAExcluir = Plantao.buscarTodosPorReferencia(referencia);
 
         // verificar se este plantao mensal eh o atual ou passado; se sim, nao excluir
         if (!podeExcluirPlantaoMensal(plantoesAExcluir)) {
-            validator.add(new ValidationMessage("referencias", "plantoesMensais.podeExcluirPlantaoMensal.validation"));
+            validator.add(new I18nMessage("referencias", "plantoesMensais.podeExcluirPlantaoMensal.validation"));
             montarDadosParaListar();
         }
 
@@ -152,6 +155,7 @@ public class PlantoesMensaisController extends TpController {
     @RoleAdmin
     @RoleAdminMissao
     @RoleAdminMissaoComplexo
+    @Path("/incluirInicio")
     public void incluirInicio() {
         montarDadosParaIncluirInicio();
     }
@@ -182,11 +186,12 @@ public class PlantoesMensaisController extends TpController {
     @RoleAdmin
     @RoleAdminMissao
     @RoleAdminMissaoComplexo
+    @Path("/incluir")
     public void incluir(Mes mes, int ano, String hora) {
         String dadosParaTitulo = gerarDadosParaTituloEReferencia(mes, ano, hora);
 
         if (Plantao.plantaoMensalJaExiste(dadosParaTitulo)) {
-            validator.add(new ValidationMessage("hora", "plantoesMensais.plantaoMensalJaExiste.validation"));
+            validator.add(new I18nMessage("hora", "plantoesMensais.plantaoMensalJaExiste.validation"));
             montarDadosParaIncluirInicio();
         }
 
@@ -288,14 +293,14 @@ public class PlantoesMensaisController extends TpController {
             plantao.setCondutor(Condutor.AR.findById(plantao.getCondutor().getId()));
             List<Afastamento> afastamentos = Afastamento.buscarPorCondutores(plantao.getCondutor(), plantao.getDataHoraInicio(), plantao.getDataHoraFim());
             if (afastamentos != null && !afastamentos.isEmpty()) {
-                validator.add(new ValidationMessage("plantao", "plantoesMensais.afastamentos.validation", plantao.getCondutor().getDadosParaExibicao(), formatoDataEHora.format(plantao
-                        .getDataHoraInicio().getTime()), formatoDataEHora.format(plantao.getDataHoraFim().getTime())));
+                validator.add(new I18nMessage("plantao", "plantoesMensais.afastamentos.validation", plantao.getCondutor().getDadosParaExibicao(), formatoDataEHora.format(plantao.getDataHoraInicio()
+                        .getTime()), formatoDataEHora.format(plantao.getDataHoraFim().getTime())));
                 plantoesComErro.add(plantao);
             } else {
                 try {
                     plantao.save();
                 } catch (Exception e) {
-                    validator.add(new ValidationMessage("plantao:" + e.getMessage(), "Houve um erro n&atilde;o identificado ao salvar o plant&atilde;o do dia "
+                    validator.add(new I18nMessage("plantao:" + e.getMessage(), "Houve um erro n&atilde;o identificado ao salvar o plant&atilde;o do dia "
                             + formatoSomenteData.format(plantao.getDataHoraInicio().getTime()) + ". Verifique se o plant&atilde;o j&aacute; foi cadastrado anteriormente para a mesma data."));
                     plantoesComErro.add(plantao);
                 }
