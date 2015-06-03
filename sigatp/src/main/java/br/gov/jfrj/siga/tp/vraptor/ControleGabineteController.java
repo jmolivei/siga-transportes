@@ -179,14 +179,7 @@ public class ControleGabineteController extends TpController {
 			result.include(VEICULOS, veiculos);
 			result.include(CONDUTORES, condutores);
 
-			if (controleGabinete.getId() > 0)
-				validator.onErrorUse(Results.page())
-						.of(ControleGabineteController.class)
-						.editar(controleGabinete.getId());
-			else
-				validator.onErrorUse(Results.page())
-						.of(ControleGabineteController.class).incluir();
-
+			validator.onErrorUse(Results.page()).of(ControleGabineteController.class).editar(controleGabinete.getId());
 		} else {
 			if (controleGabinete.getId() == 0)
 				controleGabinete.setDataHora(Calendar.getInstance());

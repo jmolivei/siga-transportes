@@ -75,6 +75,10 @@ public class ParametroController extends TpController {
 	}
 	
 	private void validaCamposNulos(Parametro parametro) {
+	    if(parametro.getCpComplexo().getIdComplexo() == null)
+	        parametro.setCpComplexo(null);
+	    if(parametro.getCpOrgaoUsuario().getIdOrgaoUsu() == null)
+	        parametro.setCpOrgaoUsuario(null);
 		if(parametro.getDpPessoa().getId() == null)
 			parametro.setDpPessoa(null);
 		if(parametro.getDpLotacao().getId() == null)

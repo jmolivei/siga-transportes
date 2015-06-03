@@ -2,29 +2,20 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <%@ taglib uri="http://localhost/jeetags" prefix="siga"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt"%>
+<%@ taglib prefix="sigatp" tagdir="/WEB-INF/tags/" %>
 
 <jsp:include page="../tags/calendario.jsp" />
-<sigatp:decimal/>
+<sigatp:decimal />
 
-<form id="formGabinete" enctype="multipart/form-data" action="${linkTo[ControleGabineteController].salvar}">
+<form id="formGabinete" action="${linkTo[ControleGabineteController].salvar}" method="post" cssClass="form" enctype="multipart/form-data">
 	<div class="gt-content-box gt-form"> 
 	<input type="hidden" name="controleGabinete" value="${controleGabinete.id}" />
 	<div class="clearfix">
 		<div class="coluna margemDireitaG">
 	       	<label for= "controleGabinete.veiculo" class= "obrigatorio">Ve&iacute;ulo:</label>
 	       	<siga:select id="veiculos" name="controleGabinete.veiculo" list="veiculos" listKey="id" listValue="dadosParaExibicao" value="${controleGabinete.veiculo.id}" headerKey="0" headerValue=""/>
-<%-- 	        #{select 'controleGabinete.veiculo.id',  --%>
-<%-- 					items:veiculos,  --%>
-<%-- 					labelProperty:'dadosParaExibicao',  --%>
-<%-- 					value:controleGabinete.veiculo?.id} --%>
-<%-- 					#{/select} --%>
 	       	<label for= "controleGabinete.condutor" class= "obrigatorio">Condutor:</label>
 	       	<siga:select id="condutores" name="controleGabinete.condutor" list="condutores" listKey="id" listValue="dadosParaExibicao" value="${controleGabinete.condutor.id}" headerKey="0" headerValue=""/>
-<%-- 	        #{select 'controleGabinete.condutor.id',  --%>
-<%-- 					items:condutores,  --%>
-<%-- 					labelProperty:'dadosParaExibicao',  --%>
-<%-- 					value:controleGabinete.condutor?.id} --%>
-<%-- 					#{/select} --%>
 		</div>
 		<div class="coluna margemDireitaG">
 	       	<label for="controleGabinete.dataHoraSaida" class= "obrigatorio">Data e Hora Sa&iacute;da:</label>
