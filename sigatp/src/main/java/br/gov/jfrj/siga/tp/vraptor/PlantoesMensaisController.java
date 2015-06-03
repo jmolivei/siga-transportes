@@ -304,8 +304,7 @@ public class PlantoesMensaisController extends TpController {
                 try {
                     plantao.save();
                 } catch (Exception e) {
-                    validator.add(new I18nMessage("plantao:" + e.getMessage(), "Houve um erro n&atilde;o identificado ao salvar o plant&atilde;o do dia "
-                            + formatoSomenteData.format(plantao.getDataHoraInicio().getTime()) + ". Verifique se o plant&atilde;o j&aacute; foi cadastrado anteriormente para a mesma data."));
+                    validator.add(new I18nMessage("plantao:" + e.getMessage(), "plantoesMensais.erro.nao.identificado.salvar", formatoSomenteData.format(plantao.getDataHoraInicio().getTime())));
                     plantoesComErro.add(plantao);
                 }
             }
