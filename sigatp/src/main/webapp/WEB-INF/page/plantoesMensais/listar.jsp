@@ -3,16 +3,14 @@
 <%@ taglib uri="http://localhost/jeetags" prefix="siga"%>
 <%@ taglib prefix="sigatp" tagdir="/WEB-INF/tags/"%>
 
-<%-- #{extends 'main.html' /} --%>
+<siga:pagina titulo="Transportes">
 
-<siga:pagina titulo="SIGA::Transportes">
-
-    <div class="gt-bd clearfix">
-    <div class="gt-content clearfix">
-        <h2>Plant&otilde;es Mensais</h2>
-        
-<%-- 	#{erros}#{/erros} --%>
-
+<div class="gt-bd clearfix">
+<div class="gt-content clearfix">
+    <h2>Plant&otilde;es Mensais</h2>
+    
+    <sigatp:erros/>
+    
 	<c:choose>
 	   <c:when test="${not empty referencias}">
 	        <div class="gt-content-box gt-for-table">     

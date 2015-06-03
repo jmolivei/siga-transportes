@@ -33,6 +33,7 @@ import br.gov.jfrj.siga.vraptor.SigaObjects;
 @Path("/app/plantao")
 public class PlantaoController extends TpController {
 
+    private static final String CONDUTOR_ID = "condutor.id";
     private static final String PLANTAO = "plantao";
 
     public PlantaoController(HttpServletRequest request, Result result, CpDao dao, Validator validator, SigaObjects so, EntityManager em) {
@@ -91,30 +92,31 @@ public class PlantaoController extends TpController {
 
         error(!plantao.ordemDeDatasCorreta(), "dataHoraInicio", "plantoes.dataHoraInicio.validation");
 
-        String listaAfastamento = "";
         List<Afastamento> afastamentos = Afastamento.buscarPorCondutores(plantao.getCondutor().getId(), formatarData(plantao.getDataHoraInicio()), formatarData(plantao.getDataHoraFim()));
 
+        StringBuilder sbAfastamento = new StringBuilder();
         for (Afastamento item : afastamentos) {
-            listaAfastamento += listaAfastamento == "" ? "" : ",";
-            listaAfastamento += formatarData(item.getDataHoraInicio()) + " a " + formatarData(item.getDataHoraFim());
+            sbAfastamento.append("".equals(sbAfastamento.toString())? "" : ",");
+            sbAfastamento.append(formatarData(item.getDataHoraInicio()) + " a " + formatarData(item.getDataHoraFim()));
         }
 
-        if (!listaAfastamento.equals(""))
+        String listaAfastamento = sbAfastamento.toString();
+        if (!"".equals(listaAfastamento))
             validator.add(new ValidationMessage("Condutor afastado " + getMensagemPeriodo(listaAfastamento) + " de: " + listaAfastamento + ".", PLANTAO));
 
         if (validator.hasErrors()) {
             result.include(PLANTAO, plantao);
             redirecionaPaginaCasoOcorraErros(idCondutor, idPlantao);
         } else {
-            String listaPlantao = "";
             List<Plantao> plantoes = Plantao.buscarPorCondutores(plantao.getCondutor().getId(), formatarData(plantao.getDataHoraInicio()), formatarData(plantao.getDataHoraFim()));
-
+            StringBuilder sbPlantao = new StringBuilder();
             for (Plantao item : plantoes) {
-                listaPlantao += listaPlantao == "" ? "" : ",";
-                listaPlantao += formatarData(item.getDataHoraInicio()) + " a " + formatarData(item.getDataHoraFim());
+                sbPlantao.append("".equals(sbPlantao.toString()) ? "" : ",");
+                sbPlantao.append(formatarData(item.getDataHoraInicio()) + " a " + formatarData(item.getDataHoraFim()));
             }
 
-            if (!listaPlantao.equals(""))
+            String listaPlantao = sbPlantao.toString();
+            if (!"".equals(listaPlantao))
                 validator.add(new ValidationMessage("Condutor em plant&atilde;o " + getMensagemPeriodo(listaPlantao) + " de: " + listaPlantao + ".", PLANTAO));
         }
 
@@ -124,12 +126,12 @@ public class PlantaoController extends TpController {
         } else {
             if (isEdicao(plantao) && !(plantao.getDataHoraInicio().before(dataHoraInicioNova) && plantao.getDataHoraFim().after(dataHoraFimNova))) {
                 List<Missao> missoes = retornarMissoesCondutorPlantao(plantao, dataHoraInicioNova, dataHoraFimNova);
-                String listaMissoes = "";
-
+                StringBuilder sbMissoes = new StringBuilder();
                 for (Missao item : missoes) {
-                    listaMissoes += listaMissoes == "" ? "" : ",";
-                    listaMissoes += item.getSequence();
+                    sbMissoes.append("".equals(sbMissoes.toString()) ? "" : ",");
+                    sbMissoes.append(item.getSequence());
                 }
+                String listaMissoes = sbMissoes.toString();
                 error(!missoes.isEmpty(), "LinkErroCondutor", listaMissoes);
             }
 
@@ -227,15 +229,15 @@ public class PlantaoController extends TpController {
         List<Missao> retorno = new ArrayList<Missao>();
 
         if (dataHoraInicioNova == null && dataHoraFimNova == null) {
-            return Missao.retornarMissoes("condutor.id", plantao.getCondutor().getId(), plantao.getCondutor().getCpOrgaoUsuario().getId(), plantao.getDataHoraInicio(), plantao.getDataHoraFim());
+            return Missao.retornarMissoes(CONDUTOR_ID, plantao.getCondutor().getId(), plantao.getCondutor().getCpOrgaoUsuario().getId(), plantao.getDataHoraInicio(), plantao.getDataHoraFim());
         }
 
         if (dataHoraInicioNova != null && dataHoraInicioNova.after(plantao.getDataHoraInicio())) {
-            retorno.addAll(Missao.retornarMissoes("condutor.id", plantao.getCondutor().getId(), plantao.getCondutor().getCpOrgaoUsuario().getId(), dataHoraInicioNova, plantao.getDataHoraInicio()));
+            retorno.addAll(Missao.retornarMissoes(CONDUTOR_ID, plantao.getCondutor().getId(), plantao.getCondutor().getCpOrgaoUsuario().getId(), dataHoraInicioNova, plantao.getDataHoraInicio()));
         }
 
         if (dataHoraFimNova != null && dataHoraFimNova.before(plantao.getDataHoraFim())) {
-            retorno.addAll(Missao.retornarMissoes("condutor.id", plantao.getCondutor().getId(), plantao.getCondutor().getCpOrgaoUsuario().getId(), plantao.getDataHoraFim(), dataHoraFimNova));
+            retorno.addAll(Missao.retornarMissoes(CONDUTOR_ID, plantao.getCondutor().getId(), plantao.getCondutor().getCpOrgaoUsuario().getId(), plantao.getDataHoraFim(), dataHoraFimNova));
         }
 
         return retorno;
