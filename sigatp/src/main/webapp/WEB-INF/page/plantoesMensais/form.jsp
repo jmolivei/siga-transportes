@@ -22,7 +22,7 @@
 				        <input type="hidden" name="plantoes[${cont}].dataHoraFim" value="<fmt:formatDate pattern="dd/MM/yyyy HH:mm" value="${plantoes[cont].dataHoraFim.time}"/>" />
 				        <select name="plantoes[${cont}].condutor.id">
 				            <c:forEach items="${condutores}" var="condutor">
-				                <option value="${condutor.id}" <c:if test="${plantao.condutor.id == condutor.id}">selected</c:if>>${condutor.id} - ${condutor.dpPessoa.nomePessoa}</option>
+				                <option value="${condutor.id}" <c:if test="${plantao.condutor.id == condutor.id}">selected</c:if>>${condutor.dadosParaExibicao}</option>
 				            </c:forEach>
 				        </select>
 				        <c:set var="cont" value="${cont + 1}"/>
