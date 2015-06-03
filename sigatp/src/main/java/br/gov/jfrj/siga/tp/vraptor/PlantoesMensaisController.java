@@ -1,4 +1,4 @@
-package controllers;
+package br.gov.jfrj.siga.tp.vraptor;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -8,12 +8,14 @@ import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 
-import play.data.validation.Validation;
-import play.db.jpa.JPA;
-import play.i18n.Messages;
-import play.mvc.Controller;
-import play.mvc.Scope.RenderArgs;
-import play.mvc.With;
+import javax.persistence.EntityManager;
+import javax.servlet.http.HttpServletRequest;
+
+import br.com.caelum.vraptor.Path;
+import br.com.caelum.vraptor.Resource;
+import br.com.caelum.vraptor.Result;
+import br.com.caelum.vraptor.Validator;
+import br.com.caelum.vraptor.validator.ValidationMessage;
 import br.gov.jfrj.siga.tp.auth.annotation.RoleAdmin;
 import br.gov.jfrj.siga.tp.auth.annotation.RoleAdminMissao;
 import br.gov.jfrj.siga.tp.auth.annotation.RoleAdminMissaoComplexo;
@@ -22,11 +24,17 @@ import br.gov.jfrj.siga.tp.model.Condutor;
 import br.gov.jfrj.siga.tp.model.DiaDaSemana;
 import br.gov.jfrj.siga.tp.model.Mes;
 import br.gov.jfrj.siga.tp.model.Plantao;
+import br.gov.jfrj.siga.tp.model.TpDao;
+import br.gov.jfrj.siga.vraptor.SigaObjects;
 
-@With(AutorizacaoGIAntigo.class)
-public class PlantoesMensais extends Controller {
+@Resource
+@Path("/app/plantoesMensais")
+public class PlantoesMensaisController extends TpController {
 
-    @SuppressWarnings("unused")
+    public PlantoesMensaisController(HttpServletRequest request, Result result, Validator validator, SigaObjects so, EntityManager em) {
+        super(request, result, TpDao.getInstance(), validator, so, em);
+    }
+
     private static final String _TEMPLATE_INCLUIR_INICIO = "PlantoesMensais/incluirInicio.html";
     private static final String _TEMPLATE_INCLUIR = "PlantoesMensais/incluir.html";
     private static final String _TEMPLATE_EDITAR = "PlantoesMensais/editar.html";
@@ -36,43 +44,41 @@ public class PlantoesMensais extends Controller {
     @RoleAdmin
     @RoleAdminMissao
     @RoleAdminMissaoComplexo
-    public static void imprimir(String referencia) throws ParseException {
+    public void imprimir(String referencia) throws ParseException {
         List<Plantao> plantoes = Plantao.buscarTodosPorReferencia(referencia);
         ordenarPelaDataHoraInicioDoPlantao(plantoes);
-
         DiaDaSemana diaDaSemana = DiaDaSemana.getDiaDaSemana(plantoes.get(0).getDataHoraInicio());
-
         String dadosParaTitulo = plantoes.get(0).getReferencia();
 
-        render(plantoes, diaDaSemana, dadosParaTitulo);
+        // render(plantoes, diaDaSemana, dadosParaTitulo);
     }
 
     @RoleAdmin
     @RoleAdminMissao
     @RoleAdminMissaoComplexo
-    public static void editar(String referencia) {
+    public void editar(String referencia) {
         List<Plantao> plantoes = Plantao.buscarTodosPorReferencia(referencia);
         Collections.sort(plantoes);
         Mes mes = extrairMesDaReferencia(referencia);
         int ano = extrairAnoDaReferencia(referencia);
         String hora = extrairHoraDaReferencia(referencia);
         montarDadosParaForm(plantoes, referencia, mes, ano, hora);
-        render();
+        // render();
     }
 
-    private static String extrairHoraDaReferencia(String referencia) {
+    private String extrairHoraDaReferencia(String referencia) {
         String[] dados = referencia.split("[()]");
         String retorno = dados[1];
         return retorno;
     }
 
-    private static int extrairAnoDaReferencia(String referencia) {
+    private int extrairAnoDaReferencia(String referencia) {
         String[] dados = referencia.split(" ");
         String retorno = dados[2];
         return Integer.parseInt(retorno);
     }
 
-    private static Mes extrairMesDaReferencia(String referencia) {
+    private Mes extrairMesDaReferencia(String referencia) {
         String[] dados = referencia.split(" ");
         String mesPorExtenso = dados[0];
         Mes mes = Mes.getMes(mesPorExtenso);
@@ -82,14 +88,14 @@ public class PlantoesMensais extends Controller {
     @RoleAdmin
     @RoleAdminMissao
     @RoleAdminMissaoComplexo
-    public static void excluir(String referencia) {
+    public void excluir(String referencia) {
         List<Plantao> plantoesAExcluir = Plantao.buscarTodosPorReferencia(referencia);
 
         // verificar se este plantao mensal eh o atual ou passado; se sim, nao excluir
         if (!podeExcluirPlantaoMensal(plantoesAExcluir)) {
-            Validation.addError("referencias", "plantoesMensais.podeExcluirPlantaoMensal.validation");
+            // validator.add(new ValidationMessage("referencias", "plantoesMensais.podeExcluirPlantaoMensal.validation"));
             montarDadosParaListar();
-            renderTemplate(PlantoesMensais._TEMPLATE_LISTAR);
+            // renderTemplate(PlantoesMensais._TEMPLATE_LISTAR);
         }
 
         for (Iterator<Plantao> iterator = plantoesAExcluir.iterator(); iterator.hasNext();) {
@@ -100,7 +106,7 @@ public class PlantoesMensais extends Controller {
         listar();
     }
 
-    private static boolean podeExcluirPlantaoMensal(List<Plantao> plantoesAExcluir) {
+    private boolean podeExcluirPlantaoMensal(List<Plantao> plantoesAExcluir) {
         Plantao teste = plantoesAExcluir.get(0);
         Calendar dataParaTestar = teste.getDataHoraInicio();
 
@@ -117,17 +123,17 @@ public class PlantoesMensais extends Controller {
     @RoleAdmin
     @RoleAdminMissao
     @RoleAdminMissaoComplexo
-    public static void listar() {
+    public void listar() {
         montarDadosParaListar();
-        render();
+        // render();
     }
 
-    private static void montarDadosParaListar() {
-        List<String> referencias = Plantao.getReferencias(AutorizacaoGIAntigo.titular().getOrgaoUsuario().getIdOrgaoUsu());
-        RenderArgs.current().put("referencias", referencias);
+    private void montarDadosParaListar() {
+        List<String> referencias = Plantao.getReferencias(getTitular().getOrgaoUsuario().getIdOrgaoUsu());
+        // RenderArgs.current().put("referencias", referencias);
     }
 
-    private static String[] gerarDatasPlantaoMensal(Integer mes, Integer ano, String hora) {
+    private String[] gerarDatasPlantaoMensal(Integer mes, Integer ano, String hora) {
         SimpleDateFormat formato = new SimpleDateFormat("dd/MM/yyyy");
 
         Calendar data = Calendar.getInstance();
@@ -149,12 +155,12 @@ public class PlantoesMensais extends Controller {
     @RoleAdmin
     @RoleAdminMissao
     @RoleAdminMissaoComplexo
-    public static void incluirInicio() {
+    public void incluirInicio() {
         montarDadosParaIncluirInicio();
-        render();
+        // render();
     }
 
-    private static void montarDadosParaIncluirInicio() {
+    private void montarDadosParaIncluirInicio() {
         Mes optMes = Mes.JANEIRO;
 
         Calendar dataParaTirarMes = Calendar.getInstance();
@@ -167,26 +173,26 @@ public class PlantoesMensais extends Controller {
         int anoDefault = dataParaTirarMes.get(Calendar.YEAR);
 
         String optHora[] = criarOpcoesDeHora();
-        String horaDefault = PlantoesMensais._HORARIO_INICIO_PLANTAO_24H;
+        // String horaDefault = PlantoesMensais._HORARIO_INICIO_PLANTAO_24H;
 
-        RenderArgs.current().put("optHora", optHora);
-        RenderArgs.current().put("horaDefault", horaDefault);
-        RenderArgs.current().put("optMes", optMes);
-        RenderArgs.current().put("mesDefault", mesDefault);
-        RenderArgs.current().put("optAno", optAno);
-        RenderArgs.current().put("anoDefault", anoDefault);
+        // RenderArgs.current().put("optHora", optHora);
+        // RenderArgs.current().put("horaDefault", horaDefault);
+        // RenderArgs.current().put("optMes", optMes);
+        // RenderArgs.current().put("mesDefault", mesDefault);
+        // RenderArgs.current().put("optAno", optAno);
+        // RenderArgs.current().put("anoDefault", anoDefault);
     }
 
     @RoleAdmin
     @RoleAdminMissao
     @RoleAdminMissaoComplexo
-    public static void incluir(Mes mes, int ano, String hora) {
+    public void incluir(Mes mes, int ano, String hora) {
         String dadosParaTitulo = gerarDadosParaTituloEReferencia(mes, ano, hora);
 
         if (Plantao.plantaoMensalJaExiste(dadosParaTitulo)) {
-            Validation.addError("hora", "plantoesMensais.plantaoMensalJaExiste.validation");
+            // validator.add(new ValidationMessage("hora", "plantoesMensais.plantaoMensalJaExiste.validation"));
             montarDadosParaIncluirInicio();
-            renderTemplate("PlantoesMensais/incluirInicio.html");
+            // renderTemplate("PlantoesMensais/incluirInicio.html");
         }
 
         String diasParaPlantoes[] = gerarDatasPlantaoMensal(mes.getCodigo(), ano, hora);
@@ -201,42 +207,42 @@ public class PlantoesMensais extends Controller {
         }
 
         montarDadosParaForm(plantoes, dadosParaTitulo, mes, ano, hora);
-        render();
+        // render();
     }
 
-    private static String gerarDadosParaTituloEReferencia(Mes mes, int ano, String hora) {
+    private String gerarDadosParaTituloEReferencia(Mes mes, int ano, String hora) {
         return mes.getNomeExibicao() + " / " + ano + " (" + hora + ")";
     }
 
-    private static Calendar converterParaCalendar(String dataEmTexto) {
+    private Calendar converterParaCalendar(String dataEmTexto) {
         Calendar retorno = Calendar.getInstance();
         SimpleDateFormat formatoDataEHora = new SimpleDateFormat("dd/MM/yyyy HH:mm");
 
         try {
             retorno.setTime(formatoDataEHora.parse(dataEmTexto));
         } catch (ParseException e) {
-            throw new RuntimeException(Messages.get("plantoesMensais.converterParaCalendar.exception"));
+            // throw new RuntimeException(Messages.get("plantoesMensais.converterParaCalendar.exception"));
         }
         return retorno;
     }
 
-    private static void montarDadosParaForm(List<Plantao> plantoes, String dadosParaTitulo, Mes mes, int ano, String hora) {
+    private void montarDadosParaForm(List<Plantao> plantoes, String dadosParaTitulo, Mes mes, int ano, String hora) {
         List<Condutor> condutores;
         try {
-            condutores = Condutor.listarTodos(AutorizacaoGIAntigo.titular().getOrgaoUsuario());
+            condutores = Condutor.listarTodos(getTitular().getOrgaoUsuario());
         } catch (Exception e) {
-            throw new RuntimeException(Messages.get("plantoesMensais.montarDadosParaForm.exception"));
+            // throw new RuntimeException(Messages.get("plantoesMensais.montarDadosParaForm.exception"));
         }
 
-        RenderArgs.current().put("plantoes", plantoes);
-        RenderArgs.current().put("condutores", condutores);
-        RenderArgs.current().put("dadosParaTitulo", dadosParaTitulo);
-        RenderArgs.current().put("mes", mes);
-        RenderArgs.current().put("ano", ano);
-        RenderArgs.current().put("hora", hora);
+        // RenderArgs.current().put("plantoes", plantoes);
+        // RenderArgs.current().put("condutores", condutores);
+        // RenderArgs.current().put("dadosParaTitulo", dadosParaTitulo);
+        // RenderArgs.current().put("mes", mes);
+        // RenderArgs.current().put("ano", ano);
+        // RenderArgs.current().put("hora", hora);
     }
 
-    private static String[] criarOpcoesDeHora() {
+    private String[] criarOpcoesDeHora() {
         String retorno[] = new String[24];
 
         retorno[0] = "00:00";
@@ -270,7 +276,7 @@ public class PlantoesMensais extends Controller {
     @RoleAdmin
     @RoleAdminMissao
     @RoleAdminMissaoComplexo
-    public static void salvar(List<Plantao> plantoes, String dadosParaTitulo, Mes mes, int ano, String hora) throws Exception {
+    public void salvar(List<Plantao> plantoes, String dadosParaTitulo, Mes mes, int ano, String hora) throws Exception {
         ordenarPelaDataHoraInicioDoPlantao(plantoes);
 
         boolean incluir = (plantoes.get(0).getId() == 0);
@@ -289,32 +295,31 @@ public class PlantoesMensais extends Controller {
             plantao.setCondutor(Condutor.AR.findById(plantao.getCondutor().getId()));
             List<Afastamento> afastamentos = Afastamento.buscarPorCondutores(plantao.getCondutor(), plantao.getDataHoraInicio(), plantao.getDataHoraFim());
             if (afastamentos != null && !afastamentos.isEmpty()) {
-                Validation.addError("plantao", "plantoesMensais.afastamentos.validation", plantao.getCondutor().getDadosParaExibicao(), formatoDataEHora.format(plantao.getDataHoraInicio().getTime()),
-                        formatoDataEHora.format(plantao.getDataHoraFim().getTime()));
+                // Validation.addError("plantao", "plantoesMensais.afastamentos.validation", plantao.condutor.getDadosParaExibicao(),
+                // formatoDataEHora.format(plantao.dataHoraInicio.getTime()),formatoDataEHora.format(plantao.dataHoraFim.getTime()));
                 plantoesComErro.add(plantao);
             } else {
                 try {
                     plantao.save();
                 } catch (Exception e) {
-                    Validation.addError("plantao:" + e.getMessage(),
-                            "Houve um erro n&atilde;o identificado ao salvar o plant&atilde;o do dia " + formatoSomenteData.format(plantao.getDataHoraInicio().getTime())
-                                    + ". Verifique se o plant&atilde;o j&aacute; foi cadastrado anteriormente para a mesma data.");
+                    // Validation.addError("plantao:" + e.getMessage(), "Houve um erro n&atilde;o identificado ao salvar o plant&atilde;o do dia " +
+                    // formatoSomenteData.format(plantao.dataHoraInicio.getTime()) + ". Verifique se o plant&atilde;o j&aacute; foi cadastrado anteriormente para a mesma data.");
                     plantoesComErro.add(plantao);
                 }
             }
         }
 
         if (!plantoesComErro.isEmpty()) {
-            JPA.setRollbackOnly();
+            // JPA.setRollbackOnly();
             if (incluir) {
                 zerarIdsInvalidosDaListaDePlantao(plantoes);
             }
 
             montarDadosParaForm(new ArrayList<Plantao>(plantoes), dadosParaTitulo, mes, ano, hora);
             if (incluir) {
-                renderTemplate(_TEMPLATE_INCLUIR);
+                // renderTemplate(_TEMPLATE_INCLUIR);
             } else {
-                renderTemplate(_TEMPLATE_EDITAR);
+                // renderTemplate(_TEMPLATE_EDITAR);
             }
         }
 
@@ -322,18 +327,18 @@ public class PlantoesMensais extends Controller {
 
     }
 
-    private static Plantao montarPlantaoParaSalvar(Plantao plantao) throws Exception {
+    private Plantao montarPlantaoParaSalvar(Plantao plantao) throws Exception {
         Plantao retorno = Plantao.AR.findById(plantao.getId());
         retorno.setCondutor(Condutor.AR.findById(plantao.getCondutor().getId()));
         return retorno;
     }
 
-    private static void ordenarPelaDataHoraInicioDoPlantao(List<Plantao> plantoes) {
+    private void ordenarPelaDataHoraInicioDoPlantao(List<Plantao> plantoes) {
         // nao vem ordenado conforme o HTML manda
         Collections.sort(plantoes);
     }
 
-    private static void zerarIdsInvalidosDaListaDePlantao(List<Plantao> plantoes) {
+    private void zerarIdsInvalidosDaListaDePlantao(List<Plantao> plantoes) {
         // apos o rollback, os Ids atribuidos aos plantoes
         // que nao deram erro sao invalidos e precisam ser zerados
         for (Iterator<Plantao> iterator = plantoes.iterator(); iterator.hasNext();) {
@@ -341,5 +346,4 @@ public class PlantoesMensais extends Controller {
             plantao.setId(0L);
         }
     }
-
 }
