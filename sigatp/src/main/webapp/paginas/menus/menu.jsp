@@ -64,7 +64,7 @@
 
 				<li><a id="menuAdmFornecedores" class="" href="${linkTo[FornecedorController].listar}">Fornecedores</a></li>
 				<li><a id="menuAdmPenalidades" class="" href="@{penalidades.listar}">Penalidades</a></li>
-				<li><a id="menuAdmPlantoes" class="" href="@{PlantoesMensais.listar}">Plant&otilde;es mensais</a></li>
+				<li><a id="menuAdmPlantoes" class="" href="${linkTo[PlantoesMensaisController].listar}">Plant&otilde;es mensais</a></li>
 				<!-- <li><a id="menuAdmMateriais" class="" href="@{Application.emdesenvolvimento}">Materiais em Estoque</a></li> -->
 				<li><a id="menuAdmRelat" class="" href="#">Relat&oacute;rios</a>
 					<ul>
@@ -106,7 +106,7 @@
 				<li><a id="menuAdmCondutores" class="" href="${linkTo[CondutorController].listar}">Condutores</a></li>
 				<li><a id="menuAdmFinalidades" class="" href="${linkTo[FinalidadeController].listar}">Finalidades</a></li>
 				<li><a id="menuAdmFornecedores" class="" href="${linkTo[FornecedorController].listar}">Fornecedores</a></li>
-				<li><a id="menuAdmPlantoes" class="" href="@{PlantoesMensais.listar}">Plant&otilde;es mensais</a></li>
+				<li><a id="menuAdmPlantoes" class="" href="${linkTo[PlantoesMensaisController].listar}"">Plant&otilde;es mensais</a></li>
 				<!-- <li><a id="menuAdmMateriais" class="" href="@{Application.emdesenvolvimento}">Materiais em Estoque</a></li> -->
 				<li><a id="menuAdmRelat" class="" href="#">Relat&oacute;rios</a>
 					<ul>

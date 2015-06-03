@@ -26,12 +26,11 @@ import br.gov.jfrj.siga.tp.model.Plantao;
 @With(AutorizacaoGIAntigo.class)
 public class PlantoesMensais extends Controller {
 
-    @SuppressWarnings("unused")
-    private static final String _TEMPLATE_INCLUIR_INICIO = "PlantoesMensais/incluirInicio.html";
-    private static final String _TEMPLATE_INCLUIR = "PlantoesMensais/incluir.html";
-    private static final String _TEMPLATE_EDITAR = "PlantoesMensais/editar.html";
-    private static final String _TEMPLATE_LISTAR = "PlantoesMensais/listar.html";
-    private static final String _HORARIO_INICIO_PLANTAO_24H = "07:00";
+    public static final String _TEMPLATE_INCLUIR_INICIO = "PlantoesMensais/incluirInicio.html";
+    public static final String _TEMPLATE_INCLUIR = "PlantoesMensais/incluir.html";
+    public static final String _TEMPLATE_EDITAR = "PlantoesMensais/editar.html";
+    public static final String _TEMPLATE_LISTAR = "PlantoesMensais/listar.html";
+    public static final String _HORARIO_INICIO_PLANTAO_24H = "07:00";
 
     @RoleAdmin
     @RoleAdminMissao
