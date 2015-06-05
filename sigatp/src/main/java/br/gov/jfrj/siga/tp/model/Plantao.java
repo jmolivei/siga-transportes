@@ -48,11 +48,12 @@ public class Plantao extends TpModel implements ConvertableEntity, Comparable<Pl
     @Data(descricaoCampo = "Data/Hora Fim")
     private Calendar dataHoraFim;
 
-    public Plantao() {
-        this.id = new Long(0);
-    }
-
     private String referencia;
+    
+    
+    public Plantao() {
+        this.id = Long.valueOf(0);
+    }
 
     public Plantao(long id, Condutor condutor, Calendar dataHoraInicio, Calendar dataHoraFim) {
         super();
@@ -63,12 +64,13 @@ public class Plantao extends TpModel implements ConvertableEntity, Comparable<Pl
     }
 
     public Plantao(Condutor condutor, Calendar dataHoraInicio, Calendar dataHoraFim) {
-        this.id = new Long(0);
+        this.id = Long.valueOf(0);
         this.condutor = condutor;
         this.dataHoraInicio = dataHoraInicio;
         this.dataHoraFim = dataHoraFim;
     }
 
+    @Override
     public Long getId() {
         return id;
     }
@@ -113,8 +115,8 @@ public class Plantao extends TpModel implements ConvertableEntity, Comparable<Pl
         return Plantao.AR.find("CONDUTOR_ID = ? ORDER BY DATAHORAINICIO DESC", condutor.getId()).fetch();
     }
 
-    public static List<Plantao> buscarPorCondutor(Long IdCondutor, Calendar dataHoraInicio) {
-        return Plantao.AR.find("condutor.id = ? AND dataHoraInicio <= ? AND (dataHoraFim is null OR dataHoraFim >= ?) order by dataHoraInicio", IdCondutor, dataHoraInicio, dataHoraInicio).fetch();
+    public static List<Plantao> buscarPorCondutor(Long idCondutor, Calendar dataHoraInicio) {
+        return Plantao.AR.find("condutor.id = ? AND dataHoraInicio <= ? AND (dataHoraFim is null OR dataHoraFim >= ?) order by dataHoraInicio", idCondutor, dataHoraInicio, dataHoraInicio).fetch();
     }
 
     public boolean ordemDeDatasCorreta() {
@@ -133,12 +135,12 @@ public class Plantao extends TpModel implements ConvertableEntity, Comparable<Pl
         return plantoes;
     }
 
-    public static List<Plantao> buscarPorCondutores(Long IdCondutor, String dataHoraInicio) {
+    public static List<Plantao> buscarPorCondutores(Long idCondutor, String dataHoraInicio) {
         String filtroCondutor = "";
         String dataFormatadaOracle = "to_date('" + dataHoraInicio + "', 'DD/MM/YYYY')";
 
-        if (IdCondutor != null) {
-            filtroCondutor = "condutor.id = " + IdCondutor + " AND ";
+        if (idCondutor != null) {
+            filtroCondutor = "condutor.id = " + idCondutor + " AND ";
         }
 
         String qrl = "SELECT p FROM Plantao p WHERE " + filtroCondutor + "  trunc(dataHoraInicio) <= trunc(" + dataFormatadaOracle + ")" + " AND (dataHoraFim IS NULL OR trunc(dataHoraFim) >= trunc("
@@ -147,13 +149,13 @@ public class Plantao extends TpModel implements ConvertableEntity, Comparable<Pl
         return retornarLista(qrl);
     }
 
-    public static List<Plantao> buscarPorCondutores(Long IdCondutor, String dataHoraInicio, String dataHoraFim) {
+    public static List<Plantao> buscarPorCondutores(Long idCondutor, String dataHoraInicio, String dataHoraFim) {
         String dataFormatadaOracleInicio = "to_date('" + dataHoraInicio + "', 'DD/MM/YYYY')";
         String dataFormatadaOracleFim = "to_date('" + dataHoraFim + "', 'DD/MM/YYYY')";
         String filtroCondutor = "";
 
-        if (IdCondutor != null) {
-            filtroCondutor = "condutor.id = " + IdCondutor + " AND ";
+        if (idCondutor != null) {
+            filtroCondutor = "condutor.id = " + idCondutor + " AND ";
         }
 
         String qrl = "SELECT p FROM Plantao p " + " WHERE " + filtroCondutor + " ((trunc(dataHoraInicio) <= trunc(" + dataFormatadaOracleInicio + ")"
@@ -189,7 +191,7 @@ public class Plantao extends TpModel implements ConvertableEntity, Comparable<Pl
 
         retorno = new ArrayList<String>();
         for (Iterator<Plantao> iterator = objetos.iterator(); iterator.hasNext();) {
-            Plantao plantao = (Plantao) iterator.next();
+            Plantao plantao = iterator.next();
             retorno.add(plantao.referencia);
         }
         return retorno;

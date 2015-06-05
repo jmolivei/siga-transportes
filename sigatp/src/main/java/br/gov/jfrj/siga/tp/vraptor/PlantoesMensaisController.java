@@ -15,10 +15,12 @@ import br.com.caelum.vraptor.Path;
 import br.com.caelum.vraptor.Resource;
 import br.com.caelum.vraptor.Result;
 import br.com.caelum.vraptor.Validator;
-import br.com.caelum.vraptor.validator.ValidationMessage;
+import br.com.caelum.vraptor.validator.I18nMessage;
+import br.gov.jfrj.siga.model.ContextoPersistencia;
 import br.gov.jfrj.siga.tp.auth.annotation.RoleAdmin;
 import br.gov.jfrj.siga.tp.auth.annotation.RoleAdminMissao;
 import br.gov.jfrj.siga.tp.auth.annotation.RoleAdminMissaoComplexo;
+import br.gov.jfrj.siga.tp.dto.PlantaoDTO;
 import br.gov.jfrj.siga.tp.model.Afastamento;
 import br.gov.jfrj.siga.tp.model.Condutor;
 import br.gov.jfrj.siga.tp.model.DiaDaSemana;
@@ -26,6 +28,7 @@ import br.gov.jfrj.siga.tp.model.Mes;
 import br.gov.jfrj.siga.tp.model.Plantao;
 import br.gov.jfrj.siga.tp.model.TpDao;
 import br.gov.jfrj.siga.vraptor.SigaObjects;
+import controllers.PlantoesMensais;
 
 @Resource
 @Path("/app/plantoesMensais")
@@ -35,27 +38,25 @@ public class PlantoesMensaisController extends TpController {
         super(request, result, TpDao.getInstance(), validator, so, em);
     }
 
-    private static final String _TEMPLATE_INCLUIR_INICIO = "PlantoesMensais/incluirInicio.html";
-    private static final String _TEMPLATE_INCLUIR = "PlantoesMensais/incluir.html";
-    private static final String _TEMPLATE_EDITAR = "PlantoesMensais/editar.html";
-    private static final String _TEMPLATE_LISTAR = "PlantoesMensais/listar.html";
-    private static final String _HORARIO_INICIO_PLANTAO_24H = "07:00";
-
     @RoleAdmin
     @RoleAdminMissao
     @RoleAdminMissaoComplexo
+    @Path("/imprimir")
     public void imprimir(String referencia) throws ParseException {
         List<Plantao> plantoes = Plantao.buscarTodosPorReferencia(referencia);
         ordenarPelaDataHoraInicioDoPlantao(plantoes);
         DiaDaSemana diaDaSemana = DiaDaSemana.getDiaDaSemana(plantoes.get(0).getDataHoraInicio());
         String dadosParaTitulo = plantoes.get(0).getReferencia();
 
-        // render(plantoes, diaDaSemana, dadosParaTitulo);
+        result.include("plantoes", plantoes);
+        result.include("diaDaSemana", diaDaSemana);
+        result.include("dadosParaTitulo", dadosParaTitulo);
     }
 
     @RoleAdmin
     @RoleAdminMissao
     @RoleAdminMissaoComplexo
+    @Path("/editar")
     public void editar(String referencia) {
         List<Plantao> plantoes = Plantao.buscarTodosPorReferencia(referencia);
         Collections.sort(plantoes);
@@ -63,13 +64,11 @@ public class PlantoesMensaisController extends TpController {
         int ano = extrairAnoDaReferencia(referencia);
         String hora = extrairHoraDaReferencia(referencia);
         montarDadosParaForm(plantoes, referencia, mes, ano, hora);
-        // render();
     }
 
     private String extrairHoraDaReferencia(String referencia) {
         String[] dados = referencia.split("[()]");
-        String retorno = dados[1];
-        return retorno;
+        return dados[1];
     }
 
     private int extrairAnoDaReferencia(String referencia) {
@@ -81,29 +80,28 @@ public class PlantoesMensaisController extends TpController {
     private Mes extrairMesDaReferencia(String referencia) {
         String[] dados = referencia.split(" ");
         String mesPorExtenso = dados[0];
-        Mes mes = Mes.getMes(mesPorExtenso);
-        return mes;
+        return Mes.getMes(mesPorExtenso);
     }
 
     @RoleAdmin
     @RoleAdminMissao
     @RoleAdminMissaoComplexo
+    @Path("/excluir")
     public void excluir(String referencia) {
         List<Plantao> plantoesAExcluir = Plantao.buscarTodosPorReferencia(referencia);
 
         // verificar se este plantao mensal eh o atual ou passado; se sim, nao excluir
         if (!podeExcluirPlantaoMensal(plantoesAExcluir)) {
-            // validator.add(new ValidationMessage("referencias", "plantoesMensais.podeExcluirPlantaoMensal.validation"));
+            validator.add(new I18nMessage("referencias", "plantoesMensais.podeExcluirPlantaoMensal.validation"));
             montarDadosParaListar();
-            // renderTemplate(PlantoesMensais._TEMPLATE_LISTAR);
         }
 
         for (Iterator<Plantao> iterator = plantoesAExcluir.iterator(); iterator.hasNext();) {
-            Plantao plantao = (Plantao) iterator.next();
+            Plantao plantao = iterator.next();
             plantao.delete();
         }
 
-        listar();
+        result.redirectTo(this).listar();
     }
 
     private boolean podeExcluirPlantaoMensal(List<Plantao> plantoesAExcluir) {
@@ -123,14 +121,16 @@ public class PlantoesMensaisController extends TpController {
     @RoleAdmin
     @RoleAdminMissao
     @RoleAdminMissaoComplexo
+    @Path("/listar")
     public void listar() {
         montarDadosParaListar();
-        // render();
     }
 
     private void montarDadosParaListar() {
-        List<String> referencias = Plantao.getReferencias(getTitular().getOrgaoUsuario().getIdOrgaoUsu());
-        // RenderArgs.current().put("referencias", referencias);
+        if (getTitular() != null && getTitular().getOrgaoUsuario() != null) {
+            List<String> referencias = Plantao.getReferencias(getTitular().getOrgaoUsuario().getIdOrgaoUsu());
+            result.include("referencias", referencias);
+        }
     }
 
     private String[] gerarDatasPlantaoMensal(Integer mes, Integer ano, String hora) {
@@ -142,7 +142,7 @@ public class PlantoesMensaisController extends TpController {
 
         data.set(Calendar.DATE, data.getMinimum(Calendar.DAY_OF_MONTH));
         int ultimoDiaDoMesQueEuQuero = data.getActualMaximum(Calendar.DAY_OF_MONTH);
-        String retorno[] = new String[ultimoDiaDoMesQueEuQuero + 1];
+        String[] retorno = new String[ultimoDiaDoMesQueEuQuero + 1];
 
         for (int i = 0; i <= ultimoDiaDoMesQueEuQuero; i++) {
             retorno[i] = formato.format(data.getTime()) + " " + hora;
@@ -155,9 +155,9 @@ public class PlantoesMensaisController extends TpController {
     @RoleAdmin
     @RoleAdminMissao
     @RoleAdminMissaoComplexo
+    @Path("/incluirInicio")
     public void incluirInicio() {
         montarDadosParaIncluirInicio();
-        // render();
     }
 
     private void montarDadosParaIncluirInicio() {
@@ -167,35 +167,36 @@ public class PlantoesMensaisController extends TpController {
         dataParaTirarMes.add(Calendar.MONTH, 1);
 
         int anoCorrente = Calendar.getInstance().get(Calendar.YEAR);
-        Integer optAno[] = { anoCorrente, anoCorrente + 1 };
+        Integer[] optAno = { anoCorrente, anoCorrente + 1 };
 
         Mes mesDefault = Mes.getMes(dataParaTirarMes.get(Calendar.MONTH));
         int anoDefault = dataParaTirarMes.get(Calendar.YEAR);
 
-        String optHora[] = criarOpcoesDeHora();
-        // String horaDefault = PlantoesMensais._HORARIO_INICIO_PLANTAO_24H;
+        String[] optHora = criarOpcoesDeHora();
+        String horaDefault = PlantoesMensais._HORARIO_INICIO_PLANTAO_24H;
 
-        // RenderArgs.current().put("optHora", optHora);
-        // RenderArgs.current().put("horaDefault", horaDefault);
-        // RenderArgs.current().put("optMes", optMes);
-        // RenderArgs.current().put("mesDefault", mesDefault);
-        // RenderArgs.current().put("optAno", optAno);
-        // RenderArgs.current().put("anoDefault", anoDefault);
+        result.include("optHora", optHora);
+        result.include("horaDefault", horaDefault);
+        result.include("optMes", optMes);
+        result.include("mesDefault", mesDefault);
+        result.include("optAno", optAno);
+        result.include("anoDefault", anoDefault);
     }
 
     @RoleAdmin
     @RoleAdminMissao
     @RoleAdminMissaoComplexo
+    @Path("/incluir")
     public void incluir(Mes mes, int ano, String hora) {
         String dadosParaTitulo = gerarDadosParaTituloEReferencia(mes, ano, hora);
 
         if (Plantao.plantaoMensalJaExiste(dadosParaTitulo)) {
-            // validator.add(new ValidationMessage("hora", "plantoesMensais.plantaoMensalJaExiste.validation"));
+            validator.add(new I18nMessage("hora", "plantoesMensais.plantaoMensalJaExiste.validation"));
             montarDadosParaIncluirInicio();
-            // renderTemplate("PlantoesMensais/incluirInicio.html");
+            validator.onErrorUsePageOf(this).incluirInicio();
         }
 
-        String diasParaPlantoes[] = gerarDatasPlantaoMensal(mes.getCodigo(), ano, hora);
+        String[] diasParaPlantoes = gerarDatasPlantaoMensal(mes.getCodigo(), ano, hora);
         List<Plantao> plantoes = new ArrayList<Plantao>();
         for (int cont = 0; cont < diasParaPlantoes.length - 1; cont++) {
             Plantao plantao = new Plantao();
@@ -207,7 +208,6 @@ public class PlantoesMensaisController extends TpController {
         }
 
         montarDadosParaForm(plantoes, dadosParaTitulo, mes, ano, hora);
-        // render();
     }
 
     private String gerarDadosParaTituloEReferencia(Mes mes, int ano, String hora) {
@@ -230,20 +230,19 @@ public class PlantoesMensaisController extends TpController {
         List<Condutor> condutores;
         try {
             condutores = Condutor.listarTodos(getTitular().getOrgaoUsuario());
+            result.include("condutores", condutores);
         } catch (Exception e) {
             // throw new RuntimeException(Messages.get("plantoesMensais.montarDadosParaForm.exception"));
         }
-
-        // RenderArgs.current().put("plantoes", plantoes);
-        // RenderArgs.current().put("condutores", condutores);
-        // RenderArgs.current().put("dadosParaTitulo", dadosParaTitulo);
-        // RenderArgs.current().put("mes", mes);
-        // RenderArgs.current().put("ano", ano);
-        // RenderArgs.current().put("hora", hora);
+        result.include("plantoes", plantoes);
+        result.include("dadosParaTitulo", dadosParaTitulo);
+        result.include("mes", mes);
+        result.include("ano", ano);
+        result.include("hora", hora);
     }
 
     private String[] criarOpcoesDeHora() {
-        String retorno[] = new String[24];
+        String[] retorno = new String[24];
 
         retorno[0] = "00:00";
         retorno[1] = "01:00";
@@ -276,17 +275,20 @@ public class PlantoesMensaisController extends TpController {
     @RoleAdmin
     @RoleAdminMissao
     @RoleAdminMissaoComplexo
-    public void salvar(List<Plantao> plantoes, String dadosParaTitulo, Mes mes, int ano, String hora) throws Exception {
-        ordenarPelaDataHoraInicioDoPlantao(plantoes);
+    public void salvar(List<PlantaoDTO> plantoes, String dadosParaTitulo, Mes mes, int ano, String hora) throws Exception {
 
-        boolean incluir = (plantoes.get(0).getId() == 0);
+        List<Plantao> listaPlantoes = recuperarListaPlantao(plantoes);
+
+        ordenarPelaDataHoraInicioDoPlantao(listaPlantoes);
+
+        boolean incluir = listaPlantoes.get(0).getId() == 0;
 
         SimpleDateFormat formatoDataEHora = new SimpleDateFormat("dd/MM/yyyy HH:mm");
         SimpleDateFormat formatoSomenteData = new SimpleDateFormat("dd/MM/yyyy");
         List<Plantao> plantoesComErro = new ArrayList<Plantao>();
 
-        for (Iterator<Plantao> iterator = plantoes.iterator(); iterator.hasNext();) {
-            Plantao plantaoDaLista = (Plantao) iterator.next();
+        for (Iterator<Plantao> iterator = listaPlantoes.iterator(); iterator.hasNext();) {
+            Plantao plantaoDaLista = iterator.next();
             Plantao plantao = incluir ? plantaoDaLista : montarPlantaoParaSalvar(plantaoDaLista);
 
             if (incluir) {
@@ -295,36 +297,43 @@ public class PlantoesMensaisController extends TpController {
             plantao.setCondutor(Condutor.AR.findById(plantao.getCondutor().getId()));
             List<Afastamento> afastamentos = Afastamento.buscarPorCondutores(plantao.getCondutor(), plantao.getDataHoraInicio(), plantao.getDataHoraFim());
             if (afastamentos != null && !afastamentos.isEmpty()) {
-                // Validation.addError("plantao", "plantoesMensais.afastamentos.validation", plantao.condutor.getDadosParaExibicao(),
-                // formatoDataEHora.format(plantao.dataHoraInicio.getTime()),formatoDataEHora.format(plantao.dataHoraFim.getTime()));
+                validator.add(new I18nMessage("plantao", "plantoesMensais.afastamentos.validation", plantao.getCondutor().getDadosParaExibicao(), formatoDataEHora.format(plantao.getDataHoraInicio()
+                        .getTime()), formatoDataEHora.format(plantao.getDataHoraFim().getTime())));
                 plantoesComErro.add(plantao);
             } else {
                 try {
                     plantao.save();
                 } catch (Exception e) {
-                    // Validation.addError("plantao:" + e.getMessage(), "Houve um erro n&atilde;o identificado ao salvar o plant&atilde;o do dia " +
-                    // formatoSomenteData.format(plantao.dataHoraInicio.getTime()) + ". Verifique se o plant&atilde;o j&aacute; foi cadastrado anteriormente para a mesma data.");
+                    validator.add(new I18nMessage("plantao:" + e.getMessage(), "plantoesMensais.erro.nao.identificado.salvar", formatoSomenteData.format(plantao.getDataHoraInicio().getTime())));
                     plantoesComErro.add(plantao);
                 }
             }
         }
 
         if (!plantoesComErro.isEmpty()) {
-            // JPA.setRollbackOnly();
+            ContextoPersistencia.em().getTransaction().setRollbackOnly();
             if (incluir) {
-                zerarIdsInvalidosDaListaDePlantao(plantoes);
+                zerarIdsInvalidosDaListaDePlantao(listaPlantoes);
             }
 
-            montarDadosParaForm(new ArrayList<Plantao>(plantoes), dadosParaTitulo, mes, ano, hora);
+            montarDadosParaForm(new ArrayList<Plantao>(listaPlantoes), dadosParaTitulo, mes, ano, hora);
             if (incluir) {
-                // renderTemplate(_TEMPLATE_INCLUIR);
+                validator.onErrorUsePageOf(this).incluir(mes, ano, hora);
             } else {
-                // renderTemplate(_TEMPLATE_EDITAR);
+                validator.onErrorUsePageOf(this).editar(dadosParaTitulo);
             }
         }
 
-        listar();
+        result.redirectTo(this).listar();
 
+    }
+
+    private List<Plantao> recuperarListaPlantao(List<PlantaoDTO> plantoes) {
+        List<Plantao> retorno = new ArrayList<>();
+        for (PlantaoDTO p : plantoes) {
+            retorno.add(p.buscarPlantao());
+        }
+        return retorno;
     }
 
     private Plantao montarPlantaoParaSalvar(Plantao plantao) throws Exception {
@@ -342,7 +351,7 @@ public class PlantoesMensaisController extends TpController {
         // apos o rollback, os Ids atribuidos aos plantoes
         // que nao deram erro sao invalidos e precisam ser zerados
         for (Iterator<Plantao> iterator = plantoes.iterator(); iterator.hasNext();) {
-            Plantao plantao = (Plantao) iterator.next();
+            Plantao plantao = iterator.next();
             plantao.setId(0L);
         }
     }

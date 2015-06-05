@@ -59,7 +59,7 @@ public class Penalidades extends Controller {
     		if(Validation.hasError("codigoInfracao")){
     			Validation.addError("codigoInfracao","");
     		}
-			renderTemplate((penalidade.id == 0? Penalidades._ACTION_INCLUIR : Penalidades._ACTION_EDITAR), penalidade);
+			renderTemplate((penalidade.getId() == 0? Penalidades._ACTION_INCLUIR : Penalidades._ACTION_EDITAR), penalidade);
 			return;
 		}
 

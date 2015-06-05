@@ -63,14 +63,14 @@
 				<li><a id="menuAdmFinalidades" class="" href="${linkTo[FinalidadeController].listar}"><fmt:message key="finalidades" /></a></li>
 
 				<li><a id="menuAdmFornecedores" class="" href="${linkTo[FornecedorController].listar}">Fornecedores</a></li>
-				<li><a id="menuAdmPenalidades" class="" href="@{penalidades.listar}">Penalidades</a></li>
-				<li><a id="menuAdmPlantoes" class="" href="@{PlantoesMensais.listar}">Plant&otilde;es mensais</a></li>
+				<li><a id="menuAdmPenalidades" class="" href="${linkTo[PenalidadeController].listar}">Penalidades</a></li>		
+				<li><a id="menuAdmPlantoes" class="" href="${linkTo[PlantoesMensaisController].listar}">Plant&otilde;es mensais</a></li>
 				<!-- <li><a id="menuAdmMateriais" class="" href="@{Application.emdesenvolvimento}">Materiais em Estoque</a></li> -->
 				<li><a id="menuAdmRelat" class="" href="#">Relat&oacute;rios</a>
 					<ul>
-				  		<li><a id="menuAdmRelatAgendaCondutores" class="" href="#" onclick="javascript:window.open('@{Relatorios.listarAgendaTodosCondutores}');">Agenda dos Condutores</a></li>
-				  		<li><a id="menuAdmRelatAgendaVeiculos" class="" href="#" onclick=  "javascript:window.open('@{Relatorios.listarAgendaTodosVeiculos}');">Agenda dos Ve&iacute;culos</a></li>
-						<li><a id="menuAdmRelatMissoesEmAndamento" class="" href="#" onclick="javascript:window.open('@{Relatorios.listarMissoesEmAndamento}');">Miss&otilde;es em Andamento</a></li>
+				  		<li><a id="menuAdmRelatAgendaCondutores" class="" href="#" onclick="javascript:window.open('${linkTo[RelatorioController].listarAgendaTodosCondutores}');">Agenda dos Condutores</a></li>
+				  		<li><a id="menuAdmRelatAgendaVeiculos" class="" href="#" onclick=  "javascript:window.open('${linkTo[RelatorioController].listarAgendaTodosVeiculos}');">Agenda dos Ve&iacute;culos</a></li>
+						<li><a id="menuAdmRelatMissoesEmAndamento" class="" href="#" onclick="javascript:window.open('${linkTo[RelatorioController].listarMissoesEmAndamento}');">Miss&otilde;es em Andamento</a></li>
 						<li><a id="menuAdmRelatRanking" class="" href="#" onclick="javascript:window.open('@{RelatoriosRanking.consultar}');">Ranking por Requisi&ccedil;&otilde;es</a></li>
 						<li><a id="menuAdmRelatConsumoMedio" class="" href="#" onclick="javascript:window.open('${linkTo[RelatorioConsumoMedioController].consultar}');">Consumo M&eacute;dio de Combust&iacute;vel</a></li>
 					</ul>
@@ -86,7 +86,7 @@
 				<li><a id="menuAdmAbastecimentos" class="" href="${linkTo[AbastecimentoController].listar}">Abastecimentos</a></li>
 				<!-- <li><a id="menuAdmCompras" class="" href="@{Application.emdesenvolvimento}">Compras de Materiais</a></li> -->
 				<li><a id="menuAdmFornecedores" class="" href="${linkTo[FornecedorController].listar}">Fornecedores</a></li>
-				<li><a id="menuAdmPenalidades" class="" href="@{penalidades.listar}">Penalidades</a></li>
+				<li><a id="menuAdmPenalidades" class="" href="${linkTo[PenalidadeController].listar}">Penalidades</a></li>			
 				<!-- <li><a id="menuAdmMateriais" class="" href="@{Application.emdesenvolvimento}">Materiais em Estoque</a></li> -->
 				<li><a id="menuAdmRelat" class="" href="#">Relat&oacute;rios</a>
 					<ul>
@@ -106,7 +106,7 @@
 				<li><a id="menuAdmCondutores" class="" href="${linkTo[CondutorController].listar}">Condutores</a></li>
 				<li><a id="menuAdmFinalidades" class="" href="${linkTo[FinalidadeController].listar}">Finalidades</a></li>
 				<li><a id="menuAdmFornecedores" class="" href="${linkTo[FornecedorController].listar}">Fornecedores</a></li>
-				<li><a id="menuAdmPlantoes" class="" href="@{PlantoesMensais.listar}">Plant&otilde;es mensais</a></li>
+				<li><a id="menuAdmPlantoes" class="" href="${linkTo[PlantoesMensaisController].listar}"">Plant&otilde;es mensais</a></li>
 				<!-- <li><a id="menuAdmMateriais" class="" href="@{Application.emdesenvolvimento}">Materiais em Estoque</a></li> -->
 				<li><a id="menuAdmRelat" class="" href="#">Relat&oacute;rios</a>
 					<ul>
