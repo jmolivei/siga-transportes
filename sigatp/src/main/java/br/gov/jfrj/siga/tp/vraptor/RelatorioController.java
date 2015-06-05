@@ -332,6 +332,38 @@ public class RelatorioController extends TpController {
         return registros;
     }
     
+    @Path("/listarMissoesEmAndamento")
+    public void listarMissoesEmAndamento() {
+        List<Missao> missoes = Missao.buscarEmAndamento();
+        List<Missao> missoesFiltradas = filtrarPorOrgao(missoes, Missao.class);
+
+        String registros = "";
+        SimpleDateFormat formatoData = new SimpleDateFormat("yyyy,M,d,H,m,s");
+
+        for (int i = 0; i < missoesFiltradas.size(); i++) {
+            registros += "[ \'" + missoes.get(i).getSequence() + " - " + missoes.get(i).getVeiculo().getPlaca() + "\', \'" + missoes.get(i).getCondutor().getNome() + "\', new Date("
+                    + formatoData.format(missoes.get(i).getDataHoraSaida().getTime()) + "), new Date(";
+
+            if (missoes.get(i).getDataHoraRetorno() != null) 
+                registros += formatoData.format(missoes.get(i).getDataHoraRetorno().getTime()) + ") ]";
+            else {
+                Calendar dataHora = recuperarDataEHora(missoes.get(i).getDataHoraSaida(), HORA_FINAL_EXPEDIENTE, MINUTO_FINAL_EXPEDIENTE, SEGUNDO_FINAL_EXPEDIENTE);
+                registros += formatoData.format(dataHora.getTime()) + ") ]";
+            }
+            if (i < missoes.size() - 1)
+                registros += ", ";
+        }
+        
+        result.include("registros", registros);
+    }
+    
+    @Path("/listarDadosDaMissao/{id}")
+    public void listarDadosDaMissao(Long id) throws Exception {
+        Missao missao = Missao.AR.findById(id);
+        
+        result.include("missao", missao);
+    }
+    
     private <T> List<T> filtrarPorOrgao(List<T> lista, final Class<T> classe) {
         List<T> listaFiltrada = Lists.newArrayList(Iterables.filter(lista, new Predicate<T>() {
                 @Override
@@ -364,7 +396,7 @@ public class RelatorioController extends TpController {
 
         return listaFiltrada;
     }
-
+    
     private static Calendar recuperarDataEHora(Calendar dataHoraPesquisa, int hora, int minuto, int segundo) {
         Calendar dataHora = Calendar.getInstance();
         dataHora.set(Calendar.YEAR,  dataHoraPesquisa.get(Calendar.YEAR));

@@ -2,6 +2,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" buffer="64kb" %>
 <%@ taglib uri="http://localhost/jeetags" prefix="siga" %>
 
-<siga:pagina>
+<siga:pagina titulo="Transportes">
 	<jsp:include page="timeline.jsp" />
 </siga:pagina>
