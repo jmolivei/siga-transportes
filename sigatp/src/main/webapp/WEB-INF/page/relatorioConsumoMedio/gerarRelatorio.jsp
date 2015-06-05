@@ -1,7 +1,6 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt"%>
 <%@ taglib uri="http://localhost/jeetags" prefix="siga"%>
 
-
 <siga:pagina titulo="SIGA-Transportes">
 
 	<style>
@@ -23,8 +22,8 @@
 	<div class="gt-bd">
 		<div class="gt-content">
 			<h2>Relat&oacute;rio de Consumo M&eacute;dio de Combust&iacute;vel do per&iacute;odo de 
-				<fmt:formatDate pattern="dd/MM/yyyy" value="${relatoriocm.abastecimentoInicial.dataHora}" /> a
-				<fmt:formatDate pattern="dd/MM/yyyy" value="${relatoriocm.abastecimentoFinal.dataHora}" /> 
+				<fmt:formatDate pattern="dd/MM/yyyy" type="date" value="${relatoriocm.abastecimentoInicial.dataHora.time}" /> a
+				<fmt:formatDate pattern="dd/MM/yyyy" type="date" value="${relatoriocm.abastecimentoFinal.dataHora.time}" /> 
 		    </h2>
 		
 			<div style="width: 100%; display: block;">
