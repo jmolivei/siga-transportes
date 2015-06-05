@@ -68,8 +68,7 @@
  	    </div>
  	    <div class="coluna">
 	       	<label for="abastecimento.valorTotalDaNotaFiscal" class= "obrigatorio">Valor da Nota Fiscal (R$) </label>
-	       	<input type="text" name="abastecimento.valorTotalDaNotaFiscal" 
-	       		value="${abastecimento.valorTotalDaNotaFiscal}" class="valor_numerico decimal" />
+	       	<input type="text" name="abastecimento.valorTotalDaNotaFiscal" value="${abastecimento.valorTotalDaNotaFiscal}" class="valor_numerico decimal" />
 	      	<label for="abastecimento.numeroDaNotaFiscal" class="obrigatorio">N&uacute;mero da Nota Fiscal</label>
 	       	<input type="text" name="abastecimento.numeroDaNotaFiscal" value="${abastecimento.numeroDaNotaFiscal}" class="valor_numerico" />
 		</div>

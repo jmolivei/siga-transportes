@@ -12,7 +12,14 @@
 <siga:pagina titulo="Transportes">
 	<div class="gt-bd clearfix">
 		<div class="gt-content clearfix">
-			<h2>Editar Abastecimento</h2>
+			<c:choose>
+				<c:when test="${abastecimento.id > 0}">
+					<h2>Editar Abastecimento</h2>
+				</c:when>
+				<c:otherwise>
+					<h2>Incluir Abastecimento</h2>
+				</c:otherwise>			
+			</c:choose>
 			<jsp:include page="form.jsp" />
 		</div>
 	</div>

@@ -57,10 +57,10 @@ public class ControleGabinete extends TpModel implements ConvertableEntity {
 	private Condutor condutor;	
 
 	@NotNull
-	private double odometroEmKmSaida;
+	private Double odometroEmKmSaida;
 
 	@NotNull
-	private double odometroEmKmRetorno;
+	private Double odometroEmKmRetorno;
 	
 	@NotNull
 	private String naturezaDoServico;
@@ -133,19 +133,19 @@ public class ControleGabinete extends TpModel implements ConvertableEntity {
 		this.condutor = condutor;
 	}
 
-	public double getOdometroEmKmSaida() {
+	public Double getOdometroEmKmSaida() {
 		return odometroEmKmSaida;
 	}
 
-	public void setOdometroEmKmSaida(double odometroEmKmSaida) {
+	public void setOdometroEmKmSaida(Double odometroEmKmSaida) {
 		this.odometroEmKmSaida = odometroEmKmSaida;
 	}
 
-	public double getOdometroEmKmRetorno() {
+	public Double getOdometroEmKmRetorno() {
 		return odometroEmKmRetorno;
 	}
 
-	public void setOdometroEmKmRetorno(double odometroEmKmRetorno) {
+	public void setOdometroEmKmRetorno(Double odometroEmKmRetorno) {
 		this.odometroEmKmRetorno = odometroEmKmRetorno;
 	}
 

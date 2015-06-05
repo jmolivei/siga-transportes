@@ -14,6 +14,8 @@
 <siga:pagina titulo="Transportes">
 	<script type="text/javascript">
 		$(document).ready(function() {
+			$("#comboorgao").val("${cpOrgaoUsuario.id}");
+			
 			$('#comboorgao').change(function () {
 				var optionSelected = $(this).find("option:selected");	
 			    var valueSelected = this.value;
@@ -40,7 +42,7 @@
 						<siga:select id="comboorgao" name="comboorgao" list="cpOrgaoUsuarios" listKey="idOrgaoUsu" listValue="nmOrgaoUsu" value="${orgaoUsuario.idOrgaoUsu}" headerKey="0" headerValue="Nenhum"/>
 					</div>
 					<div class="coluna gt-table-buttons">
-						<a class="invisivel" id="btnPesqOrgao" href="${linkTo[ConfiguracaoGIController].listarPorOrgaoUsuario[cpOrgaoUsuario.idOrgaoUsu]}" class="gt-btn-medium gt-btn-left"><fmt:message key="views.botoes.buscar"/></a>
+						<a class="invisivel" id="btnPesqOrgao" href="${linkTo[ConfiguracaoGIController].pesquisar[cpOrgaoUsuario.idOrgaoUsu]}" class="gt-btn-medium gt-btn-left"><fmt:message key="views.botoes.buscar"/></a>
 					</div>
 				</div>
 		

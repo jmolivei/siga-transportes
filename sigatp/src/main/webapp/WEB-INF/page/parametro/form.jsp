@@ -43,12 +43,12 @@ $(function() {
 			<option value=""></option>
 			<c:forEach items="${cpComplexos}" var="cpComplexo">
 				<c:choose>
-				<c:when test="${parametro.cpComplexo != null && cpComplexo.idComplexo == parametro.cpComplexo.idComplexo}">
-  						<option value="${cpComplexo.idComplexo}" selected=selected>${cpComplexo.nomeComplexo}</option>
-				</c:when>
-				<c:otherwise>
-					<option value="${cpComplexo.idComplexo}">${cpComplexo.nomeComplexo}</option>
-				</c:otherwise>
+					<c:when test="${parametro.cpComplexo != null && cpComplexo.idComplexo == parametro.cpComplexo.idComplexo}">
+	  						<option value="${cpComplexo.idComplexo}" selected=selected>${cpComplexo.nomeComplexo}</option>
+					</c:when>
+					<c:otherwise>
+						<option value="${cpComplexo.idComplexo}">${cpComplexo.nomeComplexo}</option>
+					</c:otherwise>
 				</c:choose>
 			</c:forEach>
 		</select>

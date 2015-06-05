@@ -6,12 +6,12 @@ import java.util.List;
 
 import javax.persistence.EntityManager;
 import javax.servlet.http.HttpServletRequest;
-import javax.validation.Valid;
 
 import br.com.caelum.vraptor.Path;
 import br.com.caelum.vraptor.Resource;
 import br.com.caelum.vraptor.Result;
 import br.com.caelum.vraptor.Validator;
+import br.com.caelum.vraptor.validator.I18nMessage;
 import br.com.caelum.vraptor.view.Results;
 import br.gov.jfrj.siga.cp.CpComplexo;
 import br.gov.jfrj.siga.cp.CpConfiguracao;
@@ -40,24 +40,23 @@ public class ConfiguracaoGIController extends TpController {
 		super(request, result, dao, validator, so, em);
 	}
 
-	@Path("/listarPorOrgaoUsuario")
-	public void listarPorOrgaoUsuario() throws Exception {
-		result.redirectTo(ConfiguracaoGIController.class).listarPorOrgaoUsuario(getTitular().getOrgaoUsuario().getIdOrgaoUsu());
+	@Path("/pesquisar")
+	public void pesquisar() throws Exception {
+		result.redirectTo(ConfiguracaoGIController.class).pesquisar(getTitular().getOrgaoUsuario().getIdOrgaoUsu());
 	}
 	
-	@Path("/listarPorOrgaoUsuario/{idOrgaoUsu}")
-	public void listarPorOrgaoUsuario(Long idOrgaoUsu) throws Exception {
-		pesquisar(idOrgaoUsu);
+	@Path("/pesquisar/{idOrgaoUsu}")
+	public void pesquisar(Long idOrgaoUsu) throws Exception {
+	    pesquisarPorOrgaoUsuario(idOrgaoUsu);
 	}
 
 	@SuppressWarnings("unchecked")
-	private void pesquisar(Long idOrgaoUsu) throws Exception {
+	private void pesquisarPorOrgaoUsuario(Long idOrgaoUsu) throws Exception {
 		CpOrgaoUsuario cpOrgaoUsuario = CpOrgaoUsuario.AR.findById(idOrgaoUsu);
 		List<CpOrgaoUsuario> cpOrgaoUsuarios = CpOrgaoUsuario.AR.findAll();
 		String SERVICO_COMPLEXO_ADMINISTRADOR = "SIGA-TP-ADMMISSAOCOMPLEXO";
 		CpServico cpServico = CpServico.AR.find("siglaServico",SERVICO_COMPLEXO_ADMINISTRADOR).first();
-		//TODO  HD martelada! #400
-		Long TIPO_CONFIG_COMPLEXO_PADRAO = 300L;
+		Long TIPO_CONFIG_COMPLEXO_PADRAO = 400L;
 		CpTipoConfiguracao tpConf = CpTipoConfiguracao.AR.findById(TIPO_CONFIG_COMPLEXO_PADRAO);
 		//	Object[] parametros =  {idOrgaoUsu,cpSituacaoConfiguracaoPode, cpServico};
 		//	List<CpConfiguracao> cpConfiguracoesCp =  CpConfiguracao.find("(dpPessoa in (select d from DpPessoa d where d.orgaoUsuario.idOrgaoUsu = ?) and cpSituacaoConfiguracao = ? and cpServico = ? and hisIdcFim is null )", parametros).fetch();
@@ -158,12 +157,9 @@ public class ConfiguracaoGIController extends TpController {
 		redirecionaParaListagem(cpConfiguracao);
 	}
 	
-	public void salvar(@Valid CpConfiguracao cpConfiguracao) throws Exception {
-		if(validator.hasErrors()) {
-			carregarDadosPerifericos(cpConfiguracao.getOrgaoUsuario().getIdOrgaoUsu());
-			//TODO  HD listagem ou edição?
-			validator.onErrorUse(Results.page()).of(ConfiguracaoGIController.class).editar(cpConfiguracao.getOrgaoUsuario().getIdOrgaoUsu());
-		}
+	public void salvar(CpConfiguracao cpConfiguracao) throws Exception {
+		isValid(cpConfiguracao);
+		
 		CpConfiguracao cpConfiguracaoNova = new CpConfiguracao();
 		CpConfiguracao cpConfiguracaoAnterior = CpConfiguracao.AR.findById(cpConfiguracao.getId());
 		if (cpConfiguracaoAnterior != null) {
@@ -200,13 +196,38 @@ public class ConfiguracaoGIController extends TpController {
 		redirecionaParaListagem(cpConfiguracaoNova);
 	}
 
+    private void isValid(CpConfiguracao cpConfiguracao) throws Exception {
+        validaCamposNulos(cpConfiguracao);
+        
+        if(cpConfiguracao.getComplexo() == null || cpConfiguracao.getCpTipoConfiguracao() == null || cpConfiguracao.getCpSituacaoConfiguracao() == null)
+            validator.add(new I18nMessage("configuracaoGI", "views.erro.campoObrigatorio"));
+            
+        if(validator.hasErrors()) {
+			carregarDadosPerifericos(cpConfiguracao.getOrgaoUsuario().getIdOrgaoUsu());
+			validator.onErrorUse(Results.page()).of(ConfiguracaoGIController.class).editar(cpConfiguracao.getOrgaoUsuario().getIdOrgaoUsu());
+		}
+    }
+    
+    private void validaCamposNulos(CpConfiguracao cpConfiguracao) {
+        if(cpConfiguracao.getComplexo().getIdComplexo() == null)
+            cpConfiguracao.setComplexo(null);
+        if(cpConfiguracao.getCpSituacaoConfiguracao().getIdSitConfiguracao() == null)
+            cpConfiguracao.setCpSituacaoConfiguracao(null);
+        if(cpConfiguracao.getCpTipoConfiguracao().getIdTpConfiguracao() == null)
+            cpConfiguracao.setCpTipoConfiguracao(null);
+        if(cpConfiguracao.getLotacao().getIdeLotacao() == null)
+            cpConfiguracao.setLotacao(null);
+        if(cpConfiguracao.getDpPessoa().getIdePessoa() == null)
+            cpConfiguracao.setDpPessoa(null);
+    }
+
 	private void redirecionaParaListagem(CpConfiguracao cpConfiguracao) throws Exception {
 		if (cpConfiguracao.getOrgaoUsuario() != null ) 
-			result.redirectTo(this).listarPorOrgaoUsuario(cpConfiguracao.getOrgaoUsuario().getIdOrgaoUsu());
+			result.redirectTo(this).pesquisar(cpConfiguracao.getOrgaoUsuario().getIdOrgaoUsu());
 		else if (cpConfiguracao.getDpPessoa() != null) 
-			result.redirectTo(this).listarPorOrgaoUsuario(cpConfiguracao.getDpPessoa().getLotacao().getOrgaoUsuario().getIdOrgaoUsu());
+			result.redirectTo(this).pesquisar(cpConfiguracao.getDpPessoa().getLotacao().getOrgaoUsuario().getIdOrgaoUsu());
 		else if (cpConfiguracao.getLotacao() != null) 
-			result.redirectTo(this).listarPorOrgaoUsuario(cpConfiguracao.getLotacao().getOrgaoUsuario().getIdOrgaoUsu());
+			result.redirectTo(this).pesquisar(cpConfiguracao.getLotacao().getOrgaoUsuario().getIdOrgaoUsu());
 	}
 	
 }
