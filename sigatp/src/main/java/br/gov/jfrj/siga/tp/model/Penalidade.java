@@ -8,58 +8,59 @@ import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import javax.validation.constraints.NotNull;
 
 import org.hibernate.envers.Audited;
 
-import play.data.validation.Required;
-import play.data.validation.Unique;
-import play.db.jpa.GenericModel;
 import play.modules.br.jus.jfrj.siga.uteis.validadores.upperCase.UpperCase;
 import br.gov.jfrj.siga.dp.CpOrgaoUsuario;
 import br.gov.jfrj.siga.model.ActiveRecord;
+import br.gov.jfrj.siga.tp.validation.annotation.Unique;
+import br.gov.jfrj.siga.tp.vraptor.ConvertableEntity;
 
 @SuppressWarnings("serial")
 @Entity
 @Audited
 @Table(schema = "SIGATP")
-public class Penalidade extends TpModel {
+@Unique(message="{penalidade.codigoInfracao.unique}", field="codigoInfracao")
+public class Penalidade extends TpModel implements ConvertableEntity {
 	private static final long _ID_DA_PENALIDADE_OUTRA = -1;
 
 	public static final ActiveRecord<Penalidade> AR = new ActiveRecord<>(Penalidade.class);
 
 	@Id
 	@GeneratedValue
-	public Long id;
+	private Long id;
 
-	@Required
-	@Unique(message="Campo 'C&oacute;digo da Infra&ccedil;&atilde;o' j&aacute; existente")
+	@NotNull
+	
 	@UpperCase
-	public String codigoInfracao;
+	private String codigoInfracao;
 
-	@Required
+	@NotNull
 	@UpperCase
-	public String descricaoInfracao;
+	private String descricaoInfracao;
 
-	@Required
+	@NotNull
 	@UpperCase
-	public String artigoCTB;
+	private String artigoCTB;
 
-	@Required
-	public double valor;
+	@NotNull
+	private Double valor;
 
-	@Required
+	@NotNull
 	@Enumerated(EnumType.STRING)
-	public Infrator infrator;
+	private Infrator infrator;
 
-	@Required
+	@NotNull
 	@Enumerated(EnumType.STRING)
-	public Gravidade classificacao;
+	private Gravidade classificacao;
 
 
 	public Penalidade() {
-		this.id = new Long(0);
-		this.infrator = Infrator.CONDUTOR;
-		this.classificacao = Gravidade.LEVE;
+		this.setId(new Long(0));
+		this.setInfrator(Infrator.CONDUTOR);
+		this.setClassificacao(Gravidade.LEVE);
 	}
 
 	public static List<Penalidade> listarTodos() {
@@ -79,11 +80,62 @@ public class Penalidade extends TpModel {
 		}
 		return retorno;
 	}
-
+	
 	@Override
 	public Long getId() {
-		// TODO Auto-generated method stub
-		return null;
+		return id;
+	}
+
+	public void setId(Long id) {
+		this.id = id;
+	}
+
+	public String getCodigoInfracao() {
+		return codigoInfracao;
+	}
+
+	public void setCodigoInfracao(String codigoInfracao) {
+		this.codigoInfracao = codigoInfracao;
+	}
+
+	public String getDescricaoInfracao() {
+		return descricaoInfracao;
+	}
+
+	public void setDescricaoInfracao(String descricaoInfracao) {
+		this.descricaoInfracao = descricaoInfracao;
+	}
+
+	public String getArtigoCTB() {
+		return artigoCTB;
+	}
+
+	public void setArtigoCTB(String artigoCTB) {
+		this.artigoCTB = artigoCTB;
+	}
+
+	public Double getValor() {
+		return valor;
+	}
+
+	public void setValor(Double valor) {
+		this.valor = valor;
+	}
+
+	public Infrator getInfrator() {
+		return infrator;
+	}
+
+	public void setInfrator(Infrator infrator) {
+		this.infrator = infrator;
+	}
+
+	public Gravidade getClassificacao() {
+		return classificacao;
+	}
+
+	public void setClassificacao(Gravidade classificacao) {
+		this.classificacao = classificacao;
 	}
 
 }

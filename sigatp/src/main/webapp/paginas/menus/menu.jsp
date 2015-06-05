@@ -63,7 +63,7 @@
 				<li><a id="menuAdmFinalidades" class="" href="${linkTo[FinalidadeController].listar}"><fmt:message key="finalidades" /></a></li>
 
 				<li><a id="menuAdmFornecedores" class="" href="${linkTo[FornecedorController].listar}">Fornecedores</a></li>
-				<li><a id="menuAdmPenalidades" class="" href="@{penalidades.listar}">Penalidades</a></li>
+				<li><a id="menuAdmPenalidades" class="" href="${linkTo[PenalidadeController].listar}">Penalidades</a></li>		
 				<li><a id="menuAdmPlantoes" class="" href="${linkTo[PlantoesMensaisController].listar}">Plant&otilde;es mensais</a></li>
 				<!-- <li><a id="menuAdmMateriais" class="" href="@{Application.emdesenvolvimento}">Materiais em Estoque</a></li> -->
 				<li><a id="menuAdmRelat" class="" href="#">Relat&oacute;rios</a>
@@ -86,7 +86,7 @@
 				<li><a id="menuAdmAbastecimentos" class="" href="${linkTo[AbastecimentoController].listar}">Abastecimentos</a></li>
 				<!-- <li><a id="menuAdmCompras" class="" href="@{Application.emdesenvolvimento}">Compras de Materiais</a></li> -->
 				<li><a id="menuAdmFornecedores" class="" href="${linkTo[FornecedorController].listar}">Fornecedores</a></li>
-				<li><a id="menuAdmPenalidades" class="" href="@{penalidades.listar}">Penalidades</a></li>
+				<li><a id="menuAdmPenalidades" class="" href="${linkTo[PenalidadeController].listar}">Penalidades</a></li>			
 				<!-- <li><a id="menuAdmMateriais" class="" href="@{Application.emdesenvolvimento}">Materiais em Estoque</a></li> -->
 				<li><a id="menuAdmRelat" class="" href="#">Relat&oacute;rios</a>
 					<ul>
