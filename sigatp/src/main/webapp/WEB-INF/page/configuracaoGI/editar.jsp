@@ -8,7 +8,14 @@
 <siga:pagina titulo="Transportes">
 	<div class="gt-bd clearfix">
 		<div class="gt-content clearfix">
-			<h2>Editar Configura&ccedil;&atilde;o no GI para o &Oacute;rg&atilde;o - ${cpOrgaoUsuario.nmOrgaoUsu}</h2>
+			<c:choose>
+				<c:when test="${cpConfiguracao.id > 0}">
+					<h2>Editar Configura&ccedil;&atilde;o no GI para o &Oacute;rg&atilde;o - ${cpOrgaoUsuario.nmOrgaoUsu}</h2>
+				</c:when>
+				<c:otherwise>
+					<h2>Incluir Configura&ccedil;&atilde;o no GI para o &Oacute;rg&atilde;o - ${cpOrgaoUsuario.nmOrgaoUsu}</h2>
+				</c:otherwise>
+			</c:choose>
 			<sigatp:erros />
 			<br />
 			<jsp:include page="form.jsp" />
