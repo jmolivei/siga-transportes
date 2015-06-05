@@ -208,13 +208,13 @@ public class RelatorioController extends TpController {
             registros += delim;
             SimpleDateFormat formatoData = new SimpleDateFormat("yyyy,M,d,H,m,s");
 
-            registros += "[ \'" + "Plantoes" + "\', \'" + plantao.condutor.getNome() + "\', new Date(" ;
+            registros += "[ \'" + "Plantoes" + "\', \'" + plantao.getCondutor().getNome() + "\', new Date(" ;
 
-            if (plantao.dataHoraInicio.get(Calendar.YEAR) == dataHoraPesquisa.get(Calendar.YEAR) &&
-                    plantao.dataHoraInicio.get(Calendar.MONTH) == dataHoraPesquisa.get(Calendar.MONTH) &&
-                    plantao.dataHoraInicio.get(Calendar.DAY_OF_MONTH) == dataHoraPesquisa.get(Calendar.DAY_OF_MONTH) &&
-                    plantao.dataHoraInicio.after(dataHoraPesquisa)) {
-                registros += formatoData.format(plantao.dataHoraInicio.getTime()) + "), new Date(";
+            if (plantao.getDataHoraInicio().get(Calendar.YEAR) == dataHoraPesquisa.get(Calendar.YEAR) &&
+                    plantao.getDataHoraInicio().get(Calendar.MONTH) == dataHoraPesquisa.get(Calendar.MONTH) &&
+                    plantao.getDataHoraInicio().get(Calendar.DAY_OF_MONTH) == dataHoraPesquisa.get(Calendar.DAY_OF_MONTH) &&
+                    plantao.getDataHoraInicio().after(dataHoraPesquisa)) {
+                registros += formatoData.format(plantao.getDataHoraInicio().getTime()) + "), new Date(";
             }
             else {
                 Calendar dataHora = recuperarDataEHora(dataHoraPesquisa, HORA_INICIAL_DIA, MINUTO_INICIAL_DIA,SEGUNDO_INICIAL_DIA);
@@ -222,12 +222,12 @@ public class RelatorioController extends TpController {
 
             }
 
-            if (plantao.dataHoraFim != null){
-                if (plantao.dataHoraFim.get(Calendar.YEAR) == dataHoraPesquisa.get(Calendar.YEAR) &&
-                    plantao.dataHoraFim.get(Calendar.MONTH) == dataHoraPesquisa.get(Calendar.MONTH) &&
-                    plantao.dataHoraFim.get(Calendar.DAY_OF_MONTH) == dataHoraPesquisa.get(Calendar.DAY_OF_MONTH) &&
-                    plantao.dataHoraFim.after(dataHoraPesquisa)) {
-                    registros += formatoData.format(plantao.dataHoraFim.getTime()) + ") ]";
+            if (plantao.getDataHoraFim() != null){
+                if (plantao.getDataHoraFim().get(Calendar.YEAR) == dataHoraPesquisa.get(Calendar.YEAR) &&
+                    plantao.getDataHoraFim().get(Calendar.MONTH) == dataHoraPesquisa.get(Calendar.MONTH) &&
+                    plantao.getDataHoraFim().get(Calendar.DAY_OF_MONTH) == dataHoraPesquisa.get(Calendar.DAY_OF_MONTH) &&
+                    plantao.getDataHoraFim().after(dataHoraPesquisa)) {
+                    registros += formatoData.format(plantao.getDataHoraFim().getTime()) + ") ]";
                     delim = ", ";
                     continue;
                 }
@@ -318,7 +318,7 @@ public class RelatorioController extends TpController {
                 public boolean apply(T objeto) {
                     if (classe.equals(Plantao.class)) {
                         Plantao obj = (Plantao)objeto;
-                        return obj.condutor.getCpOrgaoUsuario().getId().equals(getTitular().getOrgaoUsuario().getId());
+                        return obj.getCondutor().getCpOrgaoUsuario().getId().equals(getTitular().getOrgaoUsuario().getId());
                     }
                     else if(classe.equals(Afastamento.class)) {
                         Afastamento obj = (Afastamento)objeto;
