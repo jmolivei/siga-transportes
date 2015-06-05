@@ -9,9 +9,8 @@
 <siga:pagina titulo="SIGA-Transporte">
 	<div class="gt-bd clearfix">
 		<div class="gt-content clearfix">
-		    <c:set var="botaoAcao" value="Rejeitar" ></c:set>
-			<h2>Rejeitar Requisi&ccedil;&atilde;o</h2>
-			<jsp:include page="andamento/form.html" />
+			<h2>${acao} Requisi&ccedil;&atilde;o</h2>
+			<jsp:include page="form.jsp" />
 		</div>
 	</div>
 </siga:pagina>
