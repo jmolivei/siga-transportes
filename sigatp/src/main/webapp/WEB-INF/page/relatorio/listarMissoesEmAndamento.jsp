@@ -38,8 +38,7 @@
 	
 	        	chart.draw(dataTable,options);
 		        
-	  		}
-	  		else
+	  		} else
 				container.innerHTML = "<h3>Não existem missões em andamento.</h3>";
 	}
 	</script>
