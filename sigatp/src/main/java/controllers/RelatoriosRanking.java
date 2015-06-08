@@ -64,10 +64,10 @@ public class RelatoriosRanking extends Controller {
 		} else {
 			String msgErro = "";
 
-			if (relatorioRanking.dataInicio == null) {
+			if (relatorioRanking.getDataInicio() == null) {
 				msgErro += "Data Inicio, ";
 			}
-			if (relatorioRanking.dataFim == null) {
+			if (relatorioRanking.getDataFim() == null) {
 				msgErro += "Data Fim, ";
 			}
 
@@ -103,15 +103,15 @@ public class RelatoriosRanking extends Controller {
 		CpOrgaoUsuario cpOrgaoUsuario = AutorizacaoGIAntigo.titular().getOrgaoUsuario();
 
 		try {
-			relatorio.dataInicio.setTime(formatarDataHora(relatorio.dataInicio, "00:00:00"));
-			relatorio.dataFim.setTime(formatarDataHora(relatorio.dataFim, "23:59:59"));
+			relatorio.getDataInicio().setTime(formatarDataHora(relatorio.getDataInicio(), "00:00:00"));
+			relatorio.getDataFim().setTime(formatarDataHora(relatorio.getDataFim(), "23:59:59"));
 
 			String qrl = "SELECT c.id, m.id, r.id " + "FROM Condutor c, Missao m " + "INNER JOIN m.requisicoesTransporte r " + "WHERE c.id = m.condutor.id " + "and   dataHoraRetorno BETWEEN ? AND ? "
 					+ "AND   r.cpOrgaoUsuario.idOrgaoUsu = ? " + "ORDER BY c.id, m.id, r.id";
 
 			Query qry = JPA.em().createQuery(qrl);
-			qry.setParameter(1, relatorio.dataInicio);
-			qry.setParameter(2, relatorio.dataFim);
+			qry.setParameter(1, relatorio.getDataInicio());
+			qry.setParameter(2, relatorio.getDataFim());
 			qry.setParameter(3, cpOrgaoUsuario.getIdOrgaoUsu());
 
 			lista = (List<Object[]>) qry.getResultList();
@@ -172,15 +172,15 @@ public class RelatoriosRanking extends Controller {
 		CpOrgaoUsuario cpOrgaoUsuario = AutorizacaoGIAntigo.titular().getOrgaoUsuario();
 
 		try {
-			relatorio.dataInicio.setTime(formatarDataHora(relatorio.dataInicio, "00:00:00"));
-			relatorio.dataFim.setTime(formatarDataHora(relatorio.dataFim, "23:59:59"));
+			relatorio.getDataInicio().setTime(formatarDataHora(relatorio.getDataInicio(), "00:00:00"));
+			relatorio.getDataFim().setTime(formatarDataHora(relatorio.getDataFim(), "23:59:59"));
 
 			String qrl = "SELECT v.id, r.id " + "FROM Veiculo v, Missao m " + "INNER JOIN m.requisicoesTransporte r " + "WHERE v.id = m.veiculo.id " + "and   dataHoraRetorno BETWEEN ? AND ? "
 					+ "AND   r.cpOrgaoUsuario.idOrgaoUsu = ? " + "ORDER BY v.id, r.id";
 
 			Query qry = JPA.em().createQuery(qrl);
-			qry.setParameter(1, relatorio.dataInicio);
-			qry.setParameter(2, relatorio.dataFim);
+			qry.setParameter(1, relatorio.getDataInicio());
+			qry.setParameter(2, relatorio.getDataFim());
 			qry.setParameter(3, cpOrgaoUsuario.getIdOrgaoUsu());
 			lista = (List<Object[]>) qry.getResultList();
 
@@ -234,15 +234,15 @@ public class RelatoriosRanking extends Controller {
 		CpOrgaoUsuario cpOrgaoUsuario = AutorizacaoGIAntigo.titular().getOrgaoUsuario();
 
 		try {
-			relatorio.dataInicio.setTime(formatarDataHora(relatorio.dataInicio, "00:00:00"));
-			relatorio.dataFim.setTime(formatarDataHora(relatorio.dataFim, "23:59:59"));
+			relatorio.getDataInicio().setTime(formatarDataHora(relatorio.getDataInicio(), "00:00:00"));
+			relatorio.getDataFim().setTime(formatarDataHora(relatorio.getDataFim(), "23:59:59"));
 
 			String qrl = "SELECT f.id, count(f.id) as total_finalidade " + "FROM  FinalidadeRequisicao f, RequisicaoTransporte r " + "WHERE r.tipoFinalidade.id = f.id "
 					+ "and   r.dataHora BETWEEN ? AND ? " + "AND   r.cpOrgaoUsuario.idOrgaoUsu = ? " + "GROUP BY f.id " + "ORDER BY total_finalidade DESC";
 
 			Query qry = JPA.em().createQuery(qrl);
-			qry.setParameter(1, relatorio.dataInicio);
-			qry.setParameter(2, relatorio.dataFim);
+			qry.setParameter(1, relatorio.getDataInicio());
+			qry.setParameter(2, relatorio.getDataFim());
 			qry.setParameter(3, cpOrgaoUsuario.getIdOrgaoUsu());
 
 			lista = (List<Object[]>) qry.getResultList();
@@ -273,9 +273,9 @@ public class RelatoriosRanking extends Controller {
 		CpOrgaoUsuario cpOrgaoUsuario = AutorizacaoGIAntigo.titular().getOrgaoUsuario();
 
 		try {
-			relatorio.dataInicio.setTime(formatarDataHora(relatorio.dataInicio, "00:00:00"));
-			relatorio.dataFim.setTime(formatarDataHora(relatorio.dataFim, "23:59:59"));
-			lista = RequisicaoTransporte.AR.find("dataHora BETWEEN ? AND ? " + "AND cpOrgaoUsuario.idOrgaoUsu = ? ", relatorio.dataInicio, relatorio.dataFim, cpOrgaoUsuario.getIdOrgaoUsu()).fetch();
+			relatorio.getDataInicio().setTime(formatarDataHora(relatorio.getDataInicio(), "00:00:00"));
+			relatorio.getDataFim().setTime(formatarDataHora(relatorio.getDataFim(), "23:59:59"));
+			lista = RequisicaoTransporte.AR.find("dataHora BETWEEN ? AND ? " + "AND cpOrgaoUsuario.idOrgaoUsu = ? ", relatorio.getDataInicio(), relatorio.getDataFim(), cpOrgaoUsuario.getIdOrgaoUsu()).fetch();
 			RankingTipoPassageiroRequisicao itemRp = null;
 
 			for (int i = 0; i < listaTipoDePassageiro.size(); i++) {
