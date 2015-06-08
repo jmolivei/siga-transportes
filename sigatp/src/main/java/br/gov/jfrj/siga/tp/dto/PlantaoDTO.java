@@ -1,12 +1,16 @@
 package br.gov.jfrj.siga.tp.dto;
 
 import java.util.Calendar;
-import java.util.Date;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import br.gov.jfrj.siga.tp.model.Condutor;
 import br.gov.jfrj.siga.tp.model.Plantao;
 
 public class PlantaoDTO {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(PlantaoDTO.class);
 
     private Long id;
 
@@ -25,8 +29,9 @@ public class PlantaoDTO {
             try {
                 Plantao plantao = Plantao.AR.findById(this.id);
                 preencherDadosComuns(plantao);
-                return plantao;                
+                return plantao;
             } catch (Exception e) {
+                LOGGER.error(e.getMessage(), e);
                 return null;
             }
         }
@@ -38,7 +43,6 @@ public class PlantaoDTO {
         preencherDadosComuns(plantao);
         return plantao;
     }
-    
 
     private void preencherDadosComuns(Plantao plantao) {
         plantao.setDataHoraFim(dataHoraFim);
@@ -54,6 +58,7 @@ public class PlantaoDTO {
             try {
                 return Condutor.AR.findById(this.condutor.getId());
             } catch (Exception e) {
+                LOGGER.error(e.getMessage(), e);
                 return null;
             }
         }

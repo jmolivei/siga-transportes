@@ -1,4 +1,4 @@
-package controllers;
+package br.gov.jfrj.siga.tp.vraptor;
 
 import java.text.ParseException;
 import java.util.ArrayList;
@@ -7,33 +7,55 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import javax.persistence.EntityManager;
 import javax.persistence.Query;
+import javax.servlet.http.HttpServletRequest;
 
 import org.apache.commons.lang.StringUtils;
 
-import play.data.validation.Validation;
-import play.db.jpa.JPA;
-import play.mvc.Controller;
-import play.mvc.With;
+import br.com.caelum.vraptor.Path;
+import br.com.caelum.vraptor.Resource;
+import br.com.caelum.vraptor.Result;
+import br.com.caelum.vraptor.Validator;
+import br.com.caelum.vraptor.validator.ValidationMessage;
+import br.com.caelum.vraptor.view.Results;
 import br.gov.jfrj.siga.dp.CpOrgaoUsuario;
+import br.gov.jfrj.siga.dp.dao.CpDao;
+import br.gov.jfrj.siga.tp.auth.AutorizacaoGI;
 import br.gov.jfrj.siga.tp.model.Abastecimento;
 import br.gov.jfrj.siga.tp.model.EstadoMissao;
 import br.gov.jfrj.siga.tp.model.Missao;
 import br.gov.jfrj.siga.tp.model.RelatorioConsumoMedio;
 import br.gov.jfrj.siga.tp.model.Veiculo;
+import br.gov.jfrj.siga.vraptor.SigaObjects;
 
-@With(AutorizacaoGIAntigo.class)
-public class RelatoriosConsumoMedio extends Controller {
-	public static void consultar() throws Exception {
-		RelatorioConsumoMedio relatorioConsumoMedio = new RelatorioConsumoMedio();
-		montarCombos();
-		render(relatorioConsumoMedio);
+@Resource
+@Path("/app/relatorioConsumoMedio")
+public class RelatorioConsumoMedioController extends TpController
+{
+	private AutorizacaoGI autorizacaoGI;
+	
+	public RelatorioConsumoMedioController(HttpServletRequest request,
+			Result result, CpDao dao, Validator validator, SigaObjects so,
+			EntityManager em, AutorizacaoGI autorizacaoGI) {
+		super(request, result, dao, validator, so, em);
+		this.autorizacaoGI = autorizacaoGI;
 	}
 
-	public static void gerarRelatorio(RelatorioConsumoMedio relatorioConsumoMedio) throws ParseException, Exception {
-		if (Validation.hasErrors()) {
+	@Path("/consultar")
+	public void consultar() throws Exception {
+		RelatorioConsumoMedio relatorioConsumoMedio = new RelatorioConsumoMedio();
+		montarCombos();
+		//render(relatorioConsumoMedio);
+		result.include("relatorioConsumoMedio", relatorioConsumoMedio);
+	}
+
+	@Path("/gerarRelatorio")
+	public void gerarRelatorio(RelatorioConsumoMedio relatorioConsumoMedio) throws ParseException, Exception {
+		if (validator.hasErrors()) {
 			montarCombos();
-			renderTemplate("@Consultar");
+			//renderTemplate("@Consultar");
+			result.redirectTo(this).consultar();
 		} else {
 			String msgErro = "";
 
@@ -48,25 +70,28 @@ public class RelatoriosConsumoMedio extends Controller {
 				boolean plural = StringUtils.countMatches(msgErro, ",") > 1 ? true : false;
 				msgErro = msgErro.substring(0, msgErro.length() - 2);
 				msgErro += " deve" + (plural ? "m" : "") + " ser preenchido" + (plural ? "s" : "");
-				Validation.addError("relatorio", msgErro);
+				validator.add(new ValidationMessage(msgErro, "RelatorioConsumoMedio"));
 			}
 
-			if (!Validation.hasErrors()) {
+			if (!validator.hasErrors()) {
 				RelatorioConsumoMedio relatoriocm = calcularConsumoMedio(relatorioConsumoMedio);
-				render(relatoriocm);
+				//render(relatoriocm);
+				result.include("relatoriocm", relatoriocm);
 			} else {
 				montarCombos();
-				render("@Consultar", relatorioConsumoMedio);
+				result.include("relatorioConsumoMedio", relatorioConsumoMedio);
+				result.redirectTo(this).consultar();
+				//render("@Consultar", relatorioConsumoMedio);
 			}
 		}
 	}
 
 	@SuppressWarnings("unchecked")
-	private static RelatorioConsumoMedio calcularConsumoMedio(RelatorioConsumoMedio relatorio) throws Exception {
+	private RelatorioConsumoMedio calcularConsumoMedio(RelatorioConsumoMedio relatorio) throws Exception {
 		List<Object[]> lista;
 		Set<Missao> setMissao = new HashSet<Missao>();
 		Missao missao = null;
-		CpOrgaoUsuario cpOrgaoUsuario = AutorizacaoGIAntigo.titular().getOrgaoUsuario();
+		CpOrgaoUsuario cpOrgaoUsuario = getTitular().getOrgaoUsuario();
 		RelatorioConsumoMedio resultado = new RelatorioConsumoMedio();
 
 		Calendar dataInicial = Calendar.getInstance();
@@ -77,10 +102,10 @@ public class RelatoriosConsumoMedio extends Controller {
 		relatorio.setAbastecimentoFinal(Abastecimento.AR.findById(relatorio.getAbastecimentoFinal().getId()));
 		dataFinal.setTime(relatorio.getAbastecimentoFinal().getDataHora().getTime());
 
-		String qrl = "SELECT m.id, m.consumoEmLitros, m.odometroSaidaEmKm, m.odometroRetornoEmKm " + "FROM  Missao m " + "WHERE m.veiculo.getId() = ? " + "AND   m.dataHora BETWEEN ? AND ? "
+		String qrl = "SELECT m.id, m.consumoEmLitros, m.odometroSaidaEmKm, m.odometroRetornoEmKm " + "FROM  Missao m " + "WHERE m.veiculo.id = ? " + "AND   m.dataHora BETWEEN ? AND ? "
 				+ "AND   m.cpOrgaoUsuario.idOrgaoUsu = ? " + "AND   m.estadoMissao = ? ";
 
-		Query qry = JPA.em().createQuery(qrl);
+		Query qry = Missao.AR.em().createQuery(qrl);
 		qry.setParameter(1, relatorio.getVeiculo().getId());
 		qry.setParameter(2, dataInicial);
 		qry.setParameter(3, dataFinal);
@@ -115,8 +140,8 @@ public class RelatoriosConsumoMedio extends Controller {
 		return resultado;
 	}
 
-	private static void montarCombos() throws Exception {
-		List<Veiculo> veiculos = Veiculo.listarTodos(AutorizacaoGIAntigo.titular().getOrgaoUsuario());
+	private void montarCombos() throws Exception {
+		List<Veiculo> veiculos = Veiculo.listarTodos(getTitular().getOrgaoUsuario());
 		List<Abastecimento> abastecimentosIniciais = new ArrayList<Abastecimento>();
 		List<Abastecimento> abastecimentosFinais = new ArrayList<Abastecimento>();
 
@@ -131,20 +156,24 @@ public class RelatoriosConsumoMedio extends Controller {
 				}
 			}
 		}
-
-		renderArgs.put("veiculos", veiculos);
-		renderArgs.put("abastecimentosIniciais", abastecimentosIniciais);
+		
+		result.include("veiculos", veiculos);
+		result.include("abastecimentosIniciais", abastecimentosIniciais);
+		//renderArgs.put("veiculos", veiculos);
+		//renderArgs.put("abastecimentosIniciais", abastecimentosIniciais);
 		if (abastecimentosFinais.size() > 0) {
-			renderArgs.put("abastecimentosFinais", abastecimentosFinais);
+			//renderArgs.put("abastecimentosFinais", abastecimentosFinais);
+			result.include("abastecimentosFinais", abastecimentosFinais);
 		}
 	}
 
-	public static List<Abastecimento> montarCombosAbastecimento(Long idVeiculo) throws Exception {
+	public List<Abastecimento> montarCombosAbastecimento(Long idVeiculo) throws Exception {
 		Veiculo veiculo = Veiculo.AR.findById(idVeiculo);
 		return Abastecimento.buscarTodosPorVeiculo(veiculo);
 	}
 
-	public static void carregarComboAbastecimentoInicial(Long idVeiculo) throws Exception {
+	@Path("/carregarComboAbastecimentoInicial/{idVeiculo}")
+	public void carregarComboAbastecimentoInicial(Long idVeiculo) throws Exception {
 		StringBuffer htmlSelectAbastecimentoInicial = new StringBuffer();
 		StringBuffer htmlSelectAbastecimentoFinal = new StringBuffer();
 		List<Abastecimento> lstAbastecimento = montarCombosAbastecimento(idVeiculo);
@@ -180,6 +209,8 @@ public class RelatoriosConsumoMedio extends Controller {
 			}
 		}
 
-		renderText(htmlSelectAbastecimentoInicial + "@" + htmlSelectAbastecimentoFinal);
+		String html = htmlSelectAbastecimentoInicial.toString() + "@" + htmlSelectAbastecimentoFinal.toString();
+		result.use(Results.http()).body(html);
+		//renderText(htmlSelectAbastecimentoInicial + "@" + htmlSelectAbastecimentoFinal);
 	}
 }

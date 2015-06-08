@@ -1,0 +1,3 @@
+</br> #{lotacaoSelecao nomeSelLotacao:'filtro.lotaCondutorFiltro',valueLotacao:filtro.lotaCondutorFiltro /}
+</br> #{pessoaLotaSelecao nomeSelPessoa:'filtro.condutorFiltro',nomeSelLotacao:'filtro.lotaCondutorFiltro',valuePessoa:filtro.condutorFiltro,valueLotacao:filtro.lotaCondutorFiltro /}
+</br> #{selecaoPessoa nomeSelPessoa:'filtro.condutorFiltro',valuePessoa:filtro.condutorFiltro /}

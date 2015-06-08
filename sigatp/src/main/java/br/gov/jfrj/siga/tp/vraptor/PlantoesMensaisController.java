@@ -11,6 +11,9 @@ import java.util.List;
 import javax.persistence.EntityManager;
 import javax.servlet.http.HttpServletRequest;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import br.com.caelum.vraptor.Path;
 import br.com.caelum.vraptor.Resource;
 import br.com.caelum.vraptor.Result;
@@ -21,6 +24,7 @@ import br.gov.jfrj.siga.tp.auth.annotation.RoleAdmin;
 import br.gov.jfrj.siga.tp.auth.annotation.RoleAdminMissao;
 import br.gov.jfrj.siga.tp.auth.annotation.RoleAdminMissaoComplexo;
 import br.gov.jfrj.siga.tp.dto.PlantaoDTO;
+import br.gov.jfrj.siga.tp.exceptions.PlantoesMensaisException;
 import br.gov.jfrj.siga.tp.model.Afastamento;
 import br.gov.jfrj.siga.tp.model.Condutor;
 import br.gov.jfrj.siga.tp.model.DiaDaSemana;
@@ -33,6 +37,8 @@ import controllers.PlantoesMensais;
 @Resource
 @Path("/app/plantoesMensais")
 public class PlantoesMensaisController extends TpController {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(PlantoesMensaisController.class);
 
     public PlantoesMensaisController(HttpServletRequest request, Result result, Validator validator, SigaObjects so, EntityManager em) {
         super(request, result, TpDao.getInstance(), validator, so, em);
@@ -94,6 +100,7 @@ public class PlantoesMensaisController extends TpController {
         if (!podeExcluirPlantaoMensal(plantoesAExcluir)) {
             validator.add(new I18nMessage("referencias", "plantoesMensais.podeExcluirPlantaoMensal.validation"));
             montarDadosParaListar();
+            validator.onErrorUsePageOf(this).listar();
         }
 
         for (Iterator<Plantao> iterator = plantoesAExcluir.iterator(); iterator.hasNext();) {
@@ -221,7 +228,8 @@ public class PlantoesMensaisController extends TpController {
         try {
             retorno.setTime(formatoDataEHora.parse(dataEmTexto));
         } catch (ParseException e) {
-            // throw new RuntimeException(Messages.get("plantoesMensais.converterParaCalendar.exception"));
+            I18nMessage message = new I18nMessage("PlantoesMensais", "plantoesMensais.converterParaCalendar.exception");
+            throw new PlantoesMensaisException(message.getMessage(), e);
         }
         return retorno;
     }
@@ -232,7 +240,8 @@ public class PlantoesMensaisController extends TpController {
             condutores = Condutor.listarTodos(getTitular().getOrgaoUsuario());
             result.include("condutores", condutores);
         } catch (Exception e) {
-            // throw new RuntimeException(Messages.get("plantoesMensais.montarDadosParaForm.exception"));
+            I18nMessage message = new I18nMessage("PlantoesMensais", "plantoesMensais.montarDadosParaForm.exception");
+            throw new PlantoesMensaisException(message.getMessage(), e);
         }
         result.include("plantoes", plantoes);
         result.include("dadosParaTitulo", dadosParaTitulo);
@@ -272,10 +281,18 @@ public class PlantoesMensaisController extends TpController {
         return retorno;
     }
 
+    private Condutor recuperarCondutorBanco(Long id) {
+        try {
+            return Condutor.AR.findById(id);
+        } catch (Exception e) {
+            throw new PlantoesMensaisException(e);
+        }
+    }
+
     @RoleAdmin
     @RoleAdminMissao
     @RoleAdminMissaoComplexo
-    public void salvar(List<PlantaoDTO> plantoes, String dadosParaTitulo, Mes mes, int ano, String hora) throws Exception {
+    public void salvar(List<PlantaoDTO> plantoes, String dadosParaTitulo, Mes mes, int ano, String hora) {
 
         List<Plantao> listaPlantoes = recuperarListaPlantao(plantoes);
 
@@ -294,7 +311,7 @@ public class PlantoesMensaisController extends TpController {
             if (incluir) {
                 plantao.setReferencia(dadosParaTitulo);
             }
-            plantao.setCondutor(Condutor.AR.findById(plantao.getCondutor().getId()));
+            plantao.setCondutor(recuperarCondutorBanco(plantao.getCondutor().getId()));
             List<Afastamento> afastamentos = Afastamento.buscarPorCondutores(plantao.getCondutor(), plantao.getDataHoraInicio(), plantao.getDataHoraFim());
             if (afastamentos != null && !afastamentos.isEmpty()) {
                 validator.add(new I18nMessage("plantao", "plantoesMensais.afastamentos.validation", plantao.getCondutor().getDadosParaExibicao(), formatoDataEHora.format(plantao.getDataHoraInicio()
@@ -304,6 +321,7 @@ public class PlantoesMensaisController extends TpController {
                 try {
                     plantao.save();
                 } catch (Exception e) {
+                    LOGGER.error(e.getMessage(), e);
                     validator.add(new I18nMessage("plantao:" + e.getMessage(), "plantoesMensais.erro.nao.identificado.salvar", formatoSomenteData.format(plantao.getDataHoraInicio().getTime())));
                     plantoesComErro.add(plantao);
                 }
@@ -336,10 +354,15 @@ public class PlantoesMensaisController extends TpController {
         return retorno;
     }
 
-    private Plantao montarPlantaoParaSalvar(Plantao plantao) throws Exception {
-        Plantao retorno = Plantao.AR.findById(plantao.getId());
-        retorno.setCondutor(Condutor.AR.findById(plantao.getCondutor().getId()));
-        return retorno;
+    private Plantao montarPlantaoParaSalvar(Plantao plantao) {
+        Plantao retorno;
+        try {
+            retorno = Plantao.AR.findById(plantao.getId());
+            retorno.setCondutor(Condutor.AR.findById(plantao.getCondutor().getId()));
+            return retorno;
+        } catch (Exception e) {
+            throw new PlantoesMensaisException(e);
+        }
     }
 
     private void ordenarPelaDataHoraInicioDoPlantao(List<Plantao> plantoes) {
