@@ -11,17 +11,17 @@
 
 <li id="limenuRequisicoes"><a id="menuRequisicoes" class="" href="#">Requisi&ccedil;&otilde;es</a>
 	<ul>
-		<li id="limenuRequisicoesIncluir"><a id="menuRequisicoesIncluir" class="" href="@{Requisicoes.incluir}">Incluir</a></li>
+		<li id="limenuRequisicoesIncluir"><a id="menuRequisicoesIncluir" class="" href="${linkTo[RequisicaoController].incluir}">Incluir</a></li>
 
 		<c:choose>
      			<c:when test="${exibirMenuAdministrar || exibirMenuAdministrarMissao || exibirMenuAdministrarMissaoComplexo || exibirMenuAdministrarFrota || exibirMenuAprovador }">
 				<c:if test="${exibirMenuAdministrar || exibirMenuAdministrarMissao || exibirMenuAprovador}">
-					<li id="limenuRequisicoesAprovar"><a id="menuRequisicoesAprovar" class="" href="@{Requisicoes.listarPAprovar}">Aprovar/Rejeitar</a></li>
+					<li id="limenuRequisicoesAprovar"><a id="menuRequisicoesAprovar" class="" href="${linkTo[RequisicaoController].listarPAprovar}">Aprovar/Rejeitar</a></li>
 				</c:if>
-				<li id="limenuRequisicoesListar"><a id="menuRequisicoesListar" class="" href="@{Requisicoes.listarFiltrado(models.EstadoRequisicao.AUTORIZADA,models.EstadoRequisicao.NAOATENDIDA)}">Listar</a></li>
+				<li id="limenuRequisicoesListar"><a id="menuRequisicoesListar" class="" href="${linkTo[RequisicaoController].listarFiltrado['AUTORIZADA']['NAOATENDIDA']}">Listar</a></li>
 			</c:when>
 			<c:otherwise>
-				<li><a id="menuRequisicoesListar" class="" href="@{Requisicoes.listar}">Listar</a></li>
+				<li><a id="menuRequisicoesListar" class="" href="${linkTo[RequisicaoController].listar}">Listar</a></li>
 			</c:otherwise>
 		</c:choose>
 	</ul>
