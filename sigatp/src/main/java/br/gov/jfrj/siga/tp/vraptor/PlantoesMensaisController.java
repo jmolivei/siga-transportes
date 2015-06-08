@@ -11,6 +11,9 @@ import java.util.List;
 import javax.persistence.EntityManager;
 import javax.servlet.http.HttpServletRequest;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import br.com.caelum.vraptor.Path;
 import br.com.caelum.vraptor.Resource;
 import br.com.caelum.vraptor.Result;
@@ -34,6 +37,8 @@ import controllers.PlantoesMensais;
 @Resource
 @Path("/app/plantoesMensais")
 public class PlantoesMensaisController extends TpController {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(PlantoesMensaisController.class);
 
     public PlantoesMensaisController(HttpServletRequest request, Result result, Validator validator, SigaObjects so, EntityManager em) {
         super(request, result, TpDao.getInstance(), validator, so, em);
@@ -316,6 +321,7 @@ public class PlantoesMensaisController extends TpController {
                 try {
                     plantao.save();
                 } catch (Exception e) {
+                    LOGGER.error(e.getMessage(), e);
                     validator.add(new I18nMessage("plantao:" + e.getMessage(), "plantoesMensais.erro.nao.identificado.salvar", formatoSomenteData.format(plantao.getDataHoraInicio().getTime())));
                     plantoesComErro.add(plantao);
                 }
