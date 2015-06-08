@@ -31,6 +31,7 @@ import br.gov.jfrj.siga.tp.model.DiaDaSemana;
 import br.gov.jfrj.siga.tp.model.Mes;
 import br.gov.jfrj.siga.tp.model.Plantao;
 import br.gov.jfrj.siga.tp.model.TpDao;
+import br.gov.jfrj.siga.tp.vraptor.i18n.MessagesBundle;
 import br.gov.jfrj.siga.vraptor.SigaObjects;
 import controllers.PlantoesMensais;
 
@@ -228,8 +229,7 @@ public class PlantoesMensaisController extends TpController {
         try {
             retorno.setTime(formatoDataEHora.parse(dataEmTexto));
         } catch (ParseException e) {
-            I18nMessage message = new I18nMessage("PlantoesMensais", "plantoesMensais.converterParaCalendar.exception");
-            throw new PlantoesMensaisException(message.getMessage(), e);
+            throw new PlantoesMensaisException(MessagesBundle.getMessage("plantoesMensais.converterParaCalendar.exception"), e);
         }
         return retorno;
     }
@@ -240,8 +240,7 @@ public class PlantoesMensaisController extends TpController {
             condutores = Condutor.listarTodos(getTitular().getOrgaoUsuario());
             result.include("condutores", condutores);
         } catch (Exception e) {
-            I18nMessage message = new I18nMessage("PlantoesMensais", "plantoesMensais.montarDadosParaForm.exception");
-            throw new PlantoesMensaisException(message.getMessage(), e);
+            throw new PlantoesMensaisException(MessagesBundle.getMessage("plantoesMensais.montarDadosParaForm.exception"), e);
         }
         result.include("plantoes", plantoes);
         result.include("dadosParaTitulo", dadosParaTitulo);
