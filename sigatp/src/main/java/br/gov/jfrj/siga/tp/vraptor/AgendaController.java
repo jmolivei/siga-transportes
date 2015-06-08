@@ -10,7 +10,6 @@ import br.com.caelum.vraptor.Path;
 import br.com.caelum.vraptor.Resource;
 import br.com.caelum.vraptor.Result;
 import br.com.caelum.vraptor.Validator;
-import br.com.caelum.vraptor.view.Results;
 import br.gov.jfrj.siga.dp.dao.CpDao;
 import br.gov.jfrj.siga.tp.auth.AutorizacaoGI;
 import br.gov.jfrj.siga.vraptor.SigaObjects;
@@ -48,9 +47,7 @@ public class AgendaController extends TpController {
     	result.forwardTo(RelatorioController.class).listarAgendaPorVeiculo(Calendar.getInstance(), idVeiculo);
     }
     
-    
     public void emdesenvolvimento() {
-       //render();
     }
 
 }

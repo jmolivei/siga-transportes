@@ -9,17 +9,37 @@ import play.data.validation.Required;
 public class RelatorioRanking {
 	@Required
 	@As(lang={"*"}, value={"dd/MM/yyyy"})
-	public Calendar dataInicio;
+	private Calendar dataInicio;
 	
 	@Required
 	@As(lang={"*"}, value={"dd/MM/yyyy"})
-	public Calendar dataFim;
+	private Calendar dataFim;
 	
 	@Required
-	public int quantidadeDadosRetorno;
+	private int quantidadeDadosRetorno;
 
 	public int getQuantidadeDadosRetorno() {
 		return quantidadeDadosRetorno;
+	}
+
+	public Calendar getDataInicio() {
+		return dataInicio;
+	}
+
+	public void setDataInicio(Calendar dataInicio) {
+		this.dataInicio = dataInicio;
+	}
+
+	public Calendar getDataFim() {
+		return dataFim;
+	}
+
+	public void setDataFim(Calendar dataFim) {
+		this.dataFim = dataFim;
+	}
+
+	public void setQuantidadeDadosRetorno(int quantidadeDadosRetorno) {
+		this.quantidadeDadosRetorno = quantidadeDadosRetorno;
 	}
 
 	public class RankingCondutorRequisicao implements Comparable<RankingCondutorRequisicao> {
