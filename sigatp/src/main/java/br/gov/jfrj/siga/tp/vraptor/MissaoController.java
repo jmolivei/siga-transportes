@@ -13,6 +13,9 @@ import javax.persistence.Query;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 
+import org.codehaus.jackson.map.ObjectMapper;
+import org.codehaus.jackson.map.ObjectWriter;
+
 import br.com.caelum.vraptor.Path;
 import br.com.caelum.vraptor.Resource;
 import br.com.caelum.vraptor.Result;
@@ -37,10 +40,16 @@ import br.gov.jfrj.siga.tp.model.EstadoRequisicao;
 import br.gov.jfrj.siga.tp.model.Missao;
 import br.gov.jfrj.siga.tp.model.RequisicaoTransporte;
 import br.gov.jfrj.siga.tp.model.RequisicaoVsEstado;
+import br.gov.jfrj.siga.tp.model.TipoDePassageiro;
 import br.gov.jfrj.siga.tp.model.TpDao;
 import br.gov.jfrj.siga.tp.model.Veiculo;
+import br.gov.jfrj.siga.tp.model.vo.ItemVO;
+import br.gov.jfrj.siga.tp.model.vo.MissaoVO;
 import br.gov.jfrj.siga.tp.util.PerguntaSimNao;
 import br.gov.jfrj.siga.vraptor.SigaObjects;
+
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 
 @Resource
 @Path("/app/missao")
@@ -60,10 +69,12 @@ public class MissaoController extends TpController {
 	private static final String PATTERN_DDMMYYYYHHMM = "dd/MM/yyyy HH:mm";
 
 	private AutorizacaoGI autorizacaoGI;
+	private RequisicaoController requisicaoController;
 
-	public MissaoController(HttpServletRequest request, Result result, Validator validator, SigaObjects so, EntityManager em, AutorizacaoGI autorizacaoGI){
+	public MissaoController(HttpServletRequest request, Result result, Validator validator, SigaObjects so, EntityManager em, AutorizacaoGI autorizacaoGI, RequisicaoController requisicaoController){
 		super(request, result, TpDao.getInstance(), validator, so, em);
 		this.autorizacaoGI = autorizacaoGI;
+		this.requisicaoController = requisicaoController;
 	}
 
 	@RoleAdmin
@@ -79,6 +90,8 @@ public class MissaoController extends TpController {
 		EstadoMissao estadoMissao = EstadoMissao.PROGRAMADA;
 		MenuMontador.instance(result).recuperarMenuMissoes(null);
 		Condutor condutor = new Condutor();
+
+		montarComboCondutor();
 
 		result.include(MISSOES_STR, missoes);
 		result.include(ESTADO_MISSAO_STR, estadoMissao);
@@ -126,6 +139,8 @@ public class MissaoController extends TpController {
 		EstadoMissao estadoMissao = EstadoMissao.PROGRAMADA;
 		Condutor condutor = new Condutor();
 
+		montarComboCondutor();
+
 		result.include(MISSOES_STR, missoes);
 		result.include(ESTADO_MISSAO_STR, estadoMissao);
 		result.include(CONDUTOR_STR, condutor);
@@ -145,11 +160,13 @@ public class MissaoController extends TpController {
 		EstadoMissao estadoMissao = EstadoMissao.PROGRAMADA;
 		validarListarParaCondutorEscalado(condutorEncontrado);
 
+		montarComboCondutor();
+
 		result.include(MISSOES_STR, missoes);
 		result.include("condutorEscalado", condutorEncontrado);
 		result.include(ESTADO_MISSAO_STR, estadoMissao);
 
-		result.redirectTo(this).listar();
+		result.use(Results.page()).of(MissaoController.class).listar();
 	}
 
 	protected void validarListarParaCondutorEscalado(Condutor condutorEscalado) throws Exception {
@@ -173,6 +190,8 @@ public class MissaoController extends TpController {
 		List<Missao> missoes = recuperarMissoes(criterio, parametros);
 		MenuMontador.instance(result).recuperarMenuMissoes(estado);
 		Condutor condutor = new Condutor();
+
+		montarComboCondutor();
 
 		result.include(MISSOES_STR, missoes);
 		result.include(ESTADO_MISSAO_STR, EstadoMissao.values());
@@ -633,7 +652,7 @@ public class MissaoController extends TpController {
 		renderTemplate(Template.INICIORAPIDO, missao);
 	}
 
-	private void redirecionarCasoRequisicaoNula(Long[] req) {
+	private void redirecionarCasoRequisicaoNula(Long[] req) throws Exception {
 		if (req == null)
 			result.redirectTo(this).incluir();
 	}
@@ -702,7 +721,7 @@ public class MissaoController extends TpController {
 		EstadoRequisicao[] estados = { EstadoRequisicao.AUTORIZADA, EstadoRequisicao.PROGRAMADA, EstadoRequisicao.EMATENDIMENTO, EstadoRequisicao.NAOATENDIDA, EstadoRequisicao.ATENDIDAPARCIALMENTE };
 		StringBuilder criterioBusca = new StringBuilder();
 		criterioBusca.append("(dataHoraRetornoPrevisto is null or dataHoraRetornoPrevisto >= ?) and cpOrgaoUsuario = ?");
-		result.of(RequisicaoController.class).recuperarRequisicoes(criterioBusca, parametros, estados);
+		requisicaoController.recuperarRequisicoes(criterioBusca, parametros, estados);
 	}
 
 	protected void montarComboCondutor() throws Exception {
@@ -729,58 +748,39 @@ public class MissaoController extends TpController {
 	@RoleAdminMissaoComplexo
 	@RoleAgente
 	@Path("/listarVeiculosECondutoresDisponiveis")
-	public void listarVeiculosECondutoresDisponiveis(String nomePropriedade, String nomePropriedade1, Long idMissao, String dataSaida, String veiculosDisp, PerguntaSimNao inicioRapido) throws Exception {
+	public void listarVeiculosECondutoresDisponiveis(Long idMissao, String veiculosDisp, PerguntaSimNao inicioRapido, String dataSaida) throws Exception {
 		Missao missao = Missao.AR.findById(idMissao);
-		String opcaoSelecionada = " selected = 'selected'";
-		String selectDesabilitado = " disabled = 'disabled'";
 
 		List<Veiculo> veiculosDisponiveis = null;
 
-		if ("".equals(veiculosDisp))
+		if ("".equals(veiculosDisp) || null == veiculosDisp)
 			veiculosDisponiveis = listarVeiculosDisponiveis(idMissao, getTitular().getOrgaoUsuario().getId(), dataSaida);
 		else
 			veiculosDisponiveis = listarVeiculosDisponiveis(veiculosDisp);
 
-		StringBuilder htmlSelectVeiculos = new StringBuilder();
-		htmlSelectVeiculos.append("<select id='selveiculosdisponiveis' name='" + nomePropriedade.toString() + "' size='1' ");
-
-		if (autorizacaoGI.ehAgente())
-			htmlSelectVeiculos.append(selectDesabilitado);
-
-		htmlSelectVeiculos.append(">");
-
-		for (Veiculo veiculo : veiculosDisponiveis) {
-			htmlSelectVeiculos.append("<option value='" + veiculo.getId() + "'");
-			if (missao != null && veiculo.equals(missao.getVeiculo()))
-				htmlSelectVeiculos.append(opcaoSelecionada);
-
-			htmlSelectVeiculos.append(">" + veiculo.getDadosParaExibicao());
-		}
-
-		htmlSelectVeiculos.append("</option>" + "</select>");
-
 		List<Condutor> condutoresDisponiveis = listarCondutoresDisponiveis(idMissao, getTitular().getOrgaoUsuario().getId(), dataSaida, inicioRapido);
-		StringBuilder htmlSelectCondutores = new StringBuilder();
-		htmlSelectCondutores.append("<select id='selcondutoresdisponiveis' name='" + nomePropriedade1.toString() + "' size='1' ");
 
-		if (autorizacaoGI.ehAgente())
-			htmlSelectCondutores.append(selectDesabilitado);
+		ObjectMapper oM = new ObjectMapper();
+        ObjectWriter oW = oM.writer().withDefaultPrettyPrinter();
 
-		htmlSelectCondutores.append(">");
+        MissaoVO missaoVO = new MissaoVO();
 
-		for (Condutor condutor : condutoresDisponiveis) {
-			htmlSelectCondutores.append("<option value='" + condutor.getId() + "'");
-			if (missao != null && condutor.equals(missao.getCondutor()))
-				htmlSelectCondutores.append(opcaoSelecionada);
+        for (Veiculo veiculo : veiculosDisponiveis) {
+            boolean selected = (missao != null && veiculo.equals(missao.getVeiculo()));
+            missaoVO.veiculos.add(new ItemVO(veiculo.getId(), veiculo.getDadosParaExibicao(), selected));
+        }
 
-			htmlSelectCondutores.append(">" + condutor.getDadosParaExibicao());
+        for (Condutor condutor : condutoresDisponiveis) {
+            boolean selected = (missao != null && condutor.equals(missao.getCondutor()));
+            missaoVO.condutores.add(new ItemVO(condutor.getId(), condutor.getDadosParaExibicao(), selected));
+        }
 
-		}
-		htmlSelectCondutores.append("</option>" + "</select>");
+        missaoVO.disabled = autorizacaoGI.ehAgente();
 
-		String html = htmlSelectVeiculos.toString() + "@" + htmlSelectCondutores.toString();
+        String data = oW.writeValueAsString(missaoVO);
 
-		result.use(Results.http()).body(html);
+		result.use(Results.http()).body(data);
+
 	}
 
 	@SuppressWarnings("unchecked")
@@ -876,10 +876,12 @@ public class MissaoController extends TpController {
 	@RoleAdminMissao
 	@RoleAdminMissaoComplexo
 	@Path("/incluir")
-	public void incluir() {
+	public void incluir() throws Exception {
 		Missao missao = new Missao();
 		missao.setInicioRapido(PerguntaSimNao.NAO);
-		MenuMontador.instance(result).recuperarMenuMissao(missao.getId(), missao.getEstadoMissao());
+		MenuMontador.instance(result, autorizacaoGI).recuperarMenuMissao(missao.getId(), missao.getEstadoMissao());
+
+		montarCombos();
 
 		result.include(MISSAO_STR, missao);
 		result.include("mostrarBotoesEditar", true);
@@ -992,7 +994,7 @@ public class MissaoController extends TpController {
 		List<Veiculo> veiculos = new ArrayList<Veiculo>();
 		List<String> itens = Arrays.asList(veiculosDisp.substring(0, veiculosDisp.length() - 2).split("\\s*,\\s*"));
 
-		if (itens.isEmpty())
+		if (!itens.isEmpty())
 			for (String item : itens) {
 				Veiculo itemVeiculo = new Veiculo();
 				itemVeiculo = Veiculo.AR.findById(Long.parseLong(item));

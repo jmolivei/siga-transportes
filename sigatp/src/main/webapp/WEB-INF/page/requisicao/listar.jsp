@@ -176,7 +176,12 @@
 													</nobr>
 													<br />
 												</c:forEach>
-<%-- 											#{else}N&Atilde;O ALOCADA#{/else}  <!-- WHAT??? -->  --%>
+												<c:choose>
+													<c:when test=""></c:when>
+													<c:otherwise>
+														N&Atilde;O ALOCADA
+													</c:otherwise>
+												</c:choose>
 											</td>
 											<c:if test="${requisicaoTransporte.podeAlterar}">
 									    		<td class="edicao"><a href="${linkTo[RequisicaoController].editar[requisicaoTransporte.id]}">Editar</a></td>

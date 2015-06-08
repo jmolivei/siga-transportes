@@ -80,13 +80,12 @@ public class RelatorioController extends TpController {
         result.forwardTo(RelatorioController.class).listarAgendaPorVeiculo(Calendar.getInstance(), 0L);
     }
     
-    @Path("/listarAgendaPorCondutor")
+    @Path("/listarAgendaPorCondutor/{dataPesquisa}/{idCondutor}")
     public void listarAgendaPorCondutor(Calendar dataPesquisa,Long idCondutor) throws ParseException{
         
         Long idCondutorParaBusca = verificaIdNulo(idCondutor);
         
         String registros = "";
-
         Calendar dataHoraPesquisa = Calendar.getInstance();
         SimpleDateFormat formatar = new SimpleDateFormat("dd/MM/yyyy HH:mm");
 
@@ -150,6 +149,7 @@ public class RelatorioController extends TpController {
         result.include("entidade", "Condutor");
     }
     
+    @Path("/listarAgendaPorVeiculo/{dataPesquisa}/{idVeiculo}")
     public void listarAgendaPorVeiculo(Calendar dataPesquisa,Long idVeiculo) throws ParseException {
 
         Long idVeiculoParaBusca = verificaIdNulo(idVeiculo);

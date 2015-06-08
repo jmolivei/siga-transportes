@@ -29,7 +29,6 @@ import org.hibernate.envers.Audited;
 import org.hibernate.envers.RelationTargetAuditMode;
 
 import play.data.validation.Email;
-import play.db.jpa.JPA;
 import play.i18n.Messages;
 import br.gov.jfrj.siga.cp.CpComplexo;
 import br.gov.jfrj.siga.dp.CpOrgaoUsuario;
@@ -164,17 +163,18 @@ public class Condutor extends TpModel implements ConvertableEntity, Comparable<C
 		}
 		String dataFormatadaOracle = "to_date('" + dataSaida + "', 'DD/MM/YYYY HH24:mi')";
 
-		String qrl = "SELECT c FROM Condutor c " + " WHERE trunc(c.dataVencimentoCNH) > trunc(" + dataFormatadaOracle + ")" + "  AND c.cpOrgaoUsuario.id in  " + "(SELECT cp.id FROM CpOrgaoUsuario cp"
-				+ " WHERE  cp.id = " + idOrgao + ")" + " AND c.id not in ";
+		StringBuilder qrl = new StringBuilder();
+		qrl.append("SELECT c FROM Condutor c " + " WHERE trunc(c.dataVencimentoCNH) > trunc(" + dataFormatadaOracle + ")" + "  AND c.cpOrgaoUsuario.id in  " + "(SELECT cp.id FROM CpOrgaoUsuario cp"
+				+ " WHERE  cp.id = " + idOrgao + ")" + " AND c.id not in ");
 		if (!inicioRapido.equals(PerguntaSimNao.SIM)) {
-			qrl = qrl + "(SELECT a.condutor.id FROM Afastamento a" + " WHERE  a.condutor.id = c.id" + " AND   a.dataHoraInicio < " + dataFormatadaOracle + " AND    (a.dataHoraFim = NULL "
-					+ " OR    a.dataHoraFim > " + dataFormatadaOracle + "))" + " AND c.id not in";
+			qrl.append("(SELECT a.condutor.id FROM Afastamento a" + " WHERE  a.condutor.id = c.id" + " AND   a.dataHoraInicio < " + dataFormatadaOracle + " AND    (a.dataHoraFim = NULL "
+					+ " OR    a.dataHoraFim > " + dataFormatadaOracle + "))" + " AND c.id not in");
 		}
-		qrl = qrl + "(SELECT m.condutor.id FROM Missao m" + " WHERE  m.condutor.id = c.id" + " AND    m.estadoMissao != '" + EstadoMissao.CANCELADA + "'" + " AND    m.estadoMissao != '"
+		qrl.append("(SELECT m.condutor.id FROM Missao m" + " WHERE  m.condutor.id = c.id" + " AND    m.estadoMissao != '" + EstadoMissao.CANCELADA + "'" + " AND    m.estadoMissao != '"
 				+ EstadoMissao.FINALIZADA + "'" + " AND    m.estadoMissao != '" + EstadoMissao.PROGRAMADA + "'" + " AND    m.id != " + idMissao + " AND   m.dataHoraSaida < " + dataFormatadaOracle
-				+ " AND    (m.dataHoraRetorno = NULL " + " OR    m.dataHoraRetorno > " + dataFormatadaOracle + "))" + " ORDER BY c.dpPessoa.nomePessoa";
+				+ " AND    (m.dataHoraRetorno = NULL " + " OR    m.dataHoraRetorno > " + dataFormatadaOracle + "))" + " ORDER BY c.dpPessoa.nomePessoa");
 
-		Query qry = JPA.em().createQuery(qrl);
+		Query qry = AR.em().createQuery(qrl.toString());
 		try {
 			condutores = ((List<Condutor>) qry.getResultList());
 		} catch (NoResultException ignore) {
@@ -223,7 +223,7 @@ public class Condutor extends TpModel implements ConvertableEntity, Comparable<C
 		}
 		query.append(")");
 
-		Query qry = JPA.em().createQuery(query.toString());
+		Query qry = AR.em().createQuery(query.toString());
 
 		try {
 			condutores = ((List<Condutor>) qry.getResultList());
@@ -241,7 +241,7 @@ public class Condutor extends TpModel implements ConvertableEntity, Comparable<C
 		String qrl = "SELECT p.condutor.id FROM Plantao p" + " WHERE  p.condutor.id = " + this.id + " AND   (p.dataHoraInicio <= " + dataFormatadaOracle
 				+ " AND   ( p.dataHoraFim = NULL OR p.dataHoraFim >= " + dataFormatadaOracle + "))";
 
-		Query qry = JPA.em().createQuery(qrl);
+		Query qry = AR.em().createQuery(qrl);
 		try {
 			plantoes = ((List<Plantao>) qry.getResultList());
 			if (plantoes != null && !plantoes.isEmpty()) {
