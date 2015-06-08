@@ -14,13 +14,13 @@ public class RelatoriosRankingTest {
 
 	private RelatorioRanking iniciarClasse() {
 		RelatorioRanking relatorio = new RelatorioRanking();
-		relatorio.quantidadeDadosRetorno = 2;
+		relatorio.setQuantidadeDadosRetorno(2);
 
-		relatorio.dataInicio = Calendar.getInstance();
-		relatorio.dataInicio.set(2014, 9, 1); // 01/10/2014
+		relatorio.setDataInicio(Calendar.getInstance());
+		relatorio.getDataInicio().set(2014, 9, 1); // 01/10/2014
 
-		relatorio.dataFim = Calendar.getInstance();
-		relatorio.dataFim.set(2014, 10, 11); // 11/11/2014
+		relatorio.setDataFim(Calendar.getInstance());
+		relatorio.getDataFim().set(2014, 10, 11); // 11/11/2014
 
 		return relatorio;
 	}
