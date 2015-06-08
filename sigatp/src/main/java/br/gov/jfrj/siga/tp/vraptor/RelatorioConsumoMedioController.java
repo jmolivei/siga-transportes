@@ -102,7 +102,7 @@ public class RelatorioConsumoMedioController extends TpController
 		relatorio.setAbastecimentoFinal(Abastecimento.AR.findById(relatorio.getAbastecimentoFinal().getId()));
 		dataFinal.setTime(relatorio.getAbastecimentoFinal().getDataHora().getTime());
 
-		String qrl = "SELECT m.id, m.consumoEmLitros, m.odometroSaidaEmKm, m.odometroRetornoEmKm " + "FROM  Missao m " + "WHERE m.veiculo.getId() = ? " + "AND   m.dataHora BETWEEN ? AND ? "
+		String qrl = "SELECT m.id, m.consumoEmLitros, m.odometroSaidaEmKm, m.odometroRetornoEmKm " + "FROM  Missao m " + "WHERE m.veiculo.id = ? " + "AND   m.dataHora BETWEEN ? AND ? "
 				+ "AND   m.cpOrgaoUsuario.idOrgaoUsu = ? " + "AND   m.estadoMissao = ? ";
 
 		Query qry = Missao.AR.em().createQuery(qrl);
