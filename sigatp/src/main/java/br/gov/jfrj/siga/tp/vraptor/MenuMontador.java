@@ -1,24 +1,34 @@
 package br.gov.jfrj.siga.tp.vraptor;
 
 import br.com.caelum.vraptor.Result;
+import br.gov.jfrj.siga.tp.auth.AutorizacaoGI;
 import br.gov.jfrj.siga.tp.model.EstadoMissao;
 import br.gov.jfrj.siga.tp.model.EstadoRequisicao;
 import br.gov.jfrj.siga.tp.model.EstadoServico;
 import br.gov.jfrj.siga.tp.model.ItemMenu;
-import controllers.AutorizacaoGIAntigo;
 
 public class MenuMontador {
 
 	private Result result;
+	private AutorizacaoGI autorizacaoGI;
 
 	private MenuMontador(Result result) {
 		this.result = result;
 	}
-	
+
+	private MenuMontador(Result result, AutorizacaoGI autorizacaoGI) {
+        this.result = result;
+        this.autorizacaoGI = autorizacaoGI;
+    }
+
 	public static MenuMontador instance(Result result) {
 		return new MenuMontador(result);
 	}
-	
+
+	public static MenuMontador instance(Result result, AutorizacaoGI autorizacaoGI) {
+        return new MenuMontador(result, autorizacaoGI);
+    }
+
 	public void recuperarMenuVeiculos(Long id, ItemMenu menuVeiculos) {
 		result.include("idVeiculo", id);
 		result.include("menuVeiculosIncluir", (id == 0));
@@ -30,8 +40,8 @@ public class MenuMontador {
 		result.include("menuAutosdeinfracoes", (id != 0) && (menuVeiculos != ItemMenu.INFRACOES));
 		result.include("menuLotacoes", (id != 0) && (menuVeiculos != ItemMenu.LOTACOES));
 	}
-	
-	
+
+
 	public void recuperarMenuCondutores(Long id, ItemMenu menuCondutor) {
 		result.include("idCondutor", id);
 		result.include("menuCondutoresIncluir", (id == 0));
@@ -42,7 +52,7 @@ public class MenuMontador {
 		result.include("menuAgenda", (id != 0) && (menuCondutor != ItemMenu.AGENDA));
 		result.include("menuInfracoes", (id != 0) && (menuCondutor != ItemMenu.INFRACOES));
 	}
-	
+
 	public void recuperarMenuRequisicoes(Long id, boolean popUp, boolean mostrarBotaoRequisicao) {
 		result.include("idRequisicao", id);
 		result.include("popUp", popUp);
@@ -56,10 +66,10 @@ public class MenuMontador {
 		} else {
 			result.include("menuRequisicoesListarAndamentos", (id != null));
 		}
-		
+
 	}
-	
-	
+
+
 	public void  recuperarMenuMissoes(EstadoMissao estado) {
 		result.include("menuMissoesMostrarVoltar", false);
 		result.include("menuMissoesMostrarTodas", (estado != null));
@@ -69,7 +79,7 @@ public class MenuMontador {
 		result.include("menuMissoesMostrarCanceladas", (estado != EstadoMissao.CANCELADA));
 		result.include("menuMissoesMostrarFiltrarPorCondutor", true);
 	}
-	
+
 	public void  recuperarMenuMissoesPorCondutor() {
 		result.include("menuMissoesMostrarVoltar", true);
 		result.include("menuMissoesMostrarTodas", false);
@@ -79,27 +89,27 @@ public class MenuMontador {
 		result.include("menuMissoesMostrarCanceladas", false);
 		result.include("menuMissoesMostrarFiltrarPorCondutor", true);
 	}
-	
+
 	public void  recuperarMenuFinalidades(boolean mostrarBotaoTodas) {
 		result.include("menuFinalidadesMostrarVoltar", !mostrarBotaoTodas);
 		result.include("menuFinalidadesMostrarTodas", mostrarBotaoTodas);
 	}
-	
+
 	public void recuperarMenuListarRequisicoes(EstadoRequisicao estado) {
 		recuperarMenuListarRequisicoes(estado,estado);
 	}
-	
+
 	public void  recuperarMenuListarPAprovarRequisicoes(EstadoRequisicao estado) {
 		result.include("menuRequisicoesMostrarTodas", (estado != null));
 		result.include("menuRequisicoesMostrarAbertas", (estado != EstadoRequisicao.ABERTA));
 		result.include("menuRequisicoesMostrarAutorizadas", (estado != EstadoRequisicao.AUTORIZADA));
 		result.include("menuRequisicoesMostrarRejeitadas", (estado != EstadoRequisicao.REJEITADA));
 	}
-	
+
 	public void  recuperarMenuMissao(Long id, EstadoMissao estado) {
 		result.include("idMissao", id);
 		result.include("menuMissaoEditar", ((estado == EstadoMissao.PROGRAMADA) || (estado == EstadoMissao.INICIADA)));
-		if (AutorizacaoGIAntigo.ehAdministrador()) {
+		if (autorizacaoGI.ehAdministrador()) {
 			result.include("menuMissaoCancelar", (estado == EstadoMissao.PROGRAMADA));
 		} else {
 			result.include("menuMissaoCancelar", false);
@@ -107,10 +117,10 @@ public class MenuMontador {
 		result.include("menuMissaoIniciar", (estado == EstadoMissao.PROGRAMADA));
 		result.include("menuMissaoFinalizar", (estado == EstadoMissao.INICIADA));
 	}
-	
+
 	public void recuperarMenuServicoVeiculo(Long id, EstadoServico estado) {
 		result.include("idServico", id);
-		result.include("menuServicoVeiculoEditar", (estado == EstadoServico.AGENDADO) || (estado == EstadoServico.INICIADO)); 
+		result.include("menuServicoVeiculoEditar", (estado == EstadoServico.AGENDADO) || (estado == EstadoServico.INICIADO));
 		result.include("menuServicoVeiculoExcluir", (estado == EstadoServico.AGENDADO));
 	}
 
