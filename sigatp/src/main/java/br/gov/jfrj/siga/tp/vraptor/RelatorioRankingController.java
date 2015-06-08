@@ -44,7 +44,6 @@ import com.google.common.collect.Lists;
 
 @Resource
 @Path("/app/relatorioRanking")
-// @With(AutorizacaoGIAntigo.class)
 public class RelatorioRankingController extends TpController {
 	private AutorizacaoGI autorizacaoGI;
 
@@ -57,7 +56,7 @@ public class RelatorioRankingController extends TpController {
 	}
 
 	private static String[] gerarVetorNumeros() {
-		String vetor[] = new String[20];
+		String[] vetor = new String[20];
 		for (int i = 1; i <= 20; i++) {
 			vetor[i - 1] = String.valueOf(i);
 		}
@@ -66,7 +65,7 @@ public class RelatorioRankingController extends TpController {
 
 	@Path("/consultar")
 	public void consultar() {
-		String numeros[] = gerarVetorNumeros();
+		String[] numeros = gerarVetorNumeros();
 		String valorDefault = "1";
 		RelatorioRanking relatorioRanking = new RelatorioRanking();
 		result.include("optValores", numeros);
@@ -76,8 +75,8 @@ public class RelatorioRankingController extends TpController {
 	}
 
 	public void gerarRelatorios(RelatorioRanking relatorioRanking)
-			throws ParseException {
-		String numeros[] = gerarVetorNumeros();
+			throws ParseException, Exception {
+		String[] numeros = gerarVetorNumeros();
 		String valorDefault = "1";
 
 		if (validator.hasErrors()) {
@@ -118,14 +117,16 @@ public class RelatorioRankingController extends TpController {
 		if (relatorioRanking.getDataFim() == null)
 			msgErro += msgErro.equalsIgnoreCase("") ? "Data Fim "
 					: "e Data Fim ";
-		
+
 		msgErro += " deve(m) ser preenchido(s)";
 
-		if (relatorioRanking.getDataFim() != null && relatorioRanking.getDataInicio() != null 
-				&& relatorioRanking.getDataFim().getTime().before(relatorioRanking.getDataInicio().getTime()))
+		if (relatorioRanking.getDataFim() != null
+				&& relatorioRanking.getDataInicio() != null
+				&& relatorioRanking.getDataFim().getTime()
+						.before(relatorioRanking.getDataInicio().getTime()))
 			msgErro = "Data Inicio maior que Data Fim";
 
-		if (msgErro != "") {
+		if (!msgErro.equals("")) {
 			result.include("optValores", gerarVetorNumeros());
 			validator.add(new ValidationMessage(msgErro, "relatorio"));
 			validator.onErrorUse(Results.page())
@@ -135,7 +136,7 @@ public class RelatorioRankingController extends TpController {
 
 	@SuppressWarnings("unchecked")
 	public List<RankingCondutorRequisicao> retornarCondutoresQueAtenderamMaisRequisicoes(
-			RelatorioRanking relatorio) throws ParseException {
+			RelatorioRanking relatorio) throws ParseException, Exception {
 		List<Object[]> lista;
 		List<RankingCondutorRequisicao> listaRankingCondutor = new ArrayList<RankingCondutorRequisicao>();
 		Set<Missao> setMissao = new HashSet<Missao>();
@@ -145,80 +146,73 @@ public class RelatorioRankingController extends TpController {
 		RequisicaoTransporte requisicao = null;
 		CpOrgaoUsuario cpOrgaoUsuario = getTitular().getOrgaoUsuario();
 
-		try {
-			relatorio.getDataInicio().setTime(
-					formatarDataHora(relatorio.getDataInicio(), "00:00:00"));
-			relatorio.getDataFim().setTime(
-					formatarDataHora(relatorio.getDataFim(), "23:59:59"));
+		relatorio.getDataInicio().setTime(
+				formatarDataHora(relatorio.getDataInicio(), "00:00:00"));
+		relatorio.getDataFim().setTime(
+				formatarDataHora(relatorio.getDataFim(), "23:59:59"));
 
-			String qrl = "SELECT c.id, m.id, r.id "
-					+ "FROM Condutor c, Missao m "
-					+ "INNER JOIN m.requisicoesTransporte r "
-					+ "WHERE c.id = m.condutor.id "
-					+ "and   dataHoraRetorno BETWEEN ? AND ? "
-					+ "AND   r.cpOrgaoUsuario.idOrgaoUsu = ? "
-					+ "ORDER BY c.id, m.id, r.id";
+		String qrl = "SELECT c.id, m.id, r.id " + "FROM Condutor c, Missao m "
+				+ "INNER JOIN m.requisicoesTransporte r "
+				+ "WHERE c.id = m.condutor.id "
+				+ "and   dataHoraRetorno BETWEEN ? AND ? "
+				+ "AND   r.cpOrgaoUsuario.idOrgaoUsu = ? "
+				+ "ORDER BY c.id, m.id, r.id";
 
-			Query qry = JPA.em().createQuery(qrl);
-			qry.setParameter(1, relatorio.getDataInicio());
-			qry.setParameter(2, relatorio.getDataFim());
-			qry.setParameter(3, cpOrgaoUsuario.getIdOrgaoUsu());
+		Query qry = JPA.em().createQuery(qrl);
+		qry.setParameter(1, relatorio.getDataInicio());
+		qry.setParameter(2, relatorio.getDataFim());
+		qry.setParameter(3, cpOrgaoUsuario.getIdOrgaoUsu());
 
-			lista = (List<Object[]>) qry.getResultList();
-			Long idProximoCondutor = 0L;
-			RankingCondutorRequisicao itemRc = null;
-			Boolean salvar = false;
+		lista = (List<Object[]>) qry.getResultList();
+		Long idProximoCondutor = 0L;
+		RankingCondutorRequisicao itemRc = null;
+		Boolean salvar = false;
 
-			for (int i = 0; i < lista.size(); i++) {
-				condutor = new Condutor();
-				condutor.setId(Long.parseLong(lista.get(i)[0].toString()));
+		for (int i = 0; i < lista.size(); i++) {
+			condutor = new Condutor();
+			condutor.setId(Long.parseLong(lista.get(i)[0].toString()));
 
-				missao = new Missao();
-				missao.setId(Long.parseLong(lista.get(i)[1].toString()));
-				setMissao.add((Missao) Missao.AR.findById(missao.getId()));
+			missao = new Missao();
+			missao.setId(Long.parseLong(lista.get(i)[1].toString()));
+			setMissao.add((Missao) Missao.AR.findById(missao.getId()));
 
-				requisicao = new RequisicaoTransporte();
-				requisicao.setId(Long.parseLong(lista.get(i)[2].toString()));
-				setRequisicao
-						.add((RequisicaoTransporte) RequisicaoTransporte.AR
-								.findById(requisicao.getId()));
+			requisicao = new RequisicaoTransporte();
+			requisicao.setId(Long.parseLong(lista.get(i)[2].toString()));
+			setRequisicao.add((RequisicaoTransporte) RequisicaoTransporte.AR
+					.findById(requisicao.getId()));
 
-				if (i < lista.size() - 1) {
-					idProximoCondutor = Long.parseLong(lista.get(i + 1)[0]
-							.toString());
+			if (i < lista.size() - 1) {
+				idProximoCondutor = Long.parseLong(lista.get(i + 1)[0]
+						.toString());
 
-					if (!condutor.getId().equals(idProximoCondutor)) {
-						salvar = true;
-					}
-				} else {
+				if (!condutor.getId().equals(idProximoCondutor)) {
 					salvar = true;
 				}
-
-				if (salvar) {
-					itemRc = new RelatorioRanking().new RankingCondutorRequisicao();
-					itemRc.condutor = Condutor.AR.findById(condutor.getId());
-					itemRc.missoes = new ArrayList<Missao>(setMissao);
-					itemRc.requisicoes = new ArrayList<RequisicaoTransporte>(
-							setRequisicao);
-					listaRankingCondutor.add(itemRc);
-					setMissao.clear();
-					setRequisicao.clear();
-					salvar = false;
-				}
+			} else {
+				salvar = true;
 			}
 
-			Collections.sort(listaRankingCondutor);
-
-		} catch (Exception ex) {
-			listaRankingCondutor = null;
+			if (salvar) {
+				itemRc = new RelatorioRanking().new RankingCondutorRequisicao();
+				itemRc.condutor = Condutor.AR.findById(condutor.getId());
+				itemRc.missoes = new ArrayList<Missao>(setMissao);
+				itemRc.requisicoes = new ArrayList<RequisicaoTransporte>(
+						setRequisicao);
+				listaRankingCondutor.add(itemRc);
+				setMissao.clear();
+				setRequisicao.clear();
+				salvar = false;
+			}
 		}
+
+		Collections.sort(listaRankingCondutor);
 
 		return listaRankingCondutor;
 	}
 
 	@SuppressWarnings("unchecked")
 	public List<RankingVeiculoRequisicao> retornarVeiculosQueAtenderamMaisRequisicoes(
-			RelatorioRanking relatorio) throws ParseException {
+			RelatorioRanking relatorio) throws ParseException, Exception {
 		List<Object[]> lista;
 		List<RankingVeiculoRequisicao> listaRankingVeiculo = new ArrayList<RankingVeiculoRequisicao>();
 		Set<RequisicaoTransporte> setRequisicao = new HashSet<RequisicaoTransporte>();
@@ -226,7 +220,6 @@ public class RelatorioRankingController extends TpController {
 		RequisicaoTransporte requisicao = null;
 		CpOrgaoUsuario cpOrgaoUsuario = getTitular().getOrgaoUsuario();
 
-		try {
 			relatorio.getDataInicio().setTime(
 					formatarDataHora(relatorio.getDataInicio(), "00:00:00"));
 			relatorio.getDataFim().setTime(
@@ -283,23 +276,20 @@ public class RelatorioRankingController extends TpController {
 
 			Collections.sort(listaRankingVeiculo);
 
-		} catch (Exception ex) {
 			listaRankingVeiculo = null;
-		}
 
 		return listaRankingVeiculo;
 	}
 
 	@SuppressWarnings("unchecked")
 	public List<RankingFinalidadeRequisicao> retornarFinalidadesComMaisRequisicoes(
-			RelatorioRanking relatorio) throws ParseException {
+			RelatorioRanking relatorio) throws ParseException, Exception {
 		List<Object[]> lista;
 		List<RankingFinalidadeRequisicao> listaRankingFinalidade = new ArrayList<RankingFinalidadeRequisicao>();
 		FinalidadeRequisicao finalidade = null;
 		int totalFinalidade = 0;
 		CpOrgaoUsuario cpOrgaoUsuario = getTitular().getOrgaoUsuario();
 
-		try {
 			relatorio.getDataInicio().setTime(
 					formatarDataHora(relatorio.getDataInicio(), "00:00:00"));
 			relatorio.getDataFim().setTime(
@@ -332,22 +322,19 @@ public class RelatorioRankingController extends TpController {
 				listaRankingFinalidade.add(itemRf);
 			}
 
-		} catch (Exception ex) {
 			listaRankingFinalidade = null;
-		}
 
 		return listaRankingFinalidade;
 	}
 
 	public List<RankingTipoPassageiroRequisicao> retornarTipoPassageiroComMaisRequisicoes(
-			RelatorioRanking relatorio) throws ParseException {
+			RelatorioRanking relatorio) throws ParseException, Exception {
 		List<RequisicaoTransporte> lista;
 		List<RankingTipoPassageiroRequisicao> listaRankingTipoPassageiro = new ArrayList<RankingTipoPassageiroRequisicao>();
 		List<TipoDePassageiro> listaTipoDePassageiro = Arrays
 				.asList(TipoDePassageiro.values());
 		CpOrgaoUsuario cpOrgaoUsuario = getTitular().getOrgaoUsuario();
 
-		try {
 			relatorio.getDataInicio().setTime(
 					formatarDataHora(relatorio.getDataInicio(), "00:00:00"));
 			relatorio.getDataFim().setTime(
@@ -384,9 +371,7 @@ public class RelatorioRankingController extends TpController {
 
 			Collections.sort(listaRankingTipoPassageiro);
 
-		} catch (Exception ex) {
 			listaRankingTipoPassageiro = null;
-		}
 
 		return listaRankingTipoPassageiro;
 	}
