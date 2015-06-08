@@ -348,7 +348,7 @@ public class RequisicaoTransporte extends TpModel implements Comparable<Requisic
 			String caminhoUrl = Resources.getInstance().urlFor(ServicoVeiculoController.class, "buscarServico", true, servicoVeiculo.getSequence());
 
 			saida.append(" - ");
-			saida.append("Servi&ccedil;o: " + servicoVeiculo.getSequence() + " <a href=\"#\" onclick=\"javascript:window.open('" + caminhoUrl + "');\">");
+			saida.append("Servi&ccedil;o: " + servicoVeiculo.getSequence() + " <a href=\"#\" onclick=\"javascript:window.open('/sigatp" + caminhoUrl + "');\">");
 			saida.append("<img src=\"" + IMG_LINKNOVAJANELAICON + "\" alt=\"Abrir em uma nova janela\" title=\"Abrir em uma nova janela\"></a>");
 			saida.append(" (");
 			saida.append(servicoVeiculo.getVeiculo().getDadosParaExibicao() + ")");
