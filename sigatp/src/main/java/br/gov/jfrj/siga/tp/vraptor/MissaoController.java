@@ -180,7 +180,7 @@ public class MissaoController extends TpController {
 	@RoleAdmin
 	@RoleAdminMissao
 	@RoleAdminMissaoComplexo
-	@Path("/listarFiltrado/{estado}")
+    @Path({ "/listarFiltrado/{estado}", "/listarFiltrado" })
 	public void listarFiltrado(EstadoMissao estado) throws Exception {
 		EstadoMissao estadoMissao = seEstadoNuloUsarDefault(estado);
 
@@ -504,7 +504,7 @@ public class MissaoController extends TpController {
 
 		result.include("mostrarBotoesIniciarRapido", true);
 		result.include("mostrarDadosProgramada", true);
-		result.include("mostrarDadosIniciada", true);
+		result.include(MOSTRAR_DADOS_INICIADA_STR, true);
 
 		result.redirectTo(this).buscarPelaSequence(false, missaoPronta.getSequence());
 	}
@@ -523,7 +523,7 @@ public class MissaoController extends TpController {
 		result.include(MISSAO_STR, missao);
 		result.include("mostrarBotoesIniciar", true);
 		result.include("mostrarDadosProgramada", true);
-		result.include("mostrarDadosIniciada", true);
+		result.include(MOSTRAR_DADOS_INICIADA_STR, true);
 	}
 
 	@RoleAdmin

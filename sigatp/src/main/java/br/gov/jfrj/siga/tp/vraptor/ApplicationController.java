@@ -7,6 +7,7 @@ import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -252,7 +253,7 @@ public class ApplicationController extends TpController {
             requisicoes = RequisicaoTransporte.listarParaAgendamento(getTitular().getOrgaoUsuario());
             Integer total = totalizarItemLista(requisicoes, "");
             if (!requisicoes.isEmpty()) {
-                lista.add(adicionarItemLista("requisicoes.listar", "", "", "Requisi&ccedil;&otilde;es", total));
+                lista.add(adicionarItemLista("/app/requisicao/listar", "", "", "Requisi&ccedil;&otilde;es", total));
             }
         } catch (Exception e) {
             throw new ApplicationControllerException(e);
@@ -268,7 +269,7 @@ public class ApplicationController extends TpController {
             String titulo = "Servi&ccedil;os " + (item.equals(EstadoServico.AGENDADO) ? "agendados" : "iniciados");
             Integer total = totalizarItemLista(servicos, item.getDescricao());
             if (total > 0) {
-                lista.add(adicionarItemLista("servicosVeiculo.listarfiltrado", "estado", item.getDescricao(), titulo, total));
+                lista.add(adicionarItemLista("/app/servicoveiculo/listarFiltrado", "estado", item.getDescricao(), titulo, total));
             }
         }
     }
@@ -277,7 +278,7 @@ public class ApplicationController extends TpController {
         EstadoRequisicao estado = EstadoRequisicao.ABERTA;
         List<RequisicaoTransporte> requisicoes = RequisicaoTransporte.listar(estado);
         if (!requisicoes.isEmpty()) {
-            lista.add(adicionarItemLista("requisicoes.listarfiltrado", "estadoRequisicao", estado.getDescricao(), "Requisi&ccedil;&otilde;es a autorizar", requisicoes.size()));
+            lista.add(adicionarItemLista("/app/requisicao/listarFiltrado", "estadoRequisicao", estado.getDescricao(), "Requisi&ccedil;&otilde;es a autorizar", requisicoes.size()));
         }
     }
 
@@ -293,7 +294,7 @@ public class ApplicationController extends TpController {
             titulo = "Miss&otilde;es " + (item.equals(EstadoMissao.PROGRAMADA) ? "programadas" : "iniciadas");
             total = totalizarItemLista(missoes, item.getDescricao());
             if (total > 0) {
-                lista.add(adicionarItemLista("missoes.listarfiltrado", "estado", item.getDescricao(), titulo, total));
+                lista.add(adicionarItemLista("/app/missao/listarFiltrado", "estado", item.getDescricao(), titulo, total));
             }
         }
     }
@@ -308,7 +309,7 @@ public class ApplicationController extends TpController {
             titulo = "Requisi&ccedil;&otilde;es " + (item.equals(EstadoRequisicao.AUTORIZADA) ? "autorizadas" : "nao atendidas");
             total = totalizarItemLista(requisicoes, item.getDescricao());
             if (total > 0) {
-                lista.add(adicionarItemLista("requisicoes.listarfiltrado", "estadoRequisicao", item.getDescricao(), titulo, total));
+                lista.add(adicionarItemLista("/app/requisicao/listarFiltrado", "estadoRequisicao", item.getDescricao(), titulo, total));
             }
         }
     }
@@ -378,16 +379,24 @@ public class ApplicationController extends TpController {
         return itemLista[0];
     }
 
+    private String getUrlComParametros(String url, Map<String, Object> parametros) {
+        StringBuilder sb = new StringBuilder();
+        sb.append(url + "?");
+        for (Entry<String, Object> param : parametros.entrySet()) {
+            sb.append("&");
+            sb.append(param.getKey() + "=" + param.getValue());
+        }
+        return sb.toString();
+    }
+
     private String obterCaminhoUrl(String template, String parametro, String valor) {
         FormataCaminhoDoContextoUrl formata = new FormataCaminhoDoContextoUrl();
         if (!"".equals(parametro) && !"".equals(valor)) {
             Map<String, Object> param = new HashMap<String, Object>();
             param.put(parametro, valor);
-            return null;
-            // return formata.retornarCaminhoContextoUrl(Router.reverse(template, param).url);
+            return formata.retornarCaminhoContextoUrl(getUrlComParametros(template, param));
         } else {
-            return null;
-            // return formata.retornarCaminhoContextoUrl(Router.reverse(template).url);
+            return formata.retornarCaminhoContextoUrl(getUrlComParametros(template, new HashMap<String, Object>()));
         }
     }
 
