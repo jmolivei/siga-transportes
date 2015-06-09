@@ -131,7 +131,7 @@ public class ApplicationController extends TpController {
         }
     }
 
-    @Path("selecionar/{sigla}")
+    @Path({ "/selecionar/{sigla}", "/selecionar" })
     public void selecionar(String sigla) {
         SelecaoDocumento sel = new SelecaoDocumento();
         sel.setSigla(montarSigla(sigla));
@@ -140,7 +140,7 @@ public class ApplicationController extends TpController {
         result.include("sel", sel);
     }
 
-    @Path("/exibir/{sigla}")
+    @Path({ "/exibir/{sigla}", "/exibir" })
     public void exibir(String sigla) throws ApplicationControllerException {
 
         String[] partesDoCodigo = null;
@@ -176,7 +176,9 @@ public class ApplicationController extends TpController {
 
     @Path("/emDesenvolvimento")
     public void emDesenvolvimento() {
-
+        /**
+         * Metodo utilizado somente para o VRaptor renderizar a view em questão.
+         */
     }
 
     @Path("/selecionarPessoa")
@@ -187,7 +189,7 @@ public class ApplicationController extends TpController {
         result.include("filtro", filtro);
     }
 
-    @Path("/selecionarPessoa/{sigla}/{tipo}/{nome}")
+    @Path({ "/selecionarPessoa/{sigla}/{tipo}/{nome}", "/selecionarPessoa" })
     public void selecionarSiga(String sigla, String tipo, String nome) throws ApplicationControllerException {
         try {
             result.redirectTo("/siga/app/" + tipo + "/selecionar?" + "propriedade=" + tipo + nome + "&sigla=" + URLEncoder.encode(sigla, "UTF-8"));
@@ -196,7 +198,7 @@ public class ApplicationController extends TpController {
         }
     }
 
-    @Path("/buscarSiga/{sigla}/{tipo}/{nome}")
+    @Path({ "/buscarSiga/{sigla}/{tipo}/{nome}", "/buscarSiga" })
     public void buscarSiga(String sigla, String tipo, String nome) throws ApplicationControllerException {
         try {
             result.redirectTo("/siga/app/" + tipo + "/buscar?" + "propriedade=" + tipo + nome + "&sigla=" + URLEncoder.encode(sigla, "UTF-8"));
@@ -207,12 +209,16 @@ public class ApplicationController extends TpController {
 
     @Path("/exibirManualUsuario")
     public void exibirManualUsuario() {
-
+        /**
+         * Metodo utilizado somente para o VRaptor renderizar a view em questão.
+         */
     }
 
     @Path("/exibirManualUsuarioDeGabinete")
     public void exibirManualUsuarioDeGabinete() {
-
+        /**
+         * Metodo utilizado somente para o VRaptor renderizar a view em questão.
+         */
     }
 
     @Path("/gadget")
