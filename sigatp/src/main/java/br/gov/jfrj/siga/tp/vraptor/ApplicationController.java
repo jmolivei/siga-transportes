@@ -22,7 +22,6 @@ import br.com.caelum.vraptor.Path;
 import br.com.caelum.vraptor.Resource;
 import br.com.caelum.vraptor.Result;
 import br.com.caelum.vraptor.Validator;
-import br.com.caelum.vraptor.validator.I18nMessage;
 import br.gov.jfrj.siga.dp.DpLotacao;
 import br.gov.jfrj.siga.dp.DpPessoa;
 import br.gov.jfrj.siga.tp.auth.AutorizacaoGI;
@@ -38,6 +37,7 @@ import br.gov.jfrj.siga.tp.model.ServicoVeiculo;
 import br.gov.jfrj.siga.tp.model.TpDao;
 import br.gov.jfrj.siga.tp.util.CondutorFiltro;
 import br.gov.jfrj.siga.tp.util.FormataCaminhoDoContextoUrl;
+import br.gov.jfrj.siga.tp.vraptor.i18n.MessagesBundle;
 import br.gov.jfrj.siga.vraptor.SigaObjects;
 
 import com.google.common.base.Predicate;
@@ -146,9 +146,8 @@ public class ApplicationController extends TpController {
         String[] partesDoCodigo = null;
         try {
             partesDoCodigo = sigla.split("[-/]");
-
         } catch (Exception e) {
-            throw new ApplicationControllerException(new I18nMessage("application", "application.exibir.sigla.exception").getMessage(), e);
+            throw new ApplicationControllerException(MessagesBundle.getMessage("application.exibir.sigla.exception", sigla), e);
         }
 
         result.include("sigla", partesDoCodigo[4]);
