@@ -164,7 +164,7 @@ public class ServicoVeiculoController extends TpController {
         result.include("situacaoServico", situacaoServico);
     }
 
-    @Path("listarFiltrado/{estado}")
+    @Path({ "listarFiltrado/{estado}", "listarFiltrado" })
     public void listarFiltrado(EstadoServico parametroEstado) {
         EstadoServico estado = null != parametroEstado ? parametroEstado : EstadoServico.AGENDADO;
         CpOrgaoUsuario cpOrgaoUsuario = getTitular().getOrgaoUsuario();

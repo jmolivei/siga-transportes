@@ -13,7 +13,7 @@
 	cssClass="form" enctype="multipart/form-data"> 
 	<sigatp:erros />
 
-	<input type="hidden" name="abastecimento.id" value="${abastecimento.id}" />
+	<input type="hidden" name="abastecimento" value="${abastecimento.id}" />
 	<input type="hidden" name="abastecimento.titular" value="${abastecimento.titular.id}" />
 	<input type="hidden" name="abastecimento.orgao" value="${abastecimento.orgao.id}" />
 

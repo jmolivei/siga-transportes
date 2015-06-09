@@ -124,9 +124,9 @@
 
 <li><a class="" href="#">Ajuda</a>
 	<ul>
-		<li><a class="" href="#" onclick="javascript:window.open('@{Application.exibirManualUsuario}');">Manual do Usu&aacute;rio</a></li>
+		<li><a class="" href="#" onclick="javascript:window.open('${linkTo[ApplicationController].exibirManualUsuario}');">Manual do Usu&aacute;rio</a></li>
     	<c:if test="${exibirMenuGabinete || exibirMenuAdminGabinete}">
-			<li><a class="" href="#" onclick="javascript:window.open('@{Application.exibirManualUsuarioDeGabinete}');">Manual do Usu&aacute;rio de Gabinete</a></li>
+			<li><a class="" href="#" onclick="javascript:window.open('${linkTo[ApplicationController].exibirManualUsuarioDeGabinete}');">Manual do Usu&aacute;rio de Gabinete</a></li>
     	</c:if>
 	</ul>
 </li>

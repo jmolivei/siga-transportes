@@ -96,12 +96,13 @@ public class RequisicaoController extends TpController {
 	    EstadoRequisicao estadoReqP = EstadoRequisicao.valueOf(null != estadoRequisicaoP ? estadoRequisicaoP : estadoRequisicao);
 
 		EstadoRequisicao estadosRequisicao[] = {estadoReq, estadoReqP};
+
 		carregarRequisicoesUltimosSeteDiasPorEstados(estadosRequisicao);
 		MenuMontador.instance(result).recuperarMenuListarRequisicoes(estadoReq, estadoReqP);
 
 		result.include("estadoRequisicao", estadoRequisicao);
 
-		result.redirectTo(this).listar();
+		result.use(Results.page()).of(RequisicaoController.class).listar();
 	}
 
 	@RoleAdmin
