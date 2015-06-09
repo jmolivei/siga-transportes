@@ -118,9 +118,9 @@ public class ApplicationController extends TpController {
     public void index() throws ApplicationControllerException {
         try {
             if (autorizacaoGI.ehAdministrador() || autorizacaoGI.ehAdministradorMissao() || autorizacaoGI.ehAdministradorMissaoPorComplexo()) {
-                result.forwardTo(RequisicaoController.class).listarFiltrado(EstadoRequisicao.AUTORIZADA, EstadoRequisicao.NAOATENDIDA);
+                result.forwardTo(RequisicaoController.class).listarFiltrado(EstadoRequisicao.AUTORIZADA.toString(), EstadoRequisicao.NAOATENDIDA.toString());
             } else if (autorizacaoGI.ehAgente()) {
-                result.forwardTo(RequisicaoController.class).listarFiltrado(EstadoRequisicao.AUTORIZADA, EstadoRequisicao.NAOATENDIDA);
+                result.forwardTo(RequisicaoController.class).listarFiltrado(EstadoRequisicao.AUTORIZADA.toString(), EstadoRequisicao.NAOATENDIDA.toString());
             } else if (autorizacaoGI.ehAprovador()) {
                 result.forwardTo(RequisicaoController.class).listarPAprovar();
             } else {
