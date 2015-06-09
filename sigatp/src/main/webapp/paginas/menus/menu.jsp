@@ -11,17 +11,17 @@
 
 <li id="limenuRequisicoes"><a id="menuRequisicoes" class="" href="#">Requisi&ccedil;&otilde;es</a>
 	<ul>
-		<li id="limenuRequisicoesIncluir"><a id="menuRequisicoesIncluir" class="" href="@{Requisicoes.incluir}">Incluir</a></li>
+		<li id="limenuRequisicoesIncluir"><a id="menuRequisicoesIncluir" class="" href="${linkTo[RequisicaoController].incluir}">Incluir</a></li>
 
 		<c:choose>
      			<c:when test="${exibirMenuAdministrar || exibirMenuAdministrarMissao || exibirMenuAdministrarMissaoComplexo || exibirMenuAdministrarFrota || exibirMenuAprovador }">
 				<c:if test="${exibirMenuAdministrar || exibirMenuAdministrarMissao || exibirMenuAprovador}">
-					<li id="limenuRequisicoesAprovar"><a id="menuRequisicoesAprovar" class="" href="@{Requisicoes.listarPAprovar}">Aprovar/Rejeitar</a></li>
+					<li id="limenuRequisicoesAprovar"><a id="menuRequisicoesAprovar" class="" href="${linkTo[RequisicaoController].listarPAprovar}">Aprovar/Rejeitar</a></li>
 				</c:if>
-				<li id="limenuRequisicoesListar"><a id="menuRequisicoesListar" class="" href="@{Requisicoes.listarFiltrado(models.EstadoRequisicao.AUTORIZADA,models.EstadoRequisicao.NAOATENDIDA)}">Listar</a></li>
+				<li id="limenuRequisicoesListar"><a id="menuRequisicoesListar" class="" href="${linkTo[RequisicaoController].listarFiltrado['AUTORIZADA']['NAOATENDIDA']}">Listar</a></li>
 			</c:when>
 			<c:otherwise>
-				<li><a id="menuRequisicoesListar" class="" href="@{Requisicoes.listar}">Listar</a></li>
+				<li><a id="menuRequisicoesListar" class="" href="${linkTo[RequisicaoController].listar}">Listar</a></li>
 			</c:otherwise>
 		</c:choose>
 	</ul>
@@ -71,7 +71,7 @@
 				  		<li><a id="menuAdmRelatAgendaCondutores" class="" href="#" onclick="javascript:window.open('${linkTo[RelatorioController].listarAgendaTodosCondutores}');">Agenda dos Condutores</a></li>
 				  		<li><a id="menuAdmRelatAgendaVeiculos" class="" href="#" onclick=  "javascript:window.open('${linkTo[RelatorioController].listarAgendaTodosVeiculos}');">Agenda dos Ve&iacute;culos</a></li>
 						<li><a id="menuAdmRelatMissoesEmAndamento" class="" href="#" onclick="javascript:window.open('${linkTo[RelatorioController].listarMissoesEmAndamento}');">Miss&otilde;es em Andamento</a></li>
-						<li><a id="menuAdmRelatRanking" class="" href="#" onclick="javascript:window.open('@{RelatoriosRanking.consultar}');">Ranking por Requisi&ccedil;&otilde;es</a></li>
+						<li><a id="menuAdmRelatRanking" class="" href="#" onclick="javascript:window.open('${linkTo[RelatorioRankingController].consultar}');">Ranking por Requisi&ccedil;&otilde;es</a></li>
 						<li><a id="menuAdmRelatConsumoMedio" class="" href="#" onclick="javascript:window.open('${linkTo[RelatorioConsumoMedioController].consultar}');">Consumo M&eacute;dio de Combust&iacute;vel</a></li>
 					</ul>
 				</li>
@@ -113,7 +113,7 @@
 				  		<li><a id="menuAdmRelatAgendaCondutores" class="" href="#" onclick="javascript:window.open('@{Relatorios.listarAgendaTodosCondutores}');">Agenda dos Condutores</a></li>
 				  		<li><a id="menuAdmRelatAgendaVeiculos" class="" href="#" onclick=  "javascript:window.open('@{Relatorios.listarAgendaTodosVeiculos}');">Agenda dos Ve&iacute;culos</a></li>
 						<li><a id="menuAdmRelatMissoesEmAndamento" class="" href="#" onclick="javascript:window.open('@{Relatorios.listarMissoesEmAndamento}');">Miss&otilde;es em Andamento</a></li>
-						<li><a id="menuAdmRelatRanking" class="" href="#" onclick="javascript:window.open('@{RelatoriosRanking.consultar}');">Ranking por Requisi&ccedil;&otilde;es</a></li>
+						<li><a id="menuAdmRelatRanking" class="" href="#" onclick="javascript:window.open('${linkTo[RelatorioRankingController].consultar}');">Ranking por Requisi&ccedil;&otilde;es</a></li>
 						<li><a id="menuAdmRelatConsumoMedio" class="" href="#" onclick="javascript:window.open('@{RelatoriosConsumoMedio.consultar}');">Consumo M&eacute;dio de Combust&iacute;vel</a></li>
 					</ul>
 				</li>
@@ -124,9 +124,9 @@
 
 <li><a class="" href="#">Ajuda</a>
 	<ul>
-		<li><a class="" href="#" onclick="javascript:window.open('@{Application.exibirManualUsuario}');">Manual do Usu&aacute;rio</a></li>
+		<li><a class="" href="#" onclick="javascript:window.open('${linkTo[ApplicationController].exibirManualUsuario}');">Manual do Usu&aacute;rio</a></li>
     	<c:if test="${exibirMenuGabinete || exibirMenuAdminGabinete}">
-			<li><a class="" href="#" onclick="javascript:window.open('@{Application.exibirManualUsuarioDeGabinete}');">Manual do Usu&aacute;rio de Gabinete</a></li>
+			<li><a class="" href="#" onclick="javascript:window.open('${linkTo[ApplicationController].exibirManualUsuarioDeGabinete}');">Manual do Usu&aacute;rio de Gabinete</a></li>
     	</c:if>
 	</ul>
 </li>

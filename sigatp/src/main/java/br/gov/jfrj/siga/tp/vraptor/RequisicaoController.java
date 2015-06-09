@@ -85,7 +85,7 @@ public class RequisicaoController extends TpController {
 		result.redirectTo(this).listarPAprovar();
 	}
 
-	@Path("/listarFiltrado/{estadoRequisicao}/{estadoRequisicaoP}")
+    @Path({ "/listarFiltrado/{estadoRequisicao}/{estadoRequisicaoP}", "/listarFiltrado" })
 	public void listarFiltrado(EstadoRequisicao estadoRequisicao, EstadoRequisicao estadoRequisicaoP) throws Exception {
 		if (estadoRequisicaoP == null) { estadoRequisicaoP = estadoRequisicao; }
 		EstadoRequisicao estadosRequisicao[] = {estadoRequisicao,estadoRequisicaoP};

@@ -14,20 +14,21 @@
 			</tr>
 		</thead>
 		<tbody>
-		<c:forEach items="lista" var="item">
-			<tr>
-				<td ><a href="${item[0]}">${null != item[1] ? item[1].raw() : ""}</a></td>
-				<td align="right" ><a href="${item[0]}">${item[2]}</a></td>
-			</tr>
-		</c:forEach>
+        <c:if test="${not empty lista}">		
+			<c:forEach items="lista" var="item">
+				<tr>
+				    <td ><a href="${item[0]}">${null != item[1] ? item[1].raw() : ""}</a></td>
+				    <td align="right" ><a href="${item[0]}">${item[2]}</a></td>
+				</tr>
+			</c:forEach>
+		</c:if>
 		</tbody>
 	</table>
 </div>
 <br />
 
-<form action="${linkTo[Requisicoes].incluir}">
+<form action="${linkTo[RequisicaoController].incluir}">
 	<div id="rightbottom"></div>
 	<br>
 	<input type="submit" value="<fmt:message key='views.botoes.novo' />" class="gt-btn-small gt-btn-right"/>
-
 </form>	
