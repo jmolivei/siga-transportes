@@ -53,11 +53,9 @@
 	}
 </script>
 
-<sigatp:erros/>
-<br>
-
 <form name="formRelConsumoMedio" id="formRelConsumoMedio" action="${linkTo[RelatorioConsumoMedioController].gerarRelatorio}"
 	 method="post" cssClass="form">
+	 <sigatp:erros/>
 	<div class="gt-content-box gt-form"> 
        	<div>
    			<label for="veiculos" class="obrigatorio">Ve&iacute;culo:</label>

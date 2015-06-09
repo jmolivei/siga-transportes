@@ -85,16 +85,24 @@ public class RequisicaoController extends TpController {
 		result.redirectTo(this).listarPAprovar();
 	}
 
-    @Path({ "/listarFiltrado/{estadoRequisicao}/{estadoRequisicaoP}", "/listarFiltrado" })
-	public void listarFiltrado(EstadoRequisicao estadoRequisicao, EstadoRequisicao estadoRequisicaoP) throws Exception {
-		if (estadoRequisicaoP == null) { estadoRequisicaoP = estadoRequisicao; }
-		EstadoRequisicao estadosRequisicao[] = {estadoRequisicao,estadoRequisicaoP};
+	@Path("/listarFiltrado/{estadoRequisicao}")
+    public void listarFiltrado(String estadoRequisicao) throws Exception {
+	    result.forwardTo(this).listarFiltrado(estadoRequisicao, null);
+	}
+
+	@Path("/listarFiltrado/{estadoRequisicao}/{estadoRequisicaoP}")
+	public void listarFiltrado(String estadoRequisicao, String estadoRequisicaoP) throws Exception {
+	    EstadoRequisicao estadoReq = EstadoRequisicao.valueOf(estadoRequisicao);
+	    EstadoRequisicao estadoReqP = EstadoRequisicao.valueOf(null != estadoRequisicaoP ? estadoRequisicaoP : estadoRequisicao);
+
+		EstadoRequisicao estadosRequisicao[] = {estadoReq, estadoReqP};
+
 		carregarRequisicoesUltimosSeteDiasPorEstados(estadosRequisicao);
-		MenuMontador.instance(result).recuperarMenuListarRequisicoes(estadoRequisicao, estadoRequisicaoP);
+		MenuMontador.instance(result).recuperarMenuListarRequisicoes(estadoReq, estadoReqP);
 
 		result.include("estadoRequisicao", estadoRequisicao);
 
-		result.redirectTo(this).listar();
+		result.use(Results.page()).of(RequisicaoController.class).listar();
 	}
 
 	@RoleAdmin
@@ -153,15 +161,12 @@ public class RequisicaoController extends TpController {
 
 	private void validar(RequisicaoTransporte requisicaoTransporte, boolean checkSemPassageiros, TipoDePassageiro[] tiposDePassageiros, boolean checkRetorno) {
 
-		if ((requisicaoTransporte.getDataHoraSaidaPrevista() != null) && (requisicaoTransporte.getDataHoraRetornoPrevisto() != null) && (!requisicaoTransporte.ordemDeDatasCorreta()))
+		if ((requisicaoTransporte.getDataHoraSaidaPrevista() != null) && (requisicaoTransporte.getDataHoraRetornoPrevisto() != null) && (!requisicaoTransporte.ordemDeDatasCorreta()) || (checkRetorno && requisicaoTransporte.getDataHoraRetornoPrevisto() == null))
 			validator.add(new I18nMessage("dataHoraRetornoPrevisto", "requisicaoTransporte.dataHoraRetornoPrevisto.validation"));
 
 		if(!checkSemPassageiros)
 			if((tiposDePassageiros == null) || (tiposDePassageiros.length == 0))
 				validator.add(new I18nMessage("tiposDePassageiros", "requisicaoTransporte.tiposDePassageiros.validation"));
-
-		if(checkRetorno && requisicaoTransporte.getDataHoraRetornoPrevisto() == null)
-			validator.add(new I18nMessage("dataHoraRetornoPrevisto", "requisicaoTransporte.dataHoraRetornoPrevisto.validation"));
 
 		if(!checkSemPassageiros && (requisicaoTransporte.getPassageiros() == null || requisicaoTransporte.getPassageiros() == null))
 			validator.add(new I18nMessage("passageiros", "requisicaoTransporte.passageiros.validation"));
@@ -280,11 +285,12 @@ public class RequisicaoController extends TpController {
 			result.include("requisicaoTransporte", requisicaoTransporte);
 			result.include("checkRetorno", checkRetorno);
 			result.include("checkSemPassageiros", checkSemPassageiros);
+			result.include("tiposRequisicao", TipoRequisicao.values());
 
 			if(requisicaoTransporte.getId() > 0)
-				validator.onErrorForwardTo(RequisicaoController.class).editar(requisicaoTransporte.getId());
+				validator.onErrorUse(Results.page()).of(RequisicaoController.class).editar(requisicaoTransporte.getId());
 			else
-				validator.onErrorForwardTo(RequisicaoController.class).incluir();
+				validator.onErrorUse(Results.page()).of(RequisicaoController.class).incluir();
 		}
 	}
 

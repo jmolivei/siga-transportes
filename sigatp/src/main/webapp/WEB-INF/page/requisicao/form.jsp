@@ -47,7 +47,11 @@
 	        </div>
 	        <div id="espacoRetorno" class="margemInferior"></div>
         	<label class="obrigatorio">Finalidade</label>
-        	<siga:select name="requisicaoTransporte.tipoFinalidade" list="finalidades" listKey="id" listValue="descricao" value="${requisicaoTransporte.tipoFinalidade.id}"></siga:select>
+        	<select name="requisicaoTransporte.tipoFinalidade">
+        		<c:forEach items="${finalidades}" var="tipoFinalidade">
+        			<option value="${tipoFinalidade.id}" ${(tipoFinalidade.id == requisicaoTransporte.tipoFinalidade.id) ? 'selected' : ''}>${tipoFinalidade.descricao}</option>
+        		</c:forEach>
+        	</select>
         	<label class="obrigatorio">Detalhes da finalidade</label>
         	<textarea name="requisicaoTransporte.finalidade" rows="10" cols="60">${requisicaoTransporte.finalidade}</textarea>
 		</div>

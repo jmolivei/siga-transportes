@@ -31,12 +31,11 @@ import br.gov.jfrj.siga.cp.CpComplexo;
 import br.gov.jfrj.siga.dp.CpOrgaoUsuario;
 import br.gov.jfrj.siga.dp.DpPessoa;
 import br.gov.jfrj.siga.model.ActiveRecord;
-import br.gov.jfrj.siga.model.ContextoPersistencia;
 import br.gov.jfrj.siga.tp.util.PerguntaSimNao;
 import br.gov.jfrj.siga.tp.util.Reflexao;
 import br.gov.jfrj.siga.tp.validation.annotation.Data;
 import br.gov.jfrj.siga.tp.validation.annotation.UpperCase;
-import br.gov.jfrj.siga.vraptor.converter.ConvertableEntity;
+import br.gov.jfrj.siga.tp.vraptor.ConvertableEntity;
 import br.jus.jfrj.siga.uteis.Sequence;
 import br.jus.jfrj.siga.uteis.SequenceMethods;
 import br.jus.jfrj.siga.uteis.SiglaDocumentoType;
@@ -141,7 +140,7 @@ public class Missao extends TpModel implements ConvertableEntity, Comparable<Mis
 	@JoinColumn(name = "ID_ORGAO_USU")
 	private CpOrgaoUsuario cpOrgaoUsuario;
 
-	@NotNull(message = "missao.requisicoesTransporte.required")
+	@NotNull
 	@ManyToMany
 	@JoinTable(name = "missao_requisTransporte", joinColumns = @JoinColumn(name = "missao_Id"), inverseJoinColumns = @JoinColumn(name = "requisicaoTransporte_Id"))
 	private List<RequisicaoTransporte> requisicoesTransporte;

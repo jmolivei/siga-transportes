@@ -444,17 +444,17 @@
 			var z = 0;
 
 			$("[name='requisicoesSelecionadas']").each(function() {
-				$(this).attr('name', 'missao.requisicoesTransporte[' + x + '].id');
+				$(this).attr('name', 'requisicoesTransporte[' + x + '].id');
 				x++;
 			});
 
 			$("[name='requisicoesSelecionadas1']").each(function() {
-				$(this).attr('name', 'requisicoesTransporte_alt[' + y + '].id');
+				$(this).attr('name', 'requisicoesTransporteAlt[' + y + '].id');
 				y++;
 			});
 
 			$("[name='requisicoesAntigas']").each(function() {
-				$(this).attr('name', 'requisicoesTransporte_ant[' + z + '].id');
+				$(this).attr('name', 'requisicoesTransporteAnt[' + z + '].id');
 				z++;
 			});
 

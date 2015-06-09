@@ -45,24 +45,24 @@ public class RelatorioConsumoMedioController extends TpController
 	@Path("/consultar")
 	public void consultar() throws Exception {
 		RelatorioConsumoMedio relatorioConsumoMedio = new RelatorioConsumoMedio();
-		montarCombos();
-		//render(relatorioConsumoMedio);
+		montarCombos(null);
 		result.include("relatorioConsumoMedio", relatorioConsumoMedio);
 	}
 
 	@Path("/gerarRelatorio")
 	public void gerarRelatorio(RelatorioConsumoMedio relatorioConsumoMedio) throws ParseException, Exception {
 		if (validator.hasErrors()) {
-			montarCombos();
-			//renderTemplate("@Consultar");
-			result.redirectTo(this).consultar();
+			montarCombos(null);
+			validator.onErrorUsePageOf(this).consultar();
 		} else {
 			String msgErro = "";
 
-			if (relatorioConsumoMedio.getAbastecimentoInicial() == null) {
+			if (relatorioConsumoMedio.getAbastecimentoInicial() == null || 
+					relatorioConsumoMedio.getAbastecimentoInicial().getId() == 0) {
 				msgErro += "Abastecimento Inicial, ";
 			}
-			if (relatorioConsumoMedio.getAbastecimentoFinal() == null) {
+			if (relatorioConsumoMedio.getAbastecimentoFinal() == null || 
+					relatorioConsumoMedio.getAbastecimentoFinal().getId() == 0) {
 				msgErro += "Abastecimento Final, ";
 			}
 
@@ -75,13 +75,11 @@ public class RelatorioConsumoMedioController extends TpController
 
 			if (!validator.hasErrors()) {
 				RelatorioConsumoMedio relatoriocm = calcularConsumoMedio(relatorioConsumoMedio);
-				//render(relatoriocm);
 				result.include("relatoriocm", relatoriocm);
 			} else {
-				montarCombos();
+				montarCombos(relatorioConsumoMedio.getVeiculo());
 				result.include("relatorioConsumoMedio", relatorioConsumoMedio);
-				result.redirectTo(this).consultar();
-				//render("@Consultar", relatorioConsumoMedio);
+				validator.onErrorUsePageOf(this).consultar();
 			}
 		}
 	}
@@ -140,12 +138,15 @@ public class RelatorioConsumoMedioController extends TpController
 		return resultado;
 	}
 
-	private void montarCombos() throws Exception {
+	private void montarCombos(Veiculo veiculo) throws Exception {
 		List<Veiculo> veiculos = Veiculo.listarTodos(getTitular().getOrgaoUsuario());
 		List<Abastecimento> abastecimentosIniciais = new ArrayList<Abastecimento>();
 		List<Abastecimento> abastecimentosFinais = new ArrayList<Abastecimento>();
 
-		abastecimentosIniciais = montarCombosAbastecimento(veiculos.get(0).getId());
+		if(veiculo == null)
+			abastecimentosIniciais = montarCombosAbastecimento(veiculos.get(0).getId());
+		else
+			abastecimentosIniciais = montarCombosAbastecimento(veiculo.getId());
 
 		if (abastecimentosIniciais.size() > 0) {
 			for (Abastecimento abastecimento : abastecimentosIniciais) {
@@ -159,10 +160,7 @@ public class RelatorioConsumoMedioController extends TpController
 		
 		result.include("veiculos", veiculos);
 		result.include("abastecimentosIniciais", abastecimentosIniciais);
-		//renderArgs.put("veiculos", veiculos);
-		//renderArgs.put("abastecimentosIniciais", abastecimentosIniciais);
 		if (abastecimentosFinais.size() > 0) {
-			//renderArgs.put("abastecimentosFinais", abastecimentosFinais);
 			result.include("abastecimentosFinais", abastecimentosFinais);
 		}
 	}
@@ -211,6 +209,5 @@ public class RelatorioConsumoMedioController extends TpController
 
 		String html = htmlSelectAbastecimentoInicial.toString() + "@" + htmlSelectAbastecimentoFinal.toString();
 		result.use(Results.http()).body(html);
-		//renderText(htmlSelectAbastecimentoInicial + "@" + htmlSelectAbastecimentoFinal);
 	}
 }
