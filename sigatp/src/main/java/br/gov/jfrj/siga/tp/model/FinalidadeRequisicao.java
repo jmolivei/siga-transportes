@@ -1,5 +1,6 @@
 package br.gov.jfrj.siga.tp.model;
 
+import java.util.Collections;
 import java.util.List;
 
 import javax.persistence.Entity;
@@ -28,7 +29,7 @@ import controllers.AutorizacaoGIAntigo;
 @Audited
 @Table(name = "FinalidadeRequisicao", schema = "SIGATP")
 @Unique(message = "{finalidadeRequisicao.descricao.unique}", field = "descricao")
-public class FinalidadeRequisicao extends TpModel implements ConvertableEntity {
+public class FinalidadeRequisicao extends TpModel implements ConvertableEntity, Comparable<FinalidadeRequisicao> {
 
 	private static final long _ID_DA_FINALIDADE_OUTRA = -1;
 	public static ActiveRecord<FinalidadeRequisicao> AR = new ActiveRecord<>(FinalidadeRequisicao.class);
@@ -101,7 +102,9 @@ public class FinalidadeRequisicao extends TpModel implements ConvertableEntity {
 
 	@SuppressWarnings("unchecked")
 	public static List<FinalidadeRequisicao> listarTodos() {
-		return FinalidadeRequisicao.AR.findAll();
+		List<FinalidadeRequisicao> finalidades = FinalidadeRequisicao.AR.findAll();
+		Collections.sort(finalidades);
+		return finalidades;
 	}
 
 	public void checarProprietario(CpOrgaoUsuario orgaoUsuario) throws Exception {
@@ -120,4 +123,9 @@ public class FinalidadeRequisicao extends TpModel implements ConvertableEntity {
 		}
 		return false;
 	}
+
+    @Override
+    public int compareTo(FinalidadeRequisicao o) {
+        return this.getId().compareTo(o.getId());
+    }
 }
