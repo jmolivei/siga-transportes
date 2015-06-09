@@ -40,7 +40,6 @@ import br.gov.jfrj.siga.tp.model.EstadoRequisicao;
 import br.gov.jfrj.siga.tp.model.Missao;
 import br.gov.jfrj.siga.tp.model.RequisicaoTransporte;
 import br.gov.jfrj.siga.tp.model.RequisicaoVsEstado;
-import br.gov.jfrj.siga.tp.model.TipoDePassageiro;
 import br.gov.jfrj.siga.tp.model.TpDao;
 import br.gov.jfrj.siga.tp.model.Veiculo;
 import br.gov.jfrj.siga.tp.model.vo.ItemVO;
@@ -48,15 +47,12 @@ import br.gov.jfrj.siga.tp.model.vo.MissaoVO;
 import br.gov.jfrj.siga.tp.util.PerguntaSimNao;
 import br.gov.jfrj.siga.vraptor.SigaObjects;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-
 @Resource
 @Path("/app/missao")
 public class MissaoController extends TpController {
 
 	private static final String MISSOES_AUTORIZACAO_GI_SEM_ACESSO_EXCEPTION = "missoes.autorizacaoGI.semAcesso.exception";
-	private static final String MISSAO_REQUISICOES_TRANSPORTE_VALIDATION = "missao.requisicoesTransporte.validation";
+	private static final String MISSAO_REQUISICOES_TRANSPORTE_REQUIRED = "missao.requisicoesTransporte.required";
 	private static final String ODOMETRO_RETORNO_EM_KM_STR = "odometroRetornoEmKm";
 	private static final String VEICULOS_STR = "veiculos";
 	private static final String MOSTRAR_DADOS_INICIADA_STR = "mostrarDadosIniciada";
@@ -209,7 +205,7 @@ public class MissaoController extends TpController {
 	@RoleAdminMissao
 	@RoleAdminMissaoComplexo
 	@Path("/salvar")
-	public void salvar(@Valid Missao missao, List<RequisicaoTransporte> requisicoesTransporteAlt, List<RequisicaoTransporte> requisicoesTransportAnt) throws Exception {
+	public void salvar(Missao missao, List<RequisicaoTransporte> requisicoesTransporteAlt, List<RequisicaoTransporte> requisicoesTransportAnt) throws Exception {
 		DpPessoa dpPessoa = getCadastrante();
 		Template template;
 
@@ -222,10 +218,10 @@ public class MissaoController extends TpController {
 			template = Template.INCLUIR;
 		}
 
-		if (requisicoesTransporteAlt == null || requisicoesTransporteAlt.isEmpty()) {
-			missao.setRequisicoesTransporte(requisicoesTransporteAlt);
-			validator.add(new I18nMessage(REQUISICOES_TRANSPORTE_STR, MISSAO_REQUISICOES_TRANSPORTE_VALIDATION));
-		}
+		if (requisicoesTransporteAlt == null || requisicoesTransporteAlt.isEmpty())
+			validator.add(new I18nMessage(REQUISICOES_TRANSPORTE_STR, MISSAO_REQUISICOES_TRANSPORTE_REQUIRED));
+		else
+		    missao.setRequisicoesTransporte(requisicoesTransporteAlt);
 
 		checarCategoriaCNHVeiculoCondutor(missao);
 		redirecionarSeErroAoSalvar(missao, template);
@@ -426,7 +422,7 @@ public class MissaoController extends TpController {
 
 		if (null == requisicoesTransporteAlt || requisicoesTransporteAlt.isEmpty()) {
 			missao.setRequisicoesTransporte(requisicoesTransporteAlt);
-			validator.add(new I18nMessage(REQUISICOES_TRANSPORTE_STR, MISSAO_REQUISICOES_TRANSPORTE_VALIDATION));
+			validator.add(new I18nMessage(REQUISICOES_TRANSPORTE_STR, MISSAO_REQUISICOES_TRANSPORTE_REQUIRED));
 		}
 
 		checarCategoriaCNHVeiculoCondutor(missao);
@@ -476,7 +472,7 @@ public class MissaoController extends TpController {
 
 		if (requisicoesTransporteAlt == null || requisicoesTransporteAlt.isEmpty()) {
 			missao.setRequisicoesTransporte(requisicoesTransporteAlt);
-			validator.add(new I18nMessage(REQUISICOES_TRANSPORTE_STR, MISSAO_REQUISICOES_TRANSPORTE_VALIDATION));
+			validator.add(new I18nMessage(REQUISICOES_TRANSPORTE_STR, MISSAO_REQUISICOES_TRANSPORTE_REQUIRED));
 		}
 
 		boolean temRequisicaoDeServico = validarRequisicoesDeServico(missao, template);
@@ -1036,19 +1032,20 @@ public class MissaoController extends TpController {
 
 		switch(template) {
 			case EDITAR:
-				result.redirectTo(this).editar(missao.getId());
+			    validator.onErrorUse(Results.logic()).forwardTo(MissaoController.class).editar(missao.getId());
 				break;
 
 			case INCLUIR:
-				result.redirectTo(this).incluir();
+			    result.include("missao", missao);
+			    validator.onErrorUse(Results.logic()).forwardTo(MissaoController.class).incluir();
 				break;
 
 			case INICIORAPIDO:
-				result.redirectTo(this).iniciarMissaoRapido(missao, null);
+			    validator.onErrorUse(Results.logic()).forwardTo(MissaoController.class).iniciarMissaoRapido(missao, null);
 				break;
 
 			case CANCELAR:
-				result.redirectTo(this).cancelarMissao(missao);
+			    validator.onErrorUse(Results.logic()).forwardTo(MissaoController.class).cancelarMissao(missao);
 				break;
 
 			default:
