@@ -383,8 +383,8 @@ public class ApplicationController extends TpController {
         StringBuilder sb = new StringBuilder();
         sb.append(url + "?");
         for (Entry<String, Object> param : parametros.entrySet()) {
-            sb.append("&");
             sb.append(param.getKey() + "=" + param.getValue());
+            sb.append("&");
         }
         return sb.toString();
     }
