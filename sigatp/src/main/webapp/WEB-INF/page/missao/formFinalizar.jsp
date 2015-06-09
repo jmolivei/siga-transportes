@@ -9,9 +9,9 @@
 <jsp:include page="../tags/calendario.jsp" />
 <sigatp:decimal />
 <br />
-<form id="formMissoes" method="get,post" onsubmit="return false;" enctype="multipart/form-data">
+<form id="formMissoes" method="post" enctype="multipart/form-data">
 <sigatp:erros />
-		<input type="hidden" id="missaoId" name="missao.id" value="${missao.id}" />
+		<input type="hidden" id="missaoId" name="missao" value="${missao.id}" />
 
 	<h3>Informa&ccedil;&otilde;es B&aacute;sicas</h3>
 	<div id ="infbasicas" class="gt-content-box gt-for-table">
@@ -54,10 +54,10 @@
 				</tr>
 				</thead>
 				<tbody id="tbody">
-					<c:if test="${missao.requisicoesTransporte && missao.requisicoesTransporte.size() > 0}">
-						<c:forEach items="${missao.requisicoesTransporte}" var="requisicaoTransporte" varStatus="i">
+					<c:if test="${null != missao.requisicoesTransporte && !missao.requisicoesTransporte.isEmpty()}">
+						<c:forEach items="${missao.requisicoesTransporte}" var="requisicaoTransporte" varStatus="loop">
                 			<tr id="row_${requisicaoTransporte.id}">
-			   	    			<input type="hidden" name='requisicoesVsEstados[${i}].idRequisicaoTransporte' readonly="readonly" value="${requisicaoTransporte.id}" class="requisicoes" />
+			   	    			<input type="hidden" name='requisicoesVsEstados[${loop.index}].idRequisicaoTransporte' readonly="readonly" value="${requisicaoTransporte.id}" class="requisicoes" />
 			   	   				<td><fmt:formatDate pattern="dd/MM/yyyy HH:mm" value="${requisicaoTransporte.dataHoraSaidaPrevista.time}" /></td>
 		    					<td>
 		    						<c:choose>
@@ -76,8 +76,8 @@
 			   	    				</tptags:link>
 								</td>
 			   	    			<td width="8%" >
-			   	    				<select name="requisicoesVsEstados[${i}].estado">
-			   	    					<c:forEach items="${estadoRequisicao.valuesComboAtendimentoMissao()}" var="estado">
+			   	    				<select name="requisicoesVsEstados[${loop.index}].estado">
+			   	    					<c:forEach items="${estadosRequisicao}" var="estado">
 			   	    						<option value="${estado}" ${estado == requisicoesVsEstados[i].estado ? 'selected' : ''}>${estado.descricao}</option>
 			   	    					</c:forEach>
 			   	    				</select>
@@ -112,7 +112,7 @@
 				<td align="left" style="padding: 7px 10px;">
 					<select name="missao.estepe">
 						<c:forEach items="${estepes}" var="estepe">
-							<option value="${estepe}" ${estepe == missao.estepe ? 'selected' : ''}>${estepe.respota}</option>
+							<option value="${estepe}" ${estepe == missao.estepe ? 'selected' : ''}>${estepe.descricao}</option>
 						</c:forEach>
 					</select>
 				</td>
@@ -121,7 +121,7 @@
 				<td align="left" style="padding: 7px 10px;">
 					<select name="missao.avariasAparentesSaida">
 						<c:forEach items="${avariasAparentesSaida}" var="avariaAparente">
-							<option value="${avariaAparente}" ${avariaAparente == missao.avariasAparentesSaida ? 'selected' : ''}>${avariaAparente.resposta}</option>
+							<option value="${avariaAparente}" ${avariaAparente == missao.avariasAparentesSaida ? 'selected' : ''}>${avariaAparente.descricao}</option>
 						</c:forEach>
 					</select>
 				</td>
@@ -130,7 +130,7 @@
 				<td align="left" style="padding: 7px 10px;">
 					<select name="missao.limpeza">
 						<c:forEach items="${limpeza}" var="limpo">
-							<option value="${limpo}" ${limpo == missao.limpeza}>${limpo.resposta}</option>
+							<option value="${limpo}" ${limpo == missao.limpeza}>${limpo.descricao}</option>
 						</c:forEach>
 					</select>
 				</td>
@@ -139,7 +139,7 @@
         		<th width="14%" class="obrigatorio">N&iacute;vel Combust&iacute;vel:</th>
 				<td align="left" style="padding: 7px 10px;">
 					<select name="missao.nivelCombustivelSaida">
-						<c:forEach items="${nivelCombustivelSaida}" var="nivel">
+						<c:forEach items="${niveisCombustivelSaida}" var="nivel">
 							<option value="${nivel}" ${nivel == missao.nivelCombustivelSaida ? 'selected' : ''}>nivel.descricao</option>
 						</c:forEach>
 					</select>
@@ -149,7 +149,7 @@
 				<td align="left" style="padding: 7px 10px;">
 					<select name="missao.triangulos">
 						<c:forEach items="${triangulos}" var="triangulo">
-							<option value="${triangulo}" ${triangulo == missao.triangulos ? 'selected' : ''}>${triangulo.resposta}</option>
+							<option value="${triangulo}" ${triangulo == missao.triangulos ? 'selected' : ''}>${triangulo.descricao}</option>
 						</c:forEach>
 					</select>
 				</td>
@@ -158,7 +158,7 @@
 				<td align="left" style="padding: 7px 10px;">
 					<select name="missao.extintor">
 						<c:forEach items="${extintores}" var="extintor">
-							<option value="${extintor}" ${extintor == missao.extintor ? 'selected' : ''}>${extintor.resposta}</option>
+							<option value="${extintor}" ${extintor == missao.extintor ? 'selected' : ''}>${extintor.descricao}</option>
 						</c:forEach>
 					</select>
 				</td>
@@ -167,7 +167,7 @@
 				<td align="left" style="padding: 7px 10px;">
 					<select name="missao.ferramentas">
 						<c:forEach items="${ferramentas}" var="ferramenta">
-							<option value="${ferramenta}" ${ferramenta == missao.ferramentas ? 'selected' : ''}>${ferramenta.resposta}</option>
+							<option value="${ferramenta}" ${ferramenta == missao.ferramentas ? 'selected' : ''}>${ferramenta.descricao}</option>
 						</c:forEach>
 					</select>
 				</td>
@@ -185,8 +185,8 @@
 	        	<th width="14%" class="obrigatorio">Cart&atilde;o Seguro:</th>
 				<td align="left" style="padding: 7px 10px;">
 					<select name="missao.cartaoSeguro">
-						<c:forEach items="${cartaoSeguro}" var="seguro">
-							<option value="${seguro}" ${seguro == missao.cartaoSeguro ? 'selected' : ''}>${seguro.resposta}</option>
+						<c:forEach items="${cartoesSeguro}" var="seguro">
+							<option value="${seguro}" ${seguro == missao.cartaoSeguro ? 'selected' : ''}>${seguro.descricao}</option>
 						</c:forEach>
 					</select>
 				</td>
@@ -194,8 +194,8 @@
 	        	<th width="14%" class="obrigatorio">Cart&atilde;o Abastecimento:</th>
 				<td align="left" style="padding: 7px 10px;">
 					<select name="missao.cartaoAbastecimento">
-						<c:forEach items="${cartaoAbastecimento}" var="abastecimento">
-							<option value="${abastecimento}" ${abastecimento == missao.cartaoAbastecimento ? 'selected' : ''}>${abastecimento.resposta}</option>
+						<c:forEach items="${cartoesAbastecimento}" var="abastecimento">
+							<option value="${abastecimento}" ${abastecimento == missao.cartaoAbastecimento ? 'selected' : ''}>${abastecimento.descricao}</option>
 						</c:forEach>
 					</select>
 				</td>
@@ -203,8 +203,8 @@
 	        	<th width="14%" class="obrigatorio">Cart&atilde;o Sa&iacute;da:</th>
 				<td align="left" style="padding: 7px 10px;">
 					<select name="missao.cartaoSaida">
-						<c:forEach items="${cartaoSaida}" var="saida">
-							<option value="${saida}" ${saida == missao.cartaoSaida ? 'selected' : '' }>${saida.resposta}</option>
+						<c:forEach items="${cartoesSaida}" var="saida">
+							<option value="${saida}" ${saida == missao.cartaoSaida ? 'selected' : '' }>${saida.descricao}</option>
 						</c:forEach>
 					</select>
 				</td>
@@ -242,7 +242,7 @@
 				<td align="left" style="padding: 7px 10px;">
 					<select name="missao.avariasAparentesRetorno">
 						<c:forEach items="${avariasAparentesRetorno}" var="avariaAparente">
-							<option value="${avariaAparente}" ${avariaAparente == missao.avariasAparentesRetorno ? 'selected' : ''}>${avariaAparente.resposta}</option>
+							<option value="${avariaAparente}" ${avariaAparente == missao.avariasAparentesRetorno ? 'selected' : ''}>${avariaAparente.descricao}</option>
 						</c:forEach>
 					</select>
 				</td>
@@ -253,7 +253,7 @@
 		        	<td colspan="7"><textarea name="missao.ocorrencias" rows="7" cols="80">${null != missao ? missao.ocorrencias : ''}</textarea></td>
 		        </tr>
 		       	<tr>
-		        	<th>Itiner&acute;rio Completo:</th>
+		        	<th>Itiner&aacute;rio Completo:</th>
 		        	<td colspan="7"><textarea name="missao.itinerarioCompleto" rows="7" cols="80">${null != missao ? missao.itinerarioCompleto : ''}</textarea></td>
 		        </tr>
 		</table>
@@ -278,6 +278,6 @@
 
 	<div id="btnAcoes" class="gt-table-buttons">
 		<input type="button" id="btnFinalizar" value="<fmt:message key='views.botoes.finalizar' />" onClick="submitForm('${linkTo[MissaoController].finalizarMissao}')" class="gt-btn-medium gt-btn-left" />
-		<input type="button" id="btnVoltar"  value="&{'views.botoes.voltar'}" onClick="javascript:location.href='${linkTo[MissaoController].buscarPelaSequence[missao.sequence]}'" class="gt-btn-medium gt-btn-left" />
+		<input type="button" id="btnVoltar"  value="<fmt:message key='views.botoes.voltar' />" onClick="javascript:location.href='${linkTo[MissaoController].buscarPelaSequence[missao.sequence]}'" class="gt-btn-medium gt-btn-left" />
 	</div>
 </form>

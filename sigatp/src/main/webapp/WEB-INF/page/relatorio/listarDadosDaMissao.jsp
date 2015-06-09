@@ -153,7 +153,7 @@
 				<div class="conteudos">
 					<table>
 				    	<tr>
-				    		<th>Requisição Nº:</th><td>${requisicao.sequence}</td>
+				    		<th>Requisição Nº:</th><td>${requisicao.buscarSequence()}</td>
 				    	</tr>
 				    	<tr>	
 					    	<th>Tipo:</th><td>${requisicao.tipoRequisicao.toString()}</td>
@@ -162,10 +162,10 @@
 					    	<th>Data:</th><td><fmt:formatDate pattern="dd/MM/yyyy HH:mm" value="${missao.dataHora.time}" /></td>
 					    </tr>
 				    	<tr>	
-					    	<th>Saída Prevista:</th><td><fmt:formatDate pattern="dd/MM/yyyy HH:mm" value="${missao.dataHoraSaidaPrevista.time}" /></td>
+					    	<th>Saída Prevista:</th><td><fmt:formatDate pattern="dd/MM/yyyy HH:mm" value="${missao.dataHoraSaida.time}" /></td>
 					    </tr>
 					    <tr>    
-							<th>Retorno Previsto:</th><td><fmt:formatDate pattern="dd/MM/yyyy HH:mm" value="${missao.dataHoraRetornoPrevisto.time}" /></td>
+							<th>Retorno Previsto:</th><td><fmt:formatDate pattern="dd/MM/yyyy HH:mm" value="${missao.dataHoraRetorno.time}" /></td>
 						</tr>
 						<tr>    
 							<th>Passageiros:</th><td>${requisicao.passageiros}</td>

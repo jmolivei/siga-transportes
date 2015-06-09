@@ -85,8 +85,8 @@
 				</tr>
 			</thead>
 			<tbody id="tbody">
-				<c:if test="${null != requisicoesTransporte && !requisicoesTransporte.isEmpty()}">
-					<c:forEach items="${requisicoesTransporte}" var="requisicaoTransporte">
+				<c:if test="${null != missao.requisicoesTransporte && !missao.requisicoesTransporte.isEmpty()}">
+					<c:forEach items="${missao.requisicoesTransporte}" var="requisicaoTransporte">
 			   			<input type="hidden" name="requisicoesAntigas" readonly="readonly" value="${requisicaoTransporte.id}" class="requisicoes" />
 			   			<input type="hidden" name="missao.inicioRapido" id="inicioRapido" value="${missao.inicioRapido}" />
 
@@ -117,8 +117,8 @@
 					   	    <td width="8%" >
 					   	    	<c:if test="${(mostrarDadosIniciada || mostrarDadosFinalizada) && !mostrarBotoesIniciar && !mostrarBotoesIniciarRapido}">
 						   	    	<select name="requisicaoTransporte.ultimoEstado">
-						   	    		<c:forEach items="${estadosRequisicao.valuesComboAtendimentoMissao()}" var="estado">
-						   	    			<option value="${estado}" ${estado == requisicaoTransporte.ultimoEstado ? 'selected' : ''}>estado.descricao</option>
+						   	    		<c:forEach items="${ultimosEstados}" var="ultimos">
+						   	    			<option value="${ultimos}" ${ultimos == requisicaoTransporte.ultimoEstado ? 'selected' : ''}>${ultimos.descricao}</option>
 						   	    		</c:forEach>
 						   	    	</select>
 					   	    	</c:if>
@@ -163,7 +163,8 @@
 			var idMissao = $('#missaoId').val();
 			var dataSaida = $('#inputdataHoraSaida').val();
 			var veiculosDisp = $('#veiculosDisp').val();
-			var inicioRapido = $('#inicioRapido').val();
+			var inicioRapido = $('#inicioRapido').val() !== undefined ? $('#inicioRapido').val() : "NAO" ;
+			console.log(inicioRapido);
 			var listarVeiculosCondutoresDisp = "${linkTo[MissaoController].listarVeiculosECondutoresDisponiveis}";
 			return listarVeiculosCondutoresDisp + "?idMissao=" + idMissao + "&veiculosDisp=" + veiculosDisp + "&inicioRapido=" + inicioRapido +"&dataSaida=" + dataSaida;
 		}
@@ -183,6 +184,7 @@
 		}
 
 		var error = function(error){
+			console.error("Ocorreu um erro no servidor ao tentar preencher os dados de veiculos e condutores.");
 			console.error(error);
 		}
 
@@ -268,7 +270,6 @@
 								<option value="${veiculo.id}" ${veiculo.id == missao.veiculo.id ? 'selected' : ''}>${veiculo.dadosParaExibicao}</option>
 							</c:forEach>
 						</select>
-<%-- 						<siga:select id="selveiculosdisponiveis" name="missao.veiculo.id" list="veiculos" listKey="id" listValue="dadosParaExibicao" value="${missao.veiculo.id}"/> --%>
 					</c:when>
 					<c:otherwise>
 						<siga:select id="selveiculosdisponiveis" name="missao.veiculo.id" list="veiculos" listKey="id" listValue="dadosParaExibicao" value="${missao.veiculo.id}"/>
@@ -280,21 +281,21 @@
 		        	<label for="estepe" class="obrigatorio">Estepe</label>
 		        	<select name="missao.estepe">
 		        		<c:forEach items="${estepes}" var="estepe">
-		        			<option value="${estepe}" ${estepe == missao.estepe ? 'selected' : ''}>${estepe.resposta}</option>
+		        			<option value="${estepe}" ${estepe == missao.estepe ? 'selected' : ''}>${estepe.descricao}</option>
 		        		</c:forEach>
 		        	</select>
 
 		        	<label for="triangulos" class="obrigatorio">Tri&acirc;ngulo</label>
 		        	<select name="missao.triangulos">
 		        		<c:forEach items="${triangulos}" var="triangulo">
-		        			<option value="${triangulo}" ${triangulo == missao.triangulos ? 'selected' : ''}>${triangulo.resposta}</option>
+		        			<option value="${triangulo}" ${triangulo == missao.triangulos ? 'selected' : ''}>${triangulo.descricao}</option>
 		        		</c:forEach>
 		        	</select>
 
 		        	<label for="cartaoSeguro" class="obrigatorio">Cart&atilde;o Seguro</label>
 		        	<select name="missao.cartaoSeguro">
 		        		<c:forEach items="${cartoesSeguro}" var="cartaoSeguro">
-		        			<option value="${cartaoSeguro}" ${cartaoSeguro == missao.cartaoSeguro ? 'selected' : ''}>${cartaoSeguro.resposta}</option>
+		        			<option value="${cartaoSeguro}" ${cartaoSeguro == missao.cartaoSeguro ? 'selected' : ''}>${cartaoSeguro.descricao}</option>
 		        		</c:forEach>
 		        	</select>
 		       	</div>
@@ -310,7 +311,6 @@
 								<option value="${condutor.id}" ${condutor.id == missao.condutor.id ? 'selected' : ''}>${condutor.dadosParaExibicao}</option>
 							</c:forEach>
 						</select>
-<%-- 						<siga:select id="selcondutoresdisponiveis" name="missao.condutor.id" list="condutores" listKey="id" listValue="dadosParaExibicao" value="${missao.veiculo.id}" disabled/> --%>
 					</c:when>
 					<c:otherwise>
 						<siga:select id="selcondutoresdisponiveis" name="missao.condutor.id" list="condutores" listKey="id" listValue="dadosParaExibicao" value="${missao.condutor.id}"/>
@@ -323,21 +323,21 @@
 		        		<label for="avariasAparentesSaida" class="obrigatorio">Avarias Aparentes</label>
 		        		<select name="missao.avariasAparentesSaida">
 		        			<c:forEach items="${avariasAparentesSaida}" var="avariaAparente">
-		        				<option value="${avariaAparente}" ${avariaAparente == missao.avariasAparentesSaida ? 'selected' : ''}>${avariaAparente.resposta}</option>
+		        				<option value="${avariaAparente}" ${avariaAparente == missao.avariasAparentesSaida ? 'selected' : ''}>${avariaAparente.descricao}</option>
 		        			</c:forEach>
 		        		</select>
 
 			        	<label for="extintor" class="obrigatorio">Extintor</label>
 		        		<select name="missao.extintor">
 		        			<c:forEach items="${extintores}" var="extintor">
-		        				<option value="${extintor}" ${extintor == missao.extintor ? 'selected' : ''}>${extintor.resposta}</option>
+		        				<option value="${extintor}" ${extintor == missao.extintor ? 'selected' : ''}>${extintor.descricao}</option>
 		        			</c:forEach>
 		        		</select>
 
 			        	<label for="cartaoAbastecimento" class="obrigatorio">Cart&atilde;o Abastecimento</label>
 		        		<select name="missao.cartaoAbastecimento">
 		        			<c:forEach items="${cartoesAbastecimento}" var="cartaoAbastecimento">
-		        				<option value="${cartaoAbastecimento}" ${cartaoAbastecimento == missao.cartaoAbastecimento ? 'selected' : ''}>${cartaoAbastecimento.resposta}</option>
+		        				<option value="${cartaoAbastecimento}" ${cartaoAbastecimento == missao.cartaoAbastecimento ? 'selected' : ''}>${cartaoAbastecimento.descricao}</option>
 		        			</c:forEach>
 		        		</select>
 		       		</div>
@@ -345,21 +345,21 @@
 						<label for="limpeza" class="obrigatorio">Limpeza</label>
 		        		<select name="missao.limpeza">
 		        			<c:forEach items="${limpeza}" var="limpo">
-		        				<option value="${limpo}" ${limpo == missao.limpeza ? 'selected' : ''}>${limpo.resposta}</option>
+		        				<option value="${limpo}" ${limpo == missao.limpeza ? 'selected' : ''}>${limpo.descricao}</option>
 		        			</c:forEach>
 		        		</select>
 
 						<label for="ferramentas" class="obrigatorio">Ferramentas</label>
 		        		<select name="missao.ferramentas">
 		        			<c:forEach items="${ferramentas}" var="ferramenta">
-		        				<option value="${ferramenta}" ${ferramenta == missao.ferramentas ? 'selected' : ''}>${ferramenta.resposta}</option>
+		        				<option value="${ferramenta}" ${ferramenta == missao.ferramentas ? 'selected' : ''}>${ferramenta.descricao}</option>
 		        			</c:forEach>
 		        		</select>
 
 			        	<label for="cartaoSaida" class="obrigatorio">Cart&atilde;o Sa&iacute;da</label>
 		        		<select name="missao.cartaoSaida">
 		        			<c:forEach items="${cartoesSaida}" var="cartao">
-		        				<option value="${cartao}" ${cartao == missao.cartaoSaida ? 'selected' : ''}>${cartao.resposta}</option>
+		        				<option value="${cartao}" ${cartao == missao.cartaoSaida ? 'selected' : ''}>${cartao.descricao}</option>
 		        			</c:forEach>
 		        		</select>
 		       		</div>
@@ -367,38 +367,37 @@
 			</c:if>
 		</div>
 	</div>
-
 	<c:if test="${mostrarDadosFinalizada}">
-	<h3> Retorno</h3>
-	<div id ="infRetorno" class="gt-content-box gt-form clearfix">
-		<div class="clearfix">
-			<div class="coluna margemDireitaG">
-	        	<label for="inputdataHoraRetorno" class="obrigatorio">Data/Hora</label>
-	       		<input type="text" id="inputdataHoraRetorno" name="missao.dataHoraRetorno" value="<fmt:formatDate pattern='dd/MM/yyyy HH:mm' value="${missao.dataHoraRetorno.time}" />" size="14" class="dataHora" />
-		        <label for="nivelCombustivelRetorno" class="obrigatorio">Combustivel</label>
-        		<select name="missao.nivelCombustivelRetorno">
-        			<c:forEach items="${nivelCombustivelRetorno}" var="nivelCombustivel">
-        				<option value="${nivelCombustivel}" ${nivelCombustivel == missao.nivelCombustivelRetorno ? 'selected' : ''}>${nivelCombustivel.resposta}</option>
-        			</c:forEach>
-        		</select>
-			</div>
+		<h3>Retorno</h3>
+		<div id ="infRetorno" class="gt-content-box gt-form clearfix">
+			<div class="clearfix">
+				<div class="coluna margemDireitaG">
+		        	<label for="inputdataHoraRetorno" class="obrigatorio">Data/Hora</label>
+		       		<input type="text" id="inputdataHoraRetorno" name="missao.dataHoraRetorno" value="<fmt:formatDate pattern='dd/MM/yyyy HH:mm' value="${missao.dataHoraRetorno.time}" />" size="14" class="dataHora" />
+			        <label for="nivelCombustivelRetorno" class="obrigatorio">Combustivel</label>
+	        		<select name="missao.nivelCombustivelRetorno">
+	        			<c:forEach items="${nivelCombustivelRetorno}" var="nivelCombustivel">
+	        				<option value="${nivelCombustivel}" ${nivelCombustivel == missao.nivelCombustivelRetorno ? 'selected' : ''}>${nivelCombustivel.descricao}</option>
+	        			</c:forEach>
+	        		</select>
+				</div>
 
-			<div class="coluna">
-		    	<label for="odometroRetornoEmKm" class="obrigatorio">Od&ocirc;metro</label>
-	       		<input type="text" name="missao.odometroRetornoEmKm" value="${missao.odometroRetornoEmKm}" size="12" class="decimal" />
-		        <label for="avariasAparentesRetorno" class="obrigatorio">Avarias Aparentes</label>
-        		<select name="missao.avariasAparentesRetorno">
-        			<c:forEach items="${avariasAparentesRetorno}" var="avariaAparente">
-        				<option value="${avariaAparente}" ${avariaAparente == missao.avariasAparentesRetorno ? 'selected' : ''}>${avariaAparente.resposta}</option>
-        			</c:forEach>
-        		</select>
+				<div class="coluna">
+			    	<label for="odometroRetornoEmKm" class="obrigatorio">Od&ocirc;metro</label>
+		       		<input type="text" name="missao.odometroRetornoEmKm" value="${missao.odometroRetornoEmKm}" size="12" class="decimal" />
+			        <label for="avariasAparentesRetorno" class="obrigatorio">Avarias Aparentes</label>
+	        		<select name="missao.avariasAparentesRetorno">
+	        			<c:forEach items="${avariasAparentesRetorno}" var="avariaAparente">
+	        				<option value="${avariaAparente}" ${avariaAparente == missao.avariasAparentesRetorno ? 'selected' : ''}>${avariaAparente.descricao}</option>
+	        			</c:forEach>
+	        		</select>
+				</div>
 			</div>
+			<label for="ocorrencias" class="obrigatorio">Ocorr&ecirc;ncias</label>
+			<textarea name="missao.ocorrencias" rows="7" cols="80">${null != missao ? missao.ocorrencias : ''}</textarea>
+			<label for="itinerarioCompleto" class="obrigatorio">Itiner&aacute;rio Completo</label>
+			<textarea name="missao.itinerarioCompleto" rows="7" cols="80">${null != missao ? missao.itinerarioCompleto : ''}</textarea>
 		</div>
-		<label for="ocorrencias" class="obrigatorio">Ocorr&ecirc;ncias</label>
-		<textarea name="missao.ocorrencias" rows="7" cols="80">${null != missao ? missao.ocorrencias : ''}</textarea>
-		<label for="itinerarioCompleto" class="obrigatorio">Itiner&aacute;rio Completo</label>
-		<textarea name="missao.itinerarioCompleto" rows="7" cols="80">${null != missao ? missao.itinerarioCompleto : ''}</textarea>
-	</div>
 	</c:if>
 	<span class="alerta menor"><fmt:message key="views.erro.preenchimentoObrigatorio"/></span>
 
@@ -534,7 +533,7 @@
 			<input type="button" id="btnSalvar" value="<fmt:message key='views.botoes.salvar'/>" onClick="submitForm('${linkTo[MissaoController].salvar}')" class="gt-btn-medium gt-btn-left" />
 			<c:choose>
 				<c:when test="${missao.id > 0}">
-					<input type="button" id="btnVoltar"  value="<fmt:message key='views.botoes.voltar'/>" onClick="javascript:location.href='${linkTo[MissaoController].buscarPelaSequence[missao.sequence]}'" class="gt-btn-medium gt-btn-left" />
+					<input type="button" id="btnVoltar"  value="<fmt:message key='views.botoes.voltar'/>" onClick="javascript:location.href='${linkTo[MissaoController].buscarPelaSequence[false][missao.sequence]}'" class="gt-btn-medium gt-btn-left" />
 				</c:when>
 				<c:otherwise>
 					<input type="button" id="btnVoltar"  value="<fmt:message key='views.botoes.voltar'/>" onClick="javascript:location.href='${linkTo[MissaoController].listar}'" class="gt-btn-medium gt-btn-left" />
@@ -546,21 +545,21 @@
 	<c:if test="${mostrarBotoesIniciarRapido}">
 		<div id="btnAcoes" class="gt-table-buttons">
 			<input type="button" id="btnIniciar" value="<fmt:message key='views.botoes.iniciar'/>" onClick="submitForm('${linkTo[MissaoController].iniciarMissaoRapido}')" class="gt-btn-medium gt-btn-left" />
-			<input type="button" id="btnVoltar"  value="<fmt:message key='views.botoes.voltar'/>" onClick="javascript:location.href='${linkTo[MissaoController].buscarPelaSequence[missao.sequence]}'" class="gt-btn-medium gt-btn-left" />
+			<input type="button" id="btnVoltar"  value="<fmt:message key='views.botoes.voltar'/>" onClick="javascript:location.href='${linkTo[MissaoController].buscarPelaSequence[false][missao.sequence]}'" class="gt-btn-medium gt-btn-left" />
 		</div>
 	</c:if>
 
 	<c:if test="${mostrarBotoesIniciar}">
 		<div id="btnAcoes" class="gt-table-buttons">
 			<input type="button" id="btnIniciar" value="<fmt:message key='views.botoes.iniciar'/>" onClick="submitForm('${linkTo[MissaoController].iniciarMissao}')" class="gt-btn-medium gt-btn-left" />
-			<input type="button" id="btnVoltar"  value="<fmt:message key='views.botoes.voltar'/>" onClick="javascript:location.href='${linkTo[MissaoController].buscarPelaSequence[missao.sequence]}'" class="gt-btn-medium gt-btn-left" />
+			<input type="button" id="btnVoltar"  value="<fmt:message key='views.botoes.voltar'/>" onClick="javascript:location.href='${linkTo[MissaoController].buscarPelaSequence[false][missao.sequence]}'" class="gt-btn-medium gt-btn-left" />
 		</div>
 	</c:if>
 
 	<c:if test="${mostrarBotoesFinalizar}">
 		<div id="btnAcoes" class="gt-table-buttons">
 			<input type="button" id="btnFinalizar" value="<fmt:message key='views.botoes.finalizar'/>" onClick="submitForm('${linkTo[MissaoController].finalizarMissao}')" class="gt-btn-medium gt-btn-left" />
-			<input type="button" id="btnVoltar"  value="<fmt:message key='views.botoes.voltar'/>" onClick="javascript:location.href='${linkTo[MissaoController].buscarPelaSequence[missao.sequence]}'" class="gt-btn-medium gt-btn-left" />
+			<input type="button" id="btnVoltar"  value="<fmt:message key='views.botoes.voltar'/>" onClick="javascript:location.href='${linkTo[MissaoController].buscarPelaSequence[false][missao.sequence]}'" class="gt-btn-medium gt-btn-left" />
 		</div>
 	</c:if>
 
