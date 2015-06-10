@@ -176,17 +176,21 @@ public class Parametro extends TpModel implements ConvertableEntity {
         return retorno;
     }
 
-    public static String buscarConfigSistemaEmVigor(String stringCron) {
-        /* TODO OSI_22 - PROBLEMA DE MERGE
-         * Metodo implementado pois ocorreu um conflito com o código do cliente
-         * ao efetuar o MERGE entre os branchs da DB1 e do SIGA.
-         * 
-         * Como é utilizado nos controllers de Andamento (Andamentos.java e ParametroController.java)
-         * foi implementado somente para nao quebrar o build.
-         * 
-         * Procuramos nos fontes do git (https://github.com/projeto-siga/siga-transportes) nas branchs e nao encontramos a implementação do 
-         * metodo.
-         */
-        throw new UnsupportedOperationException();
+    public static String buscarConfigSistemaEmVigor(String nome) {
+        String retorno = null;
+        Calendar hoje = Calendar.getInstance();
+        String queryComData = "nomeParametro = ? "
+                + "and dataInicio < ? "
+                + "and (dataFim is null or dataFim > ?) "
+                + "and dpPessoa is null "
+                + "and dpLotacao is null "
+                + "and cpComplexo is null "
+                + "and cpOrgaoUsuario is null";
+        
+        Parametro parametro = Parametro.AR.find(queryComData,nome,hoje, hoje).first();
+        if(parametro != null) {
+            retorno = parametro.valorParametro;
+        }
+        return retorno;
     }
 }
