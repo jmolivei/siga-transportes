@@ -16,7 +16,6 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
-import javax.persistence.NoResultException;
 import javax.persistence.Query;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
@@ -38,12 +37,12 @@ import br.gov.jfrj.siga.vraptor.converter.ConvertableEntity;
 @Audited
 @Table(schema = "SIGATP")
 public class Abastecimento extends TpModel implements Comparable<Abastecimento>, ConvertableEntity {
-	
+
 	public static final ActiveRecord<Abastecimento> AR = new ActiveRecord<>(Abastecimento.class);
-	
+
 	@Id
-	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "hibernate_sequence_generator") 
-	@SequenceGenerator(name = "hibernate_sequence_generator", sequenceName="SIGATP.hibernate_sequence") 
+	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "hibernate_sequence_generator")
+	@SequenceGenerator(name = "hibernate_sequence_generator", sequenceName="SIGATP.hibernate_sequence")
 	private Long id;
 
 	@NotNull
@@ -53,7 +52,7 @@ public class Abastecimento extends TpModel implements Comparable<Abastecimento>,
 	@ManyToOne
 	@NotNull
 	private Fornecedor fornecedor;
-	
+
 	@NotNull
 	@Enumerated(EnumType.STRING)
 	private TipoDeCombustivel tipoDeCombustivel;
@@ -61,63 +60,58 @@ public class Abastecimento extends TpModel implements Comparable<Abastecimento>,
 	@NotNull
 	@Min(value=1, message="{abastecimento.quantidadeEmLitros.min}")
 	private Double quantidadeEmLitros;
-	
+
 	@NotNull
 	private Double precoPorLitro;
-	
+
 	@NotNull
 	private Double valorTotalDaNotaFiscal;
-	
+
 	@NotNull
 	@NotEmpty
 	private String numeroDaNotaFiscal;
-	
+
 	@ManyToOne
 	@NotNull
 	private Veiculo veiculo;
-	
+
 	@ManyToOne
 	@NotNull
-	private Condutor condutor;	
-	
+	private Condutor condutor;
+
 	@Enumerated(EnumType.STRING)
 	private NivelDeCombustivel nivelDeCombustivel;
-	
+
 	@NotNull
 	private Double odometroEmKm;
-	
+
 	@NotNull
 	private Double distanciaPercorridaEmKm;
 
 	@NotNull
 	private Double consumoMedioEmKmPorLitro;
-	
+
  	@Audited(targetAuditMode = RelationTargetAuditMode.NOT_AUDITED)
 	@ManyToOne
 	@JoinColumn(name = "ID_SOLICITANTE")
 	private DpPessoa solicitante;
- 	
+
  	@Audited(targetAuditMode = RelationTargetAuditMode.NOT_AUDITED)
 	@ManyToOne
 	@JoinColumn(name = "ID_TITULAR")
-	private DpPessoa titular; 	
-	
+	private DpPessoa titular;
+
  	@Audited(targetAuditMode = RelationTargetAuditMode.NOT_AUDITED)
 	@ManyToOne
 	@JoinColumn(name = "ID_ORGAO_USU")
 	private CpOrgaoUsuario orgao;
 
- 	public String formataValorExponencialParaDecimal(Double number) {
-		return BigDecimal.valueOf((Double) number).toPlainString();
-	}
+ 	public Abastecimento(){
+        this.id = 0L;
+        this.tipoDeCombustivel = TipoDeCombustivel.GASOLINA;
+        this.nivelDeCombustivel = NivelDeCombustivel.I;
+    }
 
- 	public String formataMoedaBrasileiraSemSimbolo(Double number) {
-		Locale defaultLocale = new Locale("pt", "BR", "BRL");
-		NumberFormat nf = NumberFormat.getCurrencyInstance(defaultLocale);
-		String moeda =  nf.format(number).replace("R$", "").trim();
-		return moeda;
-	}
-	
  	@Override
 	public Long getId() {
 		return id;
@@ -267,7 +261,7 @@ public class Abastecimento extends TpModel implements Comparable<Abastecimento>,
 		Collections.sort(abastecimentos, Collections.reverseOrder());
 		return abastecimentos;
 	}
-		
+
 	public static List<Abastecimento> buscarTodosPorCondutor(Condutor condutor){
 		List<Abastecimento> abastecimentos = Abastecimento.AR.find("condutor", condutor).fetch();
 		Collections.sort(abastecimentos, Collections.reverseOrder());
@@ -280,13 +274,6 @@ public class Abastecimento extends TpModel implements Comparable<Abastecimento>,
 		return abastecimentos;
 	}
 
-	public Abastecimento(){
-		this.id = 0L;
-		this.tipoDeCombustivel = TipoDeCombustivel.GASOLINA;
-		this.nivelDeCombustivel = NivelDeCombustivel.I;
-	}
-
-
 	@Override
 	public int compareTo(Abastecimento o) {
         return this.dataHora.compareTo(o.dataHora);
@@ -297,7 +284,7 @@ public class Abastecimento extends TpModel implements Comparable<Abastecimento>,
 		Collections.sort(abastecimentos, Collections.reverseOrder());
 		return abastecimentos;
 	}
-	
+
 	@SuppressWarnings("unchecked")
 	public static List<Abastecimento> listarParaAdminGabinete(DpPessoa admin) {
 		List<Abastecimento> retorno;
@@ -308,13 +295,10 @@ public class Abastecimento extends TpModel implements Comparable<Abastecimento>,
 				+ "where (t.idPessoaIni = " + admin.getIdInicial() + " or "
 				+ "t.lotacao.idLotacaoIni = " + admin.getLotacao().getIdInicial()
 				+ ") and t.dataFimPessoa IS NULL)";
-		
+
 		Query qry = AR.em().createQuery(query);
-		try {
-			retorno = ((List<Abastecimento>) qry.getResultList());
-		} catch(NoResultException ex) {
-			retorno =null;
-		}
+		retorno = ((List<Abastecimento>) qry.getResultList());
+
 		Collections.sort(retorno, Collections.reverseOrder());
 		return retorno;
 	}
@@ -330,13 +314,10 @@ public class Abastecimento extends TpModel implements Comparable<Abastecimento>,
 					+ "where (t.idPessoaIni = " + agente.getIdInicial() + " or "
 					+ "t.lotacao.idLotacaoIni = " + agente.getLotacao().getIdInicial()
 					+ ") and t.dataFimPessoa IS NULL)";
-				 
+
 		Query qry = AR.em().createQuery(query);
-		try {
-			retorno = ((List<Abastecimento>) qry.getResultList());
-		} catch(NoResultException ex) {
-			retorno =null;
-		}
+		retorno = ((List<Abastecimento>) qry.getResultList());
+
 		Collections.sort(retorno, Collections.reverseOrder());
 		return retorno;
 	}
@@ -346,13 +327,10 @@ public class Abastecimento extends TpModel implements Comparable<Abastecimento>,
 		List<Abastecimento> retorno;
 		String query = "select a from Abastecimento a "
 					+ "where orgao.id = " + admin.getOrgaoUsuario().getId();
-				 
+
 		Query qry = AR.em().createQuery(query);
-		try {
-			retorno = ((List<Abastecimento>) qry.getResultList());
-		} catch(NoResultException ex) {
-			retorno =null;
-		}
+		retorno = ((List<Abastecimento>) qry.getResultList());
+
 		Collections.sort(retorno, Collections.reverseOrder());
 		return retorno;
 	}
@@ -361,4 +339,14 @@ public class Abastecimento extends TpModel implements Comparable<Abastecimento>,
 		SimpleDateFormat dataFormatada = new SimpleDateFormat("dd-MM-yyyy HH:mm");
 		return dataFormatada.format(this.dataHora.getTime()) + " - " + this.fornecedor.getRazaoSocial();
 	}
+
+	public String formataValorExponencialParaDecimal(Double number) {
+        return BigDecimal.valueOf((Double) number).toPlainString();
+    }
+
+    public String formataMoedaBrasileiraSemSimbolo(Double number) {
+        Locale defaultLocale = new Locale("pt", "BR", "BRL");
+        NumberFormat nf = NumberFormat.getCurrencyInstance(defaultLocale);
+        return nf.format(number).replace("R$", "").trim();
+    }
 }
