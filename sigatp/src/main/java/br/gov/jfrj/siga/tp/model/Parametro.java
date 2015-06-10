@@ -184,7 +184,7 @@ public class Parametro extends TpModel implements ConvertableEntity {
          * Como é utilizado nos controllers de Andamento (Andamentos.java e ParametroController.java)
          * foi implementado somente para nao quebrar o build.
          * 
-         * Procuramos nos fontes do git (https://github.com/trfrj/siga-tp) nas branchs e nao encontramos a implementação do 
+         * Procuramos nos fontes do git (https://github.com/projeto-siga/siga-transportes) nas branchs e nao encontramos a implementação do 
          * metodo.
          */
         throw new UnsupportedOperationException();
