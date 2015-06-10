@@ -7,7 +7,7 @@
 <jsp:include page="../tags/calendario.jsp" />
 <sigatp:decimal />
 
-<form id="formGabinete" action="${linkTo[ControleGabineteController].salvar}" method="post" cssClass="form" enctype="multipart/form-data">
+<form id="formGabinete" action="${linkTo[ControleGabineteController].salvar}" method="post" class="form" enctype="multipart/form-data">
 	<div class="gt-content-box gt-form"> 
 	<input type="hidden" name="controleGabinete" value="${controleGabinete.id}" />
 	<div class="clearfix">

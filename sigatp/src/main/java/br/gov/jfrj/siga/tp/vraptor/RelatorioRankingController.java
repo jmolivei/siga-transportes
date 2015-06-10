@@ -113,11 +113,12 @@ public class RelatorioRankingController extends TpController {
         if (relatorioRanking.getDataInicio() == null)
             msgErro.append("Data Inicio ");
 
-        if (relatorioRanking.getDataFim() == null) {
+        if (relatorioRanking.getDataFim() == null)
             msgErro.append("".equalsIgnoreCase(msgErro.toString()) ? "Data Fim " : "e Data Fim ");
-            msgErro.append(" deve(m) ser preenchido(s)");
-        }
-
+        
+        if(!"".equalsIgnoreCase(msgErro.toString()))
+        	msgErro.append(" deve(m) ser preenchido(s)");
+        
         if (relatorioRanking.getDataFim() != null && relatorioRanking.getDataInicio() != null && relatorioRanking.getDataFim().getTime().before(relatorioRanking.getDataInicio().getTime()))
             msgErro.append("Data Inicio maior que Data Fim");
 
