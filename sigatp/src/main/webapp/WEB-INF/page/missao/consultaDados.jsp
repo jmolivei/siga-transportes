@@ -14,7 +14,7 @@
 </c:if>
 
 <br />
-<input type="hidden" id="missaoId" name="missao.id" value="${missao.id}" />
+<input type="hidden" id="missaoId" name="missao" value="${missao.id}" />
 
 <h3>Informa&ccedil;&otilde;es B&aacute;sicas</h3>
 <div id ="infbasicas" class="gt-content-box gt-for-table">
