@@ -5,6 +5,7 @@ import java.util.List;
 
 import javax.persistence.EntityManager;
 import javax.servlet.http.HttpServletRequest;
+
 import br.com.caelum.vraptor.Path;
 import br.com.caelum.vraptor.Resource;
 import br.com.caelum.vraptor.Result;
@@ -22,7 +23,9 @@ import br.gov.jfrj.siga.vraptor.SigaObjects;
 @Resource
 public class AndamentoController extends TpController{
 
-	public AndamentoController(HttpServletRequest request, Result result, Validator validator, SigaObjects so, EntityManager em) {
+	private static final String ANDAMENTO = "andamento";
+
+    public AndamentoController(HttpServletRequest request, Result result, Validator validator, SigaObjects so, EntityManager em) {
 		super(request, result, TpDao.getInstance(), validator, so, em);
 	}
 
@@ -31,6 +34,7 @@ public class AndamentoController extends TpController{
 		RequisicaoTransporte requisicaoTransporte = RequisicaoTransporte.AR.findById(idRequisicao);
 		List<Andamento> andamentos = Andamento.AR.find("requisicaoTransporte = ? order by id desc", requisicaoTransporte).fetch();
 		MenuMontador.instance(result).recuperarMenuRequisicoes(idRequisicao, popUp, popUp);
+		
 		result.include("andamentos", andamentos);
 		result.include("requisicaoTransporte", requisicaoTransporte);
 	}
@@ -46,16 +50,14 @@ public class AndamentoController extends TpController{
 			redirecionarSeErroAoSalvar(andamento);
 		}
 
-		if (andamento.getEstadoRequisicao() == EstadoRequisicao.CANCELADA
-		||  andamento.getEstadoRequisicao() == EstadoRequisicao.REJEITADA)  {
-			error((null == andamento.getDescricao() || "".equals(andamento.getDescricao())), "andamento", "views.erro.campoObrigatorio");
+		if (andamento.getEstadoRequisicao() == EstadoRequisicao.CANCELADA || andamento.getEstadoRequisicao() == EstadoRequisicao.REJEITADA)  {
+			error(null == andamento.getDescricao() || "".equals(andamento.getDescricao()), ANDAMENTO, "views.erro.campoObrigatorio");
 			redirecionarSeErroAoSalvar(andamento);
 		}
 
 		if (andamento.getEstadoRequisicao() == EstadoRequisicao.CANCELADA) {
-			if (andamento.getRequisicaoTransporte().cancelar(getCadastrante(), "CANCELADA")) {
+			if (andamento.getRequisicaoTransporte().cancelar(getCadastrante(), "CANCELADA")) 
 				result.redirectTo(ApplicationController.class).index();
-			}
 			else {
 				validator.add(new I18nMessage("estadoRequisicao", "andamentos.estadoRequisicao.andamento.validation"));
 				redirecionarSeErroAoSalvar(andamento);
@@ -74,7 +76,7 @@ public class AndamentoController extends TpController{
 	private void redirecionarSeErroAoSalvar(Andamento andamento) throws Exception {
 		if(validator.hasErrors()){
 			MenuMontador.instance(result).recuperarMenuRequisicoes(andamento.getRequisicaoTransporte().getId(), false, false);
-			result.include("andamento", andamento);
+			result.include(ANDAMENTO, andamento);
 			switch (andamento.getEstadoRequisicao()) {
 			case AUTORIZADA:
 			    validator.onErrorUse(Results.logic()).forwardTo(AndamentoController.class).autorizar(andamento.getRequisicaoTransporte().getId());
@@ -90,7 +92,6 @@ public class AndamentoController extends TpController{
 			}
 		}
 	}
-
 
 //	@RoleAdmin
 //	@RoleAdminMissao
@@ -126,17 +127,25 @@ public class AndamentoController extends TpController{
         String acaoExecutada = (acao.substring(0, acao.length()-1) + "DA").toUpperCase();
         andamento.setEstadoRequisicao(EstadoRequisicao.valueOf(acaoExecutada));
 
-        //TODO verificar a necessidade do ultimo true
         MenuMontador.instance(result).recuperarMenuRequisicoes(id, false, true);
 
-        result.include("andamento", andamento);
+        result.include(ANDAMENTO, andamento);
 
-        if (acao.equals("Autorizar") || acao.equals("Rejeitar")) {
-            if (andamento.getRequisicaoTransporte().getUltimoAndamento().getEstadoRequisicao() != EstadoRequisicao.AUTORIZADA &&
-                andamento.getRequisicaoTransporte().getUltimoAndamento().getEstadoRequisicao() != EstadoRequisicao.REJEITADA &&
-                andamento.getRequisicaoTransporte().getUltimoAndamento().getEstadoRequisicao() != EstadoRequisicao.ABERTA) {
-                throw new Exception(new I18nMessage("andamento", "andamentos.autorizarOuCancelar.exception", andamento.getRequisicaoTransporte().buscarSequence()).getMessage());
-            }
-        }
+        if ((isAcaoAutorizar(acao) || isAcaoRejeitar(acao)) && isRequisicaoEmAndamento(andamento)) 
+            throw new Exception(new I18nMessage(ANDAMENTO, "andamentos.autorizarOuCancelar.exception", andamento.getRequisicaoTransporte().buscarSequence()).getMessage());
 	}
+
+    private boolean isRequisicaoEmAndamento(Andamento andamento) {
+        return andamento.getRequisicaoTransporte().getUltimoAndamento().getEstadoRequisicao() != EstadoRequisicao.AUTORIZADA &&
+            andamento.getRequisicaoTransporte().getUltimoAndamento().getEstadoRequisicao() != EstadoRequisicao.REJEITADA &&
+            andamento.getRequisicaoTransporte().getUltimoAndamento().getEstadoRequisicao() != EstadoRequisicao.ABERTA;
+    }
+
+    private boolean isAcaoRejeitar(String acao) {
+        return "Rejeitar".equals(acao);
+    }
+
+    private boolean isAcaoAutorizar(String acao) {
+        return "Autorizar".equals(acao);
+    }
 }
