@@ -14,6 +14,7 @@ import br.com.caelum.vraptor.view.Results;
 import br.gov.jfrj.siga.dp.CpOrgaoUsuario;
 import br.gov.jfrj.siga.dp.dao.CpDao;
 import br.gov.jfrj.siga.tp.auth.annotation.RoleAdmin;
+import br.gov.jfrj.siga.tp.exceptions.GabineteControllerException;
 import br.gov.jfrj.siga.tp.model.Abastecimento;
 import br.gov.jfrj.siga.tp.model.Condutor;
 import br.gov.jfrj.siga.tp.model.Fornecedor;
@@ -48,73 +49,93 @@ public class GabineteController extends TpController {
 
     // Verificar se o MenuMontador é realmente utilizado
     @Path("/listarPorVeiculo/{idVeiculo}")
-    public void listarPorVeiculo(Long idVeiculo) throws Exception {
-        Veiculo veiculo = Veiculo.AR.findById(idVeiculo);
-        List<Abastecimento> abastecimentos = Abastecimento.buscarTodosPorVeiculo(veiculo);
-        MenuMontador.instance().recuperarMenuVeiculos(idVeiculo, ItemMenu.DADOSCADASTRAIS);
+    public void listarPorVeiculo(Long idVeiculo) throws GabineteControllerException {
+        try {
+            Veiculo veiculo = Veiculo.AR.findById(idVeiculo);
+            List<Abastecimento> abastecimentos = Abastecimento.buscarTodosPorVeiculo(veiculo);
+            MenuMontador.instance().recuperarMenuVeiculos(idVeiculo, ItemMenu.DADOSCADASTRAIS);
 
-        result.include(ABASTECIMENTOS, abastecimentos);
-        result.include(VEICULO, veiculo);
+            result.include(ABASTECIMENTOS, abastecimentos);
+            result.include(VEICULO, veiculo);
+        } catch (Exception e) {
+            throw new GabineteControllerException(e);
+        }
     }
 
     @RoleAdmin
     @Path("/incluir")
-    public void incluir() throws Exception {
-        List<Fornecedor> fornecedores = Fornecedor.listarTodos();
-        List<Veiculo> veiculos = Veiculo.listarTodos(getOrgaoUsuario());
-        List<Condutor> condutores = Condutor.listarTodos(getOrgaoUsuario());
-        Abastecimento abastecimento = new Abastecimento();
-        abastecimento.setOrgao(getTitular().getOrgaoUsuario());
-        abastecimento.setTitular(getTitular());
+    public void incluir() throws GabineteControllerException {
+        try {
+            List<Fornecedor> fornecedores = Fornecedor.listarTodos();
+            List<Veiculo> veiculos = Veiculo.listarTodos(getOrgaoUsuario());
+            List<Condutor> condutores = Condutor.listarTodos(getOrgaoUsuario());
+            Abastecimento abastecimento = new Abastecimento();
+            abastecimento.setOrgao(getTitular().getOrgaoUsuario());
+            abastecimento.setTitular(getTitular());
 
-        result.include(TIPOS_COMBUSTIVEL_PARA_ABASTECIMENTO, TipoDeCombustivel.tiposParaAbastecimento());
-        result.include(ABASTECIMENTO, abastecimento);
-        result.include(VEICULOS, veiculos);
-        result.include(CONDUTORES, condutores);
-        result.include(FORNECEDORES, fornecedores);
+            result.include(TIPOS_COMBUSTIVEL_PARA_ABASTECIMENTO, TipoDeCombustivel.tiposParaAbastecimento());
+            result.include(ABASTECIMENTO, abastecimento);
+            result.include(VEICULOS, veiculos);
+            result.include(CONDUTORES, condutores);
+            result.include(FORNECEDORES, fornecedores);
+        } catch (Exception e) {
+            throw new GabineteControllerException(e);
+        }
     }
 
     @RoleAdmin
     @Path("/editar/{id}")
-    public void editar(Long id) throws Exception {
-        List<Fornecedor> fornecedores = Fornecedor.listarTodos();
-        List<Veiculo> veiculos = Veiculo.listarTodos(getOrgaoUsuario());
-        List<Condutor> condutores = Condutor.listarTodos(getOrgaoUsuario());
-        Abastecimento abastecimento = Abastecimento.AR.findById(id);
-
-        result.include(TIPOS_COMBUSTIVEL_PARA_ABASTECIMENTO, TipoDeCombustivel.tiposParaAbastecimento());
-        result.include(ABASTECIMENTO, abastecimento);
-        result.include(VEICULOS, veiculos);
-        result.include(CONDUTORES, condutores);
-        result.include(FORNECEDORES, fornecedores);
-    }
-
-    @RoleAdmin
-    public void salvar(@Valid Abastecimento abastecimento) throws Exception {
-        if (validator.hasErrors()) {
+    public void editar(Long id) throws GabineteControllerException {
+        try {
             List<Fornecedor> fornecedores = Fornecedor.listarTodos();
             List<Veiculo> veiculos = Veiculo.listarTodos(getOrgaoUsuario());
             List<Condutor> condutores = Condutor.listarTodos(getOrgaoUsuario());
+            Abastecimento abastecimento = Abastecimento.AR.findById(id);
 
             result.include(TIPOS_COMBUSTIVEL_PARA_ABASTECIMENTO, TipoDeCombustivel.tiposParaAbastecimento());
             result.include(ABASTECIMENTO, abastecimento);
-            result.include(FORNECEDORES, fornecedores);
-            result.include(CONDUTORES, condutores);
             result.include(VEICULOS, veiculos);
+            result.include(CONDUTORES, condutores);
+            result.include(FORNECEDORES, fornecedores);
+        } catch (Exception e) {
+            throw new GabineteControllerException(e);
+        }
+    }
 
-            validator.onErrorUse(Results.page()).of(GabineteController.class).editar(abastecimento.getId());
-        } else {
-            abastecimento.save();
-            result.redirectTo(GabineteController.class).listar();
+    @RoleAdmin
+    public void salvar(@Valid Abastecimento abastecimento) throws GabineteControllerException {
+        try {
+            if (validator.hasErrors()) {
+                List<Fornecedor> fornecedores = Fornecedor.listarTodos();
+                List<Veiculo> veiculos = Veiculo.listarTodos(getOrgaoUsuario());
+                List<Condutor> condutores = Condutor.listarTodos(getOrgaoUsuario());
+
+                result.include(TIPOS_COMBUSTIVEL_PARA_ABASTECIMENTO, TipoDeCombustivel.tiposParaAbastecimento());
+                result.include(ABASTECIMENTO, abastecimento);
+                result.include(FORNECEDORES, fornecedores);
+                result.include(CONDUTORES, condutores);
+                result.include(VEICULOS, veiculos);
+
+                validator.onErrorUse(Results.page()).of(GabineteController.class).editar(abastecimento.getId());
+            } else {
+                abastecimento.save();
+                result.redirectTo(GabineteController.class).listar();
+            }
+        } catch (Exception e) {
+            throw new GabineteControllerException(e);
         }
     }
 
     @RoleAdmin
     @Path("/excluir/{id}")
-    public void excluir(Long id) throws Exception {
-        Abastecimento abastecimento = Abastecimento.AR.findById(id);
-        abastecimento.delete();
-        result.redirectTo(GabineteController.class).listar();
+    public void excluir(Long id) throws GabineteControllerException {
+        try {
+            Abastecimento abastecimento = Abastecimento.AR.findById(id);
+            abastecimento.delete();
+            result.redirectTo(GabineteController.class).listar();
+        } catch (Exception e) {
+            throw new GabineteControllerException(e);
+        }
     }
 
     private CpOrgaoUsuario getOrgaoUsuario() {
