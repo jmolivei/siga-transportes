@@ -15,9 +15,12 @@ import javax.validation.constraints.NotNull;
 
 import org.hibernate.envers.Audited;
 import org.hibernate.envers.RelationTargetAuditMode;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import br.gov.jfrj.siga.dp.DpPessoa;
 import br.gov.jfrj.siga.model.ActiveRecord;
+import br.gov.jfrj.siga.tp.dto.PlantaoDTO;
 import br.gov.jfrj.siga.tp.validation.annotation.Data;
 import br.gov.jfrj.siga.vraptor.converter.ConvertableEntity;
 
@@ -25,185 +28,188 @@ import br.gov.jfrj.siga.vraptor.converter.ConvertableEntity;
 @Audited
 @Table(schema = "SIGATP")
 public class ControleGabinete extends TpModel implements ConvertableEntity {
-	
-	private static final long serialVersionUID = 5270396853989326489L;
 
-	public static final ActiveRecord<ControleGabinete> AR = new ActiveRecord<>(ControleGabinete.class);
-	
-	@Id
-	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "hibernate_sequence_generator") @SequenceGenerator(name = "hibernate_sequence_generator", sequenceName="SIGATP.hibernate_sequence") 
-	private Long id;
-	
-	@Data(descricaoCampo="Data/Hora")
-	private Calendar dataHora;
-	
-	@NotNull
-	@Data(descricaoCampo="Data/Hora Saida")
-	private Calendar dataHoraSaida;
-	
-	@NotNull
-	@Data(descricaoCampo="Data/Hora Retorno")
-	private Calendar dataHoraRetorno;
-	
-	@NotNull
-	private String itinerario;
-	
-	@NotNull
-	@ManyToOne
-	private Veiculo veiculo;
-	
-	@NotNull
-	@ManyToOne
-	private Condutor condutor;	
+    private static final long serialVersionUID = 5270396853989326489L;
+    public static final ActiveRecord<ControleGabinete> AR = new ActiveRecord<>(ControleGabinete.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(PlantaoDTO.class);
 
-	@NotNull
-	private Double odometroEmKmSaida;
+    @Id
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "hibernate_sequence_generator")
+    @SequenceGenerator(name = "hibernate_sequence_generator", sequenceName = "SIGATP.hibernate_sequence")
+    private Long id;
 
-	@NotNull
-	private Double odometroEmKmRetorno;
-	
-	@NotNull
-	private String naturezaDoServico;
-	
-	private String ocorrencias;
-	
-	@Audited(targetAuditMode = RelationTargetAuditMode.NOT_AUDITED)
-	@ManyToOne
-	@JoinColumn(name = "ID_TITULAR")
-	private DpPessoa titular;
-	
-	@Audited(targetAuditMode = RelationTargetAuditMode.NOT_AUDITED)
-	@ManyToOne
-	@JoinColumn(name = "ID_SOLICITANTE")
-	private DpPessoa solicitante;
-	
-	public Long getId() {
-		return id;
-	}
+    @Data(descricaoCampo = "Data/Hora")
+    private Calendar dataHora;
 
-	public void setId(Long id) {
-		this.id = id;
-	}
+    @NotNull
+    @Data(descricaoCampo = "Data/Hora Saida")
+    private Calendar dataHoraSaida;
 
-	public Calendar getDataHora() {
-		return dataHora;
-	}
+    @NotNull
+    @Data(descricaoCampo = "Data/Hora Retorno")
+    private Calendar dataHoraRetorno;
 
-	public void setDataHora(Calendar dataHora) {
-		this.dataHora = dataHora;
-	}
+    @NotNull
+    private String itinerario;
 
-	public Calendar getDataHoraSaida() {
-		return dataHoraSaida;
-	}
+    @NotNull
+    @ManyToOne
+    private Veiculo veiculo;
 
-	public void setDataHoraSaida(Calendar dataHoraSaida) {
-		this.dataHoraSaida = dataHoraSaida;
-	}
+    @NotNull
+    @ManyToOne
+    private Condutor condutor;
 
-	public Calendar getDataHoraRetorno() {
-		return dataHoraRetorno;
-	}
+    @NotNull
+    private Double odometroEmKmSaida;
 
-	public void setDataHoraRetorno(Calendar dataHoraRetorno) {
-		this.dataHoraRetorno = dataHoraRetorno;
-	}
+    @NotNull
+    private Double odometroEmKmRetorno;
 
-	public String getItinerario() {
-		return itinerario;
-	}
+    @NotNull
+    private String naturezaDoServico;
 
-	public void setItinerario(String itinerario) {
-		this.itinerario = itinerario;
-	}
+    private String ocorrencias;
 
-	public Veiculo getVeiculo() {
-		return veiculo;
-	}
+    @Audited(targetAuditMode = RelationTargetAuditMode.NOT_AUDITED)
+    @ManyToOne
+    @JoinColumn(name = "ID_TITULAR")
+    private DpPessoa titular;
 
-	public void setVeiculo(Veiculo veiculo) {
-		this.veiculo = veiculo;
-	}
+    @Audited(targetAuditMode = RelationTargetAuditMode.NOT_AUDITED)
+    @ManyToOne
+    @JoinColumn(name = "ID_SOLICITANTE")
+    private DpPessoa solicitante;
 
-	public Condutor getCondutor() {
-		return condutor;
-	}
+    @Override
+    public Long getId() {
+        return id;
+    }
 
-	public void setCondutor(Condutor condutor) {
-		this.condutor = condutor;
-	}
+    public void setId(Long id) {
+        this.id = id;
+    }
 
-	public Double getOdometroEmKmSaida() {
-		return odometroEmKmSaida;
-	}
+    public Calendar getDataHora() {
+        return dataHora;
+    }
 
-	public void setOdometroEmKmSaida(Double odometroEmKmSaida) {
-		this.odometroEmKmSaida = odometroEmKmSaida;
-	}
+    public void setDataHora(Calendar dataHora) {
+        this.dataHora = dataHora;
+    }
 
-	public Double getOdometroEmKmRetorno() {
-		return odometroEmKmRetorno;
-	}
+    public Calendar getDataHoraSaida() {
+        return dataHoraSaida;
+    }
 
-	public void setOdometroEmKmRetorno(Double odometroEmKmRetorno) {
-		this.odometroEmKmRetorno = odometroEmKmRetorno;
-	}
+    public void setDataHoraSaida(Calendar dataHoraSaida) {
+        this.dataHoraSaida = dataHoraSaida;
+    }
 
-	public String getNaturezaDoServico() {
-		return naturezaDoServico;
-	}
+    public Calendar getDataHoraRetorno() {
+        return dataHoraRetorno;
+    }
 
-	public void setNaturezaDoServico(String naturezaDoServico) {
-		this.naturezaDoServico = naturezaDoServico;
-	}
+    public void setDataHoraRetorno(Calendar dataHoraRetorno) {
+        this.dataHoraRetorno = dataHoraRetorno;
+    }
 
-	public String getOcorrencias() {
-		return ocorrencias;
-	}
+    public String getItinerario() {
+        return itinerario;
+    }
 
-	public void setOcorrencias(String ocorrencias) {
-		this.ocorrencias = ocorrencias;
-	}
+    public void setItinerario(String itinerario) {
+        this.itinerario = itinerario;
+    }
 
-	public DpPessoa getTitular() {
-		return titular;
-	}
+    public Veiculo getVeiculo() {
+        return veiculo;
+    }
 
-	public void setTitular(DpPessoa titular) {
-		this.titular = titular;
-	}
+    public void setVeiculo(Veiculo veiculo) {
+        this.veiculo = veiculo;
+    }
 
-	public DpPessoa getSolicitante() {
-		return solicitante;
-	}
+    public Condutor getCondutor() {
+        return condutor;
+    }
 
-	public void setSolicitante(DpPessoa solicitante) {
-		this.solicitante = solicitante;
-	}
+    public void setCondutor(Condutor condutor) {
+        this.condutor = condutor;
+    }
 
-	public static List<ControleGabinete> buscarTodosPorVeiculo(Veiculo veiculo){
-		return ControleGabinete.AR.find("veiculo", veiculo).fetch();
-	}
-	
-	public static double buscarUltimoOdometroPorVeiculo(Veiculo veiculo, ControleGabinete controleGabinete){
-		double retorno = 0;
-		try {
-			retorno = ((ControleGabinete) ControleGabinete.AR.find("veiculo = ? and id <> ? order by id desc", veiculo, controleGabinete.id).fetch().get(0)).odometroEmKmRetorno;
-		} catch (Exception e) {
-		}
-		return retorno;
-	}
-		
-	public ControleGabinete(){
-		this.id = new Long(0);
-	}
+    public Double getOdometroEmKmSaida() {
+        return odometroEmKmSaida;
+    }
 
-	@SuppressWarnings("unchecked")
-	public static List<ControleGabinete> listarTodos() {
-		return ControleGabinete.AR.findAll();
-	}
+    public void setOdometroEmKmSaida(Double odometroEmKmSaida) {
+        this.odometroEmKmSaida = odometroEmKmSaida;
+    }
 
-	public static List<ControleGabinete> listarPorCondutor(Condutor condutor) {
-		return ControleGabinete.AR.find("condutor", condutor).fetch();
-	}
+    public Double getOdometroEmKmRetorno() {
+        return odometroEmKmRetorno;
+    }
+
+    public void setOdometroEmKmRetorno(Double odometroEmKmRetorno) {
+        this.odometroEmKmRetorno = odometroEmKmRetorno;
+    }
+
+    public String getNaturezaDoServico() {
+        return naturezaDoServico;
+    }
+
+    public void setNaturezaDoServico(String naturezaDoServico) {
+        this.naturezaDoServico = naturezaDoServico;
+    }
+
+    public String getOcorrencias() {
+        return ocorrencias;
+    }
+
+    public void setOcorrencias(String ocorrencias) {
+        this.ocorrencias = ocorrencias;
+    }
+
+    public DpPessoa getTitular() {
+        return titular;
+    }
+
+    public void setTitular(DpPessoa titular) {
+        this.titular = titular;
+    }
+
+    public DpPessoa getSolicitante() {
+        return solicitante;
+    }
+
+    public void setSolicitante(DpPessoa solicitante) {
+        this.solicitante = solicitante;
+    }
+
+    public static List<ControleGabinete> buscarTodosPorVeiculo(Veiculo veiculo) {
+        return ControleGabinete.AR.find("veiculo", veiculo).fetch();
+    }
+
+    public static double buscarUltimoOdometroPorVeiculo(Veiculo veiculo, ControleGabinete controleGabinete) {
+        double retorno = 0;
+        try {
+            retorno = ((ControleGabinete) ControleGabinete.AR.find("veiculo = ? and id <> ? order by id desc", veiculo, controleGabinete.id).fetch().get(0)).odometroEmKmRetorno;
+        } catch (Exception e) {
+            LOGGER.error(e.getMessage(), e);
+        }
+        return retorno;
+    }
+
+    public ControleGabinete() {
+        this.id = Long.valueOf(0);
+    }
+
+    @SuppressWarnings("unchecked")
+    public static List<ControleGabinete> listarTodos() {
+        return ControleGabinete.AR.findAll();
+    }
+
+    public static List<ControleGabinete> listarPorCondutor(Condutor condutor) {
+        return ControleGabinete.AR.find("condutor", condutor).fetch();
+    }
 }

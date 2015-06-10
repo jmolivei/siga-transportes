@@ -326,7 +326,6 @@ public class Condutor extends TpModel implements ConvertableEntity, Comparable<C
 
 	public static List<Condutor> listarFiltradoPor(CpOrgaoUsuario orgaoUsuario, DpLotacao lotacao) throws Exception {
 		List<Condutor> condutores = Condutor.AR.find("cpOrgaoUsuario=? and dpPessoa.lotacao.idLotacaoIni = ?", orgaoUsuario, lotacao.getIdInicial()).fetch();
-
 		Collections.sort(condutores);
 		return condutores;
 	}
