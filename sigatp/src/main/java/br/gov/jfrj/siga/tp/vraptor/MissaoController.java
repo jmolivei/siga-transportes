@@ -151,7 +151,7 @@ public class MissaoController extends TpController {
 	@RoleAdmin
 	@RoleAdminMissao
 	@RoleAdminMissaoComplexo
-	@Path("/listarPorCondutor/{condutorEscalado}")
+	@Path("/listarPorCondutor")
 	public void listarPorCondutor(Condutor condutorEscalado) throws Exception {
 		Condutor condutorEncontrado = Condutor.AR.findById(condutorEscalado.getId());
 		List<Missao> missoes = Missao.buscarTodasAsMissoesPorCondutor(condutorEncontrado);
@@ -405,16 +405,18 @@ public class MissaoController extends TpController {
 	}
 
 	private void verificarOdometroSaidaZerado(Missao missao) {
-		if (missao.getOdometroSaidaEmKm() == 0) {
-			validator.add(new I18nMessage(ODOMETRO_RETORNO_EM_KM_STR, "O valor do od&ocirc;metro de sa&iacute;da deve ser maior que zero."));
-		}
+		if (isOdometroZerado(missao.getOdometroSaidaEmKm()))
+			validator.add(new I18nMessage(ODOMETRO_RETORNO_EM_KM_STR, "missao.finalizar.odometro.saida"));
 	}
 
 	private void verificarOdometroRetornoZerado(Missao missao) {
-		if (missao.getOdometroRetornoEmKm() == 0) {
-			validator.add(new I18nMessage(ODOMETRO_RETORNO_EM_KM_STR, "O valor do od&ocirc;metro de retorno deve ser maior que zero."));
-		}
+		if (isOdometroZerado(missao.getOdometroRetornoEmKm()))
+			validator.add(new I18nMessage(ODOMETRO_RETORNO_EM_KM_STR, "missao.finalizar.odometro.retorno"));
 	}
+
+    private boolean isOdometroZerado(Double odometro) {
+        return odometro.equals(0.0);
+    }
 
 	@RoleAdmin
 	@RoleAdminMissao
@@ -524,12 +526,16 @@ public class MissaoController extends TpController {
 
 		condicaoComponentesVeiculo();
 
-		result.include(MISSAO_STR, missao);
+		condicaoComponentesIniciarMissao(missao);
+	}
+
+    private void condicaoComponentesIniciarMissao(Missao missao) {
+        result.include(MISSAO_STR, missao);
 		result.include("mostrarBotoesIniciar", true);
 		result.include(MOSTRAR_DADOS_PROGRAMADA, true);
 		result.include(MOSTRAR_DADOS_INICIADA_STR, true);
 		result.include(MOSTRAR_DADOS_FINALIZADA_STR, false);
-	}
+    }
 
     private void condicaoComponentesVeiculo() {
         result.include("estepes", PerguntaSimNao.values());
@@ -585,7 +591,7 @@ public class MissaoController extends TpController {
 	}
 
 	private void verificarJustificativaPreenchida(Missao missao) {
-		if (missao.getJustificativa().isEmpty()) {
+		if (null == missao.getJustificativa() || missao.getJustificativa().isEmpty()) {
 			validator.add(new I18nMessage("justificativa", "missoes.justificativa.validation"));
 		}
 	}
@@ -790,7 +796,13 @@ public class MissaoController extends TpController {
 		List<Condutor> condutoresDisponiveis = listarCondutoresDisponiveis(idMissao, getTitular().getOrgaoUsuario().getId(), dataSaida, inicioRapido);
 
 		ObjectMapper oM = new ObjectMapper();
-        ObjectWriter oW = oM.writer().withDefaultPrettyPrinter();
+		ObjectWriter oW = oM.writer().withDefaultPrettyPrinter();
+
+		if(condutoresDisponiveis.isEmpty()) {
+		    String data = oW.writeValueAsString(MessagesBundle.getMessage("missao.inicia.sem.condutor.disponivel"));
+		    result.use(Results.http()).body(data);
+		    return;
+		}
 
         MissaoVO missaoVO = new MissaoVO();
 
@@ -1044,6 +1056,7 @@ public class MissaoController extends TpController {
 	}
 
 	private void renderTemplate(Template template, Missao missao) throws Exception {
+	    result.include("missao", missao);
 
 		switch(template) {
 			case EDITAR:
@@ -1051,18 +1064,27 @@ public class MissaoController extends TpController {
 				break;
 
 			case INCLUIR:
-			    result.include("missao", missao);
 			    result.include(MOSTRAR_BOTOES_EDITAR, true);
 			    validator.onErrorUse(Results.page()).of(MissaoController.class).incluir();
 				break;
 
 			case INICIORAPIDO:
-			    validator.onErrorUse(Results.logic()).forwardTo(MissaoController.class).iniciarMissaoRapido(missao, null);
+			    validator.onErrorUse(Results.page()).of(MissaoController.class).iniciarMissaoRapido(missao, null);
 				break;
 
 			case CANCELAR:
-			    validator.onErrorUse(Results.logic()).forwardTo(MissaoController.class).cancelarMissao(missao);
+			    validator.onErrorUse(Results.page()).of(MissaoController.class).cancelar(missao.getId());
 				break;
+
+			case FINALIZAR:
+                validator.onErrorUse(Results.page()).of(MissaoController.class).finalizar(missao.getId());
+                break;
+
+			case INICIAR:
+			    condicaoComponentesVeiculo();
+			    condicaoComponentesIniciarMissao(missao);
+                validator.onErrorUse(Results.page()).of(MissaoController.class).iniciar(missao.getId());
+                break;
 
 			default:
 				break;

@@ -4,7 +4,7 @@
 <%@ taglib prefix="sigatp" tagdir="/WEB-INF/tags/" %>
 <%@ taglib prefix="tptags" uri="/WEB-INF/tpTags.tld"%>
 
-<script src="@{'/public/javascripts/jquery/jquery-ui-1.8.16.custom.min.js'}"></script>
+<script src="/sigatp/public/javascripts/jquery/jquery-ui-1.8.16.custom.min.js"></script>
 
 <jsp:include page="../tags/calendario.jsp" />
 <sigatp:decimal />
@@ -140,7 +140,7 @@
 				<td align="left" style="padding: 7px 10px;">
 					<select name="missao.nivelCombustivelSaida">
 						<c:forEach items="${niveisCombustivelSaida}" var="nivel">
-							<option value="${nivel}" ${nivel == missao.nivelCombustivelSaida ? 'selected' : ''}>nivel.descricao</option>
+							<option value="${nivel}" ${nivel == missao.nivelCombustivelSaida ? 'selected' : ''}>${nivel.descricao}</option>
 						</c:forEach>
 					</select>
 				</td>
@@ -278,6 +278,6 @@
 
 	<div id="btnAcoes" class="gt-table-buttons">
 		<input type="button" id="btnFinalizar" value="<fmt:message key='views.botoes.finalizar' />" onClick="submitForm('${linkTo[MissaoController].finalizarMissao}')" class="gt-btn-medium gt-btn-left" />
-		<input type="button" id="btnVoltar"  value="<fmt:message key='views.botoes.voltar' />" onClick="javascript:location.href='${linkTo[MissaoController].buscarPelaSequence[missao.sequence]}'" class="gt-btn-medium gt-btn-left" />
+		<input type="button" id="btnVoltar"  value="<fmt:message key='views.botoes.voltar' />" onClick="javascript:location.href='${linkTo[MissaoController].buscarPelaSequence[false][missao.sequence]}'" class="gt-btn-medium gt-btn-left" />
 	</div>
 </form>

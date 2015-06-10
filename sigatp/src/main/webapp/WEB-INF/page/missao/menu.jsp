@@ -56,7 +56,7 @@
 </p>
 <p>
 	<div class="caixa_busca_avancado">
-		<form action="${linkTo[MissaoController].listarPorCondutor}" enctype="multipart/form-data">
+		<form method="post" action="${linkTo[MissaoController].listarPorCondutor}" enctype="multipart/form-data">
 				<label for="servico.veiculo.id" >Selecione o condutor:</label>
 				<select id="lstCondutores" name="condutorEscalado">
 					<c:forEach items="${condutoresEscalados}" var="condutor">

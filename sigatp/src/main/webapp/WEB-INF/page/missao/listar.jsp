@@ -53,7 +53,7 @@
 							    	    <td>
 							    	    	<c:choose>
 							    	    		<c:when test="${exibirMenuAdministrar || exibirMenuAdministrarMissao || exibirMenuAdministrarMissaoComplexo || exibirMenuAgente}">
-							    	    			<nobr><a href="${linkTo[MissaoController].buscarPelaSequence[missao.sequence]}">${missao.sequence}</a> <a href="#" onclick="javascript:window.open('${linkTo[MissaoController].buscarPelaSequence[true][missao.sequence]}');"><img src="/sigatp/public/images/linknovajanelaicon.png" alt="Abrir em uma nova janela" title="Abrir em uma nova janela"></a></nobr>
+							    	    			<nobr><a href="${linkTo[MissaoController].buscarPelaSequence[false][missao.sequence]}">${missao.sequence}</a> <a href="#" onclick="javascript:window.open('${linkTo[MissaoController].buscarPelaSequence[true][missao.sequence]}');"><img src="/sigatp/public/images/linknovajanelaicon.png" alt="Abrir em uma nova janela" title="Abrir em uma nova janela"></a></nobr>
 							    	    		</c:when>
 							    	    		<c:otherwise>
 							    	    			<nobr>${missao.sequence}<a href="#" onclick="javascript:window.open('${linkTo[MissaoController].buscarPelaSequence[true][missao.sequence]}');"><img src="/sigatp/public/images/linknovajanelaicon.png" alt="Abrir em uma nova janela" title="Abrir em uma nova janela"></a></nobr>

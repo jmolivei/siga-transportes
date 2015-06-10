@@ -7,13 +7,19 @@
 		<div class="gt-content clearfix">
 			<h2>Cancelar Miss&atilde;o: ${missao.sequence}</h2>
 			<sigatp:erros />
-			<form action="${linkTo[MissaoController].cancelarMissao}" enctype="multipart/form-data">
+			<form method="post" action="${linkTo[MissaoController].cancelarMissao}" enctype="multipart/form-data">
 				<div id ="infCancelamento" class="gt-content-box gt-for-table">
 					<table class="gt-table" >
-						<tr>
-				        	<th>Justificativa: <span style="color: red; font-weight: bolder;">*</span></th>
-				        	<td><textarea name="missao.justificativa" rows="7" cols="80"></textarea></td>
-				        </tr>
+						<thead>
+							<tr>
+					        	<th>Justificativa: <span style="color: red; font-weight: bolder;">*</span></th>
+					        </tr>
+						</thead>
+						<tbody>
+							<tr>
+					        	<td><textarea name="missao.justificativa" rows="7" cols="80"></textarea></td>
+					        </tr>
+						</tbody>
 					</table>
 				</div>
 				<input type="hidden" name="missao" value="${missao.id}"/>
@@ -23,7 +29,7 @@
 				</span>
 				<div class="gt-table-buttons">
 					<input type="submit" value="<fmt:message key="views.botoes.cancelarMissao" />" class="gt-btn-medium gt-btn-left" />
-					<input type="button" value="<fmt:message key="views.botoes.voltar" />" class="gt-btn-medium gt-btn-left" onclick="javascript:window.location = '${linkTo[MissaoController].buscarPelaSequence[missao.sequence]}';" />
+					<input type="button" value="<fmt:message key="views.botoes.voltar" />" class="gt-btn-medium gt-btn-left" onclick="javascript:window.location = '${linkTo[MissaoController].buscarPelaSequence[false][missao.sequence]}';" />
 				</div>
 			</form>
 		</div>

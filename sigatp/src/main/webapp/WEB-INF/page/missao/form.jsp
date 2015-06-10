@@ -9,8 +9,16 @@
 <jsp:include page="../tags/calendario.jsp" />
 <sigatp:decimal />
 
+<style>
+	#divErros {display: none;}
+</style>
+
 <form id="formMissoes" method="post" enctype="multipart/form-data">
 	<sigatp:erros />
+	<div id="divErros" class="gt-error">
+		<li></li>
+	</div>
+	<br><br>
 	<input type="hidden" id="missaoId" name="missao" value="${missao.id}" />
 	<input type="hidden" id="veiculosDisp" name="veiculosDisp" value="" />
 
@@ -169,7 +177,18 @@
 			return listarVeiculosCondutoresDisp + "?idMissao=" + idMissao + "&veiculosDisp=" + veiculosDisp + "&inicioRapido=" + inicioRapido +"&dataSaida=" + dataSaida;
 		}
 
+		var escreverMensagemErro = function(msg) {
+			var $divErros = $('#divErros');
+			$divErros.css('display', 'block');
+			$divErros.find('li').html(msg);
+		}
+
 		var success = function(data) {
+
+			if(data.veiculos === undefined) {
+				escreverMensagemErro(data);
+			}
+
 			var $veiculos = $('#veiculosDisponiveis');
 			var $condutores = $('#condutoresDisponiveis');
 
@@ -185,7 +204,6 @@
 
 		var error = function(error){
 			console.error("Ocorreu um erro no servidor ao tentar preencher os dados de veiculos e condutores.");
-			console.error(error);
 		}
 
 		$(function() {
@@ -193,8 +211,9 @@
 				verificarMenorDataRequisicao();
 
 			var $mudouDataHoraSaida =  $('#inputdataHoraSaida').change( function() {
+				var dataHoraSaida = $('#inputdataHoraSaida').val();
 				if ("${exibirMenuAdministrar || exibirMenuAdministrarMissao || exibirMenuAdministrarMissaoComplexo}") {
-					if ($('#inputdataHoraSaida').val() != "") {
+					if (dataHoraSaida != '' && dataHoraSaida != '__/__/____ __:__') {
 						$.ajax({
 							url: getLink(),
 							dataType: 'JSON',
