@@ -75,7 +75,7 @@
 						<li><a id="menuAdmRelatConsumoMedio" class="" href="#" onclick="javascript:window.open('${linkTo[RelatorioConsumoMedioController].consultar}');">Consumo M&eacute;dio de Combust&iacute;vel</a></li>
 					</ul>
 				</li>
-				<li><a id="menuAdmServicos" class="" href="@{ServicosVeiculo.listar}">Servi&ccedil;os</a></li>
+				<li><a id="menuAdmServicos" class="" href="${linkTo[ServicoVeiculoController].listar}">Servi&ccedil;os</a></li>
 				<li><a id="menuAdmVeiculos" class="" href="${linkTo[VeiculoController].listar}">Ve&iacute;culos</a></li>
 			</ul>
 		</li>
