@@ -81,21 +81,18 @@ public class AutoDeInfracaoController extends TpController{
 	public void editar(Long id, String notificacao) throws Exception {
 		AutoDeInfracao autoDeInfracao;
 		TipoDeNotificacao tipoNotificacao;
-
 		renderVeiculosCondutoresEPenalidades();
 
 		if(id >0) {
 			autoDeInfracao = AutoDeInfracao.AR.findById(id);
-//			TODO  OSI22 - No merge das versoes houve problemas, procurar solucao para o autoDeInfracao.getCodigoDaAutuacao() que foi retirado
-//			tipoNotificacao = autoDeInfracao.getCodigoDaAutuacao() != null ? TipoDeNotificacao.AUTUACAO : TipoDeNotificacao.PENALIDADE;
+			tipoNotificacao = autoDeInfracao.getPenalidade() == null ? TipoDeNotificacao.AUTUACAO : TipoDeNotificacao.PENALIDADE;
 		} else {
 			autoDeInfracao = new AutoDeInfracao();
 			tipoNotificacao = TipoDeNotificacao.valueOf(notificacao);
 		}
 
 		result.include("autoDeInfracao", autoDeInfracao);
-//		TODO  OSI22 - No merge das versoes houve problemas, procurar solucao para o autoDeInfracao.getCodigoDaAutuacao() que foi retirado
-//		result.include("tipoNotificacao", tipoNotificacao);
+		result.include("tipoNotificacao", tipoNotificacao);
 	}
 
 	@RoleAdmin
@@ -103,8 +100,7 @@ public class AutoDeInfracaoController extends TpController{
 	@RoleAdminMissaoComplexo
 	@Path("/salvar")
 	public void salvar(@Valid AutoDeInfracao autoDeInfracao) throws Exception {
-//		TODO  OSI22 - No merge das versoes houve problemas, procurar solucao para o autoDeInfracao.getCodigoDaAutuacao() que foi retirado
-//		TipoDeNotificacao tipoNotificacao = autoDeInfracao.getCodigoDaAutuacao() != null ? TipoDeNotificacao.AUTUACAO : TipoDeNotificacao.PENALIDADE;
+		TipoDeNotificacao tipoNotificacao = autoDeInfracao.getPenalidade() == null ? TipoDeNotificacao.AUTUACAO : TipoDeNotificacao.PENALIDADE;
 
  		error(autoDeInfracao.getDataDePagamento() != null && autoDeInfracao.dataPosteriorDataCorrente(autoDeInfracao.getDataDePagamento())
  				, "dataPagamento", "veiculo.autosDeInfracao.dataDePagamento.validation");
@@ -113,8 +109,7 @@ public class AutoDeInfracaoController extends TpController{
 			renderVeiculosCondutoresEPenalidades();
 
 			result.include("autoDeInfracao", autoDeInfracao);
-//			TODO  OSI22 - No merge das versoes houve problemas, procurar solucao para o autoDeInfracao.getCodigoDaAutuacao() que foi retirado
-//			result.include("tipoNotificacao", tipoNotificacao);
+			result.include("tipoNotificacao", tipoNotificacao);
 
 			if(autoDeInfracao.getId()  > 0)
 				validator.onErrorUse(Results.page()).of(AutoDeInfracaoController.class).editar(autoDeInfracao.getId(), null);
@@ -150,26 +145,25 @@ public class AutoDeInfracaoController extends TpController{
     	result.include("penalidades", penalidades);
     }
 
-//	TODO  OSI22 - No merge das versoes houve problemas, procurar solucao
-		/* Método AJAX */
-//	@RoleAdmin
-//	@RoleAdminMissao
-//	@RoleAdminMissaoComplexo
-//	@RoleAgente
-//	public static void listarValorPenalidade(Long idPenalidade) throws Exception {
-//		Penalidade penalidade = Penalidade.AR.findById(idPenalidade);
-//		String formataMoedaBrasileiraSemSimbolo = CustomJavaExtensions.formataMoedaBrasileiraSemSimbolo(penalidade.valor);
-//		renderText(formataMoedaBrasileiraSemSimbolo);
-//	}
+	/* Método AJAX */
+	@RoleAdmin
+	@RoleAdminMissao
+	@RoleAdminMissaoComplexo
+	@RoleAgente
+	public void listarValorPenalidade(Long idPenalidade) throws Exception {
+		Penalidade penalidade = Penalidade.AR.findById(idPenalidade);
+		String formataMoedaBrasileiraSemSimbolo = CustomJavaExtensions.formataMoedaBrasileiraSemSimbolo(penalidade.getValor());
+		result.use(Results.http()).body(formataMoedaBrasileiraSemSimbolo);
+	}
 
 
 	/* Método AJAX */
-//	@RoleAdmin
-//	@RoleAdminMissao
-//	@RoleAdminMissaoComplexo
-//	@RoleAgente
-//	public static void listarClassificacaoPenalidade(Long idPenalidade) throws Exception {
-//		Penalidade penalidade = Penalidade.AR.findById(idPenalidade);
-//		renderText(penalidade.classificacao.getDescricao());
-//	}
+	@RoleAdmin
+	@RoleAdminMissao
+	@RoleAdminMissaoComplexo
+	@RoleAgente
+	public void listarClassificacaoPenalidade(Long idPenalidade) throws Exception {
+		Penalidade penalidade = Penalidade.AR.findById(idPenalidade);
+		result.use(Results.http()).body(penalidade.getClassificacao().getDescricao());
+	}
 }

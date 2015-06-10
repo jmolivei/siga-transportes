@@ -34,7 +34,7 @@ import br.gov.jfrj.siga.tp.util.SigaTpException;
 import br.gov.jfrj.siga.vraptor.SigaObjects;
 
 @Resource
-@Path("/app/servicoveiculo/")
+@Path("/app/servicoVeiculo/")
 public class ServicoVeiculoController extends TpController {
 
     private static final String SERVICO_STR = "servico";

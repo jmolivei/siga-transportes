@@ -4,9 +4,6 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt"%>
 <%@ taglib prefix="sigatp" tagdir="/WEB-INF/tags/" %>
 
-<script src="@{'/public/javascripts/jquery/jquery-ui-1.8.16.custom.min.js'}"></script>
-<script src="@{'/public/javascripts/jquery/jquery-1.6.4.min.js'}"></script>
-
 <sigatp:decimal />
 <form name="formPenalidades" id="formPenalidades"
 	action="${linkTo[PenalidadeController].salvar}" method="post"

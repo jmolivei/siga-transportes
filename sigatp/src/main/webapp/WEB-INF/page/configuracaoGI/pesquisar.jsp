@@ -7,10 +7,6 @@
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 <%@ taglib prefix="sigatp" tagdir="/WEB-INF/tags/" %>
 
-
-<script src="@{'/public/javascripts/jquery/jquery-ui-1.8.16.custom.min.js'}"></script>
-<link rel="stylesheet" type="text/css" href="@{'/public/stylesheets/servicoVeiculo.css'}">
-
 <siga:pagina titulo="Transportes">
 	<script type="text/javascript">
 		$(document).ready(function() {

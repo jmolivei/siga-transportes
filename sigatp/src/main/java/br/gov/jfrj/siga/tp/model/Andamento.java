@@ -1,6 +1,7 @@
 package br.gov.jfrj.siga.tp.model;
 
 import java.util.Calendar;
+import java.util.List;
 
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
@@ -18,6 +19,7 @@ import org.hibernate.envers.RelationTargetAuditMode;
 
 import br.gov.jfrj.siga.dp.DpPessoa;
 import br.gov.jfrj.siga.model.ActiveRecord;
+import br.gov.jfrj.siga.tp.vraptor.ParametroController;
 import br.jus.jfrj.siga.uteis.UpperCase;
 
 @SuppressWarnings("serial")
@@ -128,14 +130,13 @@ public class Andamento extends TpModel implements Comparable<Andamento> {
 		return retorno;
 	}
 
-//	TODO  OSI22 - No merge das versoes houve problemas, procurar solucao. O metodo buscarConfigSistemaEmVigor dentro do Parametros nao esta implementado
-//	public static List<Andamento> listarPorDataNotificacaoWorkFlow() throws Exception {
-//		Calendar calendar = Parametros.formatarDataParametro("cron.dataInicioPesquisaw") ;
-//		Object[] parametros = {calendar, EstadoRequisicao.ABERTA, EstadoRequisicao.AUTORIZADA,EstadoRequisicao.PROGRAMADA,EstadoRequisicao.REJEITADA};
-//		return Andamento.AR.find("dataNotificacaoWorkFlow is null " +
-//						"and dataAndamento >= ? " +
-//						"and estadoRequisicao in (?,?,?,?)", parametros).fetch();
-//	}
+	public static List<Andamento> listarPorDataNotificacaoWorkFlow() throws Exception {
+		Calendar calendar = ParametroController.formatarDataParametro("cron.dataInicioPesquisaw") ;
+		Object[] parametros = {calendar, EstadoRequisicao.ABERTA, EstadoRequisicao.AUTORIZADA,EstadoRequisicao.PROGRAMADA,EstadoRequisicao.REJEITADA};
+		return Andamento.AR.find("dataNotificacaoWorkFlow is null " +
+						"and dataAndamento >= ? " +
+						"and estadoRequisicao in (?,?,?,?)", parametros).fetch();
+	}
 
 	public static void gravarDataNotificacaoWorkFlow(Long id) throws Exception {
 		Andamento andamento = Andamento.AR.findById(id);

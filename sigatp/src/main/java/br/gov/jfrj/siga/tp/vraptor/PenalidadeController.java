@@ -14,11 +14,8 @@ import br.com.caelum.vraptor.view.Results;
 import br.gov.jfrj.siga.dp.dao.CpDao;
 import br.gov.jfrj.siga.tp.auth.annotation.RoleAdmin;
 import br.gov.jfrj.siga.tp.auth.annotation.RoleAdminFrota;
-import br.gov.jfrj.siga.tp.auth.annotation.RoleAdminGabinete;
-import br.gov.jfrj.siga.tp.auth.annotation.RoleAdminMissao;
-import br.gov.jfrj.siga.tp.auth.annotation.RoleAdminMissaoComplexo;
-import br.gov.jfrj.siga.tp.auth.annotation.RoleGabinete;
 import br.gov.jfrj.siga.tp.model.Penalidade;
+import br.gov.jfrj.siga.tp.model.TpDao;
 import br.gov.jfrj.siga.vraptor.SigaObjects;
 
 @Resource
@@ -26,44 +23,44 @@ import br.gov.jfrj.siga.vraptor.SigaObjects;
 public class PenalidadeController extends TpController {
 	public PenalidadeController(HttpServletRequest request, Result result,
 			CpDao dao, Validator validator, SigaObjects so, EntityManager em) {
-		super(request, result, dao, validator, so, em);		
+		super(request, result, TpDao.getInstance(), validator, so, em);		
 	}
 
-	
 	@Path("/listar")
-	public void listar() throws Exception {
-   		List<Penalidade> penalidades = Penalidade.AR.findAll();
+	public void listar() {
+   		List<Penalidade> penalidades = Penalidade.listarTodos();
    		result.include("penalidades", penalidades);
     }
 
+    @RoleAdmin
+    @RoleAdminFrota
 	@Path("/editar/{id}")
-	public  void editar(Long id) throws Exception {
-		Penalidade penalidade = Penalidade.AR.findById(id);
+	public  void editar(Long id) {
+		Penalidade penalidade = Penalidade.buscar(id);
 		result.include("penalidade", penalidade);
 	}
 
+    @RoleAdmin
+    @RoleAdminFrota
 	@Path("/excluir/{id}")
-	public void excluir(Long id) throws Exception {
-        Penalidade penalidade = Penalidade.AR.findById(id);
+	public void excluir(Long id) {
+        Penalidade penalidade = Penalidade.buscar(id);
 
 		penalidade.delete();
 		result.redirectTo(this).listar();
-
 	}
 
+    @RoleAdmin
+    @RoleAdminFrota
 	@Path("/incluir")
-	public void incluir() throws Exception {
+	public void incluir() {
 		Penalidade penalidade = new Penalidade();
 
      	result.include("penalidade",penalidade);
 	}
 
-	@RoleAdmin
-	@RoleAdminGabinete
-	@RoleAdminMissao
-	@RoleAdminMissaoComplexo
-	@RoleAdminFrota
-	@RoleGabinete
+    @RoleAdmin
+    @RoleAdminFrota
 	@Path("/salvar")
 	public void salvar(@Valid Penalidade penalidade) throws Exception {
     	if(validator.hasErrors())

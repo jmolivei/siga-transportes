@@ -175,4 +175,22 @@ public class Parametro extends TpModel implements ConvertableEntity {
         }
         return retorno;
     }
+
+    public static String buscarConfigSistemaEmVigor(String nome) {
+        String retorno = null;
+        Calendar hoje = Calendar.getInstance();
+        String queryComData = "nomeParametro = ? "
+                + "and dataInicio < ? "
+                + "and (dataFim is null or dataFim > ?) "
+                + "and dpPessoa is null "
+                + "and dpLotacao is null "
+                + "and cpComplexo is null "
+                + "and cpOrgaoUsuario is null";
+        
+        Parametro parametro = Parametro.AR.find(queryComData,nome,hoje, hoje).first();
+        if(parametro != null) {
+            retorno = parametro.valorParametro;
+        }
+        return retorno;
+    }
 }
