@@ -72,7 +72,7 @@
 								    						<tr>
 								    							<td>
 								    								<tptags:link texto="${requisicaoTransporte.descricaoCompleta}"
-								    											 parteTextoLink="${requisicaoTransporte.sequence}"
+								    											 parteTextoLink="${requisicaoTransporte.buscarSequence()}"
 								    											 comando="${linkTo[RequisicaoController].buscarPelaSequence[true][requisicaoTransporte.buscarSequence()]}">
 								    								</tptags:link>
 								    							</td>

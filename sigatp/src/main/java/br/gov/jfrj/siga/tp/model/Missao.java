@@ -70,20 +70,20 @@ public class Missao extends TpModel implements ConvertableEntity, Comparable<Mis
 	private Calendar dataHora;
 
 	@Transient
-	private double distanciaPercorridaEmKm;
+	private Double distanciaPercorridaEmKm;
 
 
 	@Transient
 	@Data(descricaoCampo = "tempoBruto")
 	private Calendar tempoBruto;
 
-	private double consumoEmLitros;
+	private Double consumoEmLitros;
 
 	@NotNull
 	@Data(descricaoCampo = "dataHoraSaida")
 	private Calendar dataHoraSaida;
 
-	private double odometroSaidaEmKm;
+	private Double odometroSaidaEmKm;
 
 	@Enumerated(EnumType.STRING)
 	private PerguntaSimNao estepe;
@@ -121,7 +121,7 @@ public class Missao extends TpModel implements ConvertableEntity, Comparable<Mis
 	@Data(descricaoCampo = "dataHoraRetorno")
 	private Calendar dataHoraRetorno;
 
-	private double odometroRetornoEmKm;
+	private Double odometroRetornoEmKm;
 
 	@Enumerated(EnumType.STRING)
 	private PerguntaSimNao avariasAparentesRetorno;
@@ -374,11 +374,11 @@ public class Missao extends TpModel implements ConvertableEntity, Comparable<Mis
 		this.dataHora = dataHora;
 	}
 
-	public double getDistanciaPercorridaEmKm() {
+	public Double getDistanciaPercorridaEmKm() {
 		return distanciaPercorridaEmKm;
 	}
 
-	public void setDistanciaPercorridaEmKm(double distanciaPercorridaEmKm) {
+	public void setDistanciaPercorridaEmKm(Double distanciaPercorridaEmKm) {
 		this.distanciaPercorridaEmKm = distanciaPercorridaEmKm;
 	}
 
@@ -390,11 +390,11 @@ public class Missao extends TpModel implements ConvertableEntity, Comparable<Mis
 		this.tempoBruto = tempoBruto;
 	}
 
-	public double getConsumoEmLitros() {
+	public Double getConsumoEmLitros() {
 		return consumoEmLitros;
 	}
 
-	public void setConsumoEmLitros(double consumoEmLitros) {
+	public void setConsumoEmLitros(Double consumoEmLitros) {
 		this.consumoEmLitros = consumoEmLitros;
 	}
 
@@ -406,11 +406,11 @@ public class Missao extends TpModel implements ConvertableEntity, Comparable<Mis
 		this.dataHoraSaida = dataHoraSaida;
 	}
 
-	public double getOdometroSaidaEmKm() {
+	public Double getOdometroSaidaEmKm() {
 		return odometroSaidaEmKm;
 	}
 
-	public void setOdometroSaidaEmKm(double odometroSaidaEmKm) {
+	public void setOdometroSaidaEmKm(Double odometroSaidaEmKm) {
 		this.odometroSaidaEmKm = odometroSaidaEmKm;
 	}
 
@@ -510,11 +510,11 @@ public class Missao extends TpModel implements ConvertableEntity, Comparable<Mis
 		this.dataHoraRetorno = dataHoraRetorno;
 	}
 
-	public double getOdometroRetornoEmKm() {
+	public Double getOdometroRetornoEmKm() {
 		return odometroRetornoEmKm;
 	}
 
-	public void setOdometroRetornoEmKm(double odometroRetornoEmKm) {
+	public void setOdometroRetornoEmKm(Double odometroRetornoEmKm) {
 		this.odometroRetornoEmKm = odometroRetornoEmKm;
 	}
 

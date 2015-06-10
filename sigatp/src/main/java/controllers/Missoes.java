@@ -322,8 +322,8 @@ public class Missoes extends Controller {
 		RequisicaoVsEstado[] requisicoesVsEstados = new RequisicaoVsEstado[missao.getRequisicoesTransporte().size()];
 		for (RequisicaoTransporte requisicaoTransporte : missao.getRequisicoesTransporte()) {
 			RequisicaoVsEstado requisicaoVsEstados = new RequisicaoVsEstado();
-			requisicaoVsEstados.idRequisicaoTransporte = requisicaoTransporte.getId();
-			requisicaoVsEstados.estado = requisicaoTransporte.getUltimoEstado();
+			requisicaoVsEstados.setIdRequisicaoTransporte(requisicaoTransporte.getId());
+			requisicaoVsEstados.setEstado(requisicaoTransporte.getUltimoEstado());
 			requisicoesVsEstados[i] = requisicaoVsEstados;
 			i = i + 1;
 		}
