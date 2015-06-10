@@ -143,9 +143,9 @@ public class RelatoriosRanking extends Controller {
 
 				if (salvar) {
 					itemRc = new RelatorioRanking().new RankingCondutorRequisicao();
-					itemRc.condutor = Condutor.AR.findById(condutor.getId());
-					itemRc.missoes = new ArrayList<Missao>(setMissao);
-					itemRc.requisicoes = new ArrayList<RequisicaoTransporte>(setRequisicao);
+					itemRc.setCondutor(Condutor.AR.findById(condutor.getId()));
+					itemRc.setMissoes(new ArrayList<Missao>(setMissao));
+					itemRc.setRequisicoes(new ArrayList<RequisicaoTransporte>(setRequisicao));
 					listaRankingCondutor.add(itemRc);
 					setMissao.clear();
 					setRequisicao.clear();
@@ -208,8 +208,8 @@ public class RelatoriosRanking extends Controller {
 
 				if (salvar) {
 					itemRv = new RelatorioRanking().new RankingVeiculoRequisicao();
-					itemRv.veiculo = Veiculo.AR.findById(veiculo.getId());
-					itemRv.requisicoes = new ArrayList<RequisicaoTransporte>(setRequisicao);
+					itemRv.setVeiculo(Veiculo.AR.findById(veiculo.getId()));
+					itemRv.setRequisicoes(new ArrayList<RequisicaoTransporte>(setRequisicao));
 					listaRankingVeiculo.add(itemRv);
 					setRequisicao.clear();
 					salvar = false;
@@ -254,8 +254,8 @@ public class RelatoriosRanking extends Controller {
 				totalFinalidade = Integer.parseInt(lista.get(i)[1].toString());
 
 				itemRf = new RelatorioRanking().new RankingFinalidadeRequisicao();
-				itemRf.finalidade = FinalidadeRequisicao.AR.findById(finalidade.getId());
-				itemRf.totalFinalidade = totalFinalidade;
+				itemRf.setFinalidade(FinalidadeRequisicao.AR.findById(finalidade.getId()));
+				itemRf.setTotalFinalidade(totalFinalidade);
 				listaRankingFinalidade.add(itemRf);
 			}
 
@@ -289,8 +289,8 @@ public class RelatoriosRanking extends Controller {
 					}));
 
 					itemRp = new RelatorioRanking().new RankingTipoPassageiroRequisicao();
-					itemRp.tipoPassageiro = tipoPassageiro.getDescricao();
-					itemRp.totalTipoPassageiros = requisicoesFiltradas.size();
+					itemRp.setTipoPassageiro(tipoPassageiro.getDescricao());
+					itemRp.setTotalTipoPassageiros(requisicoesFiltradas.size());
 					listaRankingTipoPassageiro.add(itemRp);
 				}
 			}

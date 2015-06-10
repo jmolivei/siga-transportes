@@ -35,16 +35,16 @@ public class RelatoriosRankingTest {
 			rankingCondutor = RelatoriosRanking.retornarCondutoresQueAtenderamMaisRequisicoes(relatorio);
 
 			for (br.gov.jfrj.siga.tp.model.RelatorioRanking.RankingCondutorRequisicao item : rankingCondutor) {
-				linha = "Condutor : " + item.condutor.getNome() + " ";
+				linha = "Condutor : " + item.getCondutor().getNome() + " ";
 				linha += "Missoes : ";
 
-				for (Missao missao : item.missoes) {
+				for (Missao missao : item.getMissoes()) {
 					linha += missao.getSequence() + " ";
 				}
 
 				linha += "Requisicoes : ";
 
-				for (RequisicaoTransporte requisicao : item.requisicoes) {
+				for (RequisicaoTransporte requisicao : item.getRequisicoes()) {
 					linha += requisicao.buscarSequence() + " ";
 				}
 
@@ -68,10 +68,10 @@ public class RelatoriosRankingTest {
 			rankingVeiculo = RelatoriosRanking.retornarVeiculosQueAtenderamMaisRequisicoes(relatorio);
 
 			for (br.gov.jfrj.siga.tp.model.RelatorioRanking.RankingVeiculoRequisicao item : rankingVeiculo) {
-				linha = "Veiculo : " + item.veiculo.getPlaca() + " ";
+				linha = "Veiculo : " + item.getVeiculo().getPlaca() + " ";
 				linha += "Requisicoes : ";
 
-				for (RequisicaoTransporte requisicao : item.requisicoes) {
+				for (RequisicaoTransporte requisicao : item.getRequisicoes()) {
 					linha += requisicao.buscarSequence() + " ";
 				}
 
@@ -95,8 +95,8 @@ public class RelatoriosRankingTest {
 			rankingFinalidade = RelatoriosRanking.retornarFinalidadesComMaisRequisicoes(relatorio);
 
 			for (br.gov.jfrj.siga.tp.model.RelatorioRanking.RankingFinalidadeRequisicao item : rankingFinalidade) {
-				linha = "Finalidade : " + item.finalidade.getDescricao() + " ";
-				linha += "Total : " + item.totalFinalidade + " ";
+				linha = "Finalidade : " + item.getFinalidade().getDescricao() + " ";
+				linha += "Total : " + item.getTotalFinalidade() + " ";
 				System.out.println(linha);
 			}
 
@@ -117,8 +117,8 @@ public class RelatoriosRankingTest {
 			rankingTipoDePassageiro = RelatoriosRanking.retornarTipoPassageiroComMaisRequisicoes(relatorio);
 
 			for (br.gov.jfrj.siga.tp.model.RelatorioRanking.RankingTipoPassageiroRequisicao item : rankingTipoDePassageiro) {
-				linha = "Tipo de passageiro : " + item.tipoPassageiro + " ";
-				linha += "Total : " + item.totalTipoPassageiros + " ";
+				linha = "Tipo de passageiro : " + item.getTipoPassageiro() + " ";
+				linha += "Total : " + item.getTotalTipoPassageiros() + " ";
 				System.out.println(linha);
 			}
 
