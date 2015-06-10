@@ -4,8 +4,8 @@
 <%@ taglib prefix="sigatp" tagdir="/WEB-INF/tags/" %>
 <%@ taglib prefix="tptags" uri="/WEB-INF/tpTags.tld"%>
 
-<script src="@{'/public/javascripts/jquery/jquery-ui-1.8.16.custom.min.js'}"></script>
-<link rel="stylesheet" type="text/css" href="@{'/public/stylesheets/servicoVeiculo.css'}">
+<script src="${pageContext.request.contextPath}/public/javascripts/jquery/jquery-ui-1.8.16.custom.min.js"></script>
+<link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/public/stylesheets/servicoVeiculo.css">
 <jsp:include page="../tags/calendario.jsp" />
 
 
