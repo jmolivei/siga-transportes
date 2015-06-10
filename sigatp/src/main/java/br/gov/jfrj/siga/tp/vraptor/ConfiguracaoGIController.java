@@ -21,6 +21,7 @@ import br.gov.jfrj.siga.cp.CpTipoConfiguracao;
 import br.gov.jfrj.siga.cp.model.DpLotacaoSelecao;
 import br.gov.jfrj.siga.dp.CpOrgaoUsuario;
 import br.gov.jfrj.siga.dp.dao.CpDao;
+import br.gov.jfrj.siga.tp.exceptions.ConfiguracaoGIControllerException;
 import br.gov.jfrj.siga.vraptor.SigaObjects;
 
 @Resource
@@ -40,60 +41,58 @@ public class ConfiguracaoGIController extends TpController {
     }
 
     @Path("/pesquisar")
-    public void pesquisar() throws Exception {
-        result.redirectTo(ConfiguracaoGIController.class).pesquisar(getTitular().getOrgaoUsuario().getIdOrgaoUsu());
+    public void pesquisar() throws ConfiguracaoGIControllerException {
+        try {
+            result.redirectTo(ConfiguracaoGIController.class).pesquisar(getTitular().getOrgaoUsuario().getIdOrgaoUsu());
+        } catch (Exception e) {
+            throw new ConfiguracaoGIControllerException(e);
+        }
     }
 
     @Path("/pesquisar/{idOrgaoUsu}")
-    public void pesquisar(Long idOrgaoUsu) throws Exception {
+    public void pesquisar(Long idOrgaoUsu) throws ConfiguracaoGIControllerException {
         pesquisarPorOrgaoUsuario(idOrgaoUsu);
     }
 
     @SuppressWarnings("unchecked")
-    private void pesquisarPorOrgaoUsuario(Long idOrgaoUsu) throws Exception {
-        CpOrgaoUsuario cpOrgaoUsuario = CpOrgaoUsuario.AR.findById(idOrgaoUsu);
-        List<CpOrgaoUsuario> cpOrgaoUsuarios = CpOrgaoUsuario.AR.findAll();
-        String SERVICO_COMPLEXO_ADMINISTRADOR = "SIGA-TP-ADMMISSAOCOMPLEXO";
-        CpServico cpServico = CpServico.AR.find("siglaServico", SERVICO_COMPLEXO_ADMINISTRADOR).first();
-        Long TIPO_CONFIG_COMPLEXO_PADRAO = 400L;
-        CpTipoConfiguracao tpConf = CpTipoConfiguracao.AR.findById(TIPO_CONFIG_COMPLEXO_PADRAO);
-        // Object[] parametros = {idOrgaoUsu,cpSituacaoConfiguracaoPode, cpServico};
-        // List<CpConfiguracao> cpConfiguracoesCp =
-        // CpConfiguracao.find("(dpPessoa in (select d from DpPessoa d where d.orgaoUsuario.idOrgaoUsu = ?) and cpSituacaoConfiguracao = ? and cpServico = ? and hisIdcFim is null )",
-        // parametros).fetch();
-        Object[] parametros = { idOrgaoUsu, cpServico };
-        List<CpConfiguracao> cpConfiguracoesCp = CpConfiguracao.AR.find("(dpPessoa in (select d from DpPessoa d where d.orgaoUsuario.idOrgaoUsu = ?) and cpServico = ? and hisIdcFim is null )",
-                parametros).fetch();
-        // Recuperando Configuração Pode para uma lotação específica
-        // Object[] parametros1 = {cpSituacaoConfiguracaoPode, idOrgaoUsu,tpConf};
-        // List<CpConfiguracao> cpConfiguracoesCl =
-        // CpConfiguracao.find("((lotacao is not null  and cpSituacaoConfiguracao = ?) and orgaoUsuario.idOrgaoUsu = ?  and cpTipoConfiguracao = ? and hisIdcFim is null  )", parametros1).fetch();
-        Object[] parametros1 = { idOrgaoUsu, tpConf };
-        List<CpConfiguracao> cpConfiguracoesCl = CpConfiguracao.AR.find("((lotacao is not null) and orgaoUsuario.idOrgaoUsu = ?  and cpTipoConfiguracao = ? and hisIdcFim is null  )", parametros1)
-                .fetch();
-        // Recuperando Configuração default para um Órgão específico
-        Object[] parametros2 = { idOrgaoUsu, tpConf };
-        // List<CpConfiguracao> cpConfiguracoesCo = CpConfiguracao.find("((cpSituacaoConfiguracao = ?) and orgaoUsuario.idOrgaoUsu = ?  and cpTipoConfiguracao = ? and hisIdcFim is null  )",
-        // parametros2).fetch();
-        List<CpConfiguracao> cpConfiguracoesCo = CpConfiguracao.AR.find("( lotacao is null and orgaoUsuario.idOrgaoUsu = ?  and cpTipoConfiguracao = ? and hisIdcFim is null )", parametros2).fetch();
-        List<CpConfiguracao> cpConfiguracoes = new ArrayList<CpConfiguracao>();
-        cpConfiguracoes.addAll(cpConfiguracoesCp);
-        cpConfiguracoes.addAll(cpConfiguracoesCl);
-        cpConfiguracoes.addAll(cpConfiguracoesCo);
+    private void pesquisarPorOrgaoUsuario(Long idOrgaoUsu) throws ConfiguracaoGIControllerException {
+        try {
+            CpOrgaoUsuario cpOrgaoUsuario = CpOrgaoUsuario.AR.findById(idOrgaoUsu);
+            List<CpOrgaoUsuario> cpOrgaoUsuarios = CpOrgaoUsuario.AR.findAll();
+            String servicoComplexoAdministrador = "SIGA-TP-ADMMISSAOCOMPLEXO";
+            CpServico cpServico = CpServico.AR.find("siglaServico", servicoComplexoAdministrador).first();
+            Long tipoConfigComplexoPadrao = 400L;
+            CpTipoConfiguracao tpConf = CpTipoConfiguracao.AR.findById(tipoConfigComplexoPadrao);
+            Object[] parametros = { idOrgaoUsu, cpServico };
+            List<CpConfiguracao> cpConfiguracoesCp = CpConfiguracao.AR.find("(dpPessoa in (select d from DpPessoa d where d.orgaoUsuario.idOrgaoUsu = ?) and cpServico = ? and hisIdcFim is null )",
+                    parametros).fetch();
+            // Recuperando Configuração Pode para uma lotação específica
+            Object[] parametros1 = { idOrgaoUsu, tpConf };
+            List<CpConfiguracao> cpConfiguracoesCl = CpConfiguracao.AR.find("((lotacao is not null) and orgaoUsuario.idOrgaoUsu = ?  and cpTipoConfiguracao = ? and hisIdcFim is null  )", parametros1)
+                    .fetch();
+            // Recuperando Configuração default para um Órgão específico
+            Object[] parametros2 = { idOrgaoUsu, tpConf };
+            List<CpConfiguracao> cpConfiguracoesCo = CpConfiguracao.AR.find("( lotacao is null and orgaoUsuario.idOrgaoUsu = ?  and cpTipoConfiguracao = ? and hisIdcFim is null )", parametros2)
+                    .fetch();
+            List<CpConfiguracao> cpConfiguracoes = new ArrayList<CpConfiguracao>();
+            cpConfiguracoes.addAll(cpConfiguracoesCp);
+            cpConfiguracoes.addAll(cpConfiguracoesCl);
+            cpConfiguracoes.addAll(cpConfiguracoesCo);
 
-        result.include(CP_CONFIGURACOES, cpConfiguracoes);
-        result.include(CP_ORGAO_USUARIO, cpOrgaoUsuario);
-        result.include(CP_ORGAO_USUARIOS, cpOrgaoUsuarios);
+            result.include(CP_CONFIGURACOES, cpConfiguracoes);
+            result.include(CP_ORGAO_USUARIO, cpOrgaoUsuario);
+            result.include(CP_ORGAO_USUARIOS, cpOrgaoUsuarios);
 
-        result.include("lotacaoSel", new DpLotacaoSelecao());
+            result.include("lotacaoSel", new DpLotacaoSelecao());
+        } catch (Exception e) {
+            throw new ConfiguracaoGIControllerException(e);
+        }
     }
 
     @Path("/incluir/{idOrgaoUsu}")
-    public void incluir(Long idOrgaoUsu) throws Exception {
+    public void incluir(Long idOrgaoUsu) throws ConfiguracaoGIControllerException {
         CpConfiguracao cpConfiguracao = new CpConfiguracao();
-
         carregarDadosPerifericos(idOrgaoUsu);
-
         cpConfiguracao.setOrgaoUsuario((CpOrgaoUsuario) result.included().get(CP_ORGAO_USUARIO));
 
         /*
@@ -106,92 +105,104 @@ public class ConfiguracaoGIController extends TpController {
     }
 
     @Path("/editar/{id}")
-    public void editar(Long id) throws Exception {
-        CpConfiguracao cpConfiguracao = CpConfiguracao.AR.findById(id);
+    public void editar(Long id) throws ConfiguracaoGIControllerException {
+        try {
+            CpConfiguracao cpConfiguracao = CpConfiguracao.AR.findById(id);
 
-        if (cpConfiguracao.getOrgaoUsuario() != null)
-            carregarDadosPerifericos(cpConfiguracao.getOrgaoUsuario().getIdOrgaoUsu());
-        else if (cpConfiguracao.getDpPessoa() != null) {
-            carregarDadosPerifericos(cpConfiguracao.getDpPessoa().getLotacao().getOrgaoUsuario().getIdOrgaoUsu());
-            cpConfiguracao.setOrgaoUsuario(cpConfiguracao.getDpPessoa().getLotacao().getOrgaoUsuario());
-        } else if (cpConfiguracao.getLotacao() != null) {
-            carregarDadosPerifericos(cpConfiguracao.getLotacao().getOrgaoUsuario().getIdOrgaoUsu());
-            cpConfiguracao.setOrgaoUsuario(cpConfiguracao.getLotacao().getOrgaoUsuario());
+            if (cpConfiguracao.getOrgaoUsuario() != null)
+                carregarDadosPerifericos(cpConfiguracao.getOrgaoUsuario().getIdOrgaoUsu());
+            else if (cpConfiguracao.getDpPessoa() != null) {
+                carregarDadosPerifericos(cpConfiguracao.getDpPessoa().getLotacao().getOrgaoUsuario().getIdOrgaoUsu());
+                cpConfiguracao.setOrgaoUsuario(cpConfiguracao.getDpPessoa().getLotacao().getOrgaoUsuario());
+            } else if (cpConfiguracao.getLotacao() != null) {
+                carregarDadosPerifericos(cpConfiguracao.getLotacao().getOrgaoUsuario().getIdOrgaoUsu());
+                cpConfiguracao.setOrgaoUsuario(cpConfiguracao.getLotacao().getOrgaoUsuario());
+            }
+
+            result.include(CP_CONFIGURACAO, cpConfiguracao);
+        } catch (Exception e) {
+            throw new ConfiguracaoGIControllerException(e);
         }
-
-        result.include(CP_CONFIGURACAO, cpConfiguracao);
     }
 
     @SuppressWarnings("unchecked")
-    private void carregarDadosPerifericos(Long idOrgaoUsu) throws Exception {
-        CpOrgaoUsuario cpOrgaoUsuario = CpOrgaoUsuario.AR.findById(idOrgaoUsu);
-        long TIPO_CONFIG_COMPLEXO_PADRAO = 400;
-        CpTipoConfiguracao tpConf1 = CpTipoConfiguracao.AR.findById(TIPO_CONFIG_COMPLEXO_PADRAO);
-        long TIPO_CONFIG_UTILIZAR_SERVICO = 200;
-        CpTipoConfiguracao tpConf2 = CpTipoConfiguracao.AR.findById(TIPO_CONFIG_UTILIZAR_SERVICO);
+    private void carregarDadosPerifericos(Long idOrgaoUsu) throws ConfiguracaoGIControllerException {
+        try {
+            CpOrgaoUsuario cpOrgaoUsuario = CpOrgaoUsuario.AR.findById(idOrgaoUsu);
+            long tipoConfigComplexoPadrao = 400;
+            CpTipoConfiguracao tpConf1 = CpTipoConfiguracao.AR.findById(tipoConfigComplexoPadrao);
+            long tipoConfigUtilizarServico = 200;
+            CpTipoConfiguracao tpConf2 = CpTipoConfiguracao.AR.findById(tipoConfigUtilizarServico);
 
-        List<CpTipoConfiguracao> cpTiposConfiguracao = new ArrayList<CpTipoConfiguracao>();
-        cpTiposConfiguracao.add(tpConf2);
-        cpTiposConfiguracao.add(tpConf1);
+            List<CpTipoConfiguracao> cpTiposConfiguracao = new ArrayList<CpTipoConfiguracao>();
+            cpTiposConfiguracao.add(tpConf2);
+            cpTiposConfiguracao.add(tpConf1);
 
-        List<CpSituacaoConfiguracao> cpSituacoesConfiguracao = CpSituacaoConfiguracao.AR.findAll();
-        List<CpComplexo> cpComplexos = CpComplexo.AR.find(" orgaoUsuario.idOrgaoUsu = ? ", idOrgaoUsu).fetch();
+            List<CpSituacaoConfiguracao> cpSituacoesConfiguracao = CpSituacaoConfiguracao.AR.findAll();
+            List<CpComplexo> cpComplexos = CpComplexo.AR.find(" orgaoUsuario.idOrgaoUsu = ? ", idOrgaoUsu).fetch();
 
-        result.include(CP_ORGAO_USUARIO, cpOrgaoUsuario);
-        result.include(CP_TIPOS_CONFIGURACAO, cpTiposConfiguracao);
-        result.include(CP_SITUACOES_CONFIGURACAO, cpSituacoesConfiguracao);
-        result.include(CP_COMPLEXOS, cpComplexos);
+            result.include(CP_ORGAO_USUARIO, cpOrgaoUsuario);
+            result.include(CP_TIPOS_CONFIGURACAO, cpTiposConfiguracao);
+            result.include(CP_SITUACOES_CONFIGURACAO, cpSituacoesConfiguracao);
+            result.include(CP_COMPLEXOS, cpComplexos);
+        } catch (Exception e) {
+            throw new ConfiguracaoGIControllerException(e);
+        }
     }
 
     @Path("/excluir/{id}")
-    public void excluir(Long id) throws Exception {
-        CpConfiguracao cpConfiguracao = CpConfiguracao.AR.findById(id);
-
-        cpConfiguracao.delete();
-
-        redirecionaParaListagem(cpConfiguracao);
+    public void excluir(Long id) throws ConfiguracaoGIControllerException {
+        try {
+            CpConfiguracao cpConfiguracao = CpConfiguracao.AR.findById(id);
+            cpConfiguracao.delete();
+            redirecionaParaListagem(cpConfiguracao);
+        } catch (Exception e) {
+            throw new ConfiguracaoGIControllerException(e);
+        }
     }
 
-    public void salvar(CpConfiguracao cpConfiguracao) throws Exception {
-        isValid(cpConfiguracao);
-
-        CpConfiguracao cpConfiguracaoNova = new CpConfiguracao();
-        CpConfiguracao cpConfiguracaoAnterior = CpConfiguracao.AR.findById(cpConfiguracao.getId());
-        if (cpConfiguracaoAnterior != null) {
-            if (cpConfiguracaoAnterior.getConfiguracaoInicial() == null) {
-                cpConfiguracaoAnterior.setConfiguracaoInicial(cpConfiguracaoAnterior);
+    public void salvar(CpConfiguracao cpConfiguracao) throws ConfiguracaoGIControllerException {
+        try {
+            isValid(cpConfiguracao);
+            CpConfiguracao cpConfiguracaoNova = new CpConfiguracao();
+            CpConfiguracao cpConfiguracaoAnterior = CpConfiguracao.AR.findById(cpConfiguracao.getId());
+            if (cpConfiguracaoAnterior != null) {
+                if (cpConfiguracaoAnterior.getConfiguracaoInicial() == null) {
+                    cpConfiguracaoAnterior.setConfiguracaoInicial(cpConfiguracaoAnterior);
+                    cpConfiguracaoAnterior.save();
+                }
+                cpConfiguracaoAnterior.setHisDtFim(new Date());
+                cpConfiguracaoAnterior.setHisIdcFim(getIdentidadeCadastrante());
                 cpConfiguracaoAnterior.save();
+
+                cpConfiguracaoNova.setConfiguracaoInicial(cpConfiguracaoAnterior.getConfiguracaoInicial());
             }
-            cpConfiguracaoAnterior.setHisDtFim(new Date());
-            cpConfiguracaoAnterior.setHisIdcFim(getIdentidadeCadastrante());
-            cpConfiguracaoAnterior.save();
 
-            cpConfiguracaoNova.setConfiguracaoInicial(cpConfiguracaoAnterior.getConfiguracaoInicial());
-        }
+            if (cpConfiguracao.getCpTipoConfiguracao().getIdTpConfiguracao() == 200) {
+                String servicoComplexoAdminstrador = "SIGA-TP-ADMMISSAOCOMPLEXO";
+                cpConfiguracaoNova.setCpServico((CpServico) CpServico.AR.find("siglaServico", servicoComplexoAdminstrador).first());
+            }
 
-        if (cpConfiguracao.getCpTipoConfiguracao().getIdTpConfiguracao() == 200) {
-            String SERVICO_COMPLEXO_ADMINISTRADOR = "SIGA-TP-ADMMISSAOCOMPLEXO";
-            cpConfiguracaoNova.setCpServico((CpServico) CpServico.AR.find("siglaServico", SERVICO_COMPLEXO_ADMINISTRADOR).first());
-        }
-
-        cpConfiguracaoNova.setCpSituacaoConfiguracao(cpConfiguracao.getCpSituacaoConfiguracao());
-        cpConfiguracaoNova.setCpTipoConfiguracao(cpConfiguracao.getCpTipoConfiguracao());
-        cpConfiguracaoNova.setComplexo(cpConfiguracao.getComplexo());
-        cpConfiguracaoNova.setOrgaoUsuario(cpConfiguracao.getOrgaoUsuario());
-        cpConfiguracaoNova.setLotacao(cpConfiguracao.getLotacao());
-        cpConfiguracaoNova.setDpPessoa(cpConfiguracao.getDpPessoa());
-        cpConfiguracaoNova.setHisDtIni(new Date());
-        cpConfiguracaoNova.setHisIdcIni(getIdentidadeCadastrante());
-        cpConfiguracaoNova.save();
-        if (cpConfiguracaoNova.getConfiguracaoInicial() == null) {
-            cpConfiguracaoNova.setConfiguracaoInicial(cpConfiguracaoNova);
+            cpConfiguracaoNova.setCpSituacaoConfiguracao(cpConfiguracao.getCpSituacaoConfiguracao());
+            cpConfiguracaoNova.setCpTipoConfiguracao(cpConfiguracao.getCpTipoConfiguracao());
+            cpConfiguracaoNova.setComplexo(cpConfiguracao.getComplexo());
+            cpConfiguracaoNova.setOrgaoUsuario(cpConfiguracao.getOrgaoUsuario());
+            cpConfiguracaoNova.setLotacao(cpConfiguracao.getLotacao());
+            cpConfiguracaoNova.setDpPessoa(cpConfiguracao.getDpPessoa());
+            cpConfiguracaoNova.setHisDtIni(new Date());
+            cpConfiguracaoNova.setHisIdcIni(getIdentidadeCadastrante());
             cpConfiguracaoNova.save();
+            if (cpConfiguracaoNova.getConfiguracaoInicial() == null) {
+                cpConfiguracaoNova.setConfiguracaoInicial(cpConfiguracaoNova);
+                cpConfiguracaoNova.save();
+            }
+            redirecionaParaListagem(cpConfiguracaoNova);
+        } catch (Exception e) {
+            throw new ConfiguracaoGIControllerException(e);
         }
-
-        redirecionaParaListagem(cpConfiguracaoNova);
     }
 
-    private void isValid(CpConfiguracao cpConfiguracao) throws Exception {
+    private void isValid(CpConfiguracao cpConfiguracao) throws ConfiguracaoGIControllerException {
         validaCamposNulos(cpConfiguracao);
 
         if (cpConfiguracao.getComplexo() == null || cpConfiguracao.getCpTipoConfiguracao() == null || cpConfiguracao.getCpSituacaoConfiguracao() == null)
@@ -216,7 +227,7 @@ public class ConfiguracaoGIController extends TpController {
             cpConfiguracao.setDpPessoa(null);
     }
 
-    private void redirecionaParaListagem(CpConfiguracao cpConfiguracao) throws Exception {
+    private void redirecionaParaListagem(CpConfiguracao cpConfiguracao) throws ConfiguracaoGIControllerException {
         if (cpConfiguracao.getOrgaoUsuario() != null)
             result.redirectTo(this).pesquisar(cpConfiguracao.getOrgaoUsuario().getIdOrgaoUsu());
         else if (cpConfiguracao.getDpPessoa() != null)
