@@ -56,6 +56,7 @@ public class Andamento extends TpModel implements Comparable<Andamento> {
 	@ManyToOne
 	private DpPessoa responsavel;
 
+	@Override
 	public Long getId() {
 		return id;
 	}

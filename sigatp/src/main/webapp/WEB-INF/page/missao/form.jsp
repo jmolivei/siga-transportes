@@ -45,7 +45,7 @@
 
 		var okButton = function() {
 		    	inserirRequisicoesSelecionadas();
-			 	if (!"${missao.id}")
+			 	if (!${missao.id})
 			 		verificarMenorDataRequisicao();
 				$( this ).dialog( "close" );
 			}
@@ -62,7 +62,7 @@
 				modal: true,
 				buttons: {
 					"Ok": okButton,
-					"Cancel": cancelButton
+					Cancel: cancelButton
 				},
 				close: function() {
 				}
@@ -164,7 +164,7 @@
 			var dataSaida = $('#inputdataHoraSaida').val();
 			var veiculosDisp = $('#veiculosDisp').val();
 			var inicioRapido = $('#inicioRapido').val() !== undefined ? $('#inicioRapido').val() : "NAO" ;
-			console.log(inicioRapido);
+
 			var listarVeiculosCondutoresDisp = "${linkTo[MissaoController].listarVeiculosECondutoresDisponiveis}";
 			return listarVeiculosCondutoresDisp + "?idMissao=" + idMissao + "&veiculosDisp=" + veiculosDisp + "&inicioRapido=" + inicioRapido +"&dataSaida=" + dataSaida;
 		}
@@ -189,7 +189,7 @@
 		}
 
 		$(function() {
-			if (! "${missao.id}")
+			if (! ${missao.id})
 				verificarMenorDataRequisicao();
 
 			var $mudouDataHoraSaida =  $('#inputdataHoraSaida').change( function() {
@@ -496,6 +496,7 @@
 			});
 
 			$("#inputdataHoraSaida").attr("value", menorData);
+			$("#inputdataHoraSaida").select();
 			$("#inputdataHoraSaida").trigger('change');
 		}
 

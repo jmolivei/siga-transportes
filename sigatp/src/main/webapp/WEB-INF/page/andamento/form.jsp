@@ -4,7 +4,7 @@
 <%@ taglib prefix="sigatp" tagdir="/WEB-INF/tags/" %>
 
 <form id="formAndamentos" action="${linkTo[AndamentoController].salvar}" method="post" enctype="multipart/form-data" >
-		<input type="hidden" name="andamento.requisicaoTransporte.id" value="${andamento.requisicaoTransporte.id}" />
+		<input type="hidden" name="andamento.requisicaoTransporte" value="${andamento.requisicaoTransporte.id}" />
 		<input type="hidden" name="andamento.estadoRequisicao" value="${andamento.estadoRequisicao}" />
 	<h3> A requisi&ccedil;&atilde;o ${andamento.requisicaoTransporte.buscarSequence()} ser&aacute; ${andamento.estadoRequisicao}</h3>
 	<sigatp:erros />
@@ -23,14 +23,15 @@
     <c:if test="${!acao.equals('Autorizar')}">
 		<span class="alerta menor">* Preenchimento obrigat&oacute;rio</span>
 	</c:if>
+	
 	<div class="gt-table-buttons">
 		<input type="submit" value="${acao}" class="gt-btn-medium gt-btn-left" />
 		<c:choose>
 			<c:when test="${acao.equals('Cancelar')}">
-				<input type="button" value="<fmt:message key="views.botoes.voltar" />" onClick="javascript:location.href='${linkTo[Requisicao].buscarPelaSequence[andamento.requisicaoTransporte.buscarSequence()][popUp]}'" class="gt-btn-medium gt-btn-left" />
+				<input type="button" value="<fmt:message key="views.botoes.voltar" />" onClick="javascript:location.href='${linkTo[RequisicaoController].buscarPelaSequence[popUp][andamento.requisicaoTransporte.buscarSequence()]}'" class="gt-btn-medium gt-btn-left" />
 			</c:when> 
 			<c:otherwise> 
-				<input type="button" value="<fmt:message key="views.botoes.voltar" />" onClick="javascript:location.href='${linkTo[Requisicao].listarPAprovar}'" class="gt-btn-medium gt-btn-left" />		
+				<input type="button" value="<fmt:message key="views.botoes.voltar" />" onClick="javascript:location.href='${linkTo[RequisicaoController].listarPAprovar}'" class="gt-btn-medium gt-btn-left" />		
 			</c:otherwise>
 		</c:choose>
 	</div>
