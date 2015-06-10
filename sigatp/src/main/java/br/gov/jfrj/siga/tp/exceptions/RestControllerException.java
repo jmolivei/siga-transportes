@@ -11,5 +11,9 @@ public class RestControllerException extends Exception {
     public RestControllerException(Exception e) {
         super(e);
     }
+    
+    public RestControllerException(String msg) {
+        super(msg);
+    }
 
 }
