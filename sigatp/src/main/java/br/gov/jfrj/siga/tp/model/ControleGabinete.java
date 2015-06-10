@@ -20,7 +20,6 @@ import org.slf4j.LoggerFactory;
 
 import br.gov.jfrj.siga.dp.DpPessoa;
 import br.gov.jfrj.siga.model.ActiveRecord;
-import br.gov.jfrj.siga.tp.dto.PlantaoDTO;
 import br.gov.jfrj.siga.tp.validation.annotation.Data;
 import br.gov.jfrj.siga.vraptor.converter.ConvertableEntity;
 
@@ -31,7 +30,7 @@ public class ControleGabinete extends TpModel implements ConvertableEntity {
 
     private static final long serialVersionUID = 5270396853989326489L;
     public static final ActiveRecord<ControleGabinete> AR = new ActiveRecord<>(ControleGabinete.class);
-    private static final Logger LOGGER = LoggerFactory.getLogger(PlantaoDTO.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(ControleGabinete.class);
 
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "hibernate_sequence_generator")

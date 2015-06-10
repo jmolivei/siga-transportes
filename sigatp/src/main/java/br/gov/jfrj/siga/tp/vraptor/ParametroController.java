@@ -22,76 +22,74 @@ import br.gov.jfrj.siga.vraptor.SigaObjects;
 @Path("/app/parametro")
 public class ParametroController extends TpController {
 
-	public ParametroController(HttpServletRequest request, Result result,
-			CpDao dao, Validator validator, SigaObjects so, EntityManager em) {
-		super(request, result, TpDao.getInstance(), validator, so, em);
-	}
+    public ParametroController(HttpServletRequest request, Result result, CpDao dao, Validator validator, SigaObjects so, EntityManager em) {
+        super(request, result, TpDao.getInstance(), validator, so, em);
+    }
 
-	@Path("/listar")
-	public void listar() throws Exception {
-		List<Parametro> parametros = Parametro.listarTodos();
-		result.include("parametros", parametros);
-	}
+    @Path("/listar")
+    public void listar() {
+        List<Parametro> parametros = Parametro.listarTodos();
+        result.include("parametros", parametros);
+    }
 
-	// @RoleAdmin
-	@Path("/editar/{id}")
-	public void editar(Long id) throws Exception {
-		Parametro parametro = Parametro.buscar(id);
-		carregarDadosPerifericos();
+    // @RoleAdmin
+    @Path("/editar/{id}")
+    public void editar(Long id) {
+        Parametro parametro = Parametro.buscar(id);
+        carregarDadosPerifericos();
 
-		result.include("parametro", parametro);
-	}
+        result.include("parametro", parametro);
+    }
 
-	// @RoleAdmin
-	@Path("/excluir/{id}")
-	public void excluir(Long id) throws Exception {
-		Parametro parametro = Parametro.buscar(id);
+    // @RoleAdmin
+    @Path("/excluir/{id}")
+    public void excluir(Long id) {
+        Parametro parametro = Parametro.buscar(id);
+        parametro.delete();
+        result.redirectTo(ParametroController.class).listar();
+    }
 
-		parametro.delete();
-		result.redirectTo(ParametroController.class).listar();
-	}
+    // @RoleAdmin
+    public void incluir() {
+        Parametro parametro = new Parametro();
+        carregarDadosPerifericos();
 
-	// @RoleAdmin
-	public void incluir() throws Exception {
-		Parametro parametro = new Parametro();
-		carregarDadosPerifericos();
+        result.include("parametro", parametro);
+    }
 
-		result.include("parametro", parametro);
-	}
-	
-	// @RoleAdmin
-	public void salvar(@Valid Parametro parametro) throws Exception {
-		validaCamposNulos(parametro);
-		
-		if (validator.hasErrors()) {
-			carregarDadosPerifericos();
-			validator.onErrorUse(Results.page()).of(ParametroController.class).editar(parametro.getId());
-			
-			return;
-		}
-		parametro.save();
+    // @RoleAdmin
+    public void salvar(@Valid Parametro parametro) {
+        validaCamposNulos(parametro);
 
-		result.redirectTo(ParametroController.class).listar();
-	}
-	
-	private void validaCamposNulos(Parametro parametro) {
-	    if(parametro.getCpComplexo().getIdComplexo() == null)
-	        parametro.setCpComplexo(null);
-	    if(parametro.getCpOrgaoUsuario().getIdOrgaoUsu() == null)
-	        parametro.setCpOrgaoUsuario(null);
-		if(parametro.getDpPessoa().getId() == null)
-			parametro.setDpPessoa(null);
-		if(parametro.getDpLotacao().getId() == null)
-			parametro.setDpLotacao(null);
-	}
+        if (validator.hasErrors()) {
+            carregarDadosPerifericos();
+            validator.onErrorUse(Results.page()).of(ParametroController.class).editar(parametro.getId());
 
-	@SuppressWarnings("unchecked")
-	private void carregarDadosPerifericos() {
-		List<CpOrgaoUsuario> cpOrgaoUsuarios = CpOrgaoUsuario.AR.findAll();
-		List<CpComplexo> cpComplexos = CpComplexo.AR.findAll();
+            return;
+        }
+        parametro.save();
 
-		result.include("cpOrgaoUsuarios", cpOrgaoUsuarios);
-		result.include("cpComplexos", cpComplexos);
-	}
-	
+        result.redirectTo(ParametroController.class).listar();
+    }
+
+    private void validaCamposNulos(Parametro parametro) {
+        if (parametro.getCpComplexo().getIdComplexo() == null)
+            parametro.setCpComplexo(null);
+        if (parametro.getCpOrgaoUsuario().getIdOrgaoUsu() == null)
+            parametro.setCpOrgaoUsuario(null);
+        if (parametro.getDpPessoa().getId() == null)
+            parametro.setDpPessoa(null);
+        if (parametro.getDpLotacao().getId() == null)
+            parametro.setDpLotacao(null);
+    }
+
+    @SuppressWarnings("unchecked")
+    private void carregarDadosPerifericos() {
+        List<CpOrgaoUsuario> cpOrgaoUsuarios = CpOrgaoUsuario.AR.findAll();
+        List<CpComplexo> cpComplexos = CpComplexo.AR.findAll();
+
+        result.include("cpOrgaoUsuarios", cpOrgaoUsuarios);
+        result.include("cpComplexos", cpComplexos);
+    }
+
 }
