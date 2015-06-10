@@ -1,4 +1,4 @@
-<link rel="stylesheet" href="@{'/public/stylesheets/andamentos.css'}" type="text/css" media="screen"/>
+<link rel="stylesheet" href="${pageContext.request.contextPath}/public/stylesheets/andamentos.css" type="text/css" media="screen"/>
 
 	   	<p class="gt-table-action-list">
 	   		<c:if test="${menuPenalidadesMostrarVoltar}"> 

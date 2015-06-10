@@ -22,6 +22,7 @@ import br.gov.jfrj.siga.cp.model.DpLotacaoSelecao;
 import br.gov.jfrj.siga.dp.CpOrgaoUsuario;
 import br.gov.jfrj.siga.dp.dao.CpDao;
 import br.gov.jfrj.siga.tp.exceptions.ConfiguracaoGIControllerException;
+import br.gov.jfrj.siga.tp.model.TpDao;
 import br.gov.jfrj.siga.vraptor.SigaObjects;
 
 @Resource
@@ -37,7 +38,7 @@ public class ConfiguracaoGIController extends TpController {
     private static final String CP_CONFIGURACOES = "cpConfiguracoes";
 
     public ConfiguracaoGIController(HttpServletRequest request, Result result, CpDao dao, Validator validator, SigaObjects so, EntityManager em) {
-        super(request, result, dao, validator, so, em);
+        super(request, result, TpDao.getInstance(), validator, so, em);
     }
 
     @Path("/pesquisar")

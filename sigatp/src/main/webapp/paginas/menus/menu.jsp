@@ -90,10 +90,10 @@
 				<!-- <li><a id="menuAdmMateriais" class="" href="@{Application.emdesenvolvimento}">Materiais em Estoque</a></li> -->
 				<li><a id="menuAdmRelat" class="" href="#">Relat&oacute;rios</a>
 					<ul>
-				  		<li><a id="menuAdmRelatAgendaVeiculos" class="" href="#" onclick=  "javascript:window.open('@{Relatorios.listarAgendaTodosVeiculos}');">Agenda dos Ve&iacute;culos</a></li>
+				  		<li><a id="menuAdmRelatAgendaVeiculos" class="" href="#" onclick=  "javascript:window.open('${linkTo[RelatorioController].listarAgendaTodosVeiculos}');">Agenda dos Ve&iacute;culos</a></li>
 					</ul>
 				</li>
-				<li><a id="menuAdmServicos" class="" href="@{ServicosVeiculo.listar}">Servi&ccedil;os</a></li>
+				<li><a id="menuAdmServicos" class="" href="${linkTo[ServicoVeiculoController].listar}">Servi&ccedil;os</a></li>
 				<li><a id="menuAdmVeiculos" class="" href="${linkTo[VeiculoController].listar}">Ve&iacute;culos</a></li>
 			</ul>
 		</li>
@@ -110,11 +110,11 @@
 				<!-- <li><a id="menuAdmMateriais" class="" href="@{Application.emdesenvolvimento}">Materiais em Estoque</a></li> -->
 				<li><a id="menuAdmRelat" class="" href="#">Relat&oacute;rios</a>
 					<ul>
-				  		<li><a id="menuAdmRelatAgendaCondutores" class="" href="#" onclick="javascript:window.open('@{Relatorios.listarAgendaTodosCondutores}');">Agenda dos Condutores</a></li>
-				  		<li><a id="menuAdmRelatAgendaVeiculos" class="" href="#" onclick=  "javascript:window.open('@{Relatorios.listarAgendaTodosVeiculos}');">Agenda dos Ve&iacute;culos</a></li>
-						<li><a id="menuAdmRelatMissoesEmAndamento" class="" href="#" onclick="javascript:window.open('@{Relatorios.listarMissoesEmAndamento}');">Miss&otilde;es em Andamento</a></li>
+				  		<li><a id="menuAdmRelatAgendaCondutores" class="" href="#" onclick="javascript:window.open('${linkTo[RelatorioController].listarAgendaTodosCondutores}');">Agenda dos Condutores</a></li>
+				  		<li><a id="menuAdmRelatAgendaVeiculos" class="" href="#" onclick=  "javascript:window.open('${linkTo[RelatorioController].listarAgendaTodosVeiculos}');">Agenda dos Ve&iacute;culos</a></li>
+						<li><a id="menuAdmRelatMissoesEmAndamento" class="" href="#" onclick="javascript:window.open('${linkTo[RelatorioController].listarMissoesEmAndamento}');">Miss&otilde;es em Andamento</a></li>
 						<li><a id="menuAdmRelatRanking" class="" href="#" onclick="javascript:window.open('${linkTo[RelatorioRankingController].consultar}');">Ranking por Requisi&ccedil;&otilde;es</a></li>
-						<li><a id="menuAdmRelatConsumoMedio" class="" href="#" onclick="javascript:window.open('@{RelatoriosConsumoMedio.consultar}');">Consumo M&eacute;dio de Combust&iacute;vel</a></li>
+						<li><a id="menuAdmRelatConsumoMedio" class="" href="#" onclick="javascript:window.open('${linkTo[RelatorioConsumoMedioController].consultar}');">Consumo M&eacute;dio de Combust&iacute;vel</a></li>
 					</ul>
 				</li>
 			</ul>
