@@ -14,6 +14,7 @@ import br.com.caelum.vraptor.Resource;
 import br.com.caelum.vraptor.Result;
 import br.com.caelum.vraptor.Validator;
 import br.gov.jfrj.siga.dp.dao.CpDao;
+import br.gov.jfrj.siga.tp.exceptions.RelatorioException;
 import br.gov.jfrj.siga.tp.model.Afastamento;
 import br.gov.jfrj.siga.tp.model.DiaDaSemana;
 import br.gov.jfrj.siga.tp.model.DiaDeTrabalho;
@@ -31,6 +32,11 @@ import com.google.common.collect.Lists;
 @Path("/app/relatorio")
 public class RelatorioController extends TpController {
 
+    private static final String YYYY_M_D_H_M_S = "yyyy,M,d,H,m,s";
+    private static final String DD_MM_YYYY = "dd/MM/yyyy";
+    private static final String CONDUTOR = "condutor";
+    private static final String REGISTROS = "registros";
+    private static final String DD_MM_YYYY_HH_MM = "dd/MM/yyyy HH:mm";
     private static final int HORA_FINAL_EXPEDIENTE = 19;
     private static final int MINUTO_FINAL_EXPEDIENTE = 0;
     private static final int SEGUNDO_FINAL_EXPEDIENTE = 0;
@@ -40,18 +46,18 @@ public class RelatorioController extends TpController {
     private static final int HORA_INICIAL_DIA = 0;
     private static final int MINUTO_INICIAL_DIA = 0;
     private static final int SEGUNDO_INICIAL_DIA = 0;
-    
-    public RelatorioController(HttpServletRequest request, Result result,
-            CpDao dao, Validator validator, SigaObjects so, EntityManager em) {
+    private static final String SEPARADOR_VIRGULA = "\', \'";
+
+    public RelatorioController(HttpServletRequest request, Result result, CpDao dao, Validator validator, SigaObjects so, EntityManager em) {
         super(request, result, dao, validator, so, em);
     }
-   
+
     @Path("/listarAgendaPorCondutorNoProximoDia/{idCondutor}/{dataPesquisa*}")
     public void listarAgendaPorCondutorNoProximoDia(Long idCondutor, Calendar dataPesquisa) throws ParseException {
         dataPesquisa.add(Calendar.DAY_OF_MONTH, 1);
-        result.forwardTo(RelatorioController.class).listarAgendaPorCondutor(dataPesquisa,idCondutor);
+        result.forwardTo(RelatorioController.class).listarAgendaPorCondutor(dataPesquisa, idCondutor);
     }
-    
+
     @Path("/listarAgendaPorCondutorNoDiaAnterior/{idCondutor}/{dataPesquisa*}")
     public void listarAgendaPorCondutorNoDiaAnterior(Long idCondutor, Calendar dataPesquisa) throws ParseException {
         dataPesquisa.add(Calendar.DAY_OF_MONTH, -1);
@@ -72,346 +78,404 @@ public class RelatorioController extends TpController {
 
     @Path("/listarAgendaTodosCondutores")
     public void listarAgendaTodosCondutores() throws ParseException {
-        result.forwardTo(RelatorioController.class).listarAgendaPorCondutor(Calendar.getInstance(),0L);
+        result.forwardTo(RelatorioController.class).listarAgendaPorCondutor(Calendar.getInstance(), 0L);
     }
-    
+
     @Path("/listarAgendaTodosVeiculos")
     public void listarAgendaTodosVeiculos() throws ParseException {
         result.forwardTo(RelatorioController.class).listarAgendaPorVeiculo(Calendar.getInstance(), 0L);
     }
-    
+
     @Path("/listarAgendaPorCondutor/{dataPesquisa}/{idCondutor}")
-    public void listarAgendaPorCondutor(Calendar dataPesquisa,Long idCondutor) throws ParseException{
-        
+    public void listarAgendaPorCondutor(Calendar dataPesquisa, Long idCondutor) throws ParseException {
+
         Long idCondutorParaBusca = verificaIdNulo(idCondutor);
-        
+
         String registros = "";
         Calendar dataHoraPesquisa = Calendar.getInstance();
-        SimpleDateFormat formatar = new SimpleDateFormat("dd/MM/yyyy HH:mm");
+        SimpleDateFormat formatar = new SimpleDateFormat(DD_MM_YYYY_HH_MM);
 
-        String strDataPesquisa=null;
+        String strDataPesquisa = null;
 
-        if (dataPesquisa != null) 
+        if (dataPesquisa != null)
             dataHoraPesquisa = dataPesquisa;
 
-        strDataPesquisa = String.format("%02d",dataHoraPesquisa.get(Calendar.DAY_OF_MONTH)) + "/" + String.format("%02d",dataHoraPesquisa.get(Calendar.MONTH) + 1) + "/" + String.format("%04d",dataHoraPesquisa.get(Calendar.YEAR));
+        strDataPesquisa = String.format("%02d", dataHoraPesquisa.get(Calendar.DAY_OF_MONTH)) + "/" + String.format("%02d", dataHoraPesquisa.get(Calendar.MONTH) + 1) + "/"
+                + String.format("%04d", dataHoraPesquisa.get(Calendar.YEAR));
         dataHoraPesquisa.setTime(formatar.parse(strDataPesquisa + " 00:00"));
 
-        List<EscalaDeTrabalho>  escalas = EscalaDeTrabalho.buscarPorCondutores(idCondutorParaBusca,strDataPesquisa);
+        List<EscalaDeTrabalho> escalas = EscalaDeTrabalho.buscarPorCondutores(idCondutorParaBusca, strDataPesquisa);
         List<EscalaDeTrabalho> escalasFiltradas = filtrarPorOrgao(escalas, EscalaDeTrabalho.class);
 
-        List<Afastamento>  afastamentos = Afastamento.buscarPorCondutores(idCondutorParaBusca,strDataPesquisa);
+        List<Afastamento> afastamentos = Afastamento.buscarPorCondutores(idCondutorParaBusca, strDataPesquisa);
         List<Afastamento> afastamentosFiltrados = filtrarPorOrgao(afastamentos, Afastamento.class);
 
-        List<Plantao> plantoes = Plantao.buscarPorCondutores(idCondutorParaBusca,strDataPesquisa);
+        List<Plantao> plantoes = Plantao.buscarPorCondutores(idCondutorParaBusca, strDataPesquisa);
         List<Plantao> plantoesFiltrados = filtrarPorOrgao(plantoes, Plantao.class);
 
-        List<Missao> missoes = Missao.buscarPorCondutores(idCondutorParaBusca,strDataPesquisa);
+        List<Missao> missoes = Missao.buscarPorCondutores(idCondutorParaBusca, strDataPesquisa);
         List<Missao> missoesFiltradas = filtrarPorOrgao(missoes, Missao.class);
 
-        String delim = "";
-        for (EscalaDeTrabalho escala : escalasFiltradas) {
+        registros = adicionarDadosEscalaDeTrabalho(registros, dataHoraPesquisa, escalasFiltradas);
 
-            SimpleDateFormat formatar1 = new SimpleDateFormat("dd/MM/yyyy HH:mm");
-            String srtDataPesquisa = formatar1.format(dataHoraPesquisa.getTime());
+        String registrosEscala = registros;
+        registros = gerarTimeLine(dataHoraPesquisa, registrosEscala, afastamentosFiltrados, plantoesFiltrados, missoesFiltradas, new ArrayList<ServicoVeiculo>(), CONDUTOR);
 
-            DiaDaSemana diaDePesquisa = DiaDaSemana.getDiaDaSemana(srtDataPesquisa);
+        SimpleDateFormat formatoData = new SimpleDateFormat(DD_MM_YYYY);
 
-            SimpleDateFormat formatoData1 = new SimpleDateFormat("yyyy,M,d,H,m,s");
-
-            Calendar dataHoraInicioTemp = Calendar.getInstance();
-            Calendar dataHoraFimTemp = recuperarDataEHora(escala.getDataVigenciaInicio(), HORA_FINAL_DIA, MINUTO_FINAL_DIA,SEGUNDO_FINAL_DIA);
-
-            for (DiaDeTrabalho dia: escala.getDiasDeTrabalho()) {
-                if (diaDePesquisa.isEquals(dia.getDiaEntrada())) {
-                    dataHoraInicioTemp = recuperarDataEHora(dataHoraPesquisa,dia.getHoraEntrada().get(Calendar.HOUR_OF_DAY), dia.getHoraEntrada().get(Calendar.MINUTE),dia.getHoraEntrada().get(Calendar.SECOND));
-                    if (diaDePesquisa.isEquals(dia.getDiaSaida())) 
-                        dataHoraFimTemp = recuperarDataEHora(dataHoraPesquisa, dia.getHoraSaida().get(Calendar.HOUR_OF_DAY), dia.getHoraSaida().get(Calendar.MINUTE),dia.getHoraSaida().get(Calendar.SECOND));
-                    else 
-                        dataHoraFimTemp = recuperarDataEHora(dataHoraPesquisa, HORA_FINAL_EXPEDIENTE, MINUTO_FINAL_EXPEDIENTE,SEGUNDO_FINAL_EXPEDIENTE);
-                    
-                    registros += delim;
-                    registros += "[ \'" + "Escalas" + "\', \'" + escala.getCondutor().getNome() + "\', new Date(" + formatoData1.format(dataHoraInicioTemp.getTime()) + "), new Date(";
-                    registros += formatoData1.format(dataHoraFimTemp.getTime()) + ") ]";
-                    delim = ", ";
-                }
-            }
-        }
-
-        String registrosEscala=registros;
-        registros = gerarTimeLine(dataHoraPesquisa,registrosEscala, afastamentosFiltrados, plantoesFiltrados, missoesFiltradas, new ArrayList<ServicoVeiculo>(), "condutor");
-
-        SimpleDateFormat formatoData = new SimpleDateFormat("dd/MM/yyyy");
-        
         result.include("dataPesquisa", formatoData.format(dataHoraPesquisa.getTime()));
-        result.include("registros", registros);
+        result.include(REGISTROS, registros);
         result.include("idCondutor", idCondutor);
         result.include("entidade", "Condutor");
     }
-    
+
+    private String adicionarDadosEscalaDeTrabalho(String registros, Calendar dataHoraPesquisa, List<EscalaDeTrabalho> escalasFiltradas) throws ParseException {
+        String delim = "";
+        StringBuilder registrosRetorno = new StringBuilder(registros);
+
+        for (EscalaDeTrabalho escala : escalasFiltradas) {
+            SimpleDateFormat formatar1 = new SimpleDateFormat(DD_MM_YYYY_HH_MM);
+            String srtDataPesquisa = formatar1.format(dataHoraPesquisa.getTime());
+            DiaDaSemana diaDePesquisa = DiaDaSemana.getDiaDaSemana(srtDataPesquisa);
+            SimpleDateFormat formatoData1 = new SimpleDateFormat(YYYY_M_D_H_M_S);
+            delim = adicionarDadosDiaDeTrabalho(dataHoraPesquisa, delim, registrosRetorno, escala, diaDePesquisa, formatoData1);
+        }
+        return registrosRetorno.toString();
+    }
+
+    private String adicionarDadosDiaDeTrabalho(Calendar dataHoraPesquisa, String delimitador, StringBuilder registrosRetorno, EscalaDeTrabalho escala, DiaDaSemana diaDePesquisa,
+            SimpleDateFormat formatoData1) {
+        Calendar dataHoraInicioTemp = Calendar.getInstance();
+        Calendar dataHoraFimTemp = recuperarDataEHora(escala.getDataVigenciaInicio(), HORA_FINAL_DIA, MINUTO_FINAL_DIA, SEGUNDO_FINAL_DIA);
+        String delim = delimitador;
+
+        for (DiaDeTrabalho dia : escala.getDiasDeTrabalho()) {
+            if (diaDePesquisa.isEquals(dia.getDiaEntrada())) {
+                dataHoraInicioTemp = recuperarDataEHora(dataHoraPesquisa, dia.getHoraEntrada().get(Calendar.HOUR_OF_DAY), dia.getHoraEntrada().get(Calendar.MINUTE),
+                        dia.getHoraEntrada().get(Calendar.SECOND));
+
+                if (diaDePesquisa.isEquals(dia.getDiaSaida())) {
+                    dataHoraFimTemp = recuperarDataEHora(dataHoraPesquisa, dia.getHoraSaida().get(Calendar.HOUR_OF_DAY), dia.getHoraSaida().get(Calendar.MINUTE),
+                            dia.getHoraSaida().get(Calendar.SECOND));
+                } else {
+                    dataHoraFimTemp = recuperarDataEHora(dataHoraPesquisa, HORA_FINAL_EXPEDIENTE, MINUTO_FINAL_EXPEDIENTE, SEGUNDO_FINAL_EXPEDIENTE);
+                }
+
+                registrosRetorno.append(delim);
+                registrosRetorno.append("[ \'" + "Escalas" + SEPARADOR_VIRGULA + escala.getCondutor().getNome() + "\', new Date(" + formatoData1.format(dataHoraInicioTemp.getTime()) + "), new Date(");
+                registrosRetorno.append(formatoData1.format(dataHoraFimTemp.getTime()) + ") ]");
+                delim = ", ";
+            }
+        }
+        return delim;
+    }
+
     @Path("/listarAgendaPorVeiculo/{dataPesquisa}/{idVeiculo}")
-    public void listarAgendaPorVeiculo(Calendar dataPesquisa,Long idVeiculo) throws ParseException {
+    public void listarAgendaPorVeiculo(Calendar dataPesquisa, Long idVeiculo) throws ParseException {
 
         Long idVeiculoParaBusca = verificaIdNulo(idVeiculo);
-        
-       String registros = "";
 
-       Calendar dataHoraPesquisa = Calendar.getInstance();
-       SimpleDateFormat formatar = new SimpleDateFormat("dd/MM/yyyy HH:mm");
+        String registros = "";
 
-       String strDataPesquisa=null;
+        Calendar dataHoraPesquisa = Calendar.getInstance();
+        SimpleDateFormat formatar = new SimpleDateFormat(DD_MM_YYYY_HH_MM);
 
-       if (dataPesquisa != null)
-           dataHoraPesquisa = dataPesquisa;
+        String strDataPesquisa = null;
 
-       strDataPesquisa = String.format("%02d",dataHoraPesquisa.get(Calendar.DAY_OF_MONTH)) + "/" + String.format("%02d",dataHoraPesquisa.get(Calendar.MONTH) + 1) + "/" + String.format("%04d",dataHoraPesquisa.get(Calendar.YEAR));
-       dataHoraPesquisa.setTime(formatar.parse(strDataPesquisa + " 00:00"));
+        if (dataPesquisa != null)
+            dataHoraPesquisa = dataPesquisa;
 
-       List<Missao> missoes = Missao.buscarPorVeiculos(idVeiculoParaBusca,strDataPesquisa);
-       List<Missao> missoesFiltradas = filtrarPorOrgao(missoes, Missao.class);
+        strDataPesquisa = String.format("%02d", dataHoraPesquisa.get(Calendar.DAY_OF_MONTH)) + "/" + String.format("%02d", dataHoraPesquisa.get(Calendar.MONTH) + 1) + "/"
+                + String.format("%04d", dataHoraPesquisa.get(Calendar.YEAR));
+        dataHoraPesquisa.setTime(formatar.parse(strDataPesquisa + " 00:00"));
 
-       List<ServicoVeiculo> servicosVeiculos = ServicoVeiculo.buscarPorVeiculo(idVeiculoParaBusca,strDataPesquisa);
-       List<ServicoVeiculo> servicosFiltrados = filtrarPorOrgao(servicosVeiculos, ServicoVeiculo.class);
+        List<Missao> missoes = Missao.buscarPorVeiculos(idVeiculoParaBusca, strDataPesquisa);
+        List<Missao> missoesFiltradas = filtrarPorOrgao(missoes, Missao.class);
 
-       registros = gerarTimeLine(dataHoraPesquisa,"", new ArrayList<Afastamento>(),new ArrayList<Plantao>(), missoesFiltradas, servicosFiltrados, "veiculo" );
+        List<ServicoVeiculo> servicosVeiculos = ServicoVeiculo.buscarPorVeiculo(idVeiculoParaBusca, strDataPesquisa);
+        List<ServicoVeiculo> servicosFiltrados = filtrarPorOrgao(servicosVeiculos, ServicoVeiculo.class);
 
-       SimpleDateFormat formatoData = new SimpleDateFormat("dd/MM/yyyy");
-       
-       result.include("dataPesquisa", formatoData.format(dataHoraPesquisa.getTime()));
-       result.include("registros", registros);
-       result.include("idVeiculo", idVeiculo);
-       result.include("entidade", "Veiculo");
-   }
-    
-    private String gerarTimeLine(Calendar dataHoraPesquisa, String registros,
-            List<Afastamento> afastamentos, List<Plantao> plantoes,
-            List<Missao> missoes, List<ServicoVeiculo> servicosVeiculos, String entidade) {
+        registros = gerarTimeLine(dataHoraPesquisa, "", new ArrayList<Afastamento>(), new ArrayList<Plantao>(), missoesFiltradas, servicosFiltrados, "veiculo");
 
+        SimpleDateFormat formatoData = new SimpleDateFormat(DD_MM_YYYY);
+
+        result.include("dataPesquisa", formatoData.format(dataHoraPesquisa.getTime()));
+        result.include(REGISTROS, registros);
+        result.include("idVeiculo", idVeiculo);
+        result.include("entidade", "Veiculo");
+    }
+
+    private String gerarTimeLine(Calendar dataHoraPesquisa, String registros, List<Afastamento> afastamentos, List<Plantao> plantoes, List<Missao> missoes, List<ServicoVeiculo> servicosVeiculos,
+            String entidade) {
+        StringBuilder registrosGerados = new StringBuilder(registros);
         String delim = "";
-        if (! registros.isEmpty())
+
+        if (!registrosGerados.toString().isEmpty())
             delim = ", ";
 
+        delim = adicionarDadosAfastamento(dataHoraPesquisa, afastamentos, registrosGerados, delim);
+        delim = adicionarDadosPlantao(dataHoraPesquisa, plantoes, registrosGerados, delim);
+        delim = adicionarDadosServicoVeiculo(dataHoraPesquisa, servicosVeiculos, registrosGerados, delim);
+        delim = adicionarDadosCondutor(dataHoraPesquisa, missoes, entidade, registrosGerados, delim);
+
+        return registrosGerados.toString();
+    }
+
+    private boolean mesmaDataEApos(Calendar origem, Calendar comparativo) {
+        if (origem == null || comparativo == null) {
+            return false;
+        }
+        return mesmaData(origem, comparativo) && isAfter(origem, comparativo);
+    }
+
+    private boolean mesmaData(Calendar origem, Calendar comparativo) {
+        return mesmoAno(origem, comparativo) && mesmoMes(origem, comparativo) && mesmoDiaDoMes(origem, comparativo);
+    }
+
+    private boolean isAfter(Calendar origem, Calendar comparativo) {
+        return origem.after(comparativo);
+    }
+
+    private boolean mesmoDiaDoMes(Calendar origem, Calendar comparativo) {
+        return origem.get(Calendar.DAY_OF_MONTH) == comparativo.get(Calendar.DAY_OF_MONTH);
+    }
+
+    private boolean mesmoMes(Calendar origem, Calendar comparativo) {
+        return origem.get(Calendar.MONTH) == comparativo.get(Calendar.MONTH);
+    }
+
+    private boolean mesmoAno(Calendar origem, Calendar comparativo) {
+        return origem.get(Calendar.YEAR) == comparativo.get(Calendar.YEAR);
+    }
+
+    private String adicionarDadosAfastamento(Calendar dataHoraPesquisa, List<Afastamento> afastamentos, StringBuilder registrosGerados, String delimitador) {
+        String delim = delimitador;
         for (Afastamento afastamento : afastamentos) {
-            registros += delim;
-            SimpleDateFormat formatoData = new SimpleDateFormat("yyyy,M,d,H,m,s");
+            registrosGerados.append(delim);
+            SimpleDateFormat formatoData = new SimpleDateFormat(YYYY_M_D_H_M_S);
+            registrosGerados.append("[ \'" + "Afastamentos" + SEPARADOR_VIRGULA + afastamento.getCondutor().getNome() + "\', new Date(");
 
-            registros += "[ \'" + "Afastamentos" + "\', \'" + afastamento.getCondutor().getNome() + "\', new Date(" ;
-
-            if (afastamento.getDataHoraInicio().get(Calendar.YEAR) == dataHoraPesquisa.get(Calendar.YEAR) &&
-                    afastamento.getDataHoraInicio().get(Calendar.MONTH) == dataHoraPesquisa.get(Calendar.MONTH) &&
-                    afastamento.getDataHoraInicio().get(Calendar.DAY_OF_MONTH) == dataHoraPesquisa.get(Calendar.DAY_OF_MONTH) &&
-                    afastamento.getDataHoraInicio().after(dataHoraPesquisa)) {
-                registros += formatoData.format(afastamento.getDataHoraInicio().getTime()) + "), new Date(";
-            }
-            else {
-                Calendar dataHora = recuperarDataEHora(dataHoraPesquisa, HORA_INICIAL_DIA, MINUTO_INICIAL_DIA,SEGUNDO_INICIAL_DIA);
-                registros += formatoData.format(dataHora.getTime()) + "), new Date(";
+            if (mesmaDataEApos(afastamento.getDataHoraInicio(), dataHoraPesquisa)) {
+                registrosGerados.append(formatoData.format(afastamento.getDataHoraInicio().getTime()) + "), new Date(");
+            } else {
+                Calendar dataHora = recuperarDataEHora(dataHoraPesquisa, HORA_INICIAL_DIA, MINUTO_INICIAL_DIA, SEGUNDO_INICIAL_DIA);
+                registrosGerados.append(formatoData.format(dataHora.getTime()) + "), new Date(");
             }
 
-            if (afastamento.getDataHoraFim() != null){
-                if (afastamento.getDataHoraFim().get(Calendar.YEAR) == dataHoraPesquisa.get(Calendar.YEAR) &&
-                    afastamento.getDataHoraFim().get(Calendar.MONTH) == dataHoraPesquisa.get(Calendar.MONTH) &&
-                    afastamento.getDataHoraFim().get(Calendar.DAY_OF_MONTH) == dataHoraPesquisa.get(Calendar.DAY_OF_MONTH) &&
-                    afastamento.getDataHoraFim().after(dataHoraPesquisa)) {
-                    registros += formatoData.format(afastamento.getDataHoraFim().getTime()) + ") ]";
-                    delim = ", ";
-                    continue;
-                }
+            if (mesmaDataEApos(afastamento.getDataHoraFim(), dataHoraPesquisa)) {
+                registrosGerados.append(formatoData.format(afastamento.getDataHoraFim().getTime()) + ") ]");
+                delim = ", ";
+                continue;
             }
-            Calendar dataHora = recuperarDataEHora(dataHoraPesquisa, HORA_FINAL_EXPEDIENTE, MINUTO_FINAL_EXPEDIENTE,SEGUNDO_FINAL_EXPEDIENTE);
-            registros += formatoData.format(dataHora.getTime()) + ") ]";
+            Calendar dataHora = recuperarDataEHora(dataHoraPesquisa, HORA_FINAL_EXPEDIENTE, MINUTO_FINAL_EXPEDIENTE, SEGUNDO_FINAL_EXPEDIENTE);
+            registrosGerados.append(formatoData.format(dataHora.getTime()) + ") ]");
             delim = ", ";
         }
+        return delim;
+    }
 
+    private String adicionarDadosPlantao(Calendar dataHoraPesquisa, List<Plantao> plantoes, StringBuilder registrosGerados, String delimitador) {
+        String delim = delimitador;
         for (Plantao plantao : plantoes) {
-            registros += delim;
-            SimpleDateFormat formatoData = new SimpleDateFormat("yyyy,M,d,H,m,s");
+            registrosGerados.append(delim);
+            SimpleDateFormat formatoData = new SimpleDateFormat(YYYY_M_D_H_M_S);
+            registrosGerados.append("[ \'" + "Plantoes" + SEPARADOR_VIRGULA + plantao.getCondutor().getNome() + "\', new Date(");
 
-            registros += "[ \'" + "Plantoes" + "\', \'" + plantao.getCondutor().getNome() + "\', new Date(" ;
-
-            if (plantao.getDataHoraInicio().get(Calendar.YEAR) == dataHoraPesquisa.get(Calendar.YEAR) &&
-                    plantao.getDataHoraInicio().get(Calendar.MONTH) == dataHoraPesquisa.get(Calendar.MONTH) &&
-                    plantao.getDataHoraInicio().get(Calendar.DAY_OF_MONTH) == dataHoraPesquisa.get(Calendar.DAY_OF_MONTH) &&
-                    plantao.getDataHoraInicio().after(dataHoraPesquisa)) {
-                registros += formatoData.format(plantao.getDataHoraInicio().getTime()) + "), new Date(";
-            }
-            else {
-                Calendar dataHora = recuperarDataEHora(dataHoraPesquisa, HORA_INICIAL_DIA, MINUTO_INICIAL_DIA,SEGUNDO_INICIAL_DIA);
-                registros += formatoData.format(dataHora.getTime()) + "), new Date(";
-
+            if (mesmaDataEApos(plantao.getDataHoraInicio(), dataHoraPesquisa)) {
+                registrosGerados.append(formatoData.format(plantao.getDataHoraInicio().getTime()) + "), new Date(");
+            } else {
+                Calendar dataHora = recuperarDataEHora(dataHoraPesquisa, HORA_INICIAL_DIA, MINUTO_INICIAL_DIA, SEGUNDO_INICIAL_DIA);
+                registrosGerados.append(formatoData.format(dataHora.getTime()) + "), new Date(");
             }
 
-            if (plantao.getDataHoraFim() != null){
-                if (plantao.getDataHoraFim().get(Calendar.YEAR) == dataHoraPesquisa.get(Calendar.YEAR) &&
-                    plantao.getDataHoraFim().get(Calendar.MONTH) == dataHoraPesquisa.get(Calendar.MONTH) &&
-                    plantao.getDataHoraFim().get(Calendar.DAY_OF_MONTH) == dataHoraPesquisa.get(Calendar.DAY_OF_MONTH) &&
-                    plantao.getDataHoraFim().after(dataHoraPesquisa)) {
-                    registros += formatoData.format(plantao.getDataHoraFim().getTime()) + ") ]";
-                    delim = ", ";
-                    continue;
-                }
+            if (mesmaDataEApos(plantao.getDataHoraFim(), dataHoraPesquisa)) {
+                registrosGerados.append(formatoData.format(plantao.getDataHoraFim().getTime()) + ") ]");
+                delim = ", ";
+                continue;
             }
-            Calendar dataHora = recuperarDataEHora(dataHoraPesquisa, HORA_FINAL_EXPEDIENTE, MINUTO_FINAL_EXPEDIENTE,SEGUNDO_FINAL_EXPEDIENTE);
-            registros += formatoData.format(dataHora.getTime()) + ") ]";
+            Calendar dataHora = recuperarDataEHora(dataHoraPesquisa, HORA_FINAL_EXPEDIENTE, MINUTO_FINAL_EXPEDIENTE, SEGUNDO_FINAL_EXPEDIENTE);
+            registrosGerados.append(formatoData.format(dataHora.getTime()) + ") ]");
             delim = ", ";
         }
+        return delim;
+    }
 
+    private String adicionarDadosServicoVeiculo(Calendar dataHoraPesquisa, List<ServicoVeiculo> servicosVeiculos, StringBuilder registrosGerados, String delimitador) {
+        String delim = delimitador;
         for (ServicoVeiculo servicoVeiculo : servicosVeiculos) {
-            registros += delim;
-            SimpleDateFormat formatoData = new SimpleDateFormat("yyyy,M,d,H,m,s");
+            registrosGerados.append(delim);
+            SimpleDateFormat formatoData = new SimpleDateFormat(YYYY_M_D_H_M_S);
 
-            registros += "[ \'" + "Servicos" + "\', \'" + servicoVeiculo.getVeiculo().getPlaca() + "\', new Date(" ;
+            registrosGerados.append("[ \'" + "Servicos" + SEPARADOR_VIRGULA + servicoVeiculo.getVeiculo().getPlaca() + "\', new Date(");
 
-            if (servicoVeiculo.getDataHoraInicio().get(Calendar.YEAR) == dataHoraPesquisa.get(Calendar.YEAR) &&
-                    servicoVeiculo.getDataHoraInicio().get(Calendar.MONTH) == dataHoraPesquisa.get(Calendar.MONTH) &&
-                    servicoVeiculo.getDataHoraInicio().get(Calendar.DAY_OF_MONTH) == dataHoraPesquisa.get(Calendar.DAY_OF_MONTH) &&
-                    servicoVeiculo.getDataHoraInicio().after(dataHoraPesquisa)) {
-                registros += formatoData.format(servicoVeiculo.getDataHoraInicio().getTime()) + "), new Date(";
-            }
-            else {
-                Calendar dataHora = recuperarDataEHora(dataHoraPesquisa, HORA_INICIAL_DIA, MINUTO_INICIAL_DIA,SEGUNDO_INICIAL_DIA);
-                registros += formatoData.format(dataHora.getTime()) + "), new Date(";
-
+            if (mesmaDataEApos(servicoVeiculo.getDataHoraInicio(), dataHoraPesquisa)) {
+                registrosGerados.append(formatoData.format(servicoVeiculo.getDataHoraInicio().getTime()) + "), new Date(");
+            } else {
+                Calendar dataHora = recuperarDataEHora(dataHoraPesquisa, HORA_INICIAL_DIA, MINUTO_INICIAL_DIA, SEGUNDO_INICIAL_DIA);
+                registrosGerados.append(formatoData.format(dataHora.getTime()) + "), new Date(");
             }
 
-            if (servicoVeiculo.getDataHoraFim() != null){
-                if (servicoVeiculo.getDataHoraFim().get(Calendar.YEAR) == dataHoraPesquisa.get(Calendar.YEAR) &&
-                    servicoVeiculo.getDataHoraFim().get(Calendar.MONTH) == dataHoraPesquisa.get(Calendar.MONTH) &&
-                    servicoVeiculo.getDataHoraFim().get(Calendar.DAY_OF_MONTH) == dataHoraPesquisa.get(Calendar.DAY_OF_MONTH) &&
-                    servicoVeiculo.getDataHoraFim().after(dataHoraPesquisa)) {
-                    registros += formatoData.format(servicoVeiculo.getDataHoraFim().getTime()) + ") ]";
-                    delim = ", ";
-                    continue;
-                }
+            if (mesmaDataEApos(servicoVeiculo.getDataHoraFim(), dataHoraPesquisa)) {
+                registrosGerados.append(formatoData.format(servicoVeiculo.getDataHoraFim().getTime()) + ") ]");
+                delim = ", ";
+                continue;
             }
-            Calendar dataHora = recuperarDataEHora(dataHoraPesquisa, HORA_FINAL_EXPEDIENTE, MINUTO_FINAL_EXPEDIENTE,SEGUNDO_FINAL_EXPEDIENTE);
-            registros += formatoData.format(dataHora.getTime()) + ") ]";
+            Calendar dataHora = recuperarDataEHora(dataHoraPesquisa, HORA_FINAL_EXPEDIENTE, MINUTO_FINAL_EXPEDIENTE, SEGUNDO_FINAL_EXPEDIENTE);
+            registrosGerados.append(formatoData.format(dataHora.getTime()) + ") ]");
             delim = ", ";
         }
+        return delim;
+    }
 
-        String label="condutor";
+    private String adicionarDadosCondutor(Calendar dataHoraPesquisa, List<Missao> missoes, String entidade, StringBuilder registrosGerados, String delimitador) {
+        String label = CONDUTOR;
+        String delim = delimitador;
         for (Missao missao : missoes) {
-            registros += delim;
-            SimpleDateFormat formatoData = new SimpleDateFormat("yyyy,M,d,H,m,s");
+            registrosGerados.append(delim);
+            SimpleDateFormat formatoData = new SimpleDateFormat(YYYY_M_D_H_M_S);
 
-            if ("condutor".equals(entidade)) {
+            if (CONDUTOR.equals(entidade)) {
                 label = missao.getSequence() + "-" + missao.getCondutor().getNome();
-            }
-            else {
+            } else {
                 label = missao.getSequence() + "-" + missao.getVeiculo().getPlaca();
             }
 
-            registros += "[ \'" + "Missoes" + "\', \'" + label + "\', new Date(" ;
+            registrosGerados.append("[ \'" + "Missoes" + SEPARADOR_VIRGULA + label + "\', new Date(");
 
-            if (missao.getDataHoraSaida().get(Calendar.YEAR) == dataHoraPesquisa.get(Calendar.YEAR) &&
-                    missao.getDataHoraSaida().get(Calendar.MONTH) == dataHoraPesquisa.get(Calendar.MONTH) &&
-                    missao.getDataHoraSaida().get(Calendar.DAY_OF_MONTH) == dataHoraPesquisa.get(Calendar.DAY_OF_MONTH) &&
-                    missao.getDataHoraSaida().after(dataHoraPesquisa)) {
-                registros += formatoData.format(missao.getDataHoraSaida().getTime()) + "), new Date(";
-            }
-            else {
-                Calendar dataHora = recuperarDataEHora(dataHoraPesquisa, HORA_INICIAL_DIA, MINUTO_INICIAL_DIA,SEGUNDO_INICIAL_DIA);
-                registros += formatoData.format(dataHora.getTime()) + "), new Date(";
+            if (mesmaDataEApos(missao.getDataHoraSaida(), dataHoraPesquisa)) {
+                registrosGerados.append(formatoData.format(missao.getDataHoraSaida().getTime()) + "), new Date(");
+            } else {
+                Calendar dataHora = recuperarDataEHora(dataHoraPesquisa, HORA_INICIAL_DIA, MINUTO_INICIAL_DIA, SEGUNDO_INICIAL_DIA);
+                registrosGerados.append(formatoData.format(dataHora.getTime()) + "), new Date(");
 
             }
 
-            if (missao.getDataHoraRetorno() != null){
-                if (missao.getDataHoraRetorno().get(Calendar.YEAR) == dataHoraPesquisa.get(Calendar.YEAR) &&
-                    missao.getDataHoraRetorno().get(Calendar.MONTH) == dataHoraPesquisa.get(Calendar.MONTH) &&
-                    missao.getDataHoraRetorno().get(Calendar.DAY_OF_MONTH) == dataHoraPesquisa.get(Calendar.DAY_OF_MONTH) &&
-                    missao.getDataHoraRetorno().after(dataHoraPesquisa)) {
-                    registros += formatoData.format(missao.getDataHoraRetorno().getTime()) + ") ]";
-                    delim = ", ";
-                    continue;
-                }
+            if (mesmaDataEApos(missao.getDataHoraRetorno(), dataHoraPesquisa)) {
+                registrosGerados.append(formatoData.format(missao.getDataHoraRetorno().getTime()) + ") ]");
+                delim = ", ";
+                continue;
             }
-            Calendar dataHora = recuperarDataEHora(dataHoraPesquisa, HORA_FINAL_EXPEDIENTE, MINUTO_FINAL_EXPEDIENTE,SEGUNDO_FINAL_EXPEDIENTE);
-            registros += formatoData.format(dataHora.getTime()) + ") ]";
+            Calendar dataHora = recuperarDataEHora(dataHoraPesquisa, HORA_FINAL_EXPEDIENTE, MINUTO_FINAL_EXPEDIENTE, SEGUNDO_FINAL_EXPEDIENTE);
+            registrosGerados.append(formatoData.format(dataHora.getTime()) + ") ]");
             delim = ", ";
         }
-        return registros;
+        return delim;
     }
-    
+
     @Path("/listarMissoesEmAndamento")
     public void listarMissoesEmAndamento() {
         List<Missao> missoes = Missao.buscarEmAndamento();
         List<Missao> missoesFiltradas = filtrarPorOrgao(missoes, Missao.class);
 
-        String registros = "";
-        SimpleDateFormat formatoData = new SimpleDateFormat("yyyy,M,d,H,m,s");
+        StringBuilder registros = new StringBuilder();
+        SimpleDateFormat formatoData = new SimpleDateFormat(YYYY_M_D_H_M_S);
 
         for (int i = 0; i < missoesFiltradas.size(); i++) {
-            registros += "[ \'" + missoes.get(i).getSequence() + " - " + missoes.get(i).getVeiculo().getPlaca() + "\', \'" + missoes.get(i).getCondutor().getNome() + "\', new Date("
-                    + formatoData.format(missoes.get(i).getDataHoraSaida().getTime()) + "), new Date(";
+            registros.append("[ \'" + missoes.get(i).getSequence() + " - " + missoes.get(i).getVeiculo().getPlaca() + SEPARADOR_VIRGULA + missoes.get(i).getCondutor().getNome() + "\', new Date("
+                    + formatoData.format(missoes.get(i).getDataHoraSaida().getTime()) + "), new Date(");
 
-            if (missoes.get(i).getDataHoraRetorno() != null) 
-                registros += formatoData.format(missoes.get(i).getDataHoraRetorno().getTime()) + ") ]";
+            if (missoes.get(i).getDataHoraRetorno() != null)
+                registros.append(formatoData.format(missoes.get(i).getDataHoraRetorno().getTime()) + ") ]");
             else {
                 Calendar dataHora = recuperarDataEHora(missoes.get(i).getDataHoraSaida(), HORA_FINAL_EXPEDIENTE, MINUTO_FINAL_EXPEDIENTE, SEGUNDO_FINAL_EXPEDIENTE);
-                registros += formatoData.format(dataHora.getTime()) + ") ]";
+                registros.append(formatoData.format(dataHora.getTime()) + ") ]");
             }
             if (i < missoes.size() - 1)
-                registros += ", ";
+                registros.append(", ");
         }
-        
-        result.include("registros", registros);
+
+        result.include(REGISTROS, registros.toString());
     }
-    
+
     @Path("/listarDadosDaMissao/{id}")
-    public void listarDadosDaMissao(Long id) throws Exception {
-        Missao missao = Missao.AR.findById(id);
-        
-        result.include("missao", missao);
+    public void listarDadosDaMissao(Long id) throws RelatorioException {
+        try {
+            Missao missao = Missao.AR.findById(id);
+            result.include("missao", missao);
+        } catch (Exception e) {
+            throw new RelatorioException(e);
+        }
     }
-    
+
     private <T> List<T> filtrarPorOrgao(List<T> lista, final Class<T> classe) {
-        List<T> listaFiltrada = Lists.newArrayList(Iterables.filter(lista, new Predicate<T>() {
-                @Override
-                public boolean apply(T objeto) {
-                    if (classe.equals(Plantao.class)) {
-                        Plantao obj = (Plantao)objeto;
-                        return obj.getCondutor().getCpOrgaoUsuario().getId().equals(getTitular().getOrgaoUsuario().getId());
-                    }
-                    else if(classe.equals(Afastamento.class)) {
-                        Afastamento obj = (Afastamento)objeto;
-                        return obj.getCondutor().getCpOrgaoUsuario().getId().equals(getTitular().getOrgaoUsuario().getId());
-                    }
-                    else if(classe.equals(EscalaDeTrabalho.class)) {
-                        EscalaDeTrabalho obj = (EscalaDeTrabalho)objeto;
-                        return obj.getCondutor().getCpOrgaoUsuario().getId().equals(getTitular().getOrgaoUsuario().getId());
-                    }
-                    else if(classe.equals(ServicoVeiculo.class)) {
-                        ServicoVeiculo obj = (ServicoVeiculo)objeto;
-                        return obj.getCpOrgaoUsuario().getId().equals(getTitular().getOrgaoUsuario().getId());
-                    }
-                    else if(classe.equals(Missao.class)) {
-                        Missao obj = (Missao)objeto;
-                        return obj.getCpOrgaoUsuario().getId().equals(getTitular().getOrgaoUsuario().getId());
-                    }
-
-                    return false;
-                }
-            }
-        ));
-
-        return listaFiltrada;
+        return Lists.newArrayList(Iterables.filter(lista, new PredicateImplementation<T>(classe)));
     }
-    
+
     private static Calendar recuperarDataEHora(Calendar dataHoraPesquisa, int hora, int minuto, int segundo) {
         Calendar dataHora = Calendar.getInstance();
-        dataHora.set(Calendar.YEAR,  dataHoraPesquisa.get(Calendar.YEAR));
-        dataHora.set(Calendar.MONTH,  dataHoraPesquisa.get(Calendar.MONTH));
-        dataHora.set(Calendar.DAY_OF_MONTH,  dataHoraPesquisa.get(Calendar.DAY_OF_MONTH));
+        dataHora.set(Calendar.YEAR, dataHoraPesquisa.get(Calendar.YEAR));
+        dataHora.set(Calendar.MONTH, dataHoraPesquisa.get(Calendar.MONTH));
+        dataHora.set(Calendar.DAY_OF_MONTH, dataHoraPesquisa.get(Calendar.DAY_OF_MONTH));
         dataHora.set(Calendar.HOUR_OF_DAY, hora);
-        dataHora.set(Calendar.MINUTE,minuto);
-        dataHora.set(Calendar.SECOND,segundo);
+        dataHora.set(Calendar.MINUTE, minuto);
+        dataHora.set(Calendar.SECOND, segundo);
         return dataHora;
     }
 
     private Long verificaIdNulo(Long id) {
-        if(id > 0)
+        if (id != null && id > 0)
             return id;
-        
+
         return null;
+    }
+
+    private final class PredicateImplementation<T> implements Predicate<T> {
+        private final Class<T> classe;
+
+        private PredicateImplementation(Class<T> classe) {
+            this.classe = classe;
+        }
+
+        private boolean applyPlantao(T objeto) {
+            if (classe.equals(Plantao.class)) {
+                Plantao obj = (Plantao) objeto;
+                return obj.getCondutor().getCpOrgaoUsuario().getId().equals(getTitular().getOrgaoUsuario().getId());
+            } else {
+                return false;
+            }
+        }
+
+        private boolean applyAfastamento(T objeto) {
+            if (classe.equals(Afastamento.class)) {
+                Afastamento obj = (Afastamento) objeto;
+                return obj.getCondutor().getCpOrgaoUsuario().getId().equals(getTitular().getOrgaoUsuario().getId());
+            } else {
+                return false;
+            }
+        }
+
+        private boolean applyEscalaDeTrabalho(T objeto) {
+            if (classe.equals(EscalaDeTrabalho.class)) {
+                EscalaDeTrabalho obj = (EscalaDeTrabalho) objeto;
+                return obj.getCondutor().getCpOrgaoUsuario().getId().equals(getTitular().getOrgaoUsuario().getId());
+            } else {
+                return false;
+            }
+        }
+
+        private boolean applyServicoVeiculo(T objeto) {
+            if (classe.equals(ServicoVeiculo.class)) {
+                ServicoVeiculo obj = (ServicoVeiculo) objeto;
+                return obj.getCpOrgaoUsuario().getId().equals(getTitular().getOrgaoUsuario().getId());
+            } else {
+                return false;
+            }
+        }
+
+        private boolean applyMissao(T objeto) {
+            if (classe.equals(Missao.class)) {
+                Missao obj = (Missao) objeto;
+                return obj.getCpOrgaoUsuario().getId().equals(getTitular().getOrgaoUsuario().getId());
+            } else {
+                return false;
+            }
+        }
+
+        @Override
+        public boolean apply(T objeto) {
+            boolean plantoAfastamentoEscala = applyPlantao(objeto) || applyAfastamento(objeto) || applyEscalaDeTrabalho(objeto);
+            boolean servicoMissao = applyServicoVeiculo(objeto) || applyMissao(objeto);
+            return plantoAfastamentoEscala || servicoMissao;
+        }
     }
 }
