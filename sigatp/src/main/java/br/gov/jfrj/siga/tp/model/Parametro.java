@@ -175,4 +175,18 @@ public class Parametro extends TpModel implements ConvertableEntity {
         }
         return retorno;
     }
+
+    public static String buscarConfigSistemaEmVigor(String stringCron) {
+        /* TODO OSI_22 - PROBLEMA DE MERGE
+         * Metodo implementado pois ocorreu um conflito com o código do cliente
+         * ao efetuar o MERGE entre os branchs da DB1 e do SIGA.
+         * 
+         * Como é utilizado nos controllers de Andamento (Andamentos.java e ParametroController.java)
+         * foi implementado somente para nao quebrar o build.
+         * 
+         * Procuramos nos fontes do git (https://github.com/trfrj/siga-tp) nas branchs e nao encontramos a implementação do 
+         * metodo.
+         */
+        throw new UnsupportedOperationException();
+    }
 }

@@ -1,5 +1,6 @@
 package controllers;
 
+import java.util.Calendar;
 import java.util.List;
 
 import play.data.validation.Valid;
@@ -67,14 +68,13 @@ public class Parametros extends Controller {
 		listar();
     }
 
-//	TODO  OSI22 - No merge das versoes houve problemas, procurar solucao.
-//	public static Calendar formatarDataParametro(String stringCron) throws ParseException {
-//		String stringData = Parametro.buscarConfigSistemaEmVigor(stringCron);
-//		String[] data = stringData.split("/");
-//		Calendar cal  = Calendar.getInstance();
-//		cal.set(Calendar.DAY_OF_MONTH, Integer.parseInt(data[0]));
-//		cal.set(Calendar.MONTH, Integer.parseInt(data[1]));
-//		cal.set(Calendar.YEAR, Integer.parseInt(data[2]));
-//		return cal;
-//	}
+	public static Calendar formatarDataParametro(String stringCron) {
+		String stringData = Parametro.buscarConfigSistemaEmVigor(stringCron);
+		String[] data = stringData.split("/");
+		Calendar cal  = Calendar.getInstance();
+		cal.set(Calendar.DAY_OF_MONTH, Integer.parseInt(data[0]));
+		cal.set(Calendar.MONTH, Integer.parseInt(data[1]));
+		cal.set(Calendar.YEAR, Integer.parseInt(data[2]));
+		return cal;
+	}
 }
