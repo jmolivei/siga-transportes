@@ -37,7 +37,6 @@ public class ParametroController extends TpController {
     public void editar(Long id) {
         Parametro parametro = Parametro.buscar(id);
         carregarDadosPerifericos();
-
         result.include("parametro", parametro);
     }
 
@@ -53,22 +52,18 @@ public class ParametroController extends TpController {
     public void incluir() {
         Parametro parametro = new Parametro();
         carregarDadosPerifericos();
-
         result.include("parametro", parametro);
     }
 
     // @RoleAdmin
     public void salvar(@Valid Parametro parametro) {
         validaCamposNulos(parametro);
-
         if (validator.hasErrors()) {
             carregarDadosPerifericos();
             validator.onErrorUse(Results.page()).of(ParametroController.class).editar(parametro.getId());
-
             return;
         }
         parametro.save();
-
         result.redirectTo(ParametroController.class).listar();
     }
 
@@ -87,7 +82,6 @@ public class ParametroController extends TpController {
     private void carregarDadosPerifericos() {
         List<CpOrgaoUsuario> cpOrgaoUsuarios = CpOrgaoUsuario.AR.findAll();
         List<CpComplexo> cpComplexos = CpComplexo.AR.findAll();
-
         result.include("cpOrgaoUsuarios", cpOrgaoUsuarios);
         result.include("cpComplexos", cpComplexos);
     }
