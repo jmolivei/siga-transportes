@@ -4,7 +4,7 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
 <%@ taglib prefix="tptags" uri="/WEB-INF/tpTags.tld"%>
 
-<script src="/public/javascripts/jquery/jquery-ui-1.8.16.custom.min.js"></script>
+<script src="/sigatp/public/javascripts/jquery/jquery-ui-1.8.16.custom.min.js"></script>
 <jsp:include page="../tags/calendario.jsp" />
 <sigatp:erros />
 <sigatp:decimal />
@@ -14,7 +14,7 @@
 </c:if>
 
 <br />
-<input type="hidden" id="missaoId" name="missao.id" value="${missao.id}" />
+<input type="hidden" id="missaoId" name="missao" value="${missao.id}" />
 
 <h3>Informa&ccedil;&otilde;es B&aacute;sicas</h3>
 <div id ="infbasicas" class="gt-content-box gt-for-table">

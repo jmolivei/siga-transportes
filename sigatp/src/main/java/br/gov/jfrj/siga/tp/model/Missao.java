@@ -26,7 +26,6 @@ import javax.validation.constraints.NotNull;
 import org.hibernate.envers.Audited;
 import org.hibernate.envers.RelationTargetAuditMode;
 
-import br.com.caelum.vraptor.validator.I18nMessage;
 import br.gov.jfrj.siga.cp.CpComplexo;
 import br.gov.jfrj.siga.dp.CpOrgaoUsuario;
 import br.gov.jfrj.siga.dp.DpPessoa;
@@ -36,19 +35,20 @@ import br.gov.jfrj.siga.tp.util.Reflexao;
 import br.gov.jfrj.siga.tp.validation.annotation.Data;
 import br.gov.jfrj.siga.tp.validation.annotation.UpperCase;
 import br.gov.jfrj.siga.tp.vraptor.ConvertableEntity;
+import br.gov.jfrj.siga.tp.vraptor.i18n.MessagesBundle;
 import br.jus.jfrj.siga.uteis.Sequence;
 import br.jus.jfrj.siga.uteis.SequenceMethods;
 import br.jus.jfrj.siga.uteis.SiglaDocumentoType;
 
 @SuppressWarnings("serial")
 @Entity
-//@Table(name = "VEICULO_2", schema="SIGAOR")
-// @Table(name = "VEICULO_2", schema="SIGAOR")
 @Audited
 @Table(schema = "SIGATP")
 public class Missao extends TpModel implements ConvertableEntity, Comparable<Missao>, SequenceMethods {
 
-	public static final ActiveRecord<Missao> AR = new ActiveRecord<>(Missao.class);
+	private static final String MISSAO_BUSCAR_SEQUENCE_EXCEPTION = "missao.buscar.sequence.exception";
+
+    public static final ActiveRecord<Missao> AR = new ActiveRecord<>(Missao.class);
 
 	@Id
 	@Sequence(propertieOrgao="cpOrgaoUsuario",siglaDocumento=SiglaDocumentoType.MTP)
@@ -70,20 +70,20 @@ public class Missao extends TpModel implements ConvertableEntity, Comparable<Mis
 	private Calendar dataHora;
 
 	@Transient
-	private double distanciaPercorridaEmKm;
+	private Double distanciaPercorridaEmKm;
 
 
 	@Transient
 	@Data(descricaoCampo = "tempoBruto")
 	private Calendar tempoBruto;
 
-	private double consumoEmLitros;
+	private Double consumoEmLitros;
 
 	@NotNull
 	@Data(descricaoCampo = "dataHoraSaida")
 	private Calendar dataHoraSaida;
 
-	private double odometroSaidaEmKm;
+	private Double odometroSaidaEmKm;
 
 	@Enumerated(EnumType.STRING)
 	private PerguntaSimNao estepe;
@@ -121,7 +121,7 @@ public class Missao extends TpModel implements ConvertableEntity, Comparable<Mis
 	@Data(descricaoCampo = "dataHoraRetorno")
 	private Calendar dataHoraRetorno;
 
-	private double odometroRetornoEmKm;
+	private Double odometroRetornoEmKm;
 
 	@Enumerated(EnumType.STRING)
 	private PerguntaSimNao avariasAparentesRetorno;
@@ -168,8 +168,8 @@ public class Missao extends TpModel implements ConvertableEntity, Comparable<Mis
 	private CpComplexo cpComplexo;
 
 	public Missao() {
-		this.id = new Long(0);
-		this.numero = new Long(0);
+		this.id = Long.valueOf(0L);
+		this.numero = Long.valueOf(0L);
 		this.dataHora = Calendar.getInstance();
 		this.avariasAparentesRetorno = PerguntaSimNao.NAO;
 		this.avariasAparentesSaida = PerguntaSimNao.NAO;
@@ -186,6 +186,10 @@ public class Missao extends TpModel implements ConvertableEntity, Comparable<Mis
 		this.nivelCombustivelSaida = NivelDeCombustivel.A;
 		this.estadoMissao = EstadoMissao.PROGRAMADA;
 		this.inicioRapido = PerguntaSimNao.NAO;
+		this.consumoEmLitros = getConsumoEmLitros();
+		this.odometroSaidaEmKm = getOdometroSaidaEmKm();
+		this.odometroRetornoEmKm = getOdometroRetornoEmKm();
+		this.distanciaPercorridaEmKm = getDistanciaPercorridaEmKm();
 	}
 
 
@@ -211,12 +215,13 @@ public class Missao extends TpModel implements ConvertableEntity, Comparable<Mis
 		}
 	}
 
+	@Override
 	public void setSequence(Object cpOrgaoUsuarioObject) {
-		CpOrgaoUsuario cpOrgaoUsuario = (CpOrgaoUsuario) cpOrgaoUsuarioObject;
+		CpOrgaoUsuario cpOrgaoUsuarioObj = (CpOrgaoUsuario) cpOrgaoUsuarioObject;
 		int year = Calendar.getInstance().get(Calendar.YEAR);
 		String qrl = "SELECT m FROM Missao m where m.numero = ";
 		qrl = qrl + "(SELECT MAX(t.numero) FROM Missao t";
-		qrl = qrl + " where cpOrgaoUsuario.id = " + cpOrgaoUsuario.getId();
+		qrl = qrl + " where cpOrgaoUsuario.id = " + cpOrgaoUsuarioObj.getId();
 		qrl = qrl + " and YEAR(dataHora) = " + year;
 		qrl = qrl + " and m.cpOrgaoUsuario.id = t.cpOrgaoUsuario.id";
 		qrl = qrl + " and YEAR(m.dataHora) = YEAR(t.dataHora)";
@@ -226,7 +231,7 @@ public class Missao extends TpModel implements ConvertableEntity, Comparable<Mis
 			Object obj = qry.getResultList().get(0);
 			this.numero = ((Missao) obj).numero + 1;
 		} catch (IndexOutOfBoundsException ex) {
-			this.numero = new Long(1);
+			this.numero = Long.valueOf(1L);
 		}
 
 	}
@@ -240,30 +245,27 @@ public class Missao extends TpModel implements ConvertableEntity, Comparable<Mis
 		Missao missao = new Missao();
 		try {
 			 partesDoCodigo = sequence.split("[-/]");
-
-			partesDoCodigo = sequence.split("[-/]");
-
 		} catch (Exception e) {
-			throw new Exception(new I18nMessage("missao", "missao.buscar.sequence.exception", sequence).getMessage());
+			throw new Exception(MessagesBundle.getMessage(MISSAO_BUSCAR_SEQUENCE_EXCEPTION, sequence));
 		}
 
 		CpOrgaoUsuario cpOrgaoUsuario = CpOrgaoUsuario.AR.find("acronimoOrgaoUsu",partesDoCodigo[0]).first();
-		Integer ano = new Integer(Integer.parseInt(partesDoCodigo[2]));
-		Long numero = new Long(Integer.parseInt(partesDoCodigo[3]));
+		Integer ano = Integer.valueOf(partesDoCodigo[2]);
+		Long numero = Long.valueOf(partesDoCodigo[3]);
 		String siglaDocumento = partesDoCodigo[4] + partesDoCodigo[1];
 		if (! Reflexao.recuperaAnotacaoField(missao).equals(siglaDocumento)) {
-			throw new Exception(new I18nMessage("missao", "missao.buscar.siglaDocumento.exception", sequence).getMessage());
+			throw new Exception(MessagesBundle.getMessage("missao.buscar.siglaDocumento.exception", sequence));
 		}
 		List<Missao> missoes = Missao.AR.find("cpOrgaoUsuario = ? and numero = ? and YEAR(dataHora) = ?", cpOrgaoUsuario, numero, ano).fetch();
 		if (missoes.size() > 1)
-			throw new Exception(new I18nMessage("missao", "missao.buscar.codigoDuplicado.exception").getMessage());
-		if (missoes.size() == 0)
-			throw new Exception(new I18nMessage("missao", "missao.buscar.codigoInvalido.exception").getMessage());
+			throw new Exception(MessagesBundle.getMessage("missao.buscar.codigoDuplicado.exception"));
+		if (missoes.isEmpty())
+			throw new Exception(MessagesBundle.getMessage("missao.buscar.codigoInvalido.exception"));
 		return missoes.get(0);
 	}
 
-	public static List<Missao> buscarPorCondutor(Long IdCondutor, Calendar dataHoraInicio) {
-		return Missao.AR.find("condutor.id = ? AND dataHoraSaida <= ? AND (dataHoraRetorno is null OR dataHoraRetorno >= ?) AND estadoMissao NOT IN (?,?) order by dataHoraSaida", IdCondutor,
+	public static List<Missao> buscarPorCondutor(Long idCondutor, Calendar dataHoraInicio) {
+		return Missao.AR.find("condutor.id = ? AND dataHoraSaida <= ? AND (dataHoraRetorno is null OR dataHoraRetorno >= ?) AND estadoMissao NOT IN (?,?) order by dataHoraSaida", idCondutor,
 				dataHoraInicio, dataHoraInicio, EstadoMissao.CANCELADA, EstadoMissao.FINALIZADA).fetch();
 	}
 
@@ -277,19 +279,18 @@ public class Missao extends TpModel implements ConvertableEntity, Comparable<Mis
 		return Missao.AR.find("condutor.id = ? order by dataHoraSaida desc", condutor.getId()).fetch();
 	}
 
-	public static List<Missao> buscarPorVeiculos(Long IdVeiculo, String dataHoraInicio) {
-		return filtrarMissoes("veiculo", IdVeiculo, dataHoraInicio);
+	public static List<Missao> buscarPorVeiculos(Long idVeiculo, String dataHoraInicio) {
+		return filtrarMissoes("veiculo", idVeiculo, dataHoraInicio);
 	}
 
-	public static List<Missao> buscarPorCondutores(Long IdCondutor, String dataHoraInicio) {
-		return filtrarMissoes("condutor", IdCondutor, dataHoraInicio);
+	public static List<Missao> buscarPorCondutores(Long idCondutor, String dataHoraInicio) {
+		return filtrarMissoes("condutor", idCondutor, dataHoraInicio);
 	}
 
 	@SuppressWarnings("unchecked")
 	private static List<Missao> filtrarMissoes(String entidade, Long idEntidade, String dataHoraInicio) {
 		String filtroEntidade = "";
 		if (idEntidade != null) {
-			filtroEntidade = entidade + ".id = " + idEntidade + " AND ";
 			filtroEntidade = entidade + ".id = " + idEntidade + " AND ";
 		}
 
@@ -374,11 +375,11 @@ public class Missao extends TpModel implements ConvertableEntity, Comparable<Mis
 		this.dataHora = dataHora;
 	}
 
-	public double getDistanciaPercorridaEmKm() {
-		return distanciaPercorridaEmKm;
+	public Double getDistanciaPercorridaEmKm() {
+		return null != distanciaPercorridaEmKm ? distanciaPercorridaEmKm : 0.0;
 	}
 
-	public void setDistanciaPercorridaEmKm(double distanciaPercorridaEmKm) {
+	public void setDistanciaPercorridaEmKm(Double distanciaPercorridaEmKm) {
 		this.distanciaPercorridaEmKm = distanciaPercorridaEmKm;
 	}
 
@@ -390,11 +391,11 @@ public class Missao extends TpModel implements ConvertableEntity, Comparable<Mis
 		this.tempoBruto = tempoBruto;
 	}
 
-	public double getConsumoEmLitros() {
-		return consumoEmLitros;
+	public Double getConsumoEmLitros() {
+		return null != consumoEmLitros ? consumoEmLitros : 0.0;
 	}
 
-	public void setConsumoEmLitros(double consumoEmLitros) {
+	public void setConsumoEmLitros(Double consumoEmLitros) {
 		this.consumoEmLitros = consumoEmLitros;
 	}
 
@@ -406,11 +407,11 @@ public class Missao extends TpModel implements ConvertableEntity, Comparable<Mis
 		this.dataHoraSaida = dataHoraSaida;
 	}
 
-	public double getOdometroSaidaEmKm() {
-		return odometroSaidaEmKm;
+	public Double getOdometroSaidaEmKm() {
+		return null != odometroSaidaEmKm ? odometroSaidaEmKm : 0.0;
 	}
 
-	public void setOdometroSaidaEmKm(double odometroSaidaEmKm) {
+	public void setOdometroSaidaEmKm(Double odometroSaidaEmKm) {
 		this.odometroSaidaEmKm = odometroSaidaEmKm;
 	}
 
@@ -510,11 +511,11 @@ public class Missao extends TpModel implements ConvertableEntity, Comparable<Mis
 		this.dataHoraRetorno = dataHoraRetorno;
 	}
 
-	public double getOdometroRetornoEmKm() {
-		return odometroRetornoEmKm;
+	public Double getOdometroRetornoEmKm() {
+		return null != odometroRetornoEmKm ? odometroRetornoEmKm : 0.0;
 	}
 
-	public void setOdometroRetornoEmKm(double odometroRetornoEmKm) {
+	public void setOdometroRetornoEmKm(Double odometroRetornoEmKm) {
 		this.odometroRetornoEmKm = odometroRetornoEmKm;
 	}
 

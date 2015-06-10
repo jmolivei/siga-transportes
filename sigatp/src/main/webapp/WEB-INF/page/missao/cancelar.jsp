@@ -16,7 +16,7 @@
 				        </tr>
 					</table>
 				</div>
-				<input type="hidden" name="missao.id" value="${missao.id}"/>
+				<input type="hidden" name="missao" value="${missao.id}"/>
 				<br/>
 				<span style="color: red; font-weight: bolder; font-size: smaller;">
 					<fmt:message key="views.erro.preenchimentoObrigatorio" />
