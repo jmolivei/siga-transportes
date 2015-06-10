@@ -11,43 +11,39 @@ import br.com.caelum.vraptor.Resource;
 import br.com.caelum.vraptor.Result;
 import br.com.caelum.vraptor.Validator;
 import br.gov.jfrj.siga.dp.dao.CpDao;
-import br.gov.jfrj.siga.tp.auth.AutorizacaoGI;
 import br.gov.jfrj.siga.vraptor.SigaObjects;
 
 @Resource
 @Path("/app/agenda")
 public class AgendaController extends TpController {
 
-	public static Long NOVOVEICULO = null;
-	public static String ACTION_EDITAR = "Veiculos/Editar";
-	
-	private AutorizacaoGI autorizacaoGI;
-	
-	public AgendaController(HttpServletRequest request, Result result,
-			CpDao dao, Validator validator, SigaObjects so, EntityManager em, 
-			AutorizacaoGI autorizacaoGI) {
-		super(request, result, dao, validator, so, em);
-		
-		this.autorizacaoGI = autorizacaoGI;
-		
-	}
+    public static final Long NOVOVEICULO = null;
+    public static final String ACTION_EDITAR = "Veiculos/Editar";
 
-	@Path("/listar/{id}")
-    public void listar(Long id) {
-       emdesenvolvimento();
+    public AgendaController(HttpServletRequest request, Result result, CpDao dao, Validator validator, SigaObjects so, EntityManager em) {
+        super(request, result, dao, validator, so, em);
+
     }
-    
+
+    @Path("/listar")
+    public void listar() {
+        result.redirectTo(this).emDesenvolvimento();
+    }
+
     @Path("/listarPorCondutor/{idCondutor}")
     public void listarPorCondutor(Long idCondutor) throws ParseException {
-    	result.forwardTo(RelatorioController.class).listarAgendaPorCondutor(Calendar.getInstance(), idCondutor);
+        result.forwardTo(RelatorioController.class).listarAgendaPorCondutor(Calendar.getInstance(), idCondutor);
     }
-    
+
     @Path("/listarPorVeiculo/{idVeiculo}")
     public void listarPorVeiculo(Long idVeiculo) throws ParseException {
-    	result.forwardTo(RelatorioController.class).listarAgendaPorVeiculo(Calendar.getInstance(), idVeiculo);
+        result.forwardTo(RelatorioController.class).listarAgendaPorVeiculo(Calendar.getInstance(), idVeiculo);
     }
-    
-    public void emdesenvolvimento() {
+
+    public void emDesenvolvimento() {
+        /*
+         * Metodo criado apenas para o VRaptor renderizar a página
+         */
     }
 
 }
