@@ -44,9 +44,8 @@
 		</div>
 		<div class="coluna margemDireitaG">
  	       	<label for="abastecimento.tipoDeCombustivel" class= "obrigatorio">Tipo de Combust&iacute;vel</label>
- 	       	<siga:select name="abastecimento.tipoDeCombustivel" list="tiposCombustivelParaAbastecimento"
-				listKey="descricao" listValue="descricao"
-				value="${abastecimento.tipoDeCombustivel}" headerKey="0" headerValue=" " />
+ 	       	<siga:select name="abastecimento.tipoDeCombustivel" list="tiposCombustivelParaAbastecimento" listKey="indice" listValue="descricao"
+				value="${abastecimento.tipoDeCombustivel.indice}" headerKey="" headerValue=" " />
 
 			<label for="abastecimento.fornecedor" class= "obrigatorio">Fornecedor</label>
 			<siga:select name="abastecimento.fornecedor" list="fornecedores"

@@ -27,12 +27,12 @@
 
 			<label for="abastecimento.odometroEmKm" class= "obrigatorio">Od&ocirc;metro (Km)</label>
 			<input type="text" name="abastecimento.odometroEmKm" value="${abastecimento.odometroEmKm}" class="decimal"/>
-			
 		</div>
 		<div class="coluna margemDireitaG">
  	       	<label for="abastecimento.tipoDeCombustivel" class= "obrigatorio">Tipo de Combust&iacute;vel</label>
- 	       	<siga:select name="abastecimento.tipoDeCombustivel" list="tiposCombustivelParaAbastecimento" listKey="descricao" listValue="descricao" value="${abastecimento.tipoDeCombustivel}" headerKey="0" headerValue=" " />
-
+ 	       	<siga:select name="abastecimento.tipoDeCombustivel" list="tiposCombustivelParaAbastecimento" listKey="indice" listValue="descricao"
+				value="${abastecimento.tipoDeCombustivel.indice}" headerKey="" headerValue=" " />
+				
 			<label for="abastecimento.fornecedor.id" class= "obrigatorio">Fornecedor</label>
 			<siga:select name="abastecimento.fornecedor.id" list="fornecedores" listKey="id" listValue="razaoSocial" value="${abastecimento.fornecedor.id}" headerKey="0" headerValue=" " />
 

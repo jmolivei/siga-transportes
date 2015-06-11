@@ -38,7 +38,7 @@
 	</c:if>
 	
 	<c:if test="${menuAbastecimentos}">
-		<a class="once" href="@{Abastecimentos.listarPorVeiculo(idVeiculo)}">
+		<a class="once" href="${linkTo[AbastecimentoController].listarPorVeiculo[idVeiculo]}">
 			<img src="/sigatp/public/images/abastecimentoicon.png" style="margin-right: 5px;">
 			<fmt:message key="abastecimentos" />
 		</a>&nbsp;&nbsp;&nbsp;
