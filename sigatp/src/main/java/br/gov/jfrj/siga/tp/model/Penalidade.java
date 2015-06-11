@@ -12,10 +12,10 @@ import javax.validation.constraints.NotNull;
 
 import org.hibernate.envers.Audited;
 
-import play.modules.br.jus.jfrj.siga.uteis.validadores.upperCase.UpperCase;
 import br.gov.jfrj.siga.dp.CpOrgaoUsuario;
 import br.gov.jfrj.siga.model.ActiveRecord;
 import br.gov.jfrj.siga.tp.validation.annotation.Unique;
+import br.gov.jfrj.siga.tp.validation.annotation.UpperCase;
 import br.gov.jfrj.siga.tp.vraptor.ConvertableEntity;
 
 @SuppressWarnings("serial")

@@ -19,8 +19,8 @@ import org.hibernate.envers.RelationTargetAuditMode;
 
 import br.gov.jfrj.siga.dp.DpPessoa;
 import br.gov.jfrj.siga.model.ActiveRecord;
+import br.gov.jfrj.siga.tp.validation.annotation.UpperCase;
 import br.gov.jfrj.siga.tp.vraptor.ParametroController;
-import br.jus.jfrj.siga.uteis.UpperCase;
 
 @SuppressWarnings("serial")
 @Entity

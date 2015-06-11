@@ -22,8 +22,8 @@ import org.hibernate.envers.Audited;
 import br.gov.jfrj.siga.model.ActiveRecord;
 import br.gov.jfrj.siga.tp.util.PerguntaSimNao;
 import br.gov.jfrj.siga.tp.validation.annotation.Data;
+import br.gov.jfrj.siga.tp.validation.annotation.UpperCase;
 import br.gov.jfrj.siga.tp.vraptor.ConvertableEntity;
-import br.jus.jfrj.siga.uteis.UpperCase;
 
 @Entity
 @Audited

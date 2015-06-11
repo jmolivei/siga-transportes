@@ -29,7 +29,6 @@ import org.hibernate.envers.Audited;
 import org.hibernate.envers.RelationTargetAuditMode;
 import org.hibernate.validator.constraints.NotEmpty;
 
-import play.modules.br.jus.jfrj.siga.uteis.validadores.validarAnoData.ValidarAnoData;
 import br.gov.jfrj.siga.cp.model.DpLotacaoSelecao;
 import br.gov.jfrj.siga.dp.CpOrgaoUsuario;
 import br.gov.jfrj.siga.dp.DpLotacao;
@@ -41,6 +40,7 @@ import br.gov.jfrj.siga.tp.validation.annotation.Renavam;
 import br.gov.jfrj.siga.tp.validation.annotation.Unique;
 import br.gov.jfrj.siga.tp.validation.annotation.UpperCase;
 import br.gov.jfrj.siga.tp.vraptor.i18n.MessagesBundle;
+import br.gov.jfrj.siga.validation.ValidarAnoData;
 import br.gov.jfrj.siga.vraptor.converter.ConvertableEntity;
 
 @Entity

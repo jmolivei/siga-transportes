@@ -8,13 +8,13 @@ import java.io.IOException;
 import org.junit.Assert;
 import org.junit.Test;
 
-import play.modules.br.jus.jfrj.siga.uteis.validadores.email.EmailCheck;
 import br.gov.jfrj.siga.tp.validation.RenavamConstraintValidator;
+import br.gov.jfrj.siga.validation.EmailConstraintValidator;
 
 public class BasicTest {
 	@Test
 	public void retornarEmailsValidos() {
-		EmailCheck validador = new EmailCheck();
+	    EmailConstraintValidator validador = new EmailConstraintValidator();
 
 		String[] emailsValidos = { "mkyong@yahoo.com", "mkyong-100@yahoo.com", "mkyong.100@yahoo.com", "mkyong111@mkyong.com", "mkyong-100@mkyong.net", "mkyong.100@mkyong.com.au", "mkyong@1.com",
 				"mkyong@gmail.com.com", "mkyong+100@gmail.com", "mkyong-100@yahoo-test.com" };

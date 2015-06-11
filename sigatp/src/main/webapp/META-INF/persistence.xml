@@ -7,7 +7,6 @@
 		<provider>org.hibernate.ejb.HibernatePersistence</provider>
 		<non-jta-data-source>java:/jboss/datasources/SigaTpDS</non-jta-data-source>
 
-
 		<class>br.gov.jfrj.siga.dp.DpCargo</class>
 		<class>br.gov.jfrj.siga.dp.DpFuncaoConfianca</class>
 		<class>br.gov.jfrj.siga.dp.DpLotacao</class>
@@ -87,6 +86,7 @@
 			<property name="hibernate.dialect" value="org.hibernate.dialect.Oracle10gDialect" />
 			<property name="hibernate.hbm2ddl.auto" value="none" />
 			<property name="hibernate.show_sql" value="true" />
+			<property name="hibernate.default_schema" value="sigatp"/>
 		</properties>
 	</persistence-unit>
 </persistence>

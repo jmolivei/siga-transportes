@@ -17,10 +17,10 @@ import javax.validation.constraints.NotNull;
 
 import org.hibernate.envers.Audited;
 
-import play.modules.br.jus.jfrj.siga.uteis.validadores.validarAnoData.ValidarAnoData;
 import br.gov.jfrj.siga.model.ActiveRecord;
 import br.gov.jfrj.siga.tp.util.PerguntaSimNao;
 import br.gov.jfrj.siga.tp.validation.annotation.UpperCase;
+import br.gov.jfrj.siga.validation.ValidarAnoData;
 import br.gov.jfrj.siga.vraptor.converter.ConvertableEntity;
 
 import com.google.gson.Gson;

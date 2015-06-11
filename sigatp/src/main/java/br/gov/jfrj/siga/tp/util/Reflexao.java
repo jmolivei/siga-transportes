@@ -2,7 +2,7 @@ package br.gov.jfrj.siga.tp.util;
 
 import java.lang.reflect.Field;
 
-import br.jus.jfrj.siga.uteis.Sequence;
+import br.gov.jfrj.siga.tp.validation.annotation.Sequence;
 
 public class Reflexao {
 
