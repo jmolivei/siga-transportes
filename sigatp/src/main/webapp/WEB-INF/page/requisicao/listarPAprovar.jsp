@@ -96,7 +96,7 @@
 							   	    						</tptags:link>
 											</td>		    		
 						    				<td class="edicao">
-						    					<c:if test="${(exibirMenuAprovador || exibirMenuAdministrar || exibirMenuAdministrarMissao || exibirMenuAdministrarMissaoComplexo) && ! requisicaoTransporte.getUltimoAndamento().estadoRequisicao.equals(models.EstadoRequisicao.AUTORIZADA)}">
+						    					<c:if test="${(exibirMenuAprovador || exibirMenuAdministrar || exibirMenuAdministrarMissao || exibirMenuAdministrarMissaoComplexo) && ! requisicaoTransporte.getUltimoAndamento().estadoRequisicao.equals('AUTORIZADA')}">
 						    						<a class="once" href="${linkTo[AndamentoController].autorizar[requisicaoTransporte.id]}">
 						    							<img src="/sigatp/public/images/approvedicon.png" style="margin-right: 5px;">
 						    							<fmt:message key="autorizar"/>
@@ -104,14 +104,14 @@
 						    					</c:if>
 											</td>
 											<td class="edicao">
-												<c:if test="${(exibirMenuAprovador || exibirMenuAdministrar || exibirMenuAdministrarMissao || exibirMenuAdministrarMissaoComplexo ) && ! requisicaoTransporte.getUltimoAndamento().estadoRequisicao.equals(models.EstadoRequisicao.REJEITADA)}">
+												<c:if test="${(exibirMenuAprovador || exibirMenuAdministrar || exibirMenuAdministrarMissao || exibirMenuAdministrarMissaoComplexo ) && ! requisicaoTransporte.getUltimoAndamento().estadoRequisicao.equals('REJEITADA')}">
 													<a class="once" href="${linkTo[AndamentoController].rejeitar[requisicaoTransporte.id]}">
 														<img src="/sigatp/public/images/rejectedicon.png" style="margin-right: 5px;">
 						    							<fmt:message key="rejeitar"/>
 													</a>&nbsp;&nbsp;&nbsp;
 												</c:if>
 												<td class="complexo" valign="middle" colspan="2">
-													<c:if test="${requisicaoTransporte.getUltimoAndamento().estadoRequisicao.equals(models.EstadoRequisicao.AUTORIZADA)}">
+													<c:if test="${requisicaoTransporte.getUltimoAndamento().estadoRequisicao.equals('AUTORIZADA')}">
 														${numeroAutorizadas = numeroAutorizadas + 1}
 														<input type="checkbox" name="req" value="${requisicaoTransporte.id}" class="complexo reqs">
 													</c:if>

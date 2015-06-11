@@ -8,22 +8,14 @@
 			<h2>Cancelar Miss&atilde;o: ${missao.sequence}</h2>
 			<sigatp:erros />
 			<form method="post" action="${linkTo[MissaoController].cancelarMissao}" enctype="multipart/form-data">
-				<div id ="infCancelamento" class="gt-content-box gt-for-table">
-					<table class="gt-table" >
-						<thead>
-							<tr>
-					        	<th>Justificativa: <span style="color: red; font-weight: bolder;">*</span></th>
-					        </tr>
-						</thead>
-						<tbody>
-							<tr>
-					        	<td><textarea name="missao.justificativa" rows="7" cols="80"></textarea></td>
-					        </tr>
-						</tbody>
-					</table>
+				<div class="gt-content-box gt-form clearfix">
+					<div id ="infCancelamento" class="coluna margemDireitaG">
+						<label for="missao.justificativa" class="obrigatorio">Justificativa:</label>
+			        	<textarea name="missao.justificativa" rows="7" cols="80"></textarea>
+					</div>
+					<input type="hidden" name="missao" value="${missao.id}"/>
+					<br/>
 				</div>
-				<input type="hidden" name="missao" value="${missao.id}"/>
-				<br/>
 				<span style="color: red; font-weight: bolder; font-size: smaller;">
 					<fmt:message key="views.erro.preenchimentoObrigatorio" />
 				</span>
