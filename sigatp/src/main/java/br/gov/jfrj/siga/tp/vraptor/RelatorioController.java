@@ -33,8 +33,6 @@ import com.google.common.collect.Lists;
 @Path("/app/relatorio")
 public class RelatorioController extends TpController {
 
-    private static final String YYYY_M_D_H_M_S = "yyyy,M,d,H,m,s";
-    private static final String DD_MM_YYYY = "dd/MM/yyyy";
     private static final String CONDUTOR = "condutor";
     private static final String REGISTROS = "registros";
     private static final String DD_MM_YYYY_HH_MM = "dd/MM/yyyy HH:mm";
@@ -49,7 +47,8 @@ public class RelatorioController extends TpController {
     private static final int SEGUNDO_INICIAL_DIA = 0;
     private static final String SEPARADOR_VIRGULA = "\', \'";
     
-    private static SimpleDateFormat formatoData = new SimpleDateFormat("dd/MM/yyyy");
+    private static SimpleDateFormat formatoDataDDMMYYYY = new SimpleDateFormat("dd/MM/yyyy");
+    private static SimpleDateFormat formatoDataYYYYMDHMS = new SimpleDateFormat("yyyy,M,d,H,m,s");
 
     public RelatorioController(HttpServletRequest request, Result result, CpDao dao, Validator validator, SigaObjects so, EntityManager em) {
         super(request, result, dao, validator, so, em);
@@ -58,26 +57,26 @@ public class RelatorioController extends TpController {
     @Path("/listarAgendaPorCondutorNoProximoDia/{idCondutor}/{dataPesquisa*}")
     public void listarAgendaPorCondutorNoProximoDia(Long idCondutor, Calendar dataPesquisa) throws ParseException {
         dataPesquisa.add(Calendar.DAY_OF_MONTH, 1);
-        result.redirectTo(RelatorioController.class).listarAgendaPorCondutor(idCondutor, formatoData.format(dataPesquisa.getTime()));
+        result.redirectTo(RelatorioController.class).listarAgendaPorCondutor(idCondutor, formatoDataDDMMYYYY.format(dataPesquisa.getTime()));
     }
 
     @Path("/listarAgendaPorCondutorNoDiaAnterior/{idCondutor}/{dataPesquisa*}")
     public void listarAgendaPorCondutorNoDiaAnterior(Long idCondutor, Calendar dataPesquisa) throws ParseException {
         dataPesquisa.add(Calendar.DAY_OF_MONTH, -1);
         
-        result.redirectTo(RelatorioController.class).listarAgendaPorCondutor(idCondutor, formatoData.format(dataPesquisa.getTime()));
+        result.redirectTo(RelatorioController.class).listarAgendaPorCondutor(idCondutor, formatoDataDDMMYYYY.format(dataPesquisa.getTime()));
     }
 
     @Path("/listarAgendaPorVeiculoNoProximoDia/{idVeiculo}/{dataPesquisa*}")
     public void listarAgendaPorVeiculoNoProximoDia(Long idVeiculo, Calendar dataPesquisa) throws ParseException {
         dataPesquisa.add(Calendar.DAY_OF_MONTH, 1);
-        result.redirectTo(RelatorioController.class).listarAgendaPorVeiculo(idVeiculo, formatoData.format(dataPesquisa.getTime()));
+        result.redirectTo(RelatorioController.class).listarAgendaPorVeiculo(idVeiculo, formatoDataDDMMYYYY.format(dataPesquisa.getTime()));
     }
 
     @Path("/listarAgendaPorVeiculoNoDiaAnterior/{idVeiculo}/{dataPesquisa*}")
     public void listarAgendaPorVeiculoNoDiaAnterior(Long idVeiculo, Calendar dataPesquisa) throws ParseException {
         dataPesquisa.add(Calendar.DAY_OF_MONTH, -1);
-        result.redirectTo(RelatorioController.class).listarAgendaPorVeiculo(idVeiculo, formatoData.format(dataPesquisa.getTime()));
+        result.redirectTo(RelatorioController.class).listarAgendaPorVeiculo(idVeiculo, formatoDataDDMMYYYY.format(dataPesquisa.getTime()));
     }
 
     @Path("/listarAgendaTodosCondutores")
@@ -124,7 +123,7 @@ public class RelatorioController extends TpController {
         String registrosEscala = registros;
         registros = gerarTimeLine(dataHoraPesquisa, registrosEscala, afastamentosFiltrados, plantoesFiltrados, missoesFiltradas, new ArrayList<ServicoVeiculo>(), CONDUTOR);
 
-        result.include("dataPesquisa", formatoData.format(dataHoraPesquisa.getTime()));
+        result.include("dataPesquisa", formatoDataDDMMYYYY.format(dataHoraPesquisa.getTime()));
         result.include(REGISTROS, registros);
         result.include("idCondutor", idCondutor);
         result.include("entidade", "Condutor");
@@ -138,8 +137,7 @@ public class RelatorioController extends TpController {
             SimpleDateFormat formatar1 = new SimpleDateFormat(DD_MM_YYYY_HH_MM);
             String srtDataPesquisa = formatar1.format(dataHoraPesquisa.getTime());
             DiaDaSemana diaDePesquisa = DiaDaSemana.getDiaDaSemana(srtDataPesquisa);
-            SimpleDateFormat formatoData1 = new SimpleDateFormat(YYYY_M_D_H_M_S);
-            delim = adicionarDadosDiaDeTrabalho(dataHoraPesquisa, delim, registrosRetorno, escala, diaDePesquisa, formatoData1);
+            delim = adicionarDadosDiaDeTrabalho(dataHoraPesquisa, delim, registrosRetorno, escala, diaDePesquisa, formatoDataYYYYMDHMS);
         }
         return registrosRetorno.toString();
     }
@@ -198,9 +196,7 @@ public class RelatorioController extends TpController {
 
         registros = gerarTimeLine(dataHoraPesquisa, "", new ArrayList<Afastamento>(), new ArrayList<Plantao>(), missoesFiltradas, servicosFiltrados, "veiculo");
 
-        SimpleDateFormat formatoData = new SimpleDateFormat(DD_MM_YYYY);
-
-        result.include("dataPesquisa", formatoData.format(dataHoraPesquisa.getTime()));
+        result.include("dataPesquisa", formatoDataDDMMYYYY.format(dataHoraPesquisa.getTime()));
         result.include(REGISTROS, registros);
         result.include("idVeiculo", idVeiculo);
         result.include("entidade", "Veiculo");
@@ -253,23 +249,23 @@ public class RelatorioController extends TpController {
         String delim = delimitador;
         for (Afastamento afastamento : afastamentos) {
             registrosGerados.append(delim);
-            SimpleDateFormat formatoData = new SimpleDateFormat(YYYY_M_D_H_M_S);
+            
             registrosGerados.append("[ \'" + "Afastamentos" + SEPARADOR_VIRGULA + afastamento.getCondutor().getNome() + "\', new Date(");
 
             if (mesmaDataEApos(afastamento.getDataHoraInicio(), dataHoraPesquisa)) {
-                registrosGerados.append(formatoData.format(afastamento.getDataHoraInicio().getTime()) + "), new Date(");
+                registrosGerados.append(formatoDataYYYYMDHMS.format(afastamento.getDataHoraInicio().getTime()) + "), new Date(");
             } else {
                 Calendar dataHora = recuperarDataEHora(dataHoraPesquisa, HORA_INICIAL_DIA, MINUTO_INICIAL_DIA, SEGUNDO_INICIAL_DIA);
-                registrosGerados.append(formatoData.format(dataHora.getTime()) + "), new Date(");
+                registrosGerados.append(formatoDataYYYYMDHMS.format(dataHora.getTime()) + "), new Date(");
             }
 
             if (mesmaDataEApos(afastamento.getDataHoraFim(), dataHoraPesquisa)) {
-                registrosGerados.append(formatoData.format(afastamento.getDataHoraFim().getTime()) + ") ]");
+                registrosGerados.append(formatoDataYYYYMDHMS.format(afastamento.getDataHoraFim().getTime()) + ") ]");
                 delim = ", ";
                 continue;
             }
             Calendar dataHora = recuperarDataEHora(dataHoraPesquisa, HORA_FINAL_EXPEDIENTE, MINUTO_FINAL_EXPEDIENTE, SEGUNDO_FINAL_EXPEDIENTE);
-            registrosGerados.append(formatoData.format(dataHora.getTime()) + ") ]");
+            registrosGerados.append(formatoDataYYYYMDHMS.format(dataHora.getTime()) + ") ]");
             delim = ", ";
         }
         return delim;
@@ -279,23 +275,22 @@ public class RelatorioController extends TpController {
         String delim = delimitador;
         for (Plantao plantao : plantoes) {
             registrosGerados.append(delim);
-            SimpleDateFormat formatoData = new SimpleDateFormat(YYYY_M_D_H_M_S);
             registrosGerados.append("[ \'" + "Plantoes" + SEPARADOR_VIRGULA + plantao.getCondutor().getNome() + "\', new Date(");
 
             if (mesmaDataEApos(plantao.getDataHoraInicio(), dataHoraPesquisa)) {
-                registrosGerados.append(formatoData.format(plantao.getDataHoraInicio().getTime()) + "), new Date(");
+                registrosGerados.append(formatoDataYYYYMDHMS.format(plantao.getDataHoraInicio().getTime()) + "), new Date(");
             } else {
                 Calendar dataHora = recuperarDataEHora(dataHoraPesquisa, HORA_INICIAL_DIA, MINUTO_INICIAL_DIA, SEGUNDO_INICIAL_DIA);
-                registrosGerados.append(formatoData.format(dataHora.getTime()) + "), new Date(");
+                registrosGerados.append(formatoDataYYYYMDHMS.format(dataHora.getTime()) + "), new Date(");
             }
 
             if (mesmaDataEApos(plantao.getDataHoraFim(), dataHoraPesquisa)) {
-                registrosGerados.append(formatoData.format(plantao.getDataHoraFim().getTime()) + ") ]");
+                registrosGerados.append(formatoDataYYYYMDHMS.format(plantao.getDataHoraFim().getTime()) + ") ]");
                 delim = ", ";
                 continue;
             }
             Calendar dataHora = recuperarDataEHora(dataHoraPesquisa, HORA_FINAL_EXPEDIENTE, MINUTO_FINAL_EXPEDIENTE, SEGUNDO_FINAL_EXPEDIENTE);
-            registrosGerados.append(formatoData.format(dataHora.getTime()) + ") ]");
+            registrosGerados.append(formatoDataYYYYMDHMS.format(dataHora.getTime()) + ") ]");
             delim = ", ";
         }
         return delim;
@@ -305,24 +300,23 @@ public class RelatorioController extends TpController {
         String delim = delimitador;
         for (ServicoVeiculo servicoVeiculo : servicosVeiculos) {
             registrosGerados.append(delim);
-            SimpleDateFormat formatoData = new SimpleDateFormat(YYYY_M_D_H_M_S);
 
             registrosGerados.append("[ \'" + "Servicos" + SEPARADOR_VIRGULA + servicoVeiculo.getVeiculo().getPlaca() + "\', new Date(");
 
             if (mesmaDataEApos(servicoVeiculo.getDataHoraInicio(), dataHoraPesquisa)) {
-                registrosGerados.append(formatoData.format(servicoVeiculo.getDataHoraInicio().getTime()) + "), new Date(");
+                registrosGerados.append(formatoDataYYYYMDHMS.format(servicoVeiculo.getDataHoraInicio().getTime()) + "), new Date(");
             } else {
                 Calendar dataHora = recuperarDataEHora(dataHoraPesquisa, HORA_INICIAL_DIA, MINUTO_INICIAL_DIA, SEGUNDO_INICIAL_DIA);
-                registrosGerados.append(formatoData.format(dataHora.getTime()) + "), new Date(");
+                registrosGerados.append(formatoDataYYYYMDHMS.format(dataHora.getTime()) + "), new Date(");
             }
 
             if (mesmaDataEApos(servicoVeiculo.getDataHoraFim(), dataHoraPesquisa)) {
-                registrosGerados.append(formatoData.format(servicoVeiculo.getDataHoraFim().getTime()) + ") ]");
+                registrosGerados.append(formatoDataYYYYMDHMS.format(servicoVeiculo.getDataHoraFim().getTime()) + ") ]");
                 delim = ", ";
                 continue;
             }
             Calendar dataHora = recuperarDataEHora(dataHoraPesquisa, HORA_FINAL_EXPEDIENTE, MINUTO_FINAL_EXPEDIENTE, SEGUNDO_FINAL_EXPEDIENTE);
-            registrosGerados.append(formatoData.format(dataHora.getTime()) + ") ]");
+            registrosGerados.append(formatoDataYYYYMDHMS.format(dataHora.getTime()) + ") ]");
             delim = ", ";
         }
         return delim;
@@ -333,7 +327,6 @@ public class RelatorioController extends TpController {
         String delim = delimitador;
         for (Missao missao : missoes) {
             registrosGerados.append(delim);
-            SimpleDateFormat formatoData = new SimpleDateFormat(YYYY_M_D_H_M_S);
 
             if (CONDUTOR.equals(entidade)) {
                 label = missao.getSequence() + "-" + missao.getCondutor().getNome();
@@ -344,20 +337,20 @@ public class RelatorioController extends TpController {
             registrosGerados.append("[ \'" + "Missoes" + SEPARADOR_VIRGULA + label + "\', new Date(");
 
             if (mesmaDataEApos(missao.getDataHoraSaida(), dataHoraPesquisa)) {
-                registrosGerados.append(formatoData.format(missao.getDataHoraSaida().getTime()) + "), new Date(");
+                registrosGerados.append(formatoDataYYYYMDHMS.format(missao.getDataHoraSaida().getTime()) + "), new Date(");
             } else {
                 Calendar dataHora = recuperarDataEHora(dataHoraPesquisa, HORA_INICIAL_DIA, MINUTO_INICIAL_DIA, SEGUNDO_INICIAL_DIA);
-                registrosGerados.append(formatoData.format(dataHora.getTime()) + "), new Date(");
+                registrosGerados.append(formatoDataYYYYMDHMS.format(dataHora.getTime()) + "), new Date(");
 
             }
 
             if (mesmaDataEApos(missao.getDataHoraRetorno(), dataHoraPesquisa)) {
-                registrosGerados.append(formatoData.format(missao.getDataHoraRetorno().getTime()) + ") ]");
+                registrosGerados.append(formatoDataYYYYMDHMS.format(missao.getDataHoraRetorno().getTime()) + ") ]");
                 delim = ", ";
                 continue;
             }
             Calendar dataHora = recuperarDataEHora(dataHoraPesquisa, HORA_FINAL_EXPEDIENTE, MINUTO_FINAL_EXPEDIENTE, SEGUNDO_FINAL_EXPEDIENTE);
-            registrosGerados.append(formatoData.format(dataHora.getTime()) + ") ]");
+            registrosGerados.append(formatoDataYYYYMDHMS.format(dataHora.getTime()) + ") ]");
             delim = ", ";
         }
         return delim;
@@ -369,17 +362,16 @@ public class RelatorioController extends TpController {
         List<Missao> missoesFiltradas = filtrarPorOrgao(missoes, Missao.class);
 
         StringBuilder registros = new StringBuilder();
-        SimpleDateFormat formatoData = new SimpleDateFormat(YYYY_M_D_H_M_S);
 
         for (int i = 0; i < missoesFiltradas.size(); i++) {
             registros.append("[ \'" + missoes.get(i).getSequence() + " - " + missoes.get(i).getVeiculo().getPlaca() + SEPARADOR_VIRGULA + missoes.get(i).getCondutor().getNome() + "\', new Date("
-                    + formatoData.format(missoes.get(i).getDataHoraSaida().getTime()) + "), new Date(");
+                    + formatoDataYYYYMDHMS.format(missoes.get(i).getDataHoraSaida().getTime()) + "), new Date(");
 
             if (missoes.get(i).getDataHoraRetorno() != null)
-                registros.append(formatoData.format(missoes.get(i).getDataHoraRetorno().getTime()) + ") ]");
+                registros.append(formatoDataYYYYMDHMS.format(missoes.get(i).getDataHoraRetorno().getTime()) + ") ]");
             else {
                 Calendar dataHora = recuperarDataEHora(missoes.get(i).getDataHoraSaida(), HORA_FINAL_EXPEDIENTE, MINUTO_FINAL_EXPEDIENTE, SEGUNDO_FINAL_EXPEDIENTE);
-                registros.append(formatoData.format(dataHora.getTime()) + ") ]");
+                registros.append(formatoDataYYYYMDHMS.format(dataHora.getTime()) + ") ]");
             }
             if (i < missoes.size() - 1)
                 registros.append(", ");
@@ -481,16 +473,13 @@ public class RelatorioController extends TpController {
     }
     
     public static String getToday() {
-        return formatoData.format(Calendar.getInstance().getTime());
+        return formatoDataDDMMYYYY.format(Calendar.getInstance().getTime());
     }
     
-    private Calendar toCalendar(String dataPesquisa) {
+    private Calendar toCalendar(String dataPesquisa) throws ParseException {
         Date dateObj = null;
-        try {
-            dateObj = formatoData.parse(dataPesquisa);
-        } catch (ParseException e) {
-            e.printStackTrace();
-        } 
+        
+        dateObj = formatoDataDDMMYYYY.parse(dataPesquisa);
         Calendar cal = Calendar.getInstance();
         cal.setTime(dateObj); 
         
