@@ -1,7 +1,6 @@
 package br.gov.jfrj.siga.tp.vraptor;
 
 import java.text.ParseException;
-import java.util.Calendar;
 
 import javax.persistence.EntityManager;
 import javax.servlet.http.HttpServletRequest;
@@ -32,12 +31,12 @@ public class AgendaController extends TpController {
 
     @Path("/listarPorCondutor/{idCondutor}")
     public void listarPorCondutor(Long idCondutor) throws ParseException {
-        result.forwardTo(RelatorioController.class).listarAgendaPorCondutor(Calendar.getInstance(), idCondutor);
+        result.redirectTo(RelatorioController.class).listarAgendaPorCondutor(idCondutor, RelatorioController.getToday());
     }
 
     @Path("/listarPorVeiculo/{idVeiculo}")
     public void listarPorVeiculo(Long idVeiculo) throws ParseException {
-        result.forwardTo(RelatorioController.class).listarAgendaPorVeiculo(Calendar.getInstance(), idVeiculo);
+        result.redirectTo(RelatorioController.class).listarAgendaPorVeiculo(idVeiculo, RelatorioController.getToday());
     }
 
     public void emDesenvolvimento() {

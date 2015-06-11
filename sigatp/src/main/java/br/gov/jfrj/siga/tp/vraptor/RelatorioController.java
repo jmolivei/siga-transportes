@@ -4,6 +4,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 import javax.persistence.EntityManager;
@@ -47,6 +48,8 @@ public class RelatorioController extends TpController {
     private static final int MINUTO_INICIAL_DIA = 0;
     private static final int SEGUNDO_INICIAL_DIA = 0;
     private static final String SEPARADOR_VIRGULA = "\', \'";
+    
+    private static SimpleDateFormat formatoData = new SimpleDateFormat("dd/MM/yyyy");
 
     public RelatorioController(HttpServletRequest request, Result result, CpDao dao, Validator validator, SigaObjects so, EntityManager em) {
         super(request, result, dao, validator, so, em);
@@ -55,40 +58,40 @@ public class RelatorioController extends TpController {
     @Path("/listarAgendaPorCondutorNoProximoDia/{idCondutor}/{dataPesquisa*}")
     public void listarAgendaPorCondutorNoProximoDia(Long idCondutor, Calendar dataPesquisa) throws ParseException {
         dataPesquisa.add(Calendar.DAY_OF_MONTH, 1);
-        result.forwardTo(RelatorioController.class).listarAgendaPorCondutor(dataPesquisa, idCondutor);
+        result.redirectTo(RelatorioController.class).listarAgendaPorCondutor(idCondutor, formatoData.format(dataPesquisa.getTime()));
     }
 
     @Path("/listarAgendaPorCondutorNoDiaAnterior/{idCondutor}/{dataPesquisa*}")
     public void listarAgendaPorCondutorNoDiaAnterior(Long idCondutor, Calendar dataPesquisa) throws ParseException {
         dataPesquisa.add(Calendar.DAY_OF_MONTH, -1);
-        result.forwardTo(RelatorioController.class).listarAgendaPorCondutor(dataPesquisa, idCondutor);
+        
+        result.redirectTo(RelatorioController.class).listarAgendaPorCondutor(idCondutor, formatoData.format(dataPesquisa.getTime()));
     }
 
     @Path("/listarAgendaPorVeiculoNoProximoDia/{idVeiculo}/{dataPesquisa*}")
     public void listarAgendaPorVeiculoNoProximoDia(Long idVeiculo, Calendar dataPesquisa) throws ParseException {
         dataPesquisa.add(Calendar.DAY_OF_MONTH, 1);
-        result.forwardTo(RelatorioController.class).listarAgendaPorVeiculo(dataPesquisa, idVeiculo);
+        result.redirectTo(RelatorioController.class).listarAgendaPorVeiculo(idVeiculo, formatoData.format(dataPesquisa.getTime()));
     }
 
     @Path("/listarAgendaPorVeiculoNoDiaAnterior/{idVeiculo}/{dataPesquisa*}")
     public void listarAgendaPorVeiculoNoDiaAnterior(Long idVeiculo, Calendar dataPesquisa) throws ParseException {
         dataPesquisa.add(Calendar.DAY_OF_MONTH, -1);
-        result.forwardTo(RelatorioController.class).listarAgendaPorVeiculo(dataPesquisa, idVeiculo);
+        result.redirectTo(RelatorioController.class).listarAgendaPorVeiculo(idVeiculo, formatoData.format(dataPesquisa.getTime()));
     }
 
     @Path("/listarAgendaTodosCondutores")
     public void listarAgendaTodosCondutores() throws ParseException {
-        result.forwardTo(RelatorioController.class).listarAgendaPorCondutor(Calendar.getInstance(), 0L);
+        result.redirectTo(RelatorioController.class).listarAgendaPorCondutor(0L, getToday());
     }
 
     @Path("/listarAgendaTodosVeiculos")
     public void listarAgendaTodosVeiculos() throws ParseException {
-        result.forwardTo(RelatorioController.class).listarAgendaPorVeiculo(Calendar.getInstance(), 0L);
+        result.redirectTo(RelatorioController.class).listarAgendaPorVeiculo(0L, getToday());
     }
 
-    @Path("/listarAgendaPorCondutor/{dataPesquisa}/{idCondutor}")
-    public void listarAgendaPorCondutor(Calendar dataPesquisa, Long idCondutor) throws ParseException {
-
+    @Path("/listarAgendaPorCondutor/{idCondutor}/{dataPesquisa*}")
+    public void listarAgendaPorCondutor(Long idCondutor, String dataPesquisa) throws ParseException {
         Long idCondutorParaBusca = verificaIdNulo(idCondutor);
 
         String registros = "";
@@ -98,7 +101,7 @@ public class RelatorioController extends TpController {
         String strDataPesquisa = null;
 
         if (dataPesquisa != null)
-            dataHoraPesquisa = dataPesquisa;
+            dataHoraPesquisa = toCalendar(dataPesquisa);
 
         strDataPesquisa = String.format("%02d", dataHoraPesquisa.get(Calendar.DAY_OF_MONTH)) + "/" + String.format("%02d", dataHoraPesquisa.get(Calendar.MONTH) + 1) + "/"
                 + String.format("%04d", dataHoraPesquisa.get(Calendar.YEAR));
@@ -120,8 +123,6 @@ public class RelatorioController extends TpController {
 
         String registrosEscala = registros;
         registros = gerarTimeLine(dataHoraPesquisa, registrosEscala, afastamentosFiltrados, plantoesFiltrados, missoesFiltradas, new ArrayList<ServicoVeiculo>(), CONDUTOR);
-
-        SimpleDateFormat formatoData = new SimpleDateFormat(DD_MM_YYYY);
 
         result.include("dataPesquisa", formatoData.format(dataHoraPesquisa.getTime()));
         result.include(REGISTROS, registros);
@@ -170,8 +171,8 @@ public class RelatorioController extends TpController {
         return delim;
     }
 
-    @Path("/listarAgendaPorVeiculo/{dataPesquisa}/{idVeiculo}")
-    public void listarAgendaPorVeiculo(Calendar dataPesquisa, Long idVeiculo) throws ParseException {
+    @Path("/listarAgendaPorVeiculo/{idVeiculo}/{dataPesquisa*}")
+    public void listarAgendaPorVeiculo(Long idVeiculo, String dataPesquisa) throws ParseException {
 
         Long idVeiculoParaBusca = verificaIdNulo(idVeiculo);
 
@@ -183,7 +184,7 @@ public class RelatorioController extends TpController {
         String strDataPesquisa = null;
 
         if (dataPesquisa != null)
-            dataHoraPesquisa = dataPesquisa;
+            dataHoraPesquisa = toCalendar(dataPesquisa);
 
         strDataPesquisa = String.format("%02d", dataHoraPesquisa.get(Calendar.DAY_OF_MONTH)) + "/" + String.format("%02d", dataHoraPesquisa.get(Calendar.MONTH) + 1) + "/"
                 + String.format("%04d", dataHoraPesquisa.get(Calendar.YEAR));
@@ -477,5 +478,22 @@ public class RelatorioController extends TpController {
             boolean servicoMissao = applyServicoVeiculo(objeto) || applyMissao(objeto);
             return plantoAfastamentoEscala || servicoMissao;
         }
+    }
+    
+    public static String getToday() {
+        return formatoData.format(Calendar.getInstance().getTime());
+    }
+    
+    private Calendar toCalendar(String dataPesquisa) {
+        Date dateObj = null;
+        try {
+            dateObj = formatoData.parse(dataPesquisa);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        } 
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(dateObj); 
+        
+        return cal;
     }
 }
