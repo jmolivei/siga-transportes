@@ -187,7 +187,7 @@ public class Parametro extends TpModel implements ConvertableEntity {
                 + "and cpComplexo is null "
                 + "and cpOrgaoUsuario is null";
         
-        Parametro parametro = Parametro.AR.find(queryComData,nome,hoje, hoje).first();
+        Parametro parametro = Parametro.AR.find(queryComData, nome, hoje, hoje).first();
         if(parametro != null) {
             retorno = parametro.valorParametro;
         }

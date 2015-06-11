@@ -518,7 +518,7 @@ public class RequisicaoTransporte extends TpModel implements Comparable<Requisic
 
 	}
 
-	public Boolean cancelar(DpPessoa responsavel, String descricao) throws Exception {
+	public Boolean cancelar(DpPessoa responsavel, String descricao) {
 		EstadoRequisicao ultimoAndamentoRequisicao = this.getUltimoAndamento().getEstadoRequisicao();
 		if (ultimoAndamentoRequisicao == EstadoRequisicao.PROGRAMADA) {
 			Boolean missaoAlterada = false;

@@ -57,7 +57,7 @@ public class RequisicaoController extends TpController {
 //	@RoleAdminMissao
 //	@RoleAdminMissaoComplexo
 	@Path("/listarPAprovar")
-	public void listarPAprovar() throws Exception {
+	public void listarPAprovar() {
 		EstadoRequisicao estadosRequisicao[] = {EstadoRequisicao.ABERTA,EstadoRequisicao.AUTORIZADA,EstadoRequisicao.REJEITADA};
 		carregarRequisicoesUltimosSeteDiasPorEstados(estadosRequisicao);
 		result.include("estadoRequisicao",EstadoRequisicao.ABERTA);
@@ -177,7 +177,7 @@ public class RequisicaoController extends TpController {
 		validator.validate(requisicaoTransporte);
 	}
 
-	private void carregarRequisicoesUltimosSeteDiasPorEstados(EstadoRequisicao[] estadosRequisicao) throws Exception {
+	private void carregarRequisicoesUltimosSeteDiasPorEstados(EstadoRequisicao[] estadosRequisicao) {
 		StringBuilder criterioBusca = new StringBuilder();
 		criterioBusca.append("((dataHoraRetornoPrevisto is null and dataHoraSaidaPrevista >= ?) or (dataHoraRetornoPrevisto >= ?)) and cpOrgaoUsuario = ? ");
 		Calendar ultimos7dias = Calendar.getInstance();
@@ -186,7 +186,7 @@ public class RequisicaoController extends TpController {
 		recuperarRequisicoes(criterioBusca, parametros, estadosRequisicao);
 	}
 
-	protected void recuperarRequisicoes(StringBuilder criterioBusca, Object[] parametros, EstadoRequisicao[] estadosRequisicao) throws Exception {
+	protected void recuperarRequisicoes(StringBuilder criterioBusca, Object[] parametros, EstadoRequisicao[] estadosRequisicao) {
 		if (!autorizacaoGI.ehAdministrador() && !autorizacaoGI.ehAdministradorMissao()  && !autorizacaoGI.ehAdministradorMissaoPorComplexo() && !autorizacaoGI.ehAprovador()) {
 			criterioBusca.append(" and solicitante.idPessoaIni = ?");
 

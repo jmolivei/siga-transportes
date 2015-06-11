@@ -33,6 +33,6 @@
 					<jsp:include page="../requisicao/menu.jsp" ></jsp:include>
 				</c:otherwise>
 			</c:choose>
-	</div>
+	   </div>
 	</div>
 </siga:pagina>

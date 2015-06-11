@@ -37,7 +37,7 @@ public class TpController extends SigaController {
         }
     }
 
-    protected CpComplexo recuperarComplexoPadrao() throws Exception {
+    protected CpComplexo recuperarComplexoPadrao() {
         return recuperarComplexoPadrao(getTitular());
     }
 
@@ -45,7 +45,7 @@ public class TpController extends SigaController {
         return (CpComplexo) getRequest().getAttribute(AutorizacaoGI.CP_COMPLEXO_ADMINISTRADOR);
     }
 
-    public CpComplexo recuperarComplexoPadrao(DpPessoa dpPessoa) throws Exception {
+    public CpComplexo recuperarComplexoPadrao(DpPessoa dpPessoa) {
         long TIPO_CONFIG_COMPLEXO_PADRAO = 400;
         CpTipoConfiguracao tpConf = TpDao.findById(CpTipoConfiguracao.class, TIPO_CONFIG_COMPLEXO_PADRAO);
         CpSituacaoConfiguracao cpSituacaoConfiguracaoPode = TpDao.findById(CpSituacaoConfiguracao.class, 1L);
@@ -69,7 +69,7 @@ public class TpController extends SigaController {
             }
         }
         if (cpComplexo == null) {
-            throw new Exception(MessagesBundle.getMessage("cpComplexo.null.exception", ""));
+            throw new NullPointerException(MessagesBundle.getMessage("cpComplexo.null.exception", ""));
         }
 
         return cpComplexo;
