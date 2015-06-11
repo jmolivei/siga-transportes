@@ -1,8 +1,8 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt"%>
+<jsp:include page="../tags/calendario.jsp" />
 
 <script type="text/javascript" src="https://www.google.com/jsapi?autoload={'modules':[{'name':'visualization', 'version':'1','packages':['timeline']}]}"/>
-
 <script type="text/javascript">
   google.load("search", "1");
   google.load("jquery", "1.4.2");
@@ -14,10 +14,10 @@
 	   $('#inputDataPesquisa').change( function() {	
 		   dataalterada = $('#inputDataPesquisa').val();
 		   if("${entidade}" == "Condutor") {
-		      controller = "${linkTo[RelatorioController].listarAgendaPorCondutor['dataatrocar'][idCondutor]}";
+		      controller = "${linkTo[RelatorioController].listarAgendaPorCondutor[idCondutor]['dataatrocar']}";
 		      controller = controller.replace("dataatrocar", dataalterada);
 		   } else {
- 			  controller = "${linkTo[RelatorioController].listarAgendaPorVeiculo['dataatrocar'][idVeiculo]}";
+ 			  controller = "${linkTo[RelatorioController].listarAgendaPorVeiculo[idVeiculo]['dataatrocar']}";
 		      controller = controller.replace("dataatrocar", dataalterada);
 		   }
  		   $(location).attr('href',controller);	
