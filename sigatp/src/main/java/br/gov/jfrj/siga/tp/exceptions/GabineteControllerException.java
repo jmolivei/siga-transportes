@@ -9,7 +9,7 @@ public class GabineteControllerException extends Exception {
     }
 
     public GabineteControllerException(Exception e) {
-        super(e);
+        super(e.getMessage(), e);
     }
 
     public GabineteControllerException(String msg) {

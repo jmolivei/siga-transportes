@@ -9,7 +9,7 @@ public class ApplicationControllerException extends Exception {
     }
 
     public ApplicationControllerException(Exception e) {
-        super(e);
+        super(e.getMessage(), e);
     }
 
 }

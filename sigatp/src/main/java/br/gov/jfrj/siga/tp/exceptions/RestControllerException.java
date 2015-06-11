@@ -9,7 +9,7 @@ public class RestControllerException extends Exception {
     }
 
     public RestControllerException(Exception e) {
-        super(e);
+        super(e.getMessage(), e);
     }
     
     public RestControllerException(String msg) {

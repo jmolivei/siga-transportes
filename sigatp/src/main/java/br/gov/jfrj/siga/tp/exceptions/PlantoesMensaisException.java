@@ -9,7 +9,7 @@ public class PlantoesMensaisException extends RuntimeException {
     }
 
     public PlantoesMensaisException(Exception e) {
-        super(e);
+        super(e.getMessage(), e);
     }
 
 }

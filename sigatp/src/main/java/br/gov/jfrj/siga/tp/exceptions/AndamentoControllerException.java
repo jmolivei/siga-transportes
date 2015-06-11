@@ -9,7 +9,7 @@ public class AndamentoControllerException extends Exception {
     }
 
     public AndamentoControllerException(Exception e) {
-        super(e);
+        super(e.getMessage(), e);
     }
 
     public AndamentoControllerException(String msg) {
