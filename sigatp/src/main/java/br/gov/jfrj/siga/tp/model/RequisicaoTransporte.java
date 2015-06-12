@@ -96,8 +96,6 @@ public class RequisicaoTransporte extends TpModel implements Comparable<Requisic
     @NotEmpty
     private String finalidade;
 
-    @NotNull
-    @NotEmpty
     private String passageiros;
 
     @NotNull
