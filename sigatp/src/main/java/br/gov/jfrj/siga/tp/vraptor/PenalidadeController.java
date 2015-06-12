@@ -11,7 +11,6 @@ import br.com.caelum.vraptor.Resource;
 import br.com.caelum.vraptor.Result;
 import br.com.caelum.vraptor.Validator;
 import br.com.caelum.vraptor.view.Results;
-import br.gov.jfrj.siga.dp.dao.CpDao;
 import br.gov.jfrj.siga.tp.auth.annotation.RoleAdmin;
 import br.gov.jfrj.siga.tp.auth.annotation.RoleAdminFrota;
 import br.gov.jfrj.siga.tp.model.Penalidade;
@@ -21,9 +20,10 @@ import br.gov.jfrj.siga.vraptor.SigaObjects;
 @Resource
 @Path("/app/penalidade/")
 public class PenalidadeController extends TpController {
-	public PenalidadeController(HttpServletRequest request, Result result,
-			CpDao dao, Validator validator, SigaObjects so, EntityManager em) {
-		super(request, result, TpDao.getInstance(), validator, so, em);		
+	private static final String PENALIDADE_STR = "penalidade";
+
+    public PenalidadeController(HttpServletRequest request, Result result, Validator validator, SigaObjects so, EntityManager em) {
+		super(request, result, TpDao.getInstance(), validator, so, em);
 	}
 
 	@Path("/listar")
@@ -37,7 +37,7 @@ public class PenalidadeController extends TpController {
 	@Path("/editar/{id}")
 	public  void editar(Long id) {
 		Penalidade penalidade = Penalidade.buscar(id);
-		result.include("penalidade", penalidade);
+		result.include(PENALIDADE_STR, penalidade);
 	}
 
     @RoleAdmin
@@ -56,17 +56,20 @@ public class PenalidadeController extends TpController {
 	public void incluir() {
 		Penalidade penalidade = new Penalidade();
 
-     	result.include("penalidade",penalidade);
+     	result.include(PENALIDADE_STR,penalidade);
 	}
 
     @RoleAdmin
     @RoleAdminFrota
 	@Path("/salvar")
-	public void salvar(@Valid Penalidade penalidade) throws Exception {
-    	if(validator.hasErrors())
-		{
-			result.include("penalidade",penalidade);
-			validator.onErrorUse(Results.page()).of(PenalidadeController.class).editar(penalidade.getId());
+	public void salvar(@Valid Penalidade penalidade) {
+    	if(validator.hasErrors()) {
+			result.include(PENALIDADE_STR,penalidade);
+
+			if(penalidade.getId() > 0)
+			    validator.onErrorUse(Results.page()).of(PenalidadeController.class).editar(penalidade.getId());
+			else
+			    validator.onErrorUse(Results.page()).of(PenalidadeController.class).incluir();
 		}
 
 	 	penalidade.save();
