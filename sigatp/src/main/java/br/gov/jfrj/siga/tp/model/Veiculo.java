@@ -355,7 +355,7 @@ public class Veiculo extends TpModel implements ConvertableEntity, Comparable<Ve
 		return false;
 	}
 
-	public static List<Veiculo> listarTodos(CpOrgaoUsuario orgaoUsuario) throws Exception {
+	public static List<Veiculo> listarTodos(CpOrgaoUsuario orgaoUsuario) {
 		List<Veiculo> veiculos = Veiculo.AR.find("cpOrgaoUsuario", orgaoUsuario).fetch();
 		Collections.sort(veiculos);
 		return veiculos;

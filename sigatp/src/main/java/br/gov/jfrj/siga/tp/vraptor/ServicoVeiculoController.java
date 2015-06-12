@@ -34,7 +34,7 @@ import br.gov.jfrj.siga.tp.util.SigaTpException;
 import br.gov.jfrj.siga.vraptor.SigaObjects;
 
 @Resource
-@Path("/app/servicoVeiculo/")
+@Path("/app/servicoVeiculo")
 public class ServicoVeiculoController extends TpController {
 
     private static final String SERVICO_STR = "servico";
@@ -45,8 +45,8 @@ public class ServicoVeiculoController extends TpController {
 
     // @RoleAdmin
     // @RoleAdminFrota
-    @Path("incluir")
-    public void incluir() throws Exception {
+    @Path("/incluir")
+    public void incluir() {
         ServicoVeiculo servico = new ServicoVeiculo();
         EstadoServico estadoServico = EstadoServico.AGENDADO;
         MenuMontador.instance(result).recuperarMenuServicoVeiculo(servico.getId(), estadoServico);
@@ -57,8 +57,8 @@ public class ServicoVeiculoController extends TpController {
 
     // @RoleAdmin
     // @RoleAdminFrota
-    @Path("cancelar")
-    public void cancelar() throws Exception {
+    @Path("/cancelar")
+    public void cancelar() {
         ServicoVeiculo servico = new ServicoVeiculo();
         EstadoServico estadoServico = EstadoServico.CANCELADO;
         MenuMontador.instance(result).recuperarMenuServicoVeiculo(servico.getId(), estadoServico);
@@ -69,8 +69,8 @@ public class ServicoVeiculoController extends TpController {
 
     // @RoleAdmin
     // @RoleAdminFrota
-    @Path("salvar")
-    public void salvar(@Valid ServicoVeiculo servico, List<Avaria> avarias) throws Exception {
+    @Path("/salvar")
+    public void salvar(@Valid ServicoVeiculo servico, List<Avaria> avarias) {
         DpPessoa dpPessoa = getCadastrante();
         servico.setCpOrgaoUsuario(getTitular().getOrgaoUsuario());
         servico.setSequence(servico.getCpOrgaoUsuario());
@@ -150,10 +150,10 @@ public class ServicoVeiculoController extends TpController {
 
         servico.save();
         montarCombos(servico.getId());
-        result.redirectTo(this).listarFiltrado(servico.getSituacaoServico());
+        result.redirectTo(this).listarFiltrado(servico.getSituacaoServico().toString());
     }
 
-    @Path("listar")
+    @Path("/listar")
     public void listar() {
         CpOrgaoUsuario cpOrgaoUsuario = getTitular().getOrgaoUsuario();
         List<ServicoVeiculo> servicos = ServicoVeiculo.AR.find("cpOrgaoUsuario", cpOrgaoUsuario).fetch();
@@ -164,9 +164,9 @@ public class ServicoVeiculoController extends TpController {
         result.include("situacaoServico", situacaoServico);
     }
 
-    @Path({ "listarFiltrado/{estado}", "listarFiltrado" })
-    public void listarFiltrado(EstadoServico parametroEstado) {
-        EstadoServico estado = null != parametroEstado ? parametroEstado : EstadoServico.AGENDADO;
+    @Path("/listarFiltrado/{parametroEstado}")
+    public void listarFiltrado(String parametroEstado) {
+        EstadoServico estado = null != parametroEstado ? EstadoServico.valueOf(parametroEstado) : EstadoServico.AGENDADO;
         CpOrgaoUsuario cpOrgaoUsuario = getTitular().getOrgaoUsuario();
         List<ServicoVeiculo> servicos = ServicoVeiculo.AR.find("cpOrgaoUsuario=? and situacaoServico = ?", cpOrgaoUsuario, estado).fetch();
         EstadoServico situacaoServico = EstadoServico.AGENDADO;
@@ -210,15 +210,15 @@ public class ServicoVeiculoController extends TpController {
 
     // @RoleAdmin
     // @RoleAdminFrota
-    @Path("editar/{id}")
-    public void editar(Long id) throws Exception {
+    @Path("/editar/{id}")
+    public void editar(Long id) {
         ServicoVeiculo servico = ServicoVeiculo.AR.findById(id);
         montarCombos(servico.getId());
         MenuMontador.instance(result).recuperarMenuServicoVeiculo(id, servico.getSituacaoServico());
         result.include(SERVICO_STR, servico);
     }
 
-    @Path("gravarAndamentosRequisicao/{estadoRequisicao}/{dpPessoa}")
+    @Path("/gravarAndamentosRequisicao/{estadoRequisicao}/{dpPessoa}")
     private void gravarAndamentosRequisicao(EstadoRequisicao estadoRequisicao, DpPessoa dpPessoa, String descricao, RequisicaoTransporte requisicaoTransporte) {
         Andamento andamento = new Andamento();
         andamento.setDescricao(descricao);
@@ -231,7 +231,7 @@ public class ServicoVeiculoController extends TpController {
         requisicaoTransporte.addAndamento(andamento);
     }
 
-    private RequisicaoTransporte gravarRequisicao(ServicoVeiculo servico) throws Exception {
+    private RequisicaoTransporte gravarRequisicao(ServicoVeiculo servico) {
         RequisicaoTransporte requisicaoTransporte = new RequisicaoTransporte();
         requisicaoTransporte.setCpOrgaoUsuario(getTitular().getOrgaoUsuario());
         requisicaoTransporte.setSequence(requisicaoTransporte.getCpOrgaoUsuario());
@@ -253,8 +253,8 @@ public class ServicoVeiculoController extends TpController {
 
     // @RoleAdmin
     // @RoleAdminFrota
-    @Path("excluir/{id}")
-    public void excluir(Long id) throws Exception {
+    @Path("/excluir/{id}")
+    public void excluir(Long id) {
         ServicoVeiculo servico = ServicoVeiculo.AR.findById(id);
         if (validator.hasErrors()) {
             return;
@@ -279,22 +279,22 @@ public class ServicoVeiculoController extends TpController {
         result.redirectTo(ServicoVeiculoController.class).listar();
     }
 
-    @Path("buscarServico/{popUp}/{sequence*}")
+    @Path("/buscarServico/{popUp}/{sequence*}")
     public void buscarServico(Boolean popUp, String sequence) throws Exception {
         ServicoVeiculo servico = recuperarPelaSigla(sequence, popUp);
         result.include(SERVICO_STR, servico);
         result.forwardTo(ServicoVeiculoController.class).ler(servico.getId());
     }
 
-    @Path("ler/{id}")
-    public void ler(Long id) throws Exception {
+    @Path("/ler/{id}")
+    public void ler(Long id) {
         ServicoVeiculo servico = ServicoVeiculo.AR.findById(id);
         MenuMontador.instance(result).recuperarMenuServicoVeiculo(id, servico.getSituacaoServico());
         montarCombos(servico.getId());
         result.include(SERVICO_STR, servico);
     }
 
-    private void redirecionarSeErroAoSalvar(ServicoVeiculo servico, Template template) throws Exception {
+    private void redirecionarSeErroAoSalvar(ServicoVeiculo servico, Template template) {
         if (validator.hasErrors()) {
             MenuMontador.instance(result).recuperarMenuServicosVeiculo(servico.getSituacaoServico());
             montarCombos(servico.getId());
@@ -314,7 +314,7 @@ public class ServicoVeiculoController extends TpController {
         }
     }
 
-    private void montarCombos(Long id) throws Exception {
+    private void montarCombos(Long id) {
         List<Veiculo> veiculos = Veiculo.listarTodos(getTitular().getOrgaoUsuario());
         List<TiposDeServico> tiposDeServico = new ArrayList<TiposDeServico>(Arrays.asList(TiposDeServico.values()));
         List<EstadoServico> estadosServico = new ArrayList<EstadoServico>();
