@@ -31,40 +31,40 @@ public class MenuMontador {
 
 	public void recuperarMenuVeiculos(Long id, ItemMenu menuVeiculos) {
 		result.include("idVeiculo", id);
-		result.include("menuVeiculosIncluir", (id == 0));
-		result.include("menuVeiculosEditar", (id != 0) && (menuVeiculos != ItemMenu.DADOSCADASTRAIS));
-		result.include("menuAvarias", (id != 0) && (menuVeiculos != ItemMenu.AVARIAS));
-		result.include("menuRelatoriosdiarios", (id != 0) && (menuVeiculos != ItemMenu.RELATORIOSDIARIOS));
-		result.include("menuAgenda", (id != 0) && (menuVeiculos != ItemMenu.AGENDA));
-		result.include("menuAbastecimentos", (id != 0) && (menuVeiculos != ItemMenu.ABASTECIMENTOS));
-		result.include("menuAutosdeinfracoes", (id != 0) && (menuVeiculos != ItemMenu.INFRACOES));
-		result.include("menuLotacoes", (id != 0) && (menuVeiculos != ItemMenu.LOTACOES));
+		result.include("menuVeiculosIncluir", id == 0);
+		result.include("menuVeiculosEditar", id != 0 && menuVeiculos != ItemMenu.DADOSCADASTRAIS);
+		result.include("menuAvarias", id != 0 && menuVeiculos != ItemMenu.AVARIAS);
+		result.include("menuRelatoriosdiarios", id != 0 && menuVeiculos != ItemMenu.RELATORIOSDIARIOS);
+		result.include("menuAgenda", id != 0 && menuVeiculos != ItemMenu.AGENDA);
+		result.include("menuAbastecimentos", id != 0 && menuVeiculos != ItemMenu.ABASTECIMENTOS);
+		result.include("menuAutosdeinfracoes", id != 0 && menuVeiculos != ItemMenu.INFRACOES);
+		result.include("menuLotacoes", id != 0 && menuVeiculos != ItemMenu.LOTACOES);
 	}
 
 
 	public void recuperarMenuCondutores(Long id, ItemMenu menuCondutor) {
 		result.include("idCondutor", id);
-		result.include("menuCondutoresIncluir", (id == 0));
-		result.include("menuCondutoresEditar", (id != 0) && (menuCondutor != ItemMenu.DADOSCADASTRAIS));
-		result.include("menuPlantoes", (id != 0) && (menuCondutor != ItemMenu.PLANTOES));
-		result.include("menuAfastamentos", (id != 0) && (menuCondutor != ItemMenu.AFASTAMENTOS));
-		result.include("menuEscalasDeTrabalho", (id != 0) && (menuCondutor != ItemMenu.ESCALASDETRABALHO));
-		result.include("menuAgenda", (id != 0) && (menuCondutor != ItemMenu.AGENDA));
-		result.include("menuInfracoes", (id != 0) && (menuCondutor != ItemMenu.INFRACOES));
+		result.include("menuCondutoresIncluir", id == 0);
+		result.include("menuCondutoresEditar", id != 0 && menuCondutor != ItemMenu.DADOSCADASTRAIS);
+		result.include("menuPlantoes", id != 0 && menuCondutor != ItemMenu.PLANTOES);
+		result.include("menuAfastamentos", id != 0 && menuCondutor != ItemMenu.AFASTAMENTOS);
+		result.include("menuEscalasDeTrabalho", id != 0 && menuCondutor != ItemMenu.ESCALASDETRABALHO);
+		result.include("menuAgenda", id != 0 && menuCondutor != ItemMenu.AGENDA);
+		result.include("menuInfracoes", id != 0 && menuCondutor != ItemMenu.INFRACOES);
 	}
 
 	public void recuperarMenuRequisicoes(Long id, boolean popUp, boolean mostrarBotaoRequisicao) {
 		result.include("idRequisicao", id);
 		result.include("popUp", popUp);
 		if(!popUp) {
-			result.include("menuRequisicoesIncluir", (id == null));
-			result.include("menuRequisicoesEditar", (id != null));
-			result.include("menuRequisicoesCancelar", (id != null));
+			result.include("menuRequisicoesIncluir", id == null);
+			result.include("menuRequisicoesEditar", id != null);
+			result.include("menuRequisicoesCancelar", id != null);
 		}
 		if(mostrarBotaoRequisicao) {
-			result.include("menuRequisicoesMostrarRequisicao", (id != null));
+			result.include("menuRequisicoesMostrarRequisicao", id != null);
 		} else {
-			result.include("menuRequisicoesListarAndamentos", (id != null));
+			result.include("menuRequisicoesListarAndamentos", id != null);
 		}
 
 	}
@@ -72,11 +72,11 @@ public class MenuMontador {
 
 	public void  recuperarMenuMissoes(EstadoMissao estado) {
 		result.include("menuMissoesMostrarVoltar", false);
-		result.include("menuMissoesMostrarTodas", (estado != null));
-		result.include("menuMissoesMostrarFinalizadas", (estado != EstadoMissao.FINALIZADA));
-		result.include("menuMissoesMostrarIniciadas", (estado != EstadoMissao.INICIADA));
-		result.include("menuMissoesMostrarProgramadas", (estado != EstadoMissao.PROGRAMADA));
-		result.include("menuMissoesMostrarCanceladas", (estado != EstadoMissao.CANCELADA));
+		result.include("menuMissoesMostrarTodas", estado != null);
+		result.include("menuMissoesMostrarFinalizadas", estado != EstadoMissao.FINALIZADA);
+		result.include("menuMissoesMostrarIniciadas", estado != EstadoMissao.INICIADA);
+		result.include("menuMissoesMostrarProgramadas", estado != EstadoMissao.PROGRAMADA);
+		result.include("menuMissoesMostrarCanceladas", estado != EstadoMissao.CANCELADA);
 		result.include("menuMissoesMostrarFiltrarPorCondutor", true);
 	}
 
@@ -100,49 +100,49 @@ public class MenuMontador {
 	}
 
 	public void  recuperarMenuListarPAprovarRequisicoes(EstadoRequisicao estado) {
-		result.include("menuRequisicoesMostrarTodas", (estado != null));
-		result.include("menuRequisicoesMostrarAbertas", (estado != EstadoRequisicao.ABERTA));
-		result.include("menuRequisicoesMostrarAutorizadas", (estado != EstadoRequisicao.AUTORIZADA));
-		result.include("menuRequisicoesMostrarRejeitadas", (estado != EstadoRequisicao.REJEITADA));
+		result.include("menuRequisicoesMostrarTodas", estado != null);
+		result.include("menuRequisicoesMostrarAbertas", estado != EstadoRequisicao.ABERTA);
+		result.include("menuRequisicoesMostrarAutorizadas", estado != EstadoRequisicao.AUTORIZADA);
+		result.include("menuRequisicoesMostrarRejeitadas", estado != EstadoRequisicao.REJEITADA);
 	}
 
 	public void  recuperarMenuMissao(Long id, EstadoMissao estado) {
 		result.include("idMissao", id);
-		result.include("menuMissaoEditar", ((estado == EstadoMissao.PROGRAMADA) || (estado == EstadoMissao.INICIADA)));
+		result.include("menuMissaoEditar", estado == EstadoMissao.PROGRAMADA || estado == EstadoMissao.INICIADA);
 		if (autorizacaoGI.ehAdministrador()) {
-			result.include("menuMissaoCancelar", (estado == EstadoMissao.PROGRAMADA));
+			result.include("menuMissaoCancelar", estado == EstadoMissao.PROGRAMADA);
 		} else {
 			result.include("menuMissaoCancelar", false);
 		}
-		result.include("menuMissaoIniciar", (estado == EstadoMissao.PROGRAMADA));
-		result.include("menuMissaoFinalizar", (estado == EstadoMissao.INICIADA));
+		result.include("menuMissaoIniciar", estado == EstadoMissao.PROGRAMADA);
+		result.include("menuMissaoFinalizar", estado == EstadoMissao.INICIADA);
 	}
 
 	public void recuperarMenuServicoVeiculo(Long id, EstadoServico estado) {
 		result.include("idServico", id);
-		result.include("menuServicoVeiculoEditar", (estado == EstadoServico.AGENDADO) || (estado == EstadoServico.INICIADO));
-		result.include("menuServicoVeiculoExcluir", (estado == EstadoServico.AGENDADO));
+		result.include("menuServicoVeiculoEditar", estado == EstadoServico.AGENDADO || estado == EstadoServico.INICIADO);
+		result.include("menuServicoVeiculoExcluir", estado == EstadoServico.AGENDADO);
 	}
 
 	public void  recuperarMenuServicosVeiculo(EstadoServico estado) {
-		result.include("menuServicosVeiculoMostrarTodos", (estado != null));
-		result.include("menuServicosVeiculoMostrarRealizados", (estado != EstadoServico.REALIZADO));
-		result.include("menuServicosVeiculoMostrarIniciados", (estado != EstadoServico.INICIADO));
-		result.include("menuServicosVeiculoMostrarAgendados", (estado != EstadoServico.AGENDADO));
-		result.include("menuServicosVeiculoMostrarCancelados", (estado != EstadoServico.CANCELADO));
+		result.include("menuServicosVeiculoMostrarTodos", estado != null);
+		result.include("menuServicosVeiculoMostrarRealizados", estado != EstadoServico.REALIZADO);
+		result.include("menuServicosVeiculoMostrarIniciados", estado != EstadoServico.INICIADO);
+		result.include("menuServicosVeiculoMostrarAgendados", estado != EstadoServico.AGENDADO);
+		result.include("menuServicosVeiculoMostrarCancelados", estado != EstadoServico.CANCELADO);
 	}
 
 
 	public void recuperarMenuListarRequisicoes(EstadoRequisicao estadoRequisicao, EstadoRequisicao estadoRequisicaoP) {
-		result.include("menuRequisicoesMostrarTodas", (estadoRequisicao != null && estadoRequisicaoP!= null ));
-		result.include("menuRequisicoesMostrarAutorizadasENaoAtendidas", (estadoRequisicao != EstadoRequisicao.AUTORIZADA && estadoRequisicaoP!= EstadoRequisicao.NAOATENDIDA ));
-		result.include("menuRequisicoesMostrarAbertas", (estadoRequisicao != EstadoRequisicao.ABERTA && estadoRequisicaoP!= EstadoRequisicao.ABERTA));
-		result.include("menuRequisicoesMostrarAutorizadas", (estadoRequisicao != EstadoRequisicao.AUTORIZADA && estadoRequisicaoP!= EstadoRequisicao.AUTORIZADA ));
-		result.include("menuRequisicoesMostrarRejeitadas", (estadoRequisicao != EstadoRequisicao.REJEITADA && estadoRequisicaoP!= EstadoRequisicao.REJEITADA));
-		result.include("menuRequisicoesMostrarProgramadas", (estadoRequisicao != EstadoRequisicao.PROGRAMADA && estadoRequisicaoP!= EstadoRequisicao.PROGRAMADA));
-		result.include("menuRequisicoesMostrarEmAtendimento", (estadoRequisicao != EstadoRequisicao.EMATENDIMENTO && estadoRequisicaoP!= EstadoRequisicao.EMATENDIMENTO));
-		result.include("menuRequisicoesMostrarAtendidas", (estadoRequisicao != EstadoRequisicao.ATENDIDA && estadoRequisicaoP!= EstadoRequisicao.ATENDIDA));
-		result.include("menuRequisicoesMostrarNaoAtendidas", (estadoRequisicao != EstadoRequisicao.NAOATENDIDA && estadoRequisicaoP!= EstadoRequisicao.NAOATENDIDA));
-		result.include("menuRequisicoesMostrarCanceladas", (estadoRequisicao != EstadoRequisicao.CANCELADA && estadoRequisicaoP!= EstadoRequisicao.CANCELADA));
+		result.include("menuRequisicoesMostrarTodas", estadoRequisicao != null && estadoRequisicaoP!= null );
+		result.include("menuRequisicoesMostrarAutorizadasENaoAtendidas", estadoRequisicao != EstadoRequisicao.AUTORIZADA || estadoRequisicaoP != EstadoRequisicao.NAOATENDIDA);
+		result.include("menuRequisicoesMostrarAbertas", estadoRequisicao != EstadoRequisicao.ABERTA && estadoRequisicaoP != EstadoRequisicao.ABERTA);
+		result.include("menuRequisicoesMostrarAutorizadas", estadoRequisicao != EstadoRequisicao.AUTORIZADA && estadoRequisicaoP != EstadoRequisicao.AUTORIZADA || estadoRequisicao == EstadoRequisicao.AUTORIZADA && estadoRequisicaoP == EstadoRequisicao.NAOATENDIDA);
+		result.include("menuRequisicoesMostrarRejeitadas", estadoRequisicao != EstadoRequisicao.REJEITADA && estadoRequisicaoP != EstadoRequisicao.REJEITADA);
+		result.include("menuRequisicoesMostrarProgramadas", estadoRequisicao != EstadoRequisicao.PROGRAMADA && estadoRequisicaoP != EstadoRequisicao.PROGRAMADA);
+		result.include("menuRequisicoesMostrarEmAtendimento", estadoRequisicao != EstadoRequisicao.EMATENDIMENTO && estadoRequisicaoP != EstadoRequisicao.EMATENDIMENTO);
+		result.include("menuRequisicoesMostrarAtendidas", estadoRequisicao != EstadoRequisicao.ATENDIDA && estadoRequisicaoP != EstadoRequisicao.ATENDIDA);
+		result.include("menuRequisicoesMostrarNaoAtendidas", estadoRequisicao != EstadoRequisicao.NAOATENDIDA && estadoRequisicaoP != EstadoRequisicao.NAOATENDIDA || estadoRequisicao == EstadoRequisicao.AUTORIZADA && estadoRequisicaoP == EstadoRequisicao.NAOATENDIDA);
+		result.include("menuRequisicoesMostrarCanceladas", estadoRequisicao != EstadoRequisicao.CANCELADA && estadoRequisicaoP != EstadoRequisicao.CANCELADA);
 	}
 }
