@@ -4,8 +4,6 @@ import java.util.List;
 
 import javax.validation.constraints.NotNull;
 
-import play.data.validation.Required;
-
 public class RelatorioConsumoMedio {
 	
 	@NotNull

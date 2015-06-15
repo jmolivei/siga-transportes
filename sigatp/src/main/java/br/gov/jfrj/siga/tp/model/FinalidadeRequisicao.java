@@ -18,10 +18,10 @@ import org.hibernate.envers.RelationTargetAuditMode;
 
 import play.i18n.Messages;
 import br.gov.jfrj.siga.dp.CpOrgaoUsuario;
+import br.gov.jfrj.siga.feature.converter.entity.vraptor.ConvertableEntity;
 import br.gov.jfrj.siga.model.ActiveRecord;
 import br.gov.jfrj.siga.tp.validation.annotation.Unique;
 import br.gov.jfrj.siga.tp.validation.annotation.UpperCase;
-import br.gov.jfrj.siga.vraptor.converter.ConvertableEntity;
 import controllers.AutorizacaoGIAntigo;
 
 @SuppressWarnings("serial")

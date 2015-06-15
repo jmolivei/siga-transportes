@@ -40,10 +40,10 @@ import org.hibernate.envers.Audited;
 import org.hibernate.envers.RelationTargetAuditMode;
 
 import br.gov.jfrj.siga.dp.DpLotacao;
+import br.gov.jfrj.siga.feature.converter.entity.vraptor.ConvertableEntity;
 import br.gov.jfrj.siga.model.ActiveRecord;
 import br.gov.jfrj.siga.tp.vraptor.i18n.MessagesBundle;
 import br.gov.jfrj.siga.validation.ValidarAnoData;
-import br.gov.jfrj.siga.vraptor.converter.ConvertableEntity;
 
 @Entity
 // @Table(name = "LOTACAO_VEICULO_2", schema="SIGAOR")
@@ -94,7 +94,7 @@ public class LotacaoVeiculo extends TpModel implements ConvertableEntity {
 
 	/**
 	 * Inclui a nova lotação do veículo e preenche a data fim da lotação anterior
-	 * 
+	 *
 	 * @param veiculo
 	 */
 	public static String atualizarDataFimLotacaoAnterior(Veiculo veiculo) throws Exception {

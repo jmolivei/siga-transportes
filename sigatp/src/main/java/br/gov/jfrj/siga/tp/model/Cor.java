@@ -10,8 +10,8 @@ import javax.persistence.Table;
 import org.hibernate.envers.Audited;
 
 import play.data.validation.Required;
+import br.gov.jfrj.siga.feature.converter.entity.vraptor.ConvertableEntity;
 import br.gov.jfrj.siga.model.ActiveRecord;
-import br.gov.jfrj.siga.vraptor.converter.ConvertableEntity;
 
 @Entity
 @Audited

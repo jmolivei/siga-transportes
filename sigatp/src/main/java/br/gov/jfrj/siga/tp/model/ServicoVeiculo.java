@@ -25,11 +25,11 @@ import org.hibernate.envers.RelationTargetAuditMode;
 import br.com.caelum.vraptor.validator.I18nMessage;
 import br.gov.jfrj.siga.dp.CpOrgaoUsuario;
 import br.gov.jfrj.siga.dp.DpPessoa;
+import br.gov.jfrj.siga.feature.converter.entity.vraptor.ConvertableEntity;
 import br.gov.jfrj.siga.model.ActiveRecord;
 import br.gov.jfrj.siga.tp.util.Reflexao;
 import br.gov.jfrj.siga.tp.validation.annotation.Data;
 import br.gov.jfrj.siga.tp.validation.annotation.Sequence;
-import br.gov.jfrj.siga.tp.vraptor.ConvertableEntity;
 import br.gov.jfrj.siga.uteis.SequenceMethods;
 import br.gov.jfrj.siga.uteis.SiglaDocumentoType;
 

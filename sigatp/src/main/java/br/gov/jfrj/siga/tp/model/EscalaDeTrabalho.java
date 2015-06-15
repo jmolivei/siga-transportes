@@ -47,8 +47,8 @@ import javax.validation.constraints.NotNull;
 
 import org.hibernate.envers.Audited;
 
+import br.gov.jfrj.siga.feature.converter.entity.vraptor.ConvertableEntity;
 import br.gov.jfrj.siga.model.ActiveRecord;
-import br.gov.jfrj.siga.vraptor.converter.ConvertableEntity;
 
 @Entity
 @Audited
