@@ -1,4 +1,4 @@
-package br.gov.jfrj.siga.tp.vraptor;
+package br.gov.jfrj.siga.tp.vraptor.job;
 
 import java.net.InetAddress;
 import java.text.SimpleDateFormat;
@@ -8,35 +8,46 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-
-import play.Logger;
-import play.Play;
-import play.jobs.Job;
-import play.jobs.On;
-import play.mvc.Router;
+import java.util.logging.Logger;
+import br.com.caelum.vraptor.ioc.ApplicationScoped;
+import br.com.caelum.vraptor.tasks.Task;
 import br.gov.jfrj.siga.base.Correio;
 import br.gov.jfrj.siga.base.SigaBaseProperties;
 import br.gov.jfrj.siga.dp.DpPessoa;
 import br.gov.jfrj.siga.tp.model.Andamento;
 import br.gov.jfrj.siga.tp.model.Condutor;
+import br.gov.jfrj.siga.tp.model.Parametro;
 import br.gov.jfrj.siga.tp.util.FormataCaminhoDoContextoUrl;
 
-//@Every("1mn")
-@On("cron.iniciow")
-public class WorkFlowNotificacaoController extends Job<Object>  {
-	private static final String espacosHtml = "&nbsp;&nbsp;&nbsp;&nbsp;";
 
-	public void doJob() {
-		String executa = Play.configuration.getProperty("cron.executaw").toString();
-		if (executa.toUpperCase().equals("TRUE")) {
+@ApplicationScoped
+public class WorkFlowNotificacao  implements Task  {
+	
+	private static final String espacosHtml = "&nbsp;&nbsp;&nbsp;&nbsp;";
+	private static final String CRON_EXECUTA_WORKFLOW = "cron.executaw";
+    private static final String CRON_LISTA_EMAIL = "cron.listaEmailw";
+	
+	@Override
+	public void execute() 
+	{
+		System.out.println(">>>>>>>> Mensagem produzida pela task!");
+
+		CustomScheduler.criaEntityManager();
+		
+		String executa = Parametro.buscarConfigSistemaEmVigor(CRON_EXECUTA_WORKFLOW);
+		
+		if (executa.toUpperCase().equals("FALSE")) {
 			verificarAndamentoDaRequisicao();
 		}
 		else {
-			Logger.info("Serviço de Nofitificação do WorkFlow desligado");
+			//Logger.info("Serviço de Nofitificação do WorkFlow desligado");
+			Logger.getLogger("Serviço de Nofitificação do WorkFlow desligado");
 		}
-		Logger.info("Serviço de Nofitificação do WorkFlow finalizado");
+		//Logger.info("Serviço de Nofitificação do WorkFlow finalizado");
+		Logger.getLogger("Serviço de Nofitificação do WorkFlow finalizado");
 	}
-
+	
+	
 	private void verificarAndamentoDaRequisicao() {
 		List<Andamento> andamentos = new ArrayList<Andamento>();
 		String tituloEmail = "Notificacoes do andamento de requisições para o WorkFlow do SIGA-DOC";
@@ -44,16 +55,14 @@ public class WorkFlowNotificacaoController extends Job<Object>  {
 		try {
 			Calendar calendar = Calendar.getInstance();
 			calendar.add(Calendar.DAY_OF_YEAR, -7);
-			andamentos = Andamento.AR.find("dataNotificacaoWorkFlow IS NULL and requisicaoTransporte in (select r from RequisicaoTransporte where origemExterna = true").fetch();
+			andamentos = Andamento.AR.find("dataNotificacaoWorkFlow IS NULL and requisicaoTransporte in (select r from RequisicaoTransporte r where origemExterna = true)").fetch();
 			notificarAndamentos(andamentos, tituloEmail, tipoNotificacao);
 
 		} catch (Exception ex) {
 			ex.printStackTrace();
 		}
-
 	}
-
-
+	
 	private static void notificarAndamentos(List<Andamento> andamentos, String titulo, String notificacao) throws Exception  {
 		Condutor condutor = new Condutor();
 		HashMap<Condutor, String> dadosCondutor = new HashMap<Condutor, String>();
@@ -82,8 +91,8 @@ public class WorkFlowNotificacaoController extends Job<Object>  {
 		String mensagem;
 
 		if (pessoa.getClass().equals(Condutor.class)) {
-			sexo = ((Condutor)pessoa).getDpPessoa().getSexo().toUpperCase();
-			nome = ((Condutor)pessoa).getNome();
+			sexo = "M";//((Condutor)pessoa).getDpPessoa().getSexo().toUpperCase();
+			nome = "TESTE";//((Condutor)pessoa).getNome();
 
 			if (titulo.contains("Missoes")) {
 				parteMensagem = plural ? "as miss&otilde;es " : "a miss&atilde;o ";
@@ -99,8 +108,8 @@ public class WorkFlowNotificacaoController extends Job<Object>  {
 			}
 		}
 		else if(pessoa.getClass().equals(DpPessoa.class)) {
-			sexo = ((DpPessoa)pessoa).getSexo().toUpperCase();
-			nome = ((DpPessoa)pessoa).getNomePessoa();
+			sexo = "F";//((DpPessoa)pessoa).getSexo().toUpperCase();
+			nome = "TESTE";//((DpPessoa)pessoa).getNomePessoa();
 
 			if (titulo.contains("Requisicoes")) {
 				parteMensagem = plural ? "as requisi&ccedil;&otilde;es " : "a requisi&ccedil;&atilde;o ";
@@ -149,7 +158,7 @@ public class WorkFlowNotificacaoController extends Job<Object>  {
 		for(Object item : itensKey){
 			String mensagemAlterada = substituirMarcacoesMensagem(titulo, notificacao, dados.get(item), item);
 			String conteudoHTML = "<html>" + mensagemAlterada;
-    		String[] lista = dados.get(item).split(",");
+			String[] lista = dados.get(item).split(",");
 
 			for (String itemLista : lista) {
 	    		Boolean primeiraVez = true;
@@ -180,7 +189,7 @@ public class WorkFlowNotificacaoController extends Job<Object>  {
 					param.put(itens[0], itens[1]);
 
 					FormataCaminhoDoContextoUrl formata = new FormataCaminhoDoContextoUrl();
-					String caminhoUrl = formata.retornarCaminhoContextoUrl(Router.getFullUrl(itens[2],param));
+					String caminhoUrl = "";//formata.retornarCaminhoContextoUrl(Router.getFullUrl(itens[2],param));
 
 					conteudoHTML += (primeiraVez ? "<p>" + sequence : "") + espacosHtml +
 								    "<a href='" + "http://" + hostName + caminhoUrl + "'>" + itens[3] + "</a>" +
@@ -194,7 +203,7 @@ public class WorkFlowNotificacaoController extends Job<Object>  {
 			String assunto = titulo;
 			String email = "";
 			String destinatario[];
-			email = Play.configuration.getProperty("cron.listaEmailw").toString();
+			email = "guilherme.rufino@db1.com.br";//Parametro.buscarConfigSistemaEmVigor(CRON_LISTA_EMAIL);
 			destinatario = email.split(",");
 
 
@@ -204,7 +213,10 @@ public class WorkFlowNotificacaoController extends Job<Object>  {
 			Correio.enviar(remetente, destinatario, assunto, conteudo, conteudoHTML);
 			SimpleDateFormat fr = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
 			Calendar calendar = Calendar.getInstance();
-			Logger.info(fr.format(calendar.getTime()) + " - Email enviado para " + email + ", assunto: " + assunto);
+			
+			Logger.getLogger("sigatp.workflow").info(fr.format(calendar.getTime()) + " - Email enviado para " + email + ", assunto: " + assunto);
+			//Logger.info(fr.format(calendar.getTime()) + " - Email enviado para " + email + ", assunto: " + assunto);
 		}
 	}
+	
 }

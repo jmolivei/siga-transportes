@@ -232,8 +232,21 @@
 			<version>6.8.8</version>
 			<scope>test</scope>
 		</dependency>
+		
+		<!-- Dependencia Jobs -->
+		<dependency>
+		    <groupId>br.com.prixma</groupId>
+		    <artifactId>vraptor-tasks</artifactId>
+		    <version>1.1.0</version>
+		    <exclusions>
+		        <exclusion>
+		            <groupId>br.com.caelum</groupId>
+		            <artifactId>3.5.4</artifactId>
+		        </exclusion>
+		    </exclusions>
+		</dependency>
 	</dependencies>
-
+	
 	<build>
 		<plugins>
 			<plugin>
