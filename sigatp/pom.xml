@@ -42,37 +42,11 @@
 			</exclusions>
 		</dependency>
 
-		<!-- <dependency> <groupId>com.google.guava</groupId> <artifactId>guava</artifactId> 
-			<version>15.0</version> </dependency> -->
-
-		<!-- Siga Uteis Play Module -->
-		<dependency>
-			<groupId>projeto-siga</groupId>
-			<artifactId>siga-uteis-play-module</artifactId>
-			<version>0.0.3</version>
-			<scope>provided</scope>
-		</dependency>
-
-		<dependency>
-			<groupId>projeto-siga</groupId>
-			<artifactId>siga-uteis-play-module</artifactId>
-			<version>0.0.3</version>
-			<classifier>module-min</classifier>
-			<type>zip</type>
-		</dependency>
-
 		<!-- Especifico do sigatp -->
 		<dependency>
 			<groupId>net.sf.oval</groupId>
 			<artifactId>oval</artifactId>
 			<version>1.84</version>
-			<scope>provided</scope>
-		</dependency>
-
-		<dependency>
-			<groupId>com.google.code.maven-play-plugin.org.playframework.modules.pdf</groupId>
-			<artifactId>play-pdf</artifactId>
-			<version>0.9</version>
 			<scope>provided</scope>
 		</dependency>
 
@@ -151,20 +125,11 @@
 			</exclusions>
 		</dependency>
 
-		<!-- <dependency> <groupId>org.jboss.javaee</groupId> <artifactId>jboss-servlet-api</artifactId> 
-			<version>2.5.0.GA</version> <scope>provided</scope> </dependency> <dependency> 
-			<groupId>com.oracle</groupId> <artifactId>ojdbc6</artifactId> <version>11.2.0.3.0</version> 
-			<scope>runtime</scope> </dependency> -->
-		<!-- <dependency> <groupId>org.hibernate</groupId> <artifactId>hibernate-commons-annotations</artifactId> 
-			<version>3.2.0.Final</version> <scope>provided</scope> -->
 		<dependency>
 			<groupId>joda-time</groupId>
 			<artifactId>joda-time</artifactId>
 			<version>2.3</version>
 		</dependency>
-
-		<!-- DEV <dependency> <groupId>org.hibernate</groupId> <artifactId>hibernate-validator-legacy</artifactId> 
-			<version>4.0.2.GA</version> </dependency> -->
 
 		<dependency>
 			<groupId>org.hibernate</groupId>

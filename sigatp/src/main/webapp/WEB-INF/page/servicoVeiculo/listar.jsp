@@ -5,7 +5,27 @@
 <siga:pagina titulo="SIGA-Transporte">
 	<div class="gt-bd clearfix">
 		<div class="gt-content clearfix">
-			<h2>Servi&ccedil;os de Ve&iacute;culos</h2>
+		
+			<c:if test="${!menuServicosVeiculoMostrarTodos}">
+				<h2>Todos os Servi&ccedil;os de Ve&iacute;culos</h2>			
+			</c:if>
+			
+			<c:if test="${!menuServicosVeiculoMostrarAgendados}">
+				<h2>Servi&ccedil;os de Ve&iacute;culos Agendados</h2>
+			</c:if>
+			
+			<c:if test="${!menuServicosVeiculoMostrarIniciados}">
+				<h2>Servi&ccedil;os de Ve&iacute;culos Iniciados</h2>
+			</c:if>
+			
+			<c:if test="${!menuServicosVeiculoMostrarRealizados}">
+				<h2>Servi&ccedil;os de Ve&iacute;culos Realizados</h2>
+			</c:if>
+			
+			<c:if test="${!menuServicosVeiculoMostrarCancelados}">
+				<h2>Servi&ccedil;os de Ve&iacute;culos Cancelados</h2>
+			</c:if>
+			
 			<jsp:include page="menu.jsp" />
 			<c:choose>
 				<c:when test="${servicos.size() > 0}">

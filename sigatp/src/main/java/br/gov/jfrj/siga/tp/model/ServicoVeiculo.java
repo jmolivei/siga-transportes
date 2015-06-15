@@ -25,14 +25,13 @@ import org.hibernate.envers.RelationTargetAuditMode;
 import br.com.caelum.vraptor.validator.I18nMessage;
 import br.gov.jfrj.siga.dp.CpOrgaoUsuario;
 import br.gov.jfrj.siga.dp.DpPessoa;
+import br.gov.jfrj.siga.feature.converter.entity.vraptor.ConvertableEntity;
 import br.gov.jfrj.siga.model.ActiveRecord;
 import br.gov.jfrj.siga.tp.util.Reflexao;
 import br.gov.jfrj.siga.tp.validation.annotation.Data;
-import br.gov.jfrj.siga.tp.vraptor.ConvertableEntity;
-import br.gov.jfrj.siga.validation.ValidarAnoData;
-import br.jus.jfrj.siga.uteis.Sequence;
-import br.jus.jfrj.siga.uteis.SequenceMethods;
-import br.jus.jfrj.siga.uteis.SiglaDocumentoType;
+import br.gov.jfrj.siga.tp.validation.annotation.Sequence;
+import br.gov.jfrj.siga.uteis.SequenceMethods;
+import br.gov.jfrj.siga.uteis.SiglaDocumentoType;
 
 @SuppressWarnings("serial")
 @Entity
@@ -50,7 +49,7 @@ public class ServicoVeiculo extends TpModel implements Comparable<ServicoVeiculo
 	@Sequence(propertieOrgao="cpOrgaoUsuario",siglaDocumento=SiglaDocumentoType.STP)
 	@Column(updatable = false)
 	private Long numero;
-
+    
  	@Audited(targetAuditMode = RelationTargetAuditMode.NOT_AUDITED)
 	@ManyToOne
 	@JoinColumn(name = "ID_ORGAO_USU")

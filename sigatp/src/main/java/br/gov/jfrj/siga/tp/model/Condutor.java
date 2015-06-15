@@ -34,12 +34,12 @@ import br.gov.jfrj.siga.cp.CpComplexo;
 import br.gov.jfrj.siga.dp.CpOrgaoUsuario;
 import br.gov.jfrj.siga.dp.DpLotacao;
 import br.gov.jfrj.siga.dp.DpPessoa;
+import br.gov.jfrj.siga.feature.converter.entity.vraptor.ConvertableEntity;
 import br.gov.jfrj.siga.model.ActiveRecord;
 import br.gov.jfrj.siga.tp.util.PerguntaSimNao;
 import br.gov.jfrj.siga.tp.validation.annotation.Cnh;
 import br.gov.jfrj.siga.tp.validation.annotation.Unique;
-import br.gov.jfrj.siga.vraptor.converter.ConvertableEntity;
-import br.jus.jfrj.siga.uteis.UpperCase;
+import br.gov.jfrj.siga.tp.validation.annotation.UpperCase;
 
 @SuppressWarnings("serial")
 @Entity

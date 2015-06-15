@@ -38,16 +38,16 @@ import br.gov.jfrj.siga.base.AplicacaoException;
 import br.gov.jfrj.siga.cp.CpComplexo;
 import br.gov.jfrj.siga.dp.CpOrgaoUsuario;
 import br.gov.jfrj.siga.dp.DpPessoa;
+import br.gov.jfrj.siga.feature.converter.entity.vraptor.ConvertableEntity;
 import br.gov.jfrj.siga.model.ActiveRecord;
 import br.gov.jfrj.siga.tp.util.Reflexao;
 import br.gov.jfrj.siga.tp.util.SigaTpException;
 import br.gov.jfrj.siga.tp.validation.annotation.Data;
-import br.gov.jfrj.siga.tp.vraptor.ConvertableEntity;
+import br.gov.jfrj.siga.tp.validation.annotation.Sequence;
 import br.gov.jfrj.siga.tp.vraptor.ServicoVeiculoController;
 import br.gov.jfrj.siga.tp.vraptor.i18n.MessagesBundle;
+import br.gov.jfrj.siga.uteis.SiglaDocumentoType;
 import br.gov.jfrj.siga.vraptor.handler.Resources;
-import br.jus.jfrj.siga.uteis.Sequence;
-import br.jus.jfrj.siga.uteis.SiglaDocumentoType;
 
 @SuppressWarnings("serial")
 @Entity
@@ -87,7 +87,7 @@ public class RequisicaoTransporte extends TpModel implements Comparable<Requisic
     @Enumerated(EnumType.STRING)
     private List<TipoDePassageiro> tiposDePassageiro;
 
-    @NotNull
+    //@NotNull
     @ManyToOne
     @JoinColumn(name = "ID_FINALIDADE")
     private FinalidadeRequisicao tipoFinalidade;
@@ -96,8 +96,6 @@ public class RequisicaoTransporte extends TpModel implements Comparable<Requisic
     @NotEmpty
     private String finalidade;
 
-    @NotNull
-    @NotEmpty
     private String passageiros;
 
     @NotNull

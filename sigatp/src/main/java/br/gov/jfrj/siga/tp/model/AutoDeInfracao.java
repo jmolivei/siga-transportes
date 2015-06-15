@@ -19,11 +19,11 @@ import javax.validation.constraints.NotNull;
 
 import org.hibernate.envers.Audited;
 
+import br.gov.jfrj.siga.feature.converter.entity.vraptor.ConvertableEntity;
 import br.gov.jfrj.siga.model.ActiveRecord;
 import br.gov.jfrj.siga.tp.util.PerguntaSimNao;
 import br.gov.jfrj.siga.tp.validation.annotation.Data;
-import br.gov.jfrj.siga.tp.vraptor.ConvertableEntity;
-import br.jus.jfrj.siga.uteis.UpperCase;
+import br.gov.jfrj.siga.tp.validation.annotation.UpperCase;
 
 @Entity
 @Audited
