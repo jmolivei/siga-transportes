@@ -35,7 +35,7 @@
       });
 </script>
 
-<c:set var="numeroAutorizadas" value="${0}"></c:set>
+<c:set var="numeroAutorizadas" value="0" scope="page"></c:set>
 
 <siga:pagina titulo="Siga - Transporte">
 	<div class="gt-bd clearfix">
@@ -96,7 +96,7 @@
 							   	    						</tptags:link>
 											</td>		    		
 						    				<td class="edicao">
-						    					<c:if test="${(exibirMenuAprovador || exibirMenuAdministrar || exibirMenuAdministrarMissao || exibirMenuAdministrarMissaoComplexo) && ! requisicaoTransporte.getUltimoAndamento().estadoRequisicao.equals('AUTORIZADA')}">
+						    					<c:if test="${(exibirMenuAprovador || exibirMenuAdministrar || exibirMenuAdministrarMissao || exibirMenuAdministrarMissaoComplexo) && ! requisicaoTransporte.getUltimoAndamento().estadoRequisicao.toString().equals('AUTORIZADA')}">
 						    						<a class="once" href="${linkTo[AndamentoController].autorizar[requisicaoTransporte.id]}">
 						    							<img src="/sigatp/public/images/approvedicon.png" style="margin-right: 5px;">
 						    							<fmt:message key="autorizar"/>
@@ -104,15 +104,15 @@
 						    					</c:if>
 											</td>
 											<td class="edicao">
-												<c:if test="${(exibirMenuAprovador || exibirMenuAdministrar || exibirMenuAdministrarMissao || exibirMenuAdministrarMissaoComplexo ) && ! requisicaoTransporte.getUltimoAndamento().estadoRequisicao.equals('REJEITADA')}">
+												<c:if test="${(exibirMenuAprovador || exibirMenuAdministrar || exibirMenuAdministrarMissao || exibirMenuAdministrarMissaoComplexo ) && ! requisicaoTransporte.getUltimoAndamento().estadoRequisicao.toString().equals('REJEITADA')}">
 													<a class="once" href="${linkTo[AndamentoController].rejeitar[requisicaoTransporte.id]}">
 														<img src="/sigatp/public/images/rejectedicon.png" style="margin-right: 5px;">
 						    							<fmt:message key="rejeitar"/>
 													</a>&nbsp;&nbsp;&nbsp;
 												</c:if>
 												<td class="complexo" valign="middle" colspan="2">
-													<c:if test="${requisicaoTransporte.getUltimoAndamento().estadoRequisicao.equals('AUTORIZADA')}">
-														${numeroAutorizadas = numeroAutorizadas + 1}
+													<c:if test="${requisicaoTransporte.getUltimoAndamento().estadoRequisicao.toString().equals('AUTORIZADA')}">
+														<c:set var="numeroAutorizadas" value="${numeroAutorizadas + 1}" scope="page"/>
 														<input type="checkbox" name="req" value="${requisicaoTransporte.id}" class="complexo reqs">
 													</c:if>
 												</td>
