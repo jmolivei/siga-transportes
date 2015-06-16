@@ -33,7 +33,6 @@ public class Penalidade extends TpModel implements ConvertableEntity {
 	private Long id;
 
 	@NotNull
-	
 	@UpperCase
 	private String codigoInfracao;
 
@@ -80,7 +79,7 @@ public class Penalidade extends TpModel implements ConvertableEntity {
 		}
 		return retorno;
 	}
-	
+
 	@Override
 	public Long getId() {
 		return id;

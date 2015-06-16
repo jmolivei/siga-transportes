@@ -1,11 +1,12 @@
-
 package br.gov.jfrj.siga.tp.validation;
 
+import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.Arrays;
 
 import javax.persistence.Column;
 import javax.persistence.Table;
@@ -23,17 +24,18 @@ import br.gov.jfrj.siga.dp.DpPessoa;
 import br.gov.jfrj.siga.model.ContextoPersistencia;
 import br.gov.jfrj.siga.tp.model.TpModel;
 import br.gov.jfrj.siga.tp.validation.annotation.Unique;
+import br.gov.jfrj.siga.tp.validation.annotation.UpperCase;
 
 /**
  * Validador de campo "unique" em entidades. A anotacao {@link Unique} deve ser inserida na entidade o campo a ser validado informado. Monta a consulta dinanicamente realizando um count para verificar
  * a existencia de duplicidade de registro com o campo.
- * 
+ *
  * @author db1
  *
  */
 public class UniqueConstraintValidator implements ConstraintValidator<Unique, TpModel> {
-	private static final String QUERY_TEMPLATE = "SELECT count(*) FROM [MODEL_CLASS] t WHERE t.[FIELD] = ?";
-	
+	private static final String QUERY_TEMPLATE = "SELECT count(*) FROM [MODEL_CLASS] t WHERE t.[FIELD] ";
+
 	private Unique unique;
 
 	@Override
@@ -43,9 +45,9 @@ public class UniqueConstraintValidator implements ConstraintValidator<Unique, Tp
 
 	@Override
 	public boolean isValid(TpModel tpModel, ConstraintValidatorContext context) {
-		
+
 		Connection connection = getConnection();
-		
+
 		try {
 			PreparedStatement statement = connection.prepareStatement(criarConsultaParaUnique(tpModel));
 			return contar(statement, tpModel).equals(0L);
@@ -72,30 +74,39 @@ public class UniqueConstraintValidator implements ConstraintValidator<Unique, Tp
 		if (isUniqueColumn() && new Mirror().on(tpModel).get().field(field) instanceof DpPessoa) {
 				DpPessoa tp = (DpPessoa) new Mirror().on(tpModel).get().field(field);
 				statement.setObject(1, tp.getId());
-				if (tpModel.getId() != null) 
-					statement.setObject(2, tpModel.getId());				
+				if (isNotNullAndGTZero(tpModel))
+					statement.setObject(2, tpModel.getId());
 		} else {
 			statement.setObject(1, new Mirror().on(tpModel).get().field(field));
-			if (tpModel.getId() != null) 
+			if (isNotNullAndGTZero(tpModel))
 				statement.setObject(2, tpModel.getId());
 		}
 	}
 
 	private String criarConsultaParaUnique(TpModel tpModel) {
-		String queryString = QUERY_TEMPLATE.replace("[MODEL_CLASS]", obterNomeTabela(tpModel));
-		queryString = queryString.replace("[FIELD]", obterNomeColuna(tpModel));
+	    StringBuilder query = new StringBuilder();
+	    query.append(QUERY_TEMPLATE.replace("[MODEL_CLASS]", obterNomeTabela(tpModel)));
 
-		if (tpModel.getId() != null)
-			queryString += " AND t.id != ? ";
-		
-		return queryString;
+	    query.append(hasUppercaseAnnotation(getField(tpModel)));
+
+	    StringBuilder queryString = new StringBuilder();
+	    queryString.append(query.toString().replace("[FIELD]", obterNomeColuna(tpModel)));
+
+		if (isNotNullAndGTZero(tpModel))
+		    queryString.append(" AND t.id != ? ");
+
+		return queryString.toString();
+	}
+
+	private boolean isNotNullAndGTZero(TpModel tpModel) {
+	    return tpModel.getId() != null && tpModel.getId() > 0;
 	}
 
 	private CharSequence obterNomeColuna(TpModel tpModel) {
 		if(isUniqueColumn())
 			return unique.uniqueColumn();
-		
-		Field field = new Mirror().on(tpModel.getClass()).reflect().field(unique.field());
+
+		Field field = getField(tpModel);
 		Column column = field.getAnnotation(Column.class);
 
 		if (column != null && column.name() != null && !column.name().isEmpty()) {
@@ -104,6 +115,25 @@ public class UniqueConstraintValidator implements ConstraintValidator<Unique, Tp
 		return unique.field();
 	}
 
+    private Field getField(TpModel tpModel) {
+        return new Mirror().on(tpModel.getClass()).reflect().field(unique.field());
+    }
+
+    private String hasUppercaseAnnotation(Field field) {
+        boolean found = false;
+        for (Annotation annotation : Arrays.asList(field.getDeclaredAnnotations())) {
+		    if(annotation instanceof UpperCase) {
+		        found = true;
+		        break;
+		    }
+        }
+
+        if(found)
+            return "= UPPER(?)";
+        else
+            return "= ?";
+    }
+
 	private String obterNomeTabela(TpModel tpModel) {
 		Table table = tpModel.getClass().getAnnotation(Table.class);
 		if (table != null && table.name() != null && !table.name().isEmpty()) {
@@ -111,21 +141,21 @@ public class UniqueConstraintValidator implements ConstraintValidator<Unique, Tp
 		}
 		return tpModel.getClass().getSimpleName();
 	}
-	
+
 	private Connection getConnection() {
-		
+
 		Session session = ContextoPersistencia.em().unwrap(Session.class);
 		SessionFactoryImpl factory = (SessionFactoryImpl) session.getSessionFactory();
 		DatasourceConnectionProviderImpl provider = (DatasourceConnectionProviderImpl)factory.getConnectionProvider();
 		DataSource dataSource = provider.getDataSource();
-		
+
 		try {
 			return dataSource.getConnection();
 		} catch (SQLException e) {
 			throw new RuntimeException(e);
 		}
 	}
-	
+
 	private boolean isUniqueColumn() {
 		return !"".equals(unique.uniqueColumn());
 	}
