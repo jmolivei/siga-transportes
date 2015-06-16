@@ -365,14 +365,17 @@ public class RequisicaoTransporte extends TpModel implements Comparable<Requisic
     public void setSequence(Object cpOrgaoUsuarioObject) {
         CpOrgaoUsuario orgaoUsuario = (CpOrgaoUsuario) cpOrgaoUsuarioObject;
         int year = Calendar.getInstance().get(Calendar.YEAR);
-        String qrl = "SELECT r FROM RequisicaoTransporte r where r.numero = ";
-        qrl = qrl + "(SELECT MAX(rt.numero) FROM RequisicaoTransporte rt";
-        qrl = qrl + " where cpOrgaoUsuario.id = " + orgaoUsuario.getId();
-        qrl = qrl + " and YEAR(dataHora) = " + year;
-        qrl = qrl + " and r.cpOrgaoUsuario.id = rt.cpOrgaoUsuario.id";
-        qrl = qrl + " and YEAR(r.dataHora) = YEAR(rt.dataHora)";
-        qrl = qrl + ")";
-        Query qry = AR.em().createQuery(qrl);
+
+        StringBuilder query = new StringBuilder();
+        query.append("SELECT req FROM RequisicaoTransporte req WHERE req.id = ");
+        query.append("(SELECT MAX(r.id) FROM RequisicaoTransporte r WHERE r.numero = ");
+        query.append("(SELECT MAX(rt.numero) FROM RequisicaoTransporte rt ");
+        query.append("WHERE cpOrgaoUsuario.id = " + orgaoUsuario.getId());
+        query.append(" AND YEAR(dataHora) = " + year);
+        query.append(" AND r.cpOrgaoUsuario.id = rt.cpOrgaoUsuario.id");
+        query.append(" AND YEAR(r.dataHora) = YEAR(rt.dataHora)))");
+
+        Query qry = AR.em().createQuery(query.toString());
         try {
             Object obj = qry.getSingleResult();
             this.numero = ((RequisicaoTransporte) obj).numero + 1;
