@@ -16,7 +16,7 @@
 
 	<h3>Informa&ccedil;&otilde;es B&aacute;sicas</h3>
 	<div id="infbasicas" class="gt-content-box gt-form clearfix">
-		<c:if test="requisicaoTransporte.id != 0">
+		<c:if test="${requisicaoTransporte.id != 0}">
         	<label>Solicitante / Fun&ccedil;&atilde;o / Lota&ccedil;&atilde;o:</label>
 
         	<c:if test="${null != requisicaoTransporte.solicitante}">
