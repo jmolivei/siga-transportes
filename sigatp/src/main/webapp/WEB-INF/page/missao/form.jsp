@@ -10,14 +10,16 @@
 <sigatp:decimal />
 
 <style>
-	#divErros {display: none;}
+ 	#errosAjax {display: none;}
 </style>
 
 <form id="formMissoes" method="post" enctype="multipart/form-data">
 	<sigatp:erros />
-	<div id="divErros" class="gt-error">
+
+	<div id="errosAjax" class="gt-error">
 		<li></li>
 	</div>
+
 	<br><br>
 	<input type="hidden" id="missaoId" name="missao" value="${missao.id}" />
 	<input type="hidden" id="veiculosDisp" name="veiculosDisp" value="" />
@@ -178,9 +180,9 @@
 		}
 
 		var escreverMensagemErro = function(msg) {
-			var $divErros = $('#divErros');
-			$divErros.css('display', 'block');
-			$divErros.find('li').html(msg);
+			var $errosAjax = $('#errosAjax');
+			$errosAjax.css('display', 'block');
+			$errosAjax.find('li').html(msg);
 		}
 
 		var success = function(data) {
