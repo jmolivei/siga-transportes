@@ -60,7 +60,7 @@ public class RequisicaoRestController extends TpController {
         }
     }
 
-    @Path("/buscar/{codigoDocumento}")
+    @Path("/buscar/{codigoDocumento*}")
     public void buscar(String codigoDocumento) throws RestControllerException {
         try {
             RequisicaoTransporteRest req = RequisicaoTransporteRest.recuperarPelaSequence(codigoDocumento);
@@ -76,19 +76,20 @@ public class RequisicaoRestController extends TpController {
         } catch (Exception e) {
             throw new RestControllerException(e);
         }
+        
     }
 
-    @Path("/estaAutorizada/{codigoDocumento}")
+    @Path("/estaAutorizada/{codigoDocumento*}")
     public void estaAutorizada(String codigoDocumento) throws RestControllerException {
         result.use(Results.http()).body(estaNesseEstado(codigoDocumento, EstadoRequisicao.AUTORIZADA).toString());
     }
 
-    @Path("/estaRejeitada/{codigoDocumento}")
+    @Path("/estaRejeitada/{codigoDocumento*}")
     public void estaRejeitada(String codigoDocumento) throws RestControllerException {
         result.use(Results.http()).body(estaNesseEstado(codigoDocumento, EstadoRequisicao.REJEITADA).toString());
     }
 
-    @Path("/estaAtendida/{codigoDocumento}")
+    @Path("/estaAtendida/{codigoDocumento*}")
     public void estaAtendida(String codigoDocumento) throws RestControllerException {
         result.use(Results.http()).body(estaNesseEstado(codigoDocumento, EstadoRequisicao.ATENDIDA).toString());
     }
@@ -120,7 +121,7 @@ public class RequisicaoRestController extends TpController {
             validator.add(new I18nMessage("finalidade", "requisicaoTransporte.finalidade.validation"));
     }
 
-    @Path("/incluir/{body}")
+    @Path("/incluir/{body*}")
     public void incluir(String body) throws RestControllerException {
         try {
             RequisicaoTransporte req = new RequisicaoTransporte();
@@ -183,7 +184,7 @@ public class RequisicaoRestController extends TpController {
         result.include("cadastrante", usuario);
     }
 
-    @Path("/alterar/{body}")
+    @Path("/alterar/{body*}")
     public void alterar(String body) throws RestControllerException {
         try {
             Map<String, String> map = transformarDadosRecebidos(body);
