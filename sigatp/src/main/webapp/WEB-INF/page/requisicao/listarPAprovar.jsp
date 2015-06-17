@@ -81,7 +81,7 @@
 											<td>
 												<c:choose>
 													<c:when test="${requisicaoTransporte.dataHoraRetornoPrevisto != null}">
-														<td><fmt:formatDate pattern="dd/MM/yyyy HH:mm" value="${requisicaoTransporte.dataHoraRetornoPrevisto.time}"/></td>
+														<fmt:formatDate pattern="dd/MM/yyyy HH:mm" value="${requisicaoTransporte.dataHoraRetornoPrevisto.time}"/>
 													</c:when>
 						    						<c:otherwise>
 						    							<fmt:message key="no"/>
@@ -94,7 +94,7 @@
 							   	    						 parteTextoLink="${requisicaoTransporte.buscarSequence()}" 
 							   	    						 comando="${linkTo[RequisicaoController].buscarPelaSequence[true][requisicaoTransporte.buscarSequence()]}">
 							   	    						</tptags:link>
-											</td>		    		
+											</td>
 						    				<td class="edicao">
 						    					<c:if test="${(exibirMenuAprovador || exibirMenuAdministrar || exibirMenuAdministrarMissao || exibirMenuAdministrarMissaoComplexo) && ! requisicaoTransporte.getUltimoAndamento().estadoRequisicao.toString().equals('AUTORIZADA')}">
 						    						<a class="once" href="${linkTo[AndamentoController].autorizar[requisicaoTransporte.id]}">
@@ -110,13 +110,13 @@
 						    							<fmt:message key="rejeitar"/>
 													</a>&nbsp;&nbsp;&nbsp;
 												</c:if>
-												<td class="complexo" valign="middle" colspan="2">
-													<c:if test="${requisicaoTransporte.getUltimoAndamento().estadoRequisicao.toString().equals('AUTORIZADA')}">
-														<c:set var="numeroAutorizadas" value="${numeroAutorizadas + 1}" scope="page"/>
-														<input type="checkbox" name="req" value="${requisicaoTransporte.id}" class="complexo reqs">
-													</c:if>
-												</td>
 											</td> 		
+											<td class="complexo" valign="middle" colspan="2">
+												<c:if test="${requisicaoTransporte.getUltimoAndamento().estadoRequisicao.toString().equals('AUTORIZADA')}">
+													<c:set var="numeroAutorizadas" value="${numeroAutorizadas + 1}" scope="page"/>
+													<input type="checkbox" name="req" value="${requisicaoTransporte.id}" class="complexo reqs">
+												</c:if>
+											</td>
 										</tr>
 									</c:forEach>
 								</tbody>
