@@ -573,9 +573,9 @@ public class RequisicaoTransporte extends TpModel implements Comparable<Requisic
         }
 
         if (!ehRequisicaoServico)
-            throw new SigaTpException(MessagesBundle.getMessage("requisicaoTransporte.naoPodeSerExcluida.exception"));
+            throw new SigaTpException("requisicaoTransporte.naoPodeSerExcluida.exception");
         else
-            throw new SigaTpException(MessagesBundle.getMessage("requisicaoTransporte.favorCancelarServico.exception"));
+            throw new SigaTpException("requisicaoTransporte.favorCancelarServico.exception");
     }
 
     public boolean contemTipoDePassageiro(TipoDePassageiro tipo) {

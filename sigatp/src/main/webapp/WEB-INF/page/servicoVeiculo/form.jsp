@@ -12,9 +12,9 @@
 <script type="text/javascript">
 
 	function verificarSituacao() {
-		var situacao = $("#situacaoServico").val(); 
+		var situacao = $('#situacaoServico').val();
 		
-		if (avarias.size() > 0) {
+		if (${avarias.size() > 0}) {
 			$("#trAvarias").show(250);
 
 			$("[name='chk']").each(function() {
@@ -68,7 +68,7 @@
 		verificarSituacao();
 		verificarAvarias();
 		
-		$("#situacaoServico").click(function(event) {
+		$("#situacaoServico").change(function(event) {
 			event.preventDefault();
 			verificarSituacao();
 		});
@@ -171,7 +171,7 @@
 				<textarea   name="servico.descricao"
 							rows="6" cols="68">${servico.descricao}</textarea>
 				<label for="situacaoServico" class= "obrigatorio">	Situa&ccedil;&atilde;o</label>
-				<select name="servico.situacaoServico" >
+				<select id="situacaoServico" name="servico.situacaoServico" >
 					<c:forEach items="${estadosServico}" var="estadoServico">
 						<option value="${estadoServico}" ${estadoServico == servico.situacaoServico ? 'selected' : ''} >${estadoServico.descricao}</option>
 					</c:forEach>
