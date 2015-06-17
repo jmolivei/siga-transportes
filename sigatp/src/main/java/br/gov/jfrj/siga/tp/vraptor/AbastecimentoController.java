@@ -28,7 +28,6 @@ import br.gov.jfrj.siga.tp.model.ItemMenu;
 import br.gov.jfrj.siga.tp.model.TipoDeCombustivel;
 import br.gov.jfrj.siga.tp.model.TpDao;
 import br.gov.jfrj.siga.tp.model.Veiculo;
-import br.gov.jfrj.siga.tp.util.MenuMontador;
 import br.gov.jfrj.siga.tp.vraptor.i18n.MessagesBundle;
 import br.gov.jfrj.siga.vraptor.SigaObjects;
 
@@ -68,11 +67,11 @@ public class AbastecimentoController extends TpController {
         result.include("abastecimentos", abastecimentos);
     }
 
-    @Path("/listarPorVeiculo")
+    @Path({"/listarPorVeiculo/{idVeiculo}", "/listarPorVeiculo"})
     public void listarPorVeiculo(Long idVeiculo) throws Exception {
         Veiculo veiculo = Veiculo.AR.findById(idVeiculo);
         List<Abastecimento> abastecimentos = Abastecimento.buscarTodosPorVeiculo(veiculo);
-        MenuMontador.instance().recuperarMenuVeiculos(idVeiculo, ItemMenu.ABASTECIMENTOS);
+        MenuMontador.instance(result).recuperarMenuVeiculos(idVeiculo, ItemMenu.ABASTECIMENTOS);
 
         result.include("abastecimentos", abastecimentos);
         result.include("veiculo", veiculo);
