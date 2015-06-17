@@ -89,13 +89,16 @@ public class AbastecimentoController extends TpController {
         List<Fornecedor> fornecedores = listarTodos();
         List<Veiculo> veiculos = listarVeiculos();
         List<Condutor> condutores = listarCondutores();
-        Abastecimento abastecimento = new Abastecimento();
 
-        result.include(ABASTECIMENTO, abastecimento);
+        result.include(ABASTECIMENTO, getAbastecimento());
         result.include(VEICULOS, veiculos);
         result.include(CONDUTORES, condutores);
         result.include(FORNECEDORES, fornecedores);
         result.include(TIPOS_COMBUSTIVEL_PARA_ABASTECIMENTO, TipoDeCombustivel.tiposParaAbastecimento());
+    }
+
+    private Object getAbastecimento() {
+        return null != getRequest().getAttribute(ABASTECIMENTO) ? getRequest().getAttribute(ABASTECIMENTO) : new Abastecimento();
     }
 
     @RoleAdmin
@@ -108,8 +111,11 @@ public class AbastecimentoController extends TpController {
     public void salvar(final @Valid Abastecimento abastecimento) throws Exception {
         if (!abastecimento.getId().equals(0L))
             verificarAcesso(abastecimento);
+        else
+            abastecimento.setOrgao(getTitular().getOrgaoUsuario());
 
         error(abastecimento.getOdometroEmKm().equals(0.0), "odometroEmKm", "abastecimento.odometroEmKm.validation");
+        error(abastecimento.getFornecedor().getId().equals(0L), "fornecedor", "abastecimento.fornecedor.validation");
 
         if (validator.hasErrors()) {
             List<Fornecedor> fornecedores = Fornecedor.listarTodos();
@@ -124,12 +130,9 @@ public class AbastecimentoController extends TpController {
         } else {
             abastecimento.setTitular(getTitular());
             abastecimento.setSolicitante(getCadastrante());
-            if (abastecimento.getId().equals(0L))
-                abastecimento.setOrgao(getTitular().getOrgaoUsuario());
 
-            abastecimento.setConsumoMedioEmKmPorLitro(0D);
-            abastecimento.setDistanciaPercorridaEmKm(0D);
             abastecimento.save();
+
             result.redirectTo(this).listar();
         }
     }
