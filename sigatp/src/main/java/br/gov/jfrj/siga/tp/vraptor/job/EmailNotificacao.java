@@ -1,6 +1,5 @@
 package br.gov.jfrj.siga.tp.vraptor.job;
 
-import java.net.InetAddress;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -9,13 +8,11 @@ import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 import java.util.logging.Logger;
 
 import br.com.caelum.vraptor.ioc.ApplicationScoped;
 import br.com.caelum.vraptor.tasks.Task;
-import br.com.caelum.vraptor.tasks.scheduler.Scheduled;
 import br.gov.jfrj.siga.base.Correio;
 import br.gov.jfrj.siga.base.SigaBaseProperties;
 import br.gov.jfrj.siga.cp.CpConfiguracao;
@@ -29,7 +26,6 @@ import br.gov.jfrj.siga.tp.model.EstadoMissao;
 import br.gov.jfrj.siga.tp.model.EstadoRequisicao;
 import br.gov.jfrj.siga.tp.model.Missao;
 import br.gov.jfrj.siga.tp.model.RequisicaoTransporte;
-import br.gov.jfrj.siga.tp.util.FormataCaminhoDoContextoUrl;
 
 import com.google.common.base.Predicate;
 import com.google.common.collect.Iterables;
@@ -43,6 +39,7 @@ public class EmailNotificacao implements Task {
 	private static final String CRON_LISTAEMAIL = "cron.listaEmail";
 	private static final String CRON_FLAGEMAIL = "cron.flagEmail";
 	private static final String SIGATP_EMAIL = "sigatp.email";
+	private static final String CAMINHO_HOSTNAME_STANDALONE = "caminhoHostnameStandalone";
 
 	@Override
 	public void execute() {
@@ -255,7 +252,7 @@ public class EmailNotificacao implements Task {
 
 	@SuppressWarnings("unchecked")
 	private static void enviarEmail(String titulo, String notificacao, HashMap<?, String> dados) throws Exception {
-		String hostName = InetAddress.getLocalHost().getHostName();
+		String hostName = System.getProperty(Parametro.buscarConfigSistemaEmVigor(CAMINHO_HOSTNAME_STANDALONE));
 		final String finalMensagem = "Att.<br>M&oacute;dulo de Transportes do Siga.<br><br>" + "Aten&ccedil;&atilde;o: esta &eacute; uma mensagem autom&aacute;tica. Por favor, n&atilde;o responda.";
 
 		Set<Object> itensKey = (Set<Object>) dados.keySet();
@@ -292,7 +289,7 @@ public class EmailNotificacao implements Task {
 
 					String caminhoUrl = "/" + itens[2] + "/" + itens[1];
 
-					conteudoHTML += (primeiraVez ? "<p>" + sequence : "") + espacosHtml + "<a href='" + "http://" + hostName + caminhoUrl + "'>" + itens[3] + "</a>" + espacosHtml;
+					conteudoHTML += (primeiraVez ? "<p>" + sequence : "") + espacosHtml + "<a href='" + hostName + caminhoUrl + "'>" + itens[3] + "</a>" + espacosHtml;
 					primeiraVez = false;
 				}
 			}
@@ -304,8 +301,7 @@ public class EmailNotificacao implements Task {
 			String destinatario[];
 			String flagEmail = Parametro.buscarConfigSistemaEmVigor(CRON_FLAGEMAIL);
 
-			// TODO Voltar condição para TRUE
-			if (!flagEmail.toUpperCase().equals("FALSE")) {
+			if (!flagEmail.toUpperCase().equals("TRUE")) {
 				if (item.getClass().equals(Condutor.class)) {
 					email = ((Condutor) item).getDpPessoa().getEmailPessoa();
 				} else if (item.getClass().equals(DpPessoa.class)) {

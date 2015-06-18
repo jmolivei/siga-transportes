@@ -23,7 +23,6 @@ public class CustomScheduler {
 
 	private static final String CRON_EMAIL = "cron.inicio";
 	private static final String CRON_WORKFLOW = "cron.iniciow";
-	private static final String DATASOURCE = "java:/jboss/datasources/SigaCpDS";
 
 	public CustomScheduler(TaskScheduler scheduler) {
 		try {
@@ -31,10 +30,9 @@ public class CustomScheduler {
 
 			String cronWorkFlow = Parametro.buscarConfigSistemaEmVigor(CRON_WORKFLOW);
 			String cronEmail = Parametro.buscarConfigSistemaEmVigor(CRON_EMAIL);
-
-			// TODO mudar para valores de cron recuperados anteriormente
-			scheduler.schedule(WorkFlowNotificacao.class, new TriggerBuilder().cron("0 0/1 8-19 1/1 * ? *"), "WorkFlowNotificacao");
-			// scheduler.schedule(EmailNotificacao.class,new TriggerBuilder().cron(cronEmail), "EmailNotificacao");
+			
+			scheduler.schedule(WorkFlowNotificacao.class, new TriggerBuilder().cron(cronWorkFlow), "WorkFlowNotificacao");
+			scheduler.schedule(EmailNotificacao.class,new TriggerBuilder().cron(cronEmail), "EmailNotificacao");
 		} catch (Exception e) {
 			Logger.getLogger("custom.schedule").info("Erro no Agendador de tarefas: " + e.getMessage());
 		} finally {

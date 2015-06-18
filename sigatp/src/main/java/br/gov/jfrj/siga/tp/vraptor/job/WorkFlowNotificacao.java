@@ -1,6 +1,5 @@
 package br.gov.jfrj.siga.tp.vraptor.job;
 
-import java.net.InetAddress;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -13,7 +12,6 @@ import java.util.logging.Logger;
 
 import br.com.caelum.vraptor.ioc.ApplicationScoped;
 import br.com.caelum.vraptor.tasks.Task;
-import br.com.caelum.vraptor.tasks.scheduler.Scheduled;
 import br.gov.jfrj.siga.base.Correio;
 import br.gov.jfrj.siga.base.SigaBaseProperties;
 import br.gov.jfrj.siga.cp.CpConfiguracao;
@@ -27,7 +25,6 @@ import br.gov.jfrj.siga.tp.util.FormatarTextoHtml;
 import br.gov.jfrj.siga.tp.util.VerificadorEnvioEmail;
 
 @ApplicationScoped
-// @Scheduled(fixedRate=600000)
 public class WorkFlowNotificacao implements Task {
 
 	private static final String espacosHtml = "&nbsp;&nbsp;";
@@ -43,12 +40,12 @@ public class WorkFlowNotificacao implements Task {
 		try {
 			CustomScheduler.criaEntityManager();
 
-			// if(!VerificadorEnvioEmail.possoEnviarEmail()) {
-			// return;
-			// }
+			if(!VerificadorEnvioEmail.possoEnviarEmail()) {
+				return;
+			}
 			boolean executa = Boolean.parseBoolean(Parametro.buscarConfigSistemaEmVigor(CRON_EXECUTAWORKFLOW));
-			// TODO voltar condição para (executa)
-			if (!executa) {
+			
+			if (executa) {
 				try {
 					notificarAndamentos();
 				} catch (Exception ex) {
@@ -145,7 +142,7 @@ public class WorkFlowNotificacao implements Task {
 		if (itensLinha[0].equals(EstadoRequisicao.ABERTA.toString())) {
 			conteudoHTML += espacosHtml + "est&aacute; pendente para an&aacute;lise de APROVA&Ccedil;&Atilde;O/REJEI&Ccedil;&Atilde;O."
 					+ "<br>Para aprovar/rejeitar a requisi&ccedil;&atilde;o, clique em:" + espacosHtml;
-			parametros.add("id," + itensLinha[2] + ",sigatp/app/andamentos/autorizar,Autorizar");
+			parametros.add("id," + itensLinha[2] + ",sigatp/app/andamento/autorizar,Autorizar");
 			parametros.add("id," + itensLinha[2] + ",sigatp/app/andamento/rejeitar,Rejeitar");
 
 			for (String parametro : parametros) {
@@ -165,8 +162,7 @@ public class WorkFlowNotificacao implements Task {
 
 		boolean flagEmail = Boolean.parseBoolean(Parametro.buscarConfigSistemaEmVigor(CRON_FLAGEMAILW));
 
-		// TODO voltar para (!flagEmail)
-		if (flagEmail) {
+		if (!flagEmail) {
 			for (Object pessoa : objeto) {
 				if (objeto.getClass().equals(DpPessoa.class)) {
 					email = ((DpPessoa) pessoa).getEmailPessoa() + ",";
@@ -192,172 +188,4 @@ public class WorkFlowNotificacao implements Task {
 
 		return emailEnviado;
 	}
-
-	// private void verificarAndamentoDaRequisicao() {
-	// List<Andamento> andamentos = new ArrayList<Andamento>();
-	// String tituloEmail = "Notificacoes do andamento de requisições para o WorkFlow do SIGA-DOC";
-	// String tipoNotificacao = "notificadas ao SIGA-DOC";
-	// try {
-	// Calendar calendar = Calendar.getInstance();
-	// calendar.add(Calendar.DAY_OF_YEAR, -7);
-	// andamentos = Andamento.AR.find("dataNotificacaoWorkFlow IS NULL and requisicaoTransporte in (select r from RequisicaoTransporte r where origemExterna = true)").fetch();
-	// notificarAndamentos(andamentos, tituloEmail, tipoNotificacao);
-	//
-	// } catch (Exception ex) {
-	// ex.printStackTrace();
-	// }
-	// }
-	//
-	// private static void notificarAndamentos(List<Andamento> andamentos, String titulo, String notificacao) throws Exception {
-	// Condutor condutor = new Condutor();
-	// HashMap<Condutor, String> dadosCondutor = new HashMap<Condutor, String>();
-	//
-	// for(Andamento item : andamentos) {
-	// String sequencia = item.getRequisicaoTransporte().buscarSequence() + " " + item.getRequisicaoTransporte().getId() + ",";
-	//
-	// if (dadosCondutor.containsKey(condutor)) {
-	// dadosCondutor.put(condutor, dadosCondutor.get(condutor) + sequencia);
-	// }
-	// else {
-	// dadosCondutor.put(condutor, sequencia);
-	// }
-	// }
-	//
-	// if (dadosCondutor.size() > 0) {
-	// enviarEmail(titulo, notificacao, dadosCondutor);
-	// }
-	// }
-	//
-	// public static String substituirMarcacoesMensagem(String titulo, String notificacao, String lista, Object pessoa) {
-	// String sexo = "";
-	// String nome = "";
-	// String parteMensagem = "";
-	// Boolean plural = lista.split(",").length > 1 ? true : false;
-	// String mensagem;
-	//
-	// if (pessoa.getClass().equals(Condutor.class)) {
-	// sexo = ((Condutor)pessoa).getDpPessoa().getSexo().toUpperCase();
-	// nome = ((Condutor)pessoa).getNome();
-	//
-	// if (titulo.contains("Missoes")) {
-	// parteMensagem = plural ? "as miss&otilde;es " : "a miss&atilde;o ";
-	//
-	// if (notificacao.contains("Nao finalizada")) {
-	// parteMensagem += "abaixo, caso j&aacute; tenha/m sido realizada/s, " +
-	// "precisa/m ser finalizada/s.<br>";
-	//
-	// }
-	// else if (notificacao.contains("Nao iniciada")) {
-	// parteMensagem += "abaixo precisa/m ser iniciada/s ou cancelada/s.<br>";
-	// }
-	// }
-	// }
-	// else if(pessoa.getClass().equals(DpPessoa.class)) {
-	// sexo = ((DpPessoa)pessoa).getSexo().toUpperCase();
-	// nome = ((DpPessoa)pessoa).getNomePessoa();
-	//
-	// if (titulo.contains("Requisicoes")) {
-	// parteMensagem = plural ? "as requisi&ccedil;&otilde;es " : "a requisi&ccedil;&atilde;o ";
-	//
-	// if (notificacao.contains("Pendente aprovar")) {
-	// parteMensagem += "abaixo precisa/m ser autorizada/s ou rejeitada/s.<br>";
-	// }
-	// }
-	// }
-	//
-	// mensagem = sexo.equals("F") ? "Prezada Sra. " + nome + ", " : "Prezado Sr. " + nome + ", ";
-	// mensagem += parteMensagem.replaceAll("/s", plural ? "s" : "").replaceAll("/m", plural ? "m" : "");
-	// return mensagem;
-	// }
-	//
-	// private static String retirarTagsHtml(String conteudo) {
-	// String retorno = conteudo.replace("<br>", "\n");
-	// retorno = retorno.replace("&aacute", "á");
-	// retorno = retorno.replace("&eacute", "é");
-	// retorno = retorno.replace("&oacute", "ó");
-	// retorno = retorno.replace("&iacute", "í");
-	// retorno = retorno.replace("&uacute", "ú");
-	// retorno = retorno.replace("&atilde", "ã");
-	// retorno = retorno.replace("&otilde", "õ");
-	// retorno = retorno.replace("&ccedil", "ç");
-	// retorno = retorno.replace("<html>", "");
-	// retorno = retorno.replace("</html>", "");
-	// retorno = retorno.replace("<p>", "");
-	// retorno = retorno.replace("</p>", "\n");
-	// retorno = retorno.replace(espacosHtml, "");
-	// retorno = retorno.replace("</a href=", "");
-	// retorno = retorno.replace(">", "");
-	// retorno = retorno.replace("'", "");
-	// retorno = retorno.replace("</a>", "");
-	// return retorno;
-	// }
-	//
-	// @SuppressWarnings("unchecked")
-	// private static void enviarEmail(String titulo, String notificacao, HashMap<?, String> dados) throws Exception {
-	// String hostName = InetAddress.getLocalHost().getHostName();
-	// final String finalMensagem = "Att.<br>M&oacute;dulo de Transportes do Siga.<br><br>" +
-	// "Aten&ccedil;&atilde;o: esta &eacute; uma mensagem autom&aacute;tica. Por favor, n&atilde;o responda.";
-	//
-	// Set<Object> itensKey = (Set<Object>) dados.keySet();
-	//
-	// for(Object item : itensKey){
-	// String mensagemAlterada = substituirMarcacoesMensagem(titulo, notificacao, dados.get(item), item);
-	// String conteudoHTML = "<html>" + mensagemAlterada;
-	// String[] lista = dados.get(item).split(",");
-	//
-	// for (String itemLista : lista) {
-	// Boolean primeiraVez = true;
-	// String sequence = itemLista.substring(0, itemLista.indexOf(" "));
-	// String id = itemLista.substring(itemLista.indexOf(" ") + 1);
-	// List<String> parametros = new ArrayList<String>();
-	//
-	// if (titulo.contains("Missoes")) {
-	// if (notificacao.contains("Nao finalizada")) {
-	// parametros.add("id," + id + ",sigatp/app/missao/finalizar,Finalizar");
-	// }
-	// else if (notificacao.contains("Nao iniciada")) {
-	// parametros.add("id," + id + ",sigatp/app/missao/iniciar,Iniciar");
-	// parametros.add("id," + id + ",sigatp/app/missao/cancelar,Cancelar");
-	// }
-	// }
-	//
-	// if (titulo.contains("Requisicoes")) {
-	// if (notificacao.contains("Pendente aprovar")) {
-	// parametros.add("id," + id + ",sigatp/app/andamento/autorizar,Autorizar");
-	// parametros.add("id," + id + ",sigatp/app/andamento/rejeitar,Rejeitar");
-	// }
-	// }
-	//
-	// for (String parametro : parametros) {
-	// String[] itens = parametro.split(",");
-	//
-	// String caminhoUrl = "/"+itens[2]+"/"+itens[1];
-	//
-	// conteudoHTML += (primeiraVez ? "<p>" + sequence : "") + espacosHtml +
-	// "<a href='" + "http://" + hostName + caminhoUrl + "'>" + itens[3] + "</a>" +
-	// espacosHtml;
-	// primeiraVez = false;
-	// }
-	// }
-	//
-	// conteudoHTML += "</p>";
-	// String remetente = SigaBaseProperties.getString("servidor.smtp.usuario.remetente");
-	// String assunto = titulo;
-	// String email = "";
-	// String destinatario[];
-	// email = Parametro.buscarConfigSistemaEmVigor(CRON_LISTAEMAIL);
-	// destinatario = email.split(",");
-	//
-	//
-	// conteudoHTML += finalMensagem + "</html>";
-	// String conteudo = retirarTagsHtml(conteudoHTML);
-	//
-	// Correio.enviar(remetente, destinatario, assunto, conteudo, conteudoHTML);
-	// SimpleDateFormat fr = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
-	// Calendar calendar = Calendar.getInstance();
-	//
-	// Logger.getLogger("sigatp.workflow").info(fr.format(calendar.getTime()) + " - Email enviado para " + email + ", assunto: " + assunto);
-	// }
-	// }
-
 }
