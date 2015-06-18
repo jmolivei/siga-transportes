@@ -149,15 +149,19 @@
 			</c:if>
 				<label for="servico.tiposDeServico" class= "obrigatorio">Tipo de Servi&ccedil;o</label>
 				
-				<select name="servico.tiposDeServico" >
+				<select id="lstTiposDeServico" name="servico.tiposDeServico" >
 					<c:forEach items="${tiposDeServico}" var="tipoDeServico">
 						<option value="${tipoDeServico}" ${tipoDeServico == servico.tiposDeServico ? 'selected' : ''} >${tipoDeServico.descricao}</option>
 					</c:forEach>
 				</select>
 								
+				<label for="servico.veiculo" class= "obrigatorio">Ve&iacute;culo</label>	
+				<select id="lstVeiculos" name="servico.veiculo">
+					<c:forEach items="${veiculos}" var="veiculo">
+						<option value="${veiculo.id}" ${veiculo.id == servico.veiculo.id ? 'selected' : ''}>${veiculo.dadosParaExibicao}</option>
+					</c:forEach>
+				</select>
 				
-				<label for="servico.veiculo" class= "obrigatorio">Ve&iacute;culo</label>				
-				<siga:select name="servico.veiculo" list="veiculos" listKey="id" listValue="dadosParaExibicao" value="${servico.veiculo.id}"/>
 				<label for="servico.dataHoraInicioPrevisto" class= "obrigatorio">In&iacute;cio Previsto</label>
 				<input  type="text"
 						name="servico.dataHoraInicioPrevisto"
@@ -203,7 +207,7 @@
 				<div class="container" id="lstAvarias">
 					<c:forEach items="${avarias}" var="avaria">
 						<input type="checkbox" name="chk" id="avaria_${avaria.id}" />
-						<tptags:link texto="${avaria.descricao}" parteTextoLink="${avaria.descricao}" comando="${linkTo[AvariaController].editar[avaria.id][false]}"></tptags:link>
+						<tptags:link texto="${avaria.descricao}" parteTextoLink="${avaria.descricao}" comando="${linkTo[AvariaController].editar[servico.veiculo.id][avaria.id][false]}"></tptags:link>
 		    			<br/>
 					</c:forEach>
 				</div>

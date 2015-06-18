@@ -71,10 +71,6 @@ public class ServicoVeiculoController extends TpController {
     // @RoleAdminFrota
     @Path("/salvar")
     public void salvar(@Valid ServicoVeiculo servico, List<Avaria> avarias) {
-        DpPessoa dpPessoa = getCadastrante();
-        servico.setCpOrgaoUsuario(getTitular().getOrgaoUsuario());
-        servico.setSequence(servico.getCpOrgaoUsuario());
-        servico.setExecutor(dpPessoa);
         Template template;
         boolean novoServico = false;
 
@@ -89,6 +85,12 @@ public class ServicoVeiculoController extends TpController {
             servico.setUltimaAlteracao(Calendar.getInstance());
             template = Template.EDITAR;
         }
+        redirecionarSeErroAoSalvar(servico, template);
+
+        DpPessoa dpPessoa = getCadastrante();
+        servico.setCpOrgaoUsuario(getTitular().getOrgaoUsuario());
+        servico.setSequence(servico.getCpOrgaoUsuario());
+        servico.setExecutor(dpPessoa);
 
         if ((servico.getSituacaoServico() == EstadoServico.REALIZADO) && avarias != null && !avarias.isEmpty()) {
             for (Avaria avaria : avarias) {
@@ -187,9 +189,7 @@ public class ServicoVeiculoController extends TpController {
             erro = true;
         }
 
-        if (erro) {
-            validator.add(new I18nMessage("motivoCancelamento", "servicosVeiculo.motivoCancelamento.validation"));
-        }
+        error(erro, "motivoCancelamento", "servicosVeiculo.motivoCancelamento.validation");
     }
 
     private void verificarDescricaoPreenchida(ServicoVeiculo servico) {
