@@ -28,7 +28,6 @@ import br.gov.jfrj.siga.tp.model.ItemMenu;
 import br.gov.jfrj.siga.tp.model.TipoDeCombustivel;
 import br.gov.jfrj.siga.tp.model.TpDao;
 import br.gov.jfrj.siga.tp.model.Veiculo;
-import br.gov.jfrj.siga.tp.util.MenuMontador;
 import br.gov.jfrj.siga.tp.vraptor.i18n.MessagesBundle;
 import br.gov.jfrj.siga.vraptor.SigaObjects;
 
@@ -68,11 +67,11 @@ public class AbastecimentoController extends TpController {
         result.include("abastecimentos", abastecimentos);
     }
 
-    @Path("/listarPorVeiculo")
+    @Path({"/listarPorVeiculo/{idVeiculo}", "/listarPorVeiculo"})
     public void listarPorVeiculo(Long idVeiculo) throws Exception {
         Veiculo veiculo = Veiculo.AR.findById(idVeiculo);
         List<Abastecimento> abastecimentos = Abastecimento.buscarTodosPorVeiculo(veiculo);
-        MenuMontador.instance().recuperarMenuVeiculos(idVeiculo, ItemMenu.ABASTECIMENTOS);
+        MenuMontador.instance(result).recuperarMenuVeiculos(idVeiculo, ItemMenu.ABASTECIMENTOS);
 
         result.include("abastecimentos", abastecimentos);
         result.include("veiculo", veiculo);
@@ -89,13 +88,16 @@ public class AbastecimentoController extends TpController {
         List<Fornecedor> fornecedores = listarTodos();
         List<Veiculo> veiculos = listarVeiculos();
         List<Condutor> condutores = listarCondutores();
-        Abastecimento abastecimento = new Abastecimento();
 
-        result.include(ABASTECIMENTO, abastecimento);
+        result.include(ABASTECIMENTO, getAbastecimento());
         result.include(VEICULOS, veiculos);
         result.include(CONDUTORES, condutores);
         result.include(FORNECEDORES, fornecedores);
         result.include(TIPOS_COMBUSTIVEL_PARA_ABASTECIMENTO, TipoDeCombustivel.tiposParaAbastecimento());
+    }
+
+    private Object getAbastecimento() {
+        return null != getRequest().getAttribute(ABASTECIMENTO) ? getRequest().getAttribute(ABASTECIMENTO) : new Abastecimento();
     }
 
     @RoleAdmin
@@ -108,8 +110,11 @@ public class AbastecimentoController extends TpController {
     public void salvar(final @Valid Abastecimento abastecimento) throws Exception {
         if (!abastecimento.getId().equals(0L))
             verificarAcesso(abastecimento);
+        else
+            abastecimento.setOrgao(getTitular().getOrgaoUsuario());
 
         error(abastecimento.getOdometroEmKm().equals(0.0), "odometroEmKm", "abastecimento.odometroEmKm.validation");
+        error(abastecimento.getFornecedor().getId().equals(0L), "fornecedor", "abastecimento.fornecedor.validation");
 
         if (validator.hasErrors()) {
             List<Fornecedor> fornecedores = Fornecedor.listarTodos();
@@ -124,12 +129,9 @@ public class AbastecimentoController extends TpController {
         } else {
             abastecimento.setTitular(getTitular());
             abastecimento.setSolicitante(getCadastrante());
-            if (abastecimento.getId().equals(0L))
-                abastecimento.setOrgao(getTitular().getOrgaoUsuario());
 
-            abastecimento.setConsumoMedioEmKmPorLitro(0D);
-            abastecimento.setDistanciaPercorridaEmKm(0D);
             abastecimento.save();
+
             result.redirectTo(this).listar();
         }
     }

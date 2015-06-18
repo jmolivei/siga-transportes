@@ -49,7 +49,7 @@ public class ServicoVeiculo extends TpModel implements Comparable<ServicoVeiculo
 	@Sequence(propertieOrgao="cpOrgaoUsuario",siglaDocumento=SiglaDocumentoType.STP)
 	@Column(updatable = false)
 	private Long numero;
-    
+
  	@Audited(targetAuditMode = RelationTargetAuditMode.NOT_AUDITED)
 	@ManyToOne
 	@JoinColumn(name = "ID_ORGAO_USU")
@@ -271,14 +271,17 @@ public class ServicoVeiculo extends TpModel implements Comparable<ServicoVeiculo
 	public void setSequence(Object cpOrgaoUsuarioObject) {
 		CpOrgaoUsuario cpOrgaoUsuario = (CpOrgaoUsuario) cpOrgaoUsuarioObject;
 		int year = Calendar.getInstance().get(Calendar.YEAR);
-		String qrl = "SELECT sv FROM ServicoVeiculo sv where sv.numero = ";
-		qrl = qrl + "(SELECT MAX(t.numero) FROM ServicoVeiculo t";
-		qrl = qrl + " where cpOrgaoUsuario.id = " + cpOrgaoUsuario.getId();
-		qrl = qrl + " and YEAR(dataHora) = " + year;
-		qrl = qrl + " and sv.cpOrgaoUsuario.id = t.cpOrgaoUsuario.id";
-		qrl = qrl + " and YEAR(sv.dataHora) = YEAR(t.dataHora)";
-		qrl = qrl + ")";
-		Query qry = AR.em().createQuery(qrl);
+
+		StringBuilder query = new StringBuilder();
+		query.append("SELECT sv FROM ServicoVeiculo sv WHERE sv.id = ");
+		query.append("(SELECT MAX(sv.id) FROM ServicoVeiculo sv WHERE sv.numero = ");
+		query.append("(SELECT MAX(t.numero) FROM ServicoVeiculo t");
+		query.append(" WHERE cpOrgaoUsuario.id = " + cpOrgaoUsuario.getId());
+		query.append(" AND YEAR(dataHora) = " + year);
+		query.append(" AND sv.cpOrgaoUsuario.id = t.cpOrgaoUsuario.id");
+		query.append(" AND YEAR(sv.dataHora) = YEAR(t.dataHora)))");
+
+		Query qry = AR.em().createQuery(query.toString());
 		try {
 			Object obj = qry.getSingleResult();
 			this.numero = ((ServicoVeiculo) obj).numero + 1;

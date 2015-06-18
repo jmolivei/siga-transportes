@@ -110,6 +110,8 @@ public class Abastecimento extends TpModel implements Comparable<Abastecimento>,
         this.id = 0L;
         this.tipoDeCombustivel = TipoDeCombustivel.GASOLINA;
         this.nivelDeCombustivel = NivelDeCombustivel.I;
+        this.distanciaPercorridaEmKm = getDistanciaPercorridaEmKm();
+        this.consumoMedioEmKmPorLitro = getConsumoMedioEmKmPorLitro();
     }
 
  	@Override
@@ -210,7 +212,7 @@ public class Abastecimento extends TpModel implements Comparable<Abastecimento>,
 	}
 
 	public Double getDistanciaPercorridaEmKm() {
-		return distanciaPercorridaEmKm;
+		return null != distanciaPercorridaEmKm ? distanciaPercorridaEmKm : 0.0;
 	}
 
 	public void setDistanciaPercorridaEmKm(Double distanciaPercorridaEmKm) {
@@ -218,7 +220,7 @@ public class Abastecimento extends TpModel implements Comparable<Abastecimento>,
 	}
 
 	public Double getConsumoMedioEmKmPorLitro() {
-		return consumoMedioEmKmPorLitro;
+		return null != consumoMedioEmKmPorLitro ? consumoMedioEmKmPorLitro : 0.0;
 	}
 
 	public void setConsumoMedioEmKmPorLitro(Double consumoMedioEmKmPorLitro) {

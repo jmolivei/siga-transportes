@@ -299,17 +299,17 @@ public class ServicoVeiculoController extends TpController {
             MenuMontador.instance(result).recuperarMenuServicosVeiculo(servico.getSituacaoServico());
             montarCombos(servico.getId());
             switch (template) {
-            case LER:
-                validator.onErrorUse(Results.page()).of(ServicoVeiculoController.class).ler(servico.getId());
-                break;
-            case EDITAR:
-                validator.onErrorUse(Results.page()).of(ServicoVeiculoController.class).editar(servico.getId());
-                break;
-            case INCLUIR:
-                validator.onErrorUse(Results.page()).of(ServicoVeiculoController.class).incluir();
-                break;
-            default:
-                break;
+                case LER:
+                    validator.onErrorUse(Results.logic()).forwardTo(ServicoVeiculoController.class).ler(servico.getId());
+                    break;
+                case EDITAR:
+                    validator.onErrorUse(Results.page()).of(ServicoVeiculoController.class).editar(servico.getId());
+                    break;
+                case INCLUIR:
+                    validator.onErrorUse(Results.page()).of(ServicoVeiculoController.class).incluir();
+                    break;
+                default:
+                    break;
             }
         }
     }

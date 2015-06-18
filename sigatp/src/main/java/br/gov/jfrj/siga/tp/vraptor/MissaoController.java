@@ -209,7 +209,7 @@ public class MissaoController extends TpController {
 	@RoleAdminMissaoComplexo
 	@Path("/salvar")
 	public void salvar(Missao missao, List<RequisicaoTransporte> requisicoesTransporteAlt, List<RequisicaoTransporte> requisicoesTransporteAnt) throws Exception {
-	    error(null == missao.getCondutor() || null == missao.getVeiculo() || null == missao.getDataHoraSaida(), "missoa", "views.erro.campoObrigatorio");
+	    error(null == missao.getCondutor() || null == missao.getVeiculo() || null == missao.getDataHoraSaida(), "missao", "views.erro.campoObrigatorio");
 	    missao.setCpOrgaoUsuario(getTitular().getOrgaoUsuario());
 
 	    Template template;

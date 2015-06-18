@@ -1,5 +1,5 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
-<link rel="stylesheet" href="/public/stylesheets/andamentos.css" type="text/css" media="screen"/>
+<link rel="stylesheet" href="/sigatp/public/stylesheets/andamentos.css" type="text/css" media="screen"/>
 
 <p class="gt-table-action-list">
 	<c:if test="${menuRequisicoesMostrarTodas}">
