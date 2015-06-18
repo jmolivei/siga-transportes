@@ -135,9 +135,8 @@ public class Andamento extends TpModel implements Comparable<Andamento> {
 		Object[] parametros = {calendar, EstadoRequisicao.ABERTA, EstadoRequisicao.AUTORIZADA,EstadoRequisicao.PROGRAMADA,EstadoRequisicao.REJEITADA};
 		return Andamento.AR.find("dataNotificacaoWorkFlow is null " +
 						"and dataAndamento >= ? " +
-						"and estadoRequisicao in (?,?,?,?)"+ 
-						//TODO retirar esse parametro
-						"and id = 193100", parametros).fetch();
+						"and estadoRequisicao in (?,?,?,?)"
+						, parametros).fetch(1);
 	}
 
 	public static void gravarDataNotificacaoWorkFlow(Long id) throws Exception {

@@ -36,46 +36,44 @@ import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
 
 @ApplicationScoped
-public class EmailNotificacao implements Task  
-{
+public class EmailNotificacao implements Task {
 	private static final String espacosHtml = "&nbsp;&nbsp;&nbsp;&nbsp;";
-	
+
 	private static final String CRON_EXECUTA = "cron.executa";
-    private static final String CRON_LISTAEMAIL = "cron.listaEmail";
-    private static final String CRON_FLAGEMAIL = "cron.flagEmail";
-    private static final String SIGATP_EMAIL = "sigatp.email";
+	private static final String CRON_LISTAEMAIL = "cron.listaEmail";
+	private static final String CRON_FLAGEMAIL = "cron.flagEmail";
+	private static final String SIGATP_EMAIL = "sigatp.email";
 
 	@Override
 	public void execute() {
-		try{
+		try {
 			CustomScheduler.criaEntityManager();
-			
+
 			String executa = Parametro.buscarConfigSistemaEmVigor(CRON_EXECUTA);
-			
+
 			if (executa.toUpperCase().equals("TRUE")) {
 				verificarMissoesProgramadas();
 				verificarMissoesIniciadasMaisDe7Dias();
 				verificarRequisicoesPendentesDeAprovacao();
-			}
-			else {
+			} else {
 				Logger.getLogger(SIGATP_EMAIL).info("Serviço desligado");
 			}
 			Logger.getLogger(SIGATP_EMAIL).info("Serviço finalizado");
-		}catch(Exception e){
+		} catch (Exception e) {
 			Logger.getLogger(SIGATP_EMAIL).info("Erro ao criar Entity: " + e.getMessage());
+		} finally {
+			CustomScheduler.fecharEntityManager();
 		}
-		
 	}
 
-	private void verificarMissoesProgramadas()  {
+	private void verificarMissoesProgramadas() {
 		List<Missao> missoes = new ArrayList<Missao>();
 		String tituloEmail = "Missoes programadas nao iniciadas";
 		String tipoNotificacao = "Nao iniciada";
 
 		try {
 			Calendar calendar = Calendar.getInstance();
-			missoes = Missao.AR.find("estadoMissao = ? and dataHoraSaida < ? " +
-					"order by condutor", EstadoMissao.PROGRAMADA, calendar).fetch();
+			missoes = Missao.AR.find("estadoMissao = ? and dataHoraSaida < ? " + "order by condutor", EstadoMissao.PROGRAMADA, calendar).fetch();
 			notificarMissoes(missoes, tituloEmail, tipoNotificacao);
 
 		} catch (Exception ex) {
@@ -83,7 +81,7 @@ public class EmailNotificacao implements Task
 		}
 	}
 
-	private void verificarMissoesIniciadasMaisDe7Dias()  {
+	private void verificarMissoesIniciadasMaisDe7Dias() {
 		List<Missao> missoes = new ArrayList<Missao>();
 		String tituloEmail = "Missoes iniciadas a mais de 7 dias nao finalizadas";
 		String tipoNotificacao = "Nao finalizada";
@@ -91,8 +89,7 @@ public class EmailNotificacao implements Task
 		try {
 			Calendar calendar = Calendar.getInstance();
 			calendar.add(Calendar.DAY_OF_YEAR, -7);
-			missoes = Missao.AR.find("estadoMissao = ? and dataHoraSaida < ? " +
-					"order by condutor", EstadoMissao.INICIADA, calendar).fetch();
+			missoes = Missao.AR.find("estadoMissao = ? and dataHoraSaida < ? " + "order by condutor", EstadoMissao.INICIADA, calendar).fetch();
 			notificarMissoes(missoes, tituloEmail, tipoNotificacao);
 
 		} catch (Exception ex) {
@@ -110,13 +107,11 @@ public class EmailNotificacao implements Task
 			requisicoes = RequisicaoTransporte.listar(EstadoRequisicao.ABERTA);
 
 			if (requisicoes.size() > 0) {
-				List<RequisicaoTransporte> requisicoesFiltradas =
-						Lists.newArrayList(Iterables.filter(requisicoes, new Predicate<RequisicaoTransporte>() {
-							public boolean apply(RequisicaoTransporte requisicao) {
-								return requisicao.getDataHoraSaidaPrevista().after(calendar);
-							}
-						}
-				));
+				List<RequisicaoTransporte> requisicoesFiltradas = Lists.newArrayList(Iterables.filter(requisicoes, new Predicate<RequisicaoTransporte>() {
+					public boolean apply(RequisicaoTransporte requisicao) {
+						return requisicao.getDataHoraSaidaPrevista().after(calendar);
+					}
+				}));
 
 				if (requisicoesFiltradas.size() > 0) {
 					notificarRequisicoes(requisicoesFiltradas, tituloEmail, tipoNotificacao);
@@ -133,16 +128,14 @@ public class EmailNotificacao implements Task
 		Set<DpPessoa> setAprovador = new HashSet<DpPessoa>();
 		List<DpPessoa> aprovadores = new ArrayList<DpPessoa>();
 
-		configuracoes = TpDao.find(CpConfiguracao.class, "cpServico.idServico = ? and " +
-			       							"cpSituacaoConfiguracao.idSitConfiguracao = ? and " +
-			       							"hisDtFim is null", servico.getIdServico(), stConfiguracao).fetch();
+		configuracoes = TpDao.find(CpConfiguracao.class, "cpServico.idServico = ? and " + "cpSituacaoConfiguracao.idSitConfiguracao = ? and " + "hisDtFim is null", servico.getIdServico(),
+				stConfiguracao).fetch();
 
 		for (CpConfiguracao cpConfiguracao : configuracoes) {
 			if (cpConfiguracao.getDpPessoa() != null) {
 				setAprovador.add(cpConfiguracao.getDpPessoa());
 			} else if (cpConfiguracao.getLotacao() != null) {
-				aprovadores = DpPessoa.AR.find("lotacao.idLotacao = ? and dataFimPessoa is null ",
-						cpConfiguracao.getLotacao().getIdLotacao()).fetch();
+				aprovadores = DpPessoa.AR.find("lotacao.idLotacao = ? and dataFimPessoa is null ", cpConfiguracao.getLotacao().getIdLotacao()).fetch();
 				setAprovador.addAll(aprovadores);
 			}
 		}
@@ -150,18 +143,17 @@ public class EmailNotificacao implements Task
 		return new ArrayList<DpPessoa>(setAprovador);
 	}
 
-	private static void notificarMissoes(List<Missao> missoes, String titulo, String notificacao) throws Exception  {
+	private static void notificarMissoes(List<Missao> missoes, String titulo, String notificacao) throws Exception {
 		Condutor condutor = new Condutor();
 		HashMap<Condutor, String> dadosCondutor = new HashMap<Condutor, String>();
 
-		for(Missao item : missoes) {
+		for (Missao item : missoes) {
 			condutor = item.getCondutor();
 			String sequencia = item.getSequence() + " " + item.getId() + ",";
 
 			if (dadosCondutor.containsKey(condutor)) {
 				dadosCondutor.put(condutor, dadosCondutor.get(condutor) + sequencia);
-			}
-			else {
+			} else {
 				dadosCondutor.put(condutor, sequencia);
 			}
 		}
@@ -171,7 +163,7 @@ public class EmailNotificacao implements Task
 		}
 	}
 
-	private static void notificarRequisicoes(List<RequisicaoTransporte> requisicoes, String titulo, String notificacao) throws Exception  {
+	private static void notificarRequisicoes(List<RequisicaoTransporte> requisicoes, String titulo, String notificacao) throws Exception {
 		List<DpPessoa> lstAprovadores = new ArrayList<DpPessoa>();
 		DpPessoa aprovador = new DpPessoa();
 		HashMap<DpPessoa, String> dadosAprovador = new HashMap<DpPessoa, String>();
@@ -182,7 +174,7 @@ public class EmailNotificacao implements Task
 		DpPessoa[] arrayAprovador = lstAprovadores.toArray(new DpPessoa[lstAprovadores.size()]);
 		Comparator<DpPessoa> comp = null;
 
-		for(RequisicaoTransporte item : requisicoes) {
+		for (RequisicaoTransporte item : requisicoes) {
 			aprovador = item.getUltimoAndamento().getResponsavel();
 			int index = Arrays.binarySearch(arrayAprovador, aprovador, comp);
 			DpPessoa chave = lstAprovadores.get(index);
@@ -190,8 +182,7 @@ public class EmailNotificacao implements Task
 
 			if (dadosAprovador.containsKey(lstAprovadores.get(index))) {
 				dadosAprovador.put(chave, dadosAprovador.get(chave) + sequencia);
-			}
-			else {
+			} else {
 				dadosAprovador.put(chave, sequencia);
 			}
 		}
@@ -209,25 +200,22 @@ public class EmailNotificacao implements Task
 		String mensagem;
 
 		if (pessoa.getClass().equals(Condutor.class)) {
-			sexo = ((Condutor)pessoa).getDpPessoa().getSexo().toUpperCase();
-			nome = ((Condutor)pessoa).getNome();
+			sexo = ((Condutor) pessoa).getDpPessoa().getSexo().toUpperCase();
+			nome = ((Condutor) pessoa).getNome();
 
 			if (titulo.contains("Missoes")) {
 				parteMensagem = plural ? "as miss&otilde;es " : "a miss&atilde;o ";
 
 				if (notificacao.contains("Nao finalizada")) {
-					parteMensagem += "abaixo, caso j&aacute; tenha/m sido realizada/s, " +
-								    "precisa/m ser finalizada/s.<br>";
+					parteMensagem += "abaixo, caso j&aacute; tenha/m sido realizada/s, " + "precisa/m ser finalizada/s.<br>";
 
-				}
-				else if (notificacao.contains("Nao iniciada")) {
+				} else if (notificacao.contains("Nao iniciada")) {
 					parteMensagem += "abaixo precisa/m ser iniciada/s ou cancelada/s.<br>";
 				}
 			}
-		}
-		else if(pessoa.getClass().equals(DpPessoa.class)) {
-			sexo = ((DpPessoa)pessoa).getSexo().toUpperCase();
-			nome = ((DpPessoa)pessoa).getNomePessoa();
+		} else if (pessoa.getClass().equals(DpPessoa.class)) {
+			sexo = ((DpPessoa) pessoa).getSexo().toUpperCase();
+			nome = ((DpPessoa) pessoa).getNomePessoa();
 
 			if (titulo.contains("Requisicoes")) {
 				parteMensagem = plural ? "as requisi&ccedil;&otilde;es " : "a requisi&ccedil;&atilde;o ";
@@ -268,27 +256,25 @@ public class EmailNotificacao implements Task
 	@SuppressWarnings("unchecked")
 	private static void enviarEmail(String titulo, String notificacao, HashMap<?, String> dados) throws Exception {
 		String hostName = InetAddress.getLocalHost().getHostName();
-		final String finalMensagem = "Att.<br>M&oacute;dulo de Transportes do Siga.<br><br>" +
-		   		"Aten&ccedil;&atilde;o: esta &eacute; uma mensagem autom&aacute;tica. Por favor, n&atilde;o responda.";
+		final String finalMensagem = "Att.<br>M&oacute;dulo de Transportes do Siga.<br><br>" + "Aten&ccedil;&atilde;o: esta &eacute; uma mensagem autom&aacute;tica. Por favor, n&atilde;o responda.";
 
 		Set<Object> itensKey = (Set<Object>) dados.keySet();
 
-		for(Object item : itensKey){
+		for (Object item : itensKey) {
 			String mensagemAlterada = substituirMarcacoesMensagem(titulo, notificacao, dados.get(item), item);
 			String conteudoHTML = "<html>" + mensagemAlterada;
-    		String[] lista = dados.get(item).split(",");
+			String[] lista = dados.get(item).split(",");
 
 			for (String itemLista : lista) {
-	    		Boolean primeiraVez = true;
-				String sequence =  itemLista.substring(0, itemLista.indexOf(" "));
+				Boolean primeiraVez = true;
+				String sequence = itemLista.substring(0, itemLista.indexOf(" "));
 				String id = itemLista.substring(itemLista.indexOf(" ") + 1);
 				List<String> parametros = new ArrayList<String>();
 
 				if (titulo.contains("Missoes")) {
 					if (notificacao.contains("Nao finalizada")) {
 						parametros.add("id," + id + ",sigatp/app/missao/finalizar,Finalizar");
-					}
-					else if (notificacao.contains("Nao iniciada")) {
+					} else if (notificacao.contains("Nao iniciada")) {
 						parametros.add("id," + id + ",sigatp/app/missao/iniciar,Iniciar");
 						parametros.add("id," + id + ",sigatp/app/missao/cancelar,Cancelar");
 					}
@@ -304,11 +290,9 @@ public class EmailNotificacao implements Task
 				for (String parametro : parametros) {
 					String[] itens = parametro.split(",");
 
-					String caminhoUrl = "/"+itens[2]+"/"+itens[1];
+					String caminhoUrl = "/" + itens[2] + "/" + itens[1];
 
-					conteudoHTML += (primeiraVez ? "<p>" + sequence : "") + espacosHtml +
-								    "<a href='" + "http://" + hostName + caminhoUrl + "'>" + itens[3] + "</a>" +
-								    espacosHtml;
+					conteudoHTML += (primeiraVez ? "<p>" + sequence : "") + espacosHtml + "<a href='" + "http://" + hostName + caminhoUrl + "'>" + itens[3] + "</a>" + espacosHtml;
 					primeiraVez = false;
 				}
 			}
@@ -320,18 +304,16 @@ public class EmailNotificacao implements Task
 			String destinatario[];
 			String flagEmail = Parametro.buscarConfigSistemaEmVigor(CRON_FLAGEMAIL);
 
-			//TODO Voltar condição para TRUE
+			// TODO Voltar condição para TRUE
 			if (!flagEmail.toUpperCase().equals("FALSE")) {
 				if (item.getClass().equals(Condutor.class)) {
-					email = ((Condutor)item).getDpPessoa().getEmailPessoa();
-				}
-				else if(item.getClass().equals(DpPessoa.class)) {
-					email = ((DpPessoa)item).getEmailPessoa();
+					email = ((Condutor) item).getDpPessoa().getEmailPessoa();
+				} else if (item.getClass().equals(DpPessoa.class)) {
+					email = ((DpPessoa) item).getEmailPessoa();
 				}
 				destinatario = new String[1];
 				destinatario[0] = email;
-			}
-			else {
+			} else {
 				email = Parametro.buscarConfigSistemaEmVigor(CRON_LISTAEMAIL);
 				destinatario = email.split(",");
 			}
@@ -343,7 +325,7 @@ public class EmailNotificacao implements Task
 			SimpleDateFormat fr = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
 			Calendar calendar = Calendar.getInstance();
 			Logger.getLogger(SIGATP_EMAIL).info(fr.format(calendar.getTime()) + " - Email enviado para " + email + ", assunto: " + assunto);
-			
+
 		}
 	}
 }

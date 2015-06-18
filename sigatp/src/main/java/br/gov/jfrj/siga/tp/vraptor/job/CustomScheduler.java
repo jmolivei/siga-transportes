@@ -7,55 +7,58 @@ import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
 
 import org.hibernate.Session;
-import org.hibernate.cfg.Configuration;
 
 import br.com.caelum.vraptor.ioc.ApplicationScoped;
 import br.com.caelum.vraptor.tasks.helpers.TriggerBuilder;
 import br.com.caelum.vraptor.tasks.scheduler.Scheduled;
 import br.com.caelum.vraptor.tasks.scheduler.TaskScheduler;
-import br.gov.jfrj.siga.base.auditoria.hibernate.auditor.SigaAuditor;
-import br.gov.jfrj.siga.base.auditoria.hibernate.auditor.SigaHibernateChamadaAuditor;
-import br.gov.jfrj.siga.dp.dao.CpDao;
 import br.gov.jfrj.siga.model.ContextoPersistencia;
 import br.gov.jfrj.siga.model.dao.HibernateUtil;
 import br.gov.jfrj.siga.tp.model.Parametro;
 import br.gov.jfrj.siga.tp.model.TpDao;
 
 @ApplicationScoped
-//@Scheduled()
+@Scheduled(fixedRate = 1)
 public class CustomScheduler {
-	
-    private static final String CRON_EMAIL = "cron.inicio";
-    private static final String CRON_WORKFLOW = "cron.iniciow";
+
+	private static final String CRON_EMAIL = "cron.inicio";
+	private static final String CRON_WORKFLOW = "cron.iniciow";
 	private static final String DATASOURCE = "java:/jboss/datasources/SigaCpDS";
-    
-	public CustomScheduler(TaskScheduler scheduler) 
-	{
-		try{
+
+	public CustomScheduler(TaskScheduler scheduler) {
+		try {
 			criaEntityManager();
-			
-	        String cronWorkFlow = Parametro.buscarConfigSistemaEmVigor(CRON_WORKFLOW);
-	        String cronEmail = Parametro.buscarConfigSistemaEmVigor(CRON_EMAIL);
-	        	        
-	        //TODO mudar para valores de cron recuperados anteriormente
-	        //scheduler.schedule(WorkFlowNotificacao.class,new TriggerBuilder().cron("0 0/1 8-19 1/1 * ? *"), "WorkFlowNotificacao");
-	        //scheduler.schedule(EmailNotificacao.class,new TriggerBuilder().cron(cronEmail), "EmailNotificacao");
-		}catch(Exception e){
+
+			String cronWorkFlow = Parametro.buscarConfigSistemaEmVigor(CRON_WORKFLOW);
+			String cronEmail = Parametro.buscarConfigSistemaEmVigor(CRON_EMAIL);
+
+			// TODO mudar para valores de cron recuperados anteriormente
+			scheduler.schedule(WorkFlowNotificacao.class, new TriggerBuilder().cron("0 0/1 8-19 1/1 * ? *"), "WorkFlowNotificacao");
+			// scheduler.schedule(EmailNotificacao.class,new TriggerBuilder().cron(cronEmail), "EmailNotificacao");
+		} catch (Exception e) {
 			Logger.getLogger("custom.schedule").info("Erro no Agendador de tarefas: " + e.getMessage());
+		} finally {
+			fecharEntityManager();
 		}
-    }
-    
-    public static void criaEntityManager() throws Exception
-    {
+	}
+
+	public static void criaEntityManager() {
 		EntityManagerFactory factory = Persistence.createEntityManagerFactory("default");
-		EntityManager em =  factory.createEntityManager();
-		ContextoPersistencia.setEntityManager(em);
-		
+		EntityManager em = factory.createEntityManager();
+		Session session = (Session) em.getDelegate();
+
 		TpDao.freeInstance();
-		TpDao.getInstance((Session) em.getDelegate(), ((Session) em.getDelegate()).getSessionFactory().openStatelessSession());
-		
-		Configuration cfg = CpDao.criarHibernateCfg(DATASOURCE);
-		HibernateUtil.configurarHibernate(cfg);
-		SigaAuditor.configuraAuditoria(new SigaHibernateChamadaAuditor(cfg));
-    }
+		TpDao.getInstance(session, session.getSessionFactory().openStatelessSession());
+
+		ContextoPersistencia.setEntityManager(em);
+		HibernateUtil.setSessao(session);
+	}
+
+	public static void fecharEntityManager() {
+		EntityManager em = ContextoPersistencia.em();
+		if (em != null && em.isOpen()) {
+			em.close();
+		}
+		TpDao.freeInstance();
+	}
 }
