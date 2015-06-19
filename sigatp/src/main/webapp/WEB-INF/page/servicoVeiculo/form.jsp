@@ -135,7 +135,7 @@
 	}
 </script>
 
-<form id="frmServicos" method="post" enctype="multipart/form-data">
+<form id="frmServicos" method="post" action="${linkTo[ServicoVeiculoController].salvar}" enctype="multipart/form-data">
 <input type="hidden" id="servicoVeiculoId" name="servico" value="${servico.id}" />
 <input type="hidden" name="servico.dataHora" value="<fmt:formatDate pattern="dd/MM/yyyy HH:mm" value="${servico.dataHora.time}" />" class="dataHora" />
 	<div class="gt-content-box gt-form clearfix" >
@@ -216,7 +216,7 @@
 	</div>
 	<span><fmt:message key="views.erro.preenchimentoObrigatorio"></fmt:message></span> 
 	<div class="gt-table-buttons">	
-		<input id="btnSalvar" type="button" value="<fmt:message key="views.botoes.salvar"/>" onClick="submitForm('${linkTo[ServicoVeiculoController].salvar}')" class="gt-btn-medium gt-btn-left" />
+		<input id="btnSalvar" type="button" value="<fmt:message key="views.botoes.salvar"/>"class="gt-btn-medium gt-btn-left" />
 		<input id="btnCancelar" type="button" value="<fmt:message key="views.botoes.cancelar"/>" onClick="javascript:location.href='${linkTo[ServicoVeiculoController].listar}'" class="gt-btn-medium gt-btn-left" />
 	</div>
 </form>
