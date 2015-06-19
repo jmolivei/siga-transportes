@@ -27,7 +27,7 @@
         	</c:if>
 
         	<label>Data de Inclus&atilde;o:</label>
-        	<h5><fmt:formatDate pattern="dd/MM/yyyy" value="${requisicaoTransporte.dataHora.time}"/></h5>
+        	<h5><fmt:formatDate pattern="dd/MM/yyyy HH:mm" value="${requisicaoTransporte.dataHora.time}"/></h5>
 		</c:if>
 		<div class="coluna">
 	       	<label class="obrigatorio">Tipo</label>
