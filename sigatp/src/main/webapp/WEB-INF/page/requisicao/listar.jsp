@@ -27,7 +27,7 @@
     	   });
 
 		$('#missao_incluir').click( function() {
-			if($('form').serialize().indexOf("req=") != -1) {
+			if($('form').serialize().indexOf("req") != -1) {
 				$('form').submit();
 			} else {
 				alert('Por favor, selecione ao menos uma requisi&ccedil;&atilde;o.');
@@ -35,13 +35,13 @@
 		});
 
        	$('#missao_inicioRapido').click( function() {
-			if($('form').serialize().indexOf("req=") != -1) {
+			if($('form').serialize().indexOf("req") != -1) {
 				var formulario = document.getElementById('formIncluirMissao');
 				var destino = formulario.action;
-				formulario.action = destino.replace("incluircomrequisicoes", "incluiriniciorapido"); // /sigatp/missoes/incluircomrequisicoes
+				formulario.action = destino.replace("incluirComRequisicoes", "incluirInicioRapido"); // /sigatp/missoes/incluircomrequisicoes
 				formulario.submit();
 			} else {
-				alert('Por favor, selecione ao menos uma requisi&ccedil;&atilde;o.');
+				alert('Por favor, selecione ao menos uma requisi\u00E7\u00e3o.');
 			}
 		});
 
@@ -125,7 +125,7 @@
 				</c:when>
 			</c:choose>
 
-			<form id="formIncluirMissao" action="${linkTo[MissaoController].incluirComRequisicoes}" enctype="multipart/form-data">
+			<form id="formIncluirMissao" method="post" action="${linkTo[MissaoController].incluirComRequisicoes}" enctype="multipart/form-data">
 				<jsp:include page="menuListar.jsp"></jsp:include>
 				<c:choose>
 					<c:when test="${requisicoesTransporte.size() > 0}">
@@ -143,7 +143,7 @@
 									</tr>
 								</thead>
 								<tbody>
-									<c:forEach items="${requisicoesTransporte}" var="requisicaoTransporte">
+									<c:forEach items="${requisicoesTransporte}" var="requisicaoTransporte" varStatus="idx">
 									   	<tr id ="row_${requisicaoTransporte.id}">
 						 			   	   	<td><fmt:formatDate pattern="dd/MM/yyyy HH:mm" value="${requisicaoTransporte.dataHoraSaidaPrevista.time}" /></td>
 								    		<td>
@@ -191,7 +191,7 @@
 								    		</td>
 								    		<td class="missao" valign="middle" colspan="2">
 								    			<c:if test="${requisicaoTransporte.podeAgendar}">
-								    				<input type="checkbox" name="req" value="${requisicaoTransporte.id}" class="missao reqs">
+								    				<input type="checkbox" name="req[${idx.count - 1}]" value="${requisicaoTransporte.id}" class="missao reqs">
 								    			</c:if>
 								    		</td>
 										</tr>

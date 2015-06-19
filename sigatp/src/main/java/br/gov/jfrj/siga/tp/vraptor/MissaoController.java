@@ -472,16 +472,21 @@ public class MissaoController extends TpController {
 	@RoleAdminMissaoComplexo
 	@Path("/iniciarMissaoRapido")
 	public void iniciarMissaoRapido(@Valid Missao missao, List<RequisicaoTransporte> requisicoesTransporteAlt) throws Exception {
-		DpPessoa dpPessoa = getCadastrante();
 		Template template = Template.INICIORAPIDO;
+
+		if (requisicoesTransporteAlt == null || requisicoesTransporteAlt.isEmpty())
+		    validator.add(new I18nMessage(REQUISICOES_TRANSPORTE_STR, MISSAO_REQUISICOES_TRANSPORTE_REQUIRED));
+		else
+		    missao.setRequisicoesTransporte(requisicoesTransporteAlt);
+
+		error(missao.getOdometroSaidaEmKm().equals(0.0), MISSAO_STR, "veiculo.odometroEmKmAtual.zero.validation");
+		redirecionarSeErroAoSalvar(missao, template);
+
 		missao.setCpOrgaoUsuario(getTitular().getOrgaoUsuario());
 		missao.setSequence(missao.getCpOrgaoUsuario());
+		DpPessoa dpPessoa = getCadastrante();
 		missao.setResponsavel(dpPessoa);
 
-		if (requisicoesTransporteAlt == null || requisicoesTransporteAlt.isEmpty()) {
-			missao.setRequisicoesTransporte(requisicoesTransporteAlt);
-			validator.add(new I18nMessage(REQUISICOES_TRANSPORTE_STR, MISSAO_REQUISICOES_TRANSPORTE_REQUIRED));
-		}
 
 		boolean temRequisicaoDeServico = validarRequisicoesDeServico(missao, template);
 
@@ -668,22 +673,35 @@ public class MissaoController extends TpController {
 	@RoleAdminMissao
 	@RoleAdminMissaoComplexo
 	@Path("/incluirInicioRapido")
-	public void incluirInicioRapido(Long[] req) throws Exception {
+	public void incluirInicioRapido(List<Long> req) throws Exception {
 		redirecionarCasoRequisicaoNula(req);
 
 		Missao missao = new Missao();
 		missao.setInicioRapido(PerguntaSimNao.SIM);
 		missao.setRequisicoesTransporte(new ArrayList<RequisicaoTransporte>());
-		for (int cont = 0; cont < req.length; cont++)
-			missao.getRequisicoesTransporte().add((RequisicaoTransporte) RequisicaoTransporte.AR.findById(req[cont]));
+		for (Long id : req)
+			missao.getRequisicoesTransporte().add((RequisicaoTransporte) RequisicaoTransporte.AR.findById(id));
 
 		removerRequisicoesDoRenderArgs(missao.getRequisicoesTransporte());
 
-		renderTemplate(Template.INICIORAPIDO, missao);
+		result.forwardTo(this).inicioRapido(missao);
 	}
 
-	private void redirecionarCasoRequisicaoNula(Long[] req) throws Exception {
-		if (req == null)
+	@RoleAdmin
+    @RoleAdminMissao
+    @RoleAdminMissaoComplexo
+    @Path("/inicioRapido")
+	public void inicioRapido(Missao missao) {
+	    result.include(MISSAO_STR, missao);
+	    result.include("mostrarBotoesIniciarRapido", true);
+	    result.include("mostrarDadosProgramada", true);
+	    result.include("mostrarDadosIniciada", true);
+
+	    condicaoComponentesVeiculo();
+	}
+
+	private void redirecionarCasoRequisicaoNula(List<Long> req) throws Exception {
+		if (req.isEmpty())
 			result.redirectTo(this).incluir();
 	}
 
@@ -891,15 +909,16 @@ public class MissaoController extends TpController {
 	@RoleAdminMissao
 	@RoleAdminMissaoComplexo
 	@Path("/incluirComRequisicoes")
-	public void incluirComRequisicoes(Long[] req) throws Exception {
+	public void incluirComRequisicoes(List<Long> req) throws Exception {
+
 		redirecionarCasoRequisicaoNula(req);
 
 		Missao missao = new Missao();
 		missao.setInicioRapido(PerguntaSimNao.NAO);
 		missao.setRequisicoesTransporte(new ArrayList<RequisicaoTransporte>());
 
-		for (int cont = 0; cont < req.length; cont++)
-			missao.getRequisicoesTransporte().add((RequisicaoTransporte) RequisicaoTransporte.AR.findById(req[cont]));
+		for (Long id : req)
+			missao.getRequisicoesTransporte().add((RequisicaoTransporte) RequisicaoTransporte.AR.findById(id));
 
 		removerRequisicoesDoRenderArgs(missao.getRequisicoesTransporte());
 		result.include(MISSAO_STR, missao);
@@ -912,7 +931,7 @@ public class MissaoController extends TpController {
 	@RoleAdminMissaoComplexo
 	@Path("/incluir")
 	public void incluir() throws Exception {
-		Missao missao = new Missao();
+		Missao missao = getMissao();
 		missao.setInicioRapido(PerguntaSimNao.NAO);
 		MenuMontador.instance(result, autorizacaoGI).recuperarMenuMissao(missao.getId(), missao.getEstadoMissao());
 
@@ -921,6 +940,10 @@ public class MissaoController extends TpController {
 		result.include(MISSAO_STR, missao);
 		result.include(MOSTRAR_BOTOES_EDITAR, true);
 	}
+
+    private Missao getMissao() {
+        return null != getRequest().getAttribute(MISSAO_STR) ? (Missao) getRequest().getAttribute(MISSAO_STR) : new Missao();
+    }
 
 	private void removerRequisicoesDoRenderArgs(List<RequisicaoTransporte> requisicoesTransporte) {
 		@SuppressWarnings("unchecked")
@@ -1069,7 +1092,7 @@ public class MissaoController extends TpController {
 				break;
 
 			case INICIORAPIDO:
-			    validator.onErrorUse(Results.page()).of(MissaoController.class).iniciarMissaoRapido(missao, null);
+			    validator.onErrorUse(Results.logic()).forwardTo(MissaoController.class).inicioRapido(missao);
 				break;
 
 			case CANCELAR:
