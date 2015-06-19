@@ -30,7 +30,7 @@
 			if($('form').serialize().indexOf("req") != -1) {
 				$('form').submit();
 			} else {
-				alert('Por favor, selecione ao menos uma requisi&ccedil;&atilde;o.');
+				alert('Por favor, selecione ao menos uma requisi\u00E7\u00e3o.');
 			}
 		});
 
