@@ -10,7 +10,6 @@ import javax.persistence.EntityManager;
 import javax.servlet.http.HttpServletRequest;
 
 import org.codehaus.jackson.map.ObjectMapper;
-import org.codehaus.jackson.map.ObjectWriter;
 import org.codehaus.jackson.type.TypeReference;
 
 import br.com.caelum.vraptor.Path;
@@ -51,10 +50,6 @@ public class RequisicaoRestController extends TpController {
 
             if (req.getRequisicaoTransporte() == null)
                 throw new NullPointerException(MessagesBundle.getMessage(REQUISICOES_REST_REQ_NULL_EXCEPTION));
-
-            ObjectWriter ow = new ObjectMapper().writer().withDefaultPrettyPrinter();
-            String json = ow.writeValueAsString(req);
-            result.use(Results.http()).body(json);
         } catch (Exception e) {
             throw new RestControllerException(e);
         }
@@ -67,12 +62,7 @@ public class RequisicaoRestController extends TpController {
 
             if (req.getRequisicaoTransporte() == null)
                 throw new NullPointerException(MessagesBundle.getMessage(REQUISICOES_REST_REQ_NULL_EXCEPTION));
-
-            ObjectWriter ow = new ObjectMapper().writer().withDefaultPrettyPrinter();
-
-            String json = ow.writeValueAsString(req);
-
-            result.use(Results.http()).body(json);
+            result.use(Results.json()).from(req.getRequisicaoTransporte()).serialize();
         } catch (Exception e) {
             throw new RestControllerException(e);
         }
