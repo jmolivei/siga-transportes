@@ -225,8 +225,6 @@ public class MissaoController extends TpController {
 		else
 		    missao.setRequisicoesTransporte(requisicoesTransporteAlt);
 
-		validarOdometro(missao);
-
 		redirecionarSeErroAoSalvar(missao, template);
 		checarCategoriaCNHVeiculoCondutor(missao);
 
