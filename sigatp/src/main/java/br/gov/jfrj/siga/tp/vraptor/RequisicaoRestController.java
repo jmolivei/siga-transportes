@@ -50,6 +50,8 @@ public class RequisicaoRestController extends TpController {
 
             if (req.getRequisicaoTransporte() == null)
                 throw new NullPointerException(MessagesBundle.getMessage(REQUISICOES_REST_REQ_NULL_EXCEPTION));
+            
+            result.use(Results.json()).from(req.getRequisicaoTransporte()).serialize();
         } catch (Exception e) {
             throw new RestControllerException(e);
         }
@@ -62,6 +64,7 @@ public class RequisicaoRestController extends TpController {
 
             if (req.getRequisicaoTransporte() == null)
                 throw new NullPointerException(MessagesBundle.getMessage(REQUISICOES_REST_REQ_NULL_EXCEPTION));
+            
             result.use(Results.json()).from(req.getRequisicaoTransporte()).serialize();
         } catch (Exception e) {
             throw new RestControllerException(e);
