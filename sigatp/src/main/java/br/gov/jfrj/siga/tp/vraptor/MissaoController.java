@@ -1106,7 +1106,7 @@ public class MissaoController extends TpController {
 				break;
 
 			case FINALIZAR:
-                validator.onErrorUse(Results.page()).of(MissaoController.class).finalizar(missao.getId());
+                validator.onErrorUse(Results.logic()).forwardTo(MissaoController.class).finalizar(missao.getId());
                 break;
 
 			case INICIAR:
