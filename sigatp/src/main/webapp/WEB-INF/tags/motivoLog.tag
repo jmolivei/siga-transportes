@@ -24,12 +24,14 @@
 					text: "Confirmar",
 					"class":"gt-table-buttons",
 					click: function() {
+						console.log($(this).find('button'));
 						var $formulario = $("#formulario");
 						var input = $("<input>")
 			               .attr("type", "hidden")
 			               .attr("name", "motivoLog").val($("#txtMotivoLog").val());
 			            if(input.val() === "")
 				            return false;
+			            $('.ui-dialog-buttonset').find('button').attr('disabled', 'disabled');
 						$formulario.append($(input));
 				        var $link = $(this).data("link");
 				        $formulario.attr('action',$link);
