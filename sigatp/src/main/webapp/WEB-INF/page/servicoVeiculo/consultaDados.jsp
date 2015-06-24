@@ -36,7 +36,7 @@
 		    <c:if test="${servico.situacaoServico.equals('REALIZADO')}">
 		 		<tr>
 		        	<th width="14%">Data Hora Fim:</span></th>
-		        	<fmt:formatDate pattern="dd/MM/yyyy HH:mm" value="${servico.dataHoraFim.time}" />
+		        	<td><fmt:formatDate pattern="dd/MM/yyyy HH:mm" value="${servico.dataHoraFim.time}" /></td>
 		        </tr>
 		    </c:if>
 
