@@ -342,7 +342,7 @@ public class MissaoController extends TpController {
 	@Path("/finalizar/{id}")
 	public void finalizar(Long id) throws Exception {
 		Missao missao = Missao.AR.findById(id);
-		montarDadosParaAMissao(missao);
+		montarDadosSeDataHoraSaidaNotNull(missao);
 		checarCondutorPeloUsuarioAutenticado(missao);
 		Integer i = 0;
 		RequisicaoVsEstado[] requisicoesVsEstados = new RequisicaoVsEstado[missao.getRequisicoesTransporte().size()];
@@ -529,7 +529,7 @@ public class MissaoController extends TpController {
 	@Path("/iniciar/{id}")
 	public void iniciar(Long id) throws Exception {
 		Missao missao = Missao.AR.findById(id);
-		montarDadosParaAMissao(missao);
+		montarDadosSeDataHoraSaidaNotNull(missao);
 		checarCondutorPeloUsuarioAutenticado(missao);
 		checarComplexo(missao.getCpComplexo().getIdComplexo());
 
@@ -716,7 +716,7 @@ public class MissaoController extends TpController {
 	@Path("/editar/{id}")
 	public void editar(Long id) throws Exception {
 		Missao missao = Missao.AR.findById(id);
-		montarDadosParaAMissao(missao);
+		montarDadosSeDataHoraSaidaNotNull(missao);
 		checarCondutorPeloUsuarioAutenticado(missao);
 		checarComplexo(missao.getCpComplexo().getIdComplexo());
 		MenuMontador.instance(result, autorizacaoGI).recuperarMenuMissao(id, missao.getEstadoMissao());
@@ -729,6 +729,11 @@ public class MissaoController extends TpController {
 
 		consultarEstadoDaMissao(missao);
 	}
+
+    private void montarDadosSeDataHoraSaidaNotNull(Missao missao) throws Exception {
+        if(null != missao.getDataHoraSaida())
+		    montarDadosParaAMissao(missao);
+    }
 
     private void consultarEstadoDaMissao(Missao missao) {
         if("INICIADA".equals(missao.getEstadoMissao().getDescricao()))
@@ -765,7 +770,7 @@ public class MissaoController extends TpController {
 	public void ler(Long id) throws Exception {
 		Missao missao = Missao.AR.findById(id);
 		montarDadosParaAMissao(missao);
-		MenuMontador.instance(result).recuperarMenuMissao(id, missao.getEstadoMissao());
+		MenuMontador.instance(result, autorizacaoGI).recuperarMenuMissao(id, missao.getEstadoMissao());
 		checarCondutorPeloUsuarioAutenticado(missao);
 		checarComplexo(missao.getCpComplexo().getIdComplexo());
 	}
