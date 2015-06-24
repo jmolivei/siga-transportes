@@ -471,7 +471,7 @@ public class MissaoController extends TpController {
 	@RoleAdminMissao
 	@RoleAdminMissaoComplexo
 	@Path("/iniciarMissaoRapido")
-	public void iniciarMissaoRapido(@Valid Missao missao, List<RequisicaoTransporte> requisicoesTransporteAlt) throws Exception {
+	public void iniciarMissaoRapido(Missao missao, List<RequisicaoTransporte> requisicoesTransporteAlt) throws Exception {
 		Template template = Template.INICIORAPIDO;
 
 		if (requisicoesTransporteAlt == null || requisicoesTransporteAlt.isEmpty())
@@ -479,7 +479,7 @@ public class MissaoController extends TpController {
 		else
 		    missao.setRequisicoesTransporte(requisicoesTransporteAlt);
 
-		error(missao.getOdometroSaidaEmKm().equals(0.0), MISSAO_STR, "veiculo.odometroEmKmAtual.zero.validation");
+		validarOdometro(missao);
 		redirecionarSeErroAoSalvar(missao, template);
 
 		missao.setCpOrgaoUsuario(getTitular().getOrgaoUsuario());
@@ -517,6 +517,10 @@ public class MissaoController extends TpController {
 
 		result.redirectTo(this).buscarPelaSequence(false, missaoPronta.getSequence());
 	}
+
+    private void validarOdometro(Missao missao) {
+        error(missao.getOdometroSaidaEmKm().equals(0.0), MISSAO_STR, "veiculo.odometroEmKmAtual.zero.validation");
+    }
 
 	@RoleAdmin
 	@RoleAgente
@@ -1100,7 +1104,7 @@ public class MissaoController extends TpController {
 				break;
 
 			case FINALIZAR:
-                validator.onErrorUse(Results.page()).of(MissaoController.class).finalizar(missao.getId());
+                validator.onErrorUse(Results.logic()).forwardTo(MissaoController.class).finalizar(missao.getId());
                 break;
 
 			case INICIAR:
