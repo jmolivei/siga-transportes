@@ -5,7 +5,6 @@ import java.util.Calendar;
 import java.util.Iterator;
 import java.util.List;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -21,6 +20,7 @@ import org.hibernate.envers.Audited;
 
 import br.gov.jfrj.siga.feature.converter.entity.vraptor.ConvertableEntity;
 import br.gov.jfrj.siga.model.ActiveRecord;
+import br.gov.jfrj.siga.model.ContextoPersistencia;
 import br.gov.jfrj.siga.tp.validation.annotation.Data;
 
 @SuppressWarnings("serial")
@@ -36,7 +36,7 @@ public class Plantao extends TpModel implements ConvertableEntity, Comparable<Pl
     @SequenceGenerator(name = "hibernate_sequence_generator", sequenceName = "SIGATP.hibernate_sequence")
     private Long id;
 
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne
     @NotNull
     private Condutor condutor;
 
@@ -226,10 +226,13 @@ public class Plantao extends TpModel implements ConvertableEntity, Comparable<Pl
 
     public static List<Plantao> buscarTodosPorReferencia(String referencia) {
         List<Plantao> retorno;
-
         retorno = Plantao.AR.find("referencia", referencia).fetch();
-
         return retorno;
+    }
+    
+    @Override
+    public void delete() {
+        ContextoPersistencia.em().remove(this);
     }
 
 }
