@@ -159,14 +159,21 @@ public class RelatorioController extends TpController {
                 } else {
                     dataHoraFimTemp = recuperarDataEHora(dataHoraPesquisa, HORA_FINAL_EXPEDIENTE, MINUTO_FINAL_EXPEDIENTE, SEGUNDO_FINAL_EXPEDIENTE);
                 }
+                
+                dataParaJavascript(dataHoraInicioTemp);
 
                 registrosRetorno.append(delim);
                 registrosRetorno.append("[ \'" + "Escalas" + SEPARADOR_VIRGULA + escala.getCondutor().getNome() + "\', new Date(" + formatoData1.format(dataHoraInicioTemp.getTime()) + "), new Date(");
-                registrosRetorno.append(formatoData1.format(dataHoraFimTemp.getTime()) + ") ]");
+                registrosRetorno.append(formatoData1.format(dataParaJavascript(dataHoraFimTemp)) + ") ]");
                 delim = ", ";
             }
         }
         return delim;
+    }
+
+    private Date dataParaJavascript(Calendar dataHoraInicioTemp) {
+        dataHoraInicioTemp.add(Calendar.MONTH, -1);
+        return dataHoraInicioTemp.getTime();
     }
 
     @Path("/listarAgendaPorVeiculo/{idVeiculo}/{dataPesquisa*}")
@@ -253,19 +260,19 @@ public class RelatorioController extends TpController {
             registrosGerados.append("[ \'" + "Afastamentos" + SEPARADOR_VIRGULA + afastamento.getCondutor().getNome() + "\', new Date(");
 
             if (mesmaDataEApos(afastamento.getDataHoraInicio(), dataHoraPesquisa)) {
-                registrosGerados.append(formatoDataYYYYMDHMS.format(afastamento.getDataHoraInicio().getTime()) + "), new Date(");
+                registrosGerados.append(formatoDataYYYYMDHMS.format(dataParaJavascript(afastamento.getDataHoraInicio())) + "), new Date(");
             } else {
                 Calendar dataHora = recuperarDataEHora(dataHoraPesquisa, HORA_INICIAL_DIA, MINUTO_INICIAL_DIA, SEGUNDO_INICIAL_DIA);
-                registrosGerados.append(formatoDataYYYYMDHMS.format(dataHora.getTime()) + "), new Date(");
+                registrosGerados.append(formatoDataYYYYMDHMS.format(dataParaJavascript(dataHora)) + "), new Date(");
             }
 
             if (mesmaDataEApos(afastamento.getDataHoraFim(), dataHoraPesquisa)) {
-                registrosGerados.append(formatoDataYYYYMDHMS.format(afastamento.getDataHoraFim().getTime()) + ") ]");
+                registrosGerados.append(formatoDataYYYYMDHMS.format(dataParaJavascript(afastamento.getDataHoraFim())) + ") ]");
                 delim = ", ";
                 continue;
             }
             Calendar dataHora = recuperarDataEHora(dataHoraPesquisa, HORA_FINAL_EXPEDIENTE, MINUTO_FINAL_EXPEDIENTE, SEGUNDO_FINAL_EXPEDIENTE);
-            registrosGerados.append(formatoDataYYYYMDHMS.format(dataHora.getTime()) + ") ]");
+            registrosGerados.append(formatoDataYYYYMDHMS.format(dataParaJavascript(dataHora)) + ") ]");
             delim = ", ";
         }
         return delim;
@@ -278,19 +285,19 @@ public class RelatorioController extends TpController {
             registrosGerados.append("[ \'" + "Plantoes" + SEPARADOR_VIRGULA + plantao.getCondutor().getNome() + "\', new Date(");
 
             if (mesmaDataEApos(plantao.getDataHoraInicio(), dataHoraPesquisa)) {
-                registrosGerados.append(formatoDataYYYYMDHMS.format(plantao.getDataHoraInicio().getTime()) + "), new Date(");
+                registrosGerados.append(formatoDataYYYYMDHMS.format(dataParaJavascript(plantao.getDataHoraInicio())) + "), new Date(");
             } else {
                 Calendar dataHora = recuperarDataEHora(dataHoraPesquisa, HORA_INICIAL_DIA, MINUTO_INICIAL_DIA, SEGUNDO_INICIAL_DIA);
-                registrosGerados.append(formatoDataYYYYMDHMS.format(dataHora.getTime()) + "), new Date(");
+                registrosGerados.append(formatoDataYYYYMDHMS.format(dataParaJavascript(dataHora)) + "), new Date(");
             }
 
             if (mesmaDataEApos(plantao.getDataHoraFim(), dataHoraPesquisa)) {
-                registrosGerados.append(formatoDataYYYYMDHMS.format(plantao.getDataHoraFim().getTime()) + ") ]");
+                registrosGerados.append(formatoDataYYYYMDHMS.format(dataParaJavascript(plantao.getDataHoraFim())) + ") ]");
                 delim = ", ";
                 continue;
             }
             Calendar dataHora = recuperarDataEHora(dataHoraPesquisa, HORA_FINAL_EXPEDIENTE, MINUTO_FINAL_EXPEDIENTE, SEGUNDO_FINAL_EXPEDIENTE);
-            registrosGerados.append(formatoDataYYYYMDHMS.format(dataHora.getTime()) + ") ]");
+            registrosGerados.append(formatoDataYYYYMDHMS.format(dataParaJavascript(dataHora)) + ") ]");
             delim = ", ";
         }
         return delim;
@@ -304,19 +311,19 @@ public class RelatorioController extends TpController {
             registrosGerados.append("[ \'" + "Servicos" + SEPARADOR_VIRGULA + servicoVeiculo.getVeiculo().getPlaca() + "\', new Date(");
 
             if (mesmaDataEApos(servicoVeiculo.getDataHoraInicio(), dataHoraPesquisa)) {
-                registrosGerados.append(formatoDataYYYYMDHMS.format(servicoVeiculo.getDataHoraInicio().getTime()) + "), new Date(");
+                registrosGerados.append(formatoDataYYYYMDHMS.format(dataParaJavascript(servicoVeiculo.getDataHoraInicio())) + "), new Date(");
             } else {
                 Calendar dataHora = recuperarDataEHora(dataHoraPesquisa, HORA_INICIAL_DIA, MINUTO_INICIAL_DIA, SEGUNDO_INICIAL_DIA);
-                registrosGerados.append(formatoDataYYYYMDHMS.format(dataHora.getTime()) + "), new Date(");
+                registrosGerados.append(formatoDataYYYYMDHMS.format(dataParaJavascript(dataHora)) + "), new Date(");
             }
 
             if (mesmaDataEApos(servicoVeiculo.getDataHoraFim(), dataHoraPesquisa)) {
-                registrosGerados.append(formatoDataYYYYMDHMS.format(servicoVeiculo.getDataHoraFim().getTime()) + ") ]");
+                registrosGerados.append(formatoDataYYYYMDHMS.format(dataParaJavascript(servicoVeiculo.getDataHoraFim())) + ") ]");
                 delim = ", ";
                 continue;
             }
             Calendar dataHora = recuperarDataEHora(dataHoraPesquisa, HORA_FINAL_EXPEDIENTE, MINUTO_FINAL_EXPEDIENTE, SEGUNDO_FINAL_EXPEDIENTE);
-            registrosGerados.append(formatoDataYYYYMDHMS.format(dataHora.getTime()) + ") ]");
+            registrosGerados.append(formatoDataYYYYMDHMS.format(dataParaJavascript(dataHora)) + ") ]");
             delim = ", ";
         }
         return delim;
@@ -337,20 +344,20 @@ public class RelatorioController extends TpController {
             registrosGerados.append("[ \'" + "Missoes" + SEPARADOR_VIRGULA + label + "\', new Date(");
 
             if (mesmaDataEApos(missao.getDataHoraSaida(), dataHoraPesquisa)) {
-                registrosGerados.append(formatoDataYYYYMDHMS.format(missao.getDataHoraSaida().getTime()) + "), new Date(");
+                registrosGerados.append(formatoDataYYYYMDHMS.format(dataParaJavascript(missao.getDataHoraSaida())) + "), new Date(");
             } else {
                 Calendar dataHora = recuperarDataEHora(dataHoraPesquisa, HORA_INICIAL_DIA, MINUTO_INICIAL_DIA, SEGUNDO_INICIAL_DIA);
-                registrosGerados.append(formatoDataYYYYMDHMS.format(dataHora.getTime()) + "), new Date(");
+                registrosGerados.append(formatoDataYYYYMDHMS.format(dataParaJavascript(dataHora)) + "), new Date(");
 
             }
 
             if (mesmaDataEApos(missao.getDataHoraRetorno(), dataHoraPesquisa)) {
-                registrosGerados.append(formatoDataYYYYMDHMS.format(missao.getDataHoraRetorno().getTime()) + ") ]");
+                registrosGerados.append(formatoDataYYYYMDHMS.format(dataParaJavascript(missao.getDataHoraRetorno())) + ") ]");
                 delim = ", ";
                 continue;
             }
             Calendar dataHora = recuperarDataEHora(dataHoraPesquisa, HORA_FINAL_EXPEDIENTE, MINUTO_FINAL_EXPEDIENTE, SEGUNDO_FINAL_EXPEDIENTE);
-            registrosGerados.append(formatoDataYYYYMDHMS.format(dataHora.getTime()) + ") ]");
+            registrosGerados.append(formatoDataYYYYMDHMS.format(dataParaJavascript(dataHora)) + ") ]");
             delim = ", ";
         }
         return delim;
@@ -365,13 +372,13 @@ public class RelatorioController extends TpController {
 
         for (int i = 0; i < missoesFiltradas.size(); i++) {
             registros.append("[ \'" + missoes.get(i).getSequence() + " - " + missoes.get(i).getVeiculo().getPlaca() + SEPARADOR_VIRGULA + missoes.get(i).getCondutor().getNome() + "\', new Date("
-                    + formatoDataYYYYMDHMS.format(missoes.get(i).getDataHoraSaida().getTime()) + "), new Date(");
+                    + formatoDataYYYYMDHMS.format(dataParaJavascript(missoes.get(i).getDataHoraSaida())) + "), new Date(");
 
             if (missoes.get(i).getDataHoraRetorno() != null)
-                registros.append(formatoDataYYYYMDHMS.format(missoes.get(i).getDataHoraRetorno().getTime()) + ") ]");
+                registros.append(formatoDataYYYYMDHMS.format(dataParaJavascript(missoes.get(i).getDataHoraRetorno())) + ") ]");
             else {
                 Calendar dataHora = recuperarDataEHora(missoes.get(i).getDataHoraSaida(), HORA_FINAL_EXPEDIENTE, MINUTO_FINAL_EXPEDIENTE, SEGUNDO_FINAL_EXPEDIENTE);
-                registros.append(formatoDataYYYYMDHMS.format(dataHora.getTime()) + ") ]");
+                registros.append(formatoDataYYYYMDHMS.format(dataParaJavascript(dataHora)) + ") ]");
             }
             if (i < missoes.size() - 1)
                 registros.append(", ");
@@ -479,7 +486,7 @@ public class RelatorioController extends TpController {
     private Calendar toCalendar(String dataPesquisa) throws ParseException {
         Date dateObj = null;
         
-        dateObj = formatoDataDDMMYYYY.parse(dataPesquisa);
+         dateObj = formatoDataDDMMYYYY.parse(dataPesquisa);
         Calendar cal = Calendar.getInstance();
         cal.setTime(dateObj); 
         
