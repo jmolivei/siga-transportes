@@ -31,14 +31,14 @@
 	</c:if>
 	
 	<c:if test="${menuAgenda}">
-		<a class="once" href="@{Agendas.listarPorVeiculo(idVeiculo)}">
+		<a class="once" href="${linkTo[AgendaController].listarPorVeiculo[idVeiculo]}">
 			<img src="/sigatp/public/images/agendaicon.png" style="margin-right: 5px;">
 			<fmt:message key="agenda" />
 		</a>&nbsp;&nbsp;&nbsp;
 	</c:if>
 	
 	<c:if test="${menuAbastecimentos}">
-		<a class="once" href="@{Abastecimentos.listarPorVeiculo(idVeiculo)}">
+		<a class="once" href="${linkTo[AbastecimentoController].listarPorVeiculo[idVeiculo]}">
 			<img src="/sigatp/public/images/abastecimentoicon.png" style="margin-right: 5px;">
 			<fmt:message key="abastecimentos" />
 		</a>&nbsp;&nbsp;&nbsp;

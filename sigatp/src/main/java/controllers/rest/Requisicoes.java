@@ -88,21 +88,21 @@ public class Requisicoes extends Controller {
 	
 	private static void validarRequisicao(RequisicaoTransporte requisicaoTransporte) throws Exception {
 		
-		if(requisicaoTransporte.dataHoraRetornoPrevisto != null) {
-			if ((requisicaoTransporte.dataHoraSaidaPrevista != null) && (!requisicaoTransporte.ordemDeDatasCorreta())){
+		if(requisicaoTransporte.getDataHoraRetornoPrevisto() != null) {
+			if ((requisicaoTransporte.getDataHoraSaidaPrevista() != null) && (!requisicaoTransporte.ordemDeDatasCorreta())){
 				Validation.addError("dataHoraRetornoPrevisto", "requisicaoTransporte.dataHoraRetornoPrevisto.validation");
 			}
 		}
 		
-		if((requisicaoTransporte.tiposDePassageiro == null) || (requisicaoTransporte.tiposDePassageiro.isEmpty())) {
+		if((requisicaoTransporte.getTiposDePassageiro() == null) || (requisicaoTransporte.getTiposDePassageiro().isEmpty())) {
 			Validation.addError("tiposDePassageiros", "requisicaoTransporte.tiposDePassageiros.validation");
 		}
 		
-		if(requisicaoTransporte.passageiros == null || requisicaoTransporte.passageiros.isEmpty()) {
+		if(requisicaoTransporte.getPassageiros() == null || requisicaoTransporte.getPassageiros().isEmpty()) {
 			Validation.addError("passageiros", "requisicaoTransporte.passageirosNomeEContato.validation");
 		}
 		
-		if(requisicaoTransporte.tipoFinalidade.ehOutra() && requisicaoTransporte.finalidade.isEmpty()) {
+		if(requisicaoTransporte.getTipoFinalidade().ehOutra() && requisicaoTransporte.getFinalidade().isEmpty()) {
 			Validation.addError("finalidade", "requisicaoTransporte.finalidade.validation");
 		}
 		
@@ -131,18 +131,18 @@ public class Requisicoes extends Controller {
 			return; //precisa?
 		}
 		
-		DpPessoa dpPessoa = recuperaPessoa(req.idSolicitante);
+		DpPessoa dpPessoa = recuperaPessoa(req.getIdSolicitante());
 		
-		req.solicitante = dpPessoa;
-		req.cpOrgaoUsuario = dpPessoa.getOrgaoUsuario();
-		req.cpComplexo = AutorizacaoGIAntigo.recuperarComplexoPadrao(dpPessoa);
+		req.setSolicitante(dpPessoa);
+		req.setCpOrgaoUsuario(dpPessoa.getOrgaoUsuario());
+		req.setCpComplexo(AutorizacaoGIAntigo.recuperarComplexoPadrao(dpPessoa));
 		
 		checarSolicitante(req, dpPessoa, true);
 		
-		req.dataHora = Calendar.getInstance();
-		req.setSequence(req.cpOrgaoUsuario);
+		req.setDataHora(Calendar.getInstance());
+		req.setSequence(req.getCpOrgaoUsuario());
 		
-		req.solicitante = dpPessoa;
+		req.setSolicitante(dpPessoa);
 		
 		hackSimularUsuarioLogadoParaRevInfo(dpPessoa);
 		
@@ -151,14 +151,14 @@ public class Requisicoes extends Controller {
 		//gravar andamento
 		req.refresh();
 		Andamento andamento = new Andamento();
-		andamento.descricao = "NOVA REQUISICAO";
-		andamento.dataAndamento = Calendar.getInstance();
-		andamento.estadoRequisicao = EstadoRequisicao.ABERTA;
-		andamento.requisicaoTransporte = req;
-		andamento.responsavel = dpPessoa;
+		andamento.setDescricao("NOVA REQUISICAO");
+		andamento.setDataAndamento(Calendar.getInstance());
+		andamento.setEstadoRequisicao(EstadoRequisicao.ABERTA);
+		andamento.setRequisicaoTransporte(req);
+		andamento.setResponsavel(dpPessoa);
 		andamento.save();
 		
-		ver(req.id);
+		ver(req.getId());
 	}
 
 	private static Map<String, String> transformarDadosRecebidos(String body)
@@ -202,7 +202,7 @@ public class Requisicoes extends Controller {
 		
 		requisicaoAAlterar.save();
 		
-		ver(requisicaoAAlterar.id);
+		ver(requisicaoAAlterar.getId());
 		
 	}
 	
@@ -215,7 +215,7 @@ public class Requisicoes extends Controller {
 	}
 
 	private static void checarSolicitante(RequisicaoTransporte req, DpPessoa pessoaAcesso, Boolean escrita) throws Exception {
-		if (! pessoaAcesso.getIdInicial().equals(req.idSolicitante) && escrita) {
+		if (! pessoaAcesso.getIdInicial().equals(req.getIdSolicitante()) && escrita) {
 			throw new Exception(Messages.get("requisicoes.checarSolicitante.exception"));
 		}
 	}

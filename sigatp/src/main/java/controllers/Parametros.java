@@ -1,10 +1,8 @@
 package controllers;
 
-import java.text.ParseException;
 import java.util.Calendar;
 import java.util.List;
 
-import models.Parametro;
 import play.data.validation.Valid;
 import play.data.validation.Validation;
 import play.mvc.Controller;
@@ -12,9 +10,10 @@ import play.mvc.Scope.RenderArgs;
 import play.mvc.With;
 import br.gov.jfrj.siga.cp.CpComplexo;
 import br.gov.jfrj.siga.dp.CpOrgaoUsuario;
-import controllers.AutorizacaoGI.RoleAdmin;
+import br.gov.jfrj.siga.tp.auth.annotation.RoleAdmin;
+import br.gov.jfrj.siga.tp.model.Parametro;
 
-@With(AutorizacaoGI.class)
+@With(AutorizacaoGIAntigo.class)
 public class Parametros extends Controller {
 	@SuppressWarnings("unused")
 	private static final String ACTION_LISTAR = "@listar";
@@ -22,26 +21,26 @@ public class Parametros extends Controller {
 	private static final String ACTION_INCLUIR = "@incluir";
 
 	public static void listar() throws Exception {
-   		List<Parametro> parametros = Parametro.findAll();
+   		List<Parametro> parametros = Parametro.listarTodos();
 		render(parametros);
     }
-	
+
 	@RoleAdmin
 	public static void editar(Long id) throws Exception {
-		Parametro parametro = Parametro.findById(id);
+		Parametro parametro = Parametro.buscar(id);
 		carregarDadosPerifericos();
     	render(parametro);
 	}
 
 	@RoleAdmin
 	public static void excluir(Long id) throws Exception {
-        Parametro parametro = Parametro.findById(id);	
-        
+        Parametro parametro = Parametro.buscar(id);
+
 		parametro.delete();
 		listar();
-		
+
 	}
-	
+
 	@RoleAdmin
 	public static void incluir() throws Exception {
 		Parametro parametro = new Parametro();
@@ -50,26 +49,26 @@ public class Parametros extends Controller {
 	}
 
 	private static void carregarDadosPerifericos() {
-		List<CpOrgaoUsuario> cpOrgaoUsuarios = CpOrgaoUsuario.findAll();
-		List<CpComplexo> cpComplexos = CpComplexo.findAll();
+		List<CpOrgaoUsuario> cpOrgaoUsuarios = CpOrgaoUsuario.AR.findAll();
+		List<CpComplexo> cpComplexos = CpComplexo.AR.findAll();
 		RenderArgs.current().put("cpOrgaoUsuarios", cpOrgaoUsuarios);
 		RenderArgs.current().put("cpComplexos", cpComplexos);
 	}
 
 	@RoleAdmin
-	public static void salvar(@Valid Parametro parametro) throws Exception {	
+	public static void salvar(@Valid Parametro parametro) throws Exception {
     		if(Validation.hasErrors()) {
         		carregarDadosPerifericos();
-    			renderTemplate((parametro.id == 0? Parametros.ACTION_INCLUIR : Parametros.ACTION_EDITAR), parametro);
+    			renderTemplate((parametro.getId() == 0? Parametros.ACTION_INCLUIR : Parametros.ACTION_EDITAR), parametro);
     			return;
     		}
-	
+
 	 	parametro.save();
-   
+
 		listar();
     }
 
-	public static Calendar formatarDataParametro(String stringCron) throws ParseException {
+	public static Calendar formatarDataParametro(String stringCron) {
 		String stringData = Parametro.buscarConfigSistemaEmVigor(stringCron);
 		String[] data = stringData.split("/");
 		Calendar cal  = Calendar.getInstance();

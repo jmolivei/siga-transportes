@@ -1,45 +1,3 @@
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 package br.gov.jfrj.siga.tp.model;
 
 import java.text.SimpleDateFormat;
@@ -71,10 +29,10 @@ import org.hibernate.envers.Audited;
 import org.hibernate.envers.RelationTargetAuditMode;
 import org.hibernate.validator.constraints.NotEmpty;
 
-import play.modules.br.jus.jfrj.siga.uteis.validadores.validarAnoData.ValidarAnoData;
 import br.gov.jfrj.siga.cp.model.DpLotacaoSelecao;
 import br.gov.jfrj.siga.dp.CpOrgaoUsuario;
 import br.gov.jfrj.siga.dp.DpLotacao;
+import br.gov.jfrj.siga.feature.converter.entity.vraptor.ConvertableEntity;
 import br.gov.jfrj.siga.model.ActiveRecord;
 import br.gov.jfrj.siga.tp.util.PerguntaSimNao;
 import br.gov.jfrj.siga.tp.util.Situacao;
@@ -83,10 +41,9 @@ import br.gov.jfrj.siga.tp.validation.annotation.Renavam;
 import br.gov.jfrj.siga.tp.validation.annotation.Unique;
 import br.gov.jfrj.siga.tp.validation.annotation.UpperCase;
 import br.gov.jfrj.siga.tp.vraptor.i18n.MessagesBundle;
-import br.gov.jfrj.siga.vraptor.converter.ConvertableEntity;
+import br.gov.jfrj.siga.validation.ValidarAnoData;
 
 @Entity
-// @Table(name = "VEICULO_2", schema="SIGAOR")
 @Audited
 @Table(schema = "SIGATP")
 @Unique(message = "{veiculo.placa.unique}", field = "placa")
@@ -388,17 +345,17 @@ public class Veiculo extends TpModel implements ConvertableEntity, Comparable<Ve
 
 	public static Boolean estaDisponivel(Missao m) throws Exception {
 		SimpleDateFormat formatar = new SimpleDateFormat("dd/MM/yyyy HH:mm");
-		String dataHoraSaidaStr = formatar.format(m.dataHoraSaida.getTime());
-		List<Veiculo> veiculos = listarDisponiveis(dataHoraSaidaStr, m.getId(), m.cpOrgaoUsuario.getId());
+		String dataHoraSaidaStr = formatar.format(m.getDataHoraSaida().getTime());
+		List<Veiculo> veiculos = listarDisponiveis(dataHoraSaidaStr, m.getId(), m.getCpOrgaoUsuario().getId());
 		for (Veiculo veiculo : veiculos) {
-			if (veiculo.id.equals(m.veiculo.id)) {
+			if (veiculo.id.equals(m.getVeiculo().id)) {
 				return true;
 			}
 		}
 		return false;
 	}
 
-	public static List<Veiculo> listarTodos(CpOrgaoUsuario orgaoUsuario) throws Exception {
+	public static List<Veiculo> listarTodos(CpOrgaoUsuario orgaoUsuario) {
 		List<Veiculo> veiculos = Veiculo.AR.find("cpOrgaoUsuario", orgaoUsuario).fetch();
 		Collections.sort(veiculos);
 		return veiculos;

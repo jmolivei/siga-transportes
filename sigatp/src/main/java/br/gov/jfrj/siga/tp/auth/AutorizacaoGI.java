@@ -18,7 +18,7 @@ import com.google.common.base.Optional;
 
 /**
  * Classe que contem os dados de autorizacao do usuario. Agrupa em um mapa o nome da permissao e um boleano indicando se o usuario a possui ou nao.
- * 
+ *
  * @author db1
  *
  */
@@ -26,7 +26,7 @@ import com.google.common.base.Optional;
 @Component
 public class AutorizacaoGI {
 
-	private static final String CP_COMPLEXO_ADMINISTRADOR = "cpComplexoAdministrador";
+	public static final String CP_COMPLEXO_ADMINISTRADOR = "cpComplexoAdministrador";
 	private SigaObjects so;
 	private Map<String, Boolean> statusPermissoes = new HashMap<String, Boolean>();
 
@@ -36,13 +36,13 @@ public class AutorizacaoGI {
 	}
 
 	/**
-	 * Recupera na configuração do GI o complexo do perfil AdministradorPorComplexo para usuário logado verificando Órgao e Lotação e o 
+	 * Recupera na configuração do GI o complexo do perfil AdministradorPorComplexo para usuário logado verificando Órgao e Lotação e o
 	 * tipo de configurção "Utilizar Complexo"
-	 * 
+	 *
 	 * @return
 	 * @throws Exception
 	 */
-	protected CpComplexo recuperarComplexoAdministrador() throws Exception {
+	public CpComplexo recuperarComplexoAdministrador() throws Exception {
 		String SERVICO_COMPLEXO_ADMINISTRADOR = "SIGA-TP-ADMMISSAOCOMPLEXO";
 		CpServico cpServico = TpDao.find(CpServico.class, "siglaServico", SERVICO_COMPLEXO_ADMINISTRADOR).first();
 		CpSituacaoConfiguracao cpSituacaoConfiguracaoPode = TpDao.findById(CpSituacaoConfiguracao.class, 1L);
@@ -104,7 +104,7 @@ public class AutorizacaoGI {
 		result.include(Autorizacoes.EXIBIR_MENU_AGENTE, ehAgente());
 		result.include(Autorizacoes.EXIBIR_MENU_ADMMISSAO_ADMINISTRAR_MISSAO_COMPLEXO, deveExibirMenuAdmissaoComplexo());
 	}
-	
+
 	public Boolean ehAdministrador() {
 		return getStatusPermissao(Autorizacoes.ADM_ADMINISTRAR);
 	}

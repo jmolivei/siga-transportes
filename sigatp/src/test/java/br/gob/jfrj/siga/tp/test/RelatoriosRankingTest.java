@@ -14,13 +14,13 @@ public class RelatoriosRankingTest {
 
 	private RelatorioRanking iniciarClasse() {
 		RelatorioRanking relatorio = new RelatorioRanking();
-		relatorio.quantidadeDadosRetorno = 2;
+		relatorio.setQuantidadeDadosRetorno(2);
 
-		relatorio.dataInicio = Calendar.getInstance();
-		relatorio.dataInicio.set(2014, 9, 1); // 01/10/2014
+		relatorio.setDataInicio(Calendar.getInstance());
+		relatorio.getDataInicio().set(2014, 9, 1); // 01/10/2014
 
-		relatorio.dataFim = Calendar.getInstance();
-		relatorio.dataFim.set(2014, 10, 11); // 11/11/2014
+		relatorio.setDataFim(Calendar.getInstance());
+		relatorio.getDataFim().set(2014, 10, 11); // 11/11/2014
 
 		return relatorio;
 	}
@@ -35,17 +35,17 @@ public class RelatoriosRankingTest {
 			rankingCondutor = RelatoriosRanking.retornarCondutoresQueAtenderamMaisRequisicoes(relatorio);
 
 			for (br.gov.jfrj.siga.tp.model.RelatorioRanking.RankingCondutorRequisicao item : rankingCondutor) {
-				linha = "Condutor : " + item.condutor.getNome() + " ";
+				linha = "Condutor : " + item.getCondutor().getNome() + " ";
 				linha += "Missoes : ";
 
-				for (Missao missao : item.missoes) {
+				for (Missao missao : item.getMissoes()) {
 					linha += missao.getSequence() + " ";
 				}
 
 				linha += "Requisicoes : ";
 
-				for (RequisicaoTransporte requisicao : item.requisicoes) {
-					linha += requisicao.getSequence() + " ";
+				for (RequisicaoTransporte requisicao : item.getRequisicoes()) {
+					linha += requisicao.buscarSequence() + " ";
 				}
 
 				System.out.println(linha);
@@ -68,11 +68,11 @@ public class RelatoriosRankingTest {
 			rankingVeiculo = RelatoriosRanking.retornarVeiculosQueAtenderamMaisRequisicoes(relatorio);
 
 			for (br.gov.jfrj.siga.tp.model.RelatorioRanking.RankingVeiculoRequisicao item : rankingVeiculo) {
-				linha = "Veiculo : " + item.veiculo.getPlaca() + " ";
+				linha = "Veiculo : " + item.getVeiculo().getPlaca() + " ";
 				linha += "Requisicoes : ";
 
-				for (RequisicaoTransporte requisicao : item.requisicoes) {
-					linha += requisicao.getSequence() + " ";
+				for (RequisicaoTransporte requisicao : item.getRequisicoes()) {
+					linha += requisicao.buscarSequence() + " ";
 				}
 
 				System.out.println(linha);
@@ -95,8 +95,8 @@ public class RelatoriosRankingTest {
 			rankingFinalidade = RelatoriosRanking.retornarFinalidadesComMaisRequisicoes(relatorio);
 
 			for (br.gov.jfrj.siga.tp.model.RelatorioRanking.RankingFinalidadeRequisicao item : rankingFinalidade) {
-				linha = "Finalidade : " + item.finalidade.getDescricao() + " ";
-				linha += "Total : " + item.totalFinalidade + " ";
+				linha = "Finalidade : " + item.getFinalidade().getDescricao() + " ";
+				linha += "Total : " + item.getTotalFinalidade() + " ";
 				System.out.println(linha);
 			}
 
@@ -117,8 +117,8 @@ public class RelatoriosRankingTest {
 			rankingTipoDePassageiro = RelatoriosRanking.retornarTipoPassageiroComMaisRequisicoes(relatorio);
 
 			for (br.gov.jfrj.siga.tp.model.RelatorioRanking.RankingTipoPassageiroRequisicao item : rankingTipoDePassageiro) {
-				linha = "Tipo de passageiro : " + item.tipoPassageiro + " ";
-				linha += "Total : " + item.totalTipoPassageiros + " ";
+				linha = "Tipo de passageiro : " + item.getTipoPassageiro() + " ";
+				linha += "Total : " + item.getTotalTipoPassageiros() + " ";
 				System.out.println(linha);
 			}
 

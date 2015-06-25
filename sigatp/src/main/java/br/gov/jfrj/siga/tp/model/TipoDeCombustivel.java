@@ -5,25 +5,36 @@ import java.util.List;
 
 public enum TipoDeCombustivel {
 
-	GASOLINA("GASOLINA", true),
-	ALCOOL("ETANOL", true),
-	DIESEL("DIESEL", true), GNV("GNV", true),
-	ALCOOL_E_GASOLINA("FLEX", false),
-	ALCOOL_E_GNV("ALCOOL/GNV", false),
-	GASOLINA_E_GNV("GASOLINA/GNV", false),
-	DIESEL_E_GNV("DIESEL/GNV", false),
-	GASOLINA_E_ALCOOL_E_GNV("GASOLINA/ALCOOL/GNV", false),
-	GASOLINA_ADITIVADA("GASOLINA ADITIVADA", true);
+	GASOLINA(0, "GASOLINA", true),
+	ALCOOL(1, "ETANOL", true),
+	DIESEL(2, "DIESEL", true), 
+	GNV(3, "GNV", true),
+	ALCOOL_E_GASOLINA(4, "FLEX", false),
+	ALCOOL_E_GNV(5, "ALCOOL/GNV", false),
+	GASOLINA_E_GNV(6, "GASOLINA/GNV", false),
+	DIESEL_E_GNV(7, "DIESEL/GNV", false),
+	GASOLINA_E_ALCOOL_E_GNV(8, "GASOLINA/ALCOOL/GNV", false),
+	GASOLINA_ADITIVADA(9, "GASOLINA ADITIVADA", true);
 	
+	private Integer indice;
 	private String descricao;
 	private boolean exibirNoAbastecimento;
 	
-	TipoDeCombustivel(String descricao, boolean exibirNoAbastecimento){
+	TipoDeCombustivel(Integer indice, String descricao, boolean exibirNoAbastecimento){
+	    this.setIndice(indice);
 		this.setDescricao(descricao);
 		this.setExibirNoAbastecimento(exibirNoAbastecimento);
 	}
 
-	private void setDescricao(String descricao) {
+	public int getIndice() {
+        return indice;
+    }
+
+    public void setIndice(int indice) {
+        this.indice = indice;
+    }
+
+    private void setDescricao(String descricao) {
 		this.descricao = descricao;
 	}
 	

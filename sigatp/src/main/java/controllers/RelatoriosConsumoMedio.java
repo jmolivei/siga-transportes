@@ -37,10 +37,10 @@ public class RelatoriosConsumoMedio extends Controller {
 		} else {
 			String msgErro = "";
 
-			if (relatorioConsumoMedio.abastecimentoInicial == null) {
+			if (relatorioConsumoMedio.getAbastecimentoInicial() == null) {
 				msgErro += "Abastecimento Inicial, ";
 			}
-			if (relatorioConsumoMedio.abastecimentoFinal == null) {
+			if (relatorioConsumoMedio.getAbastecimentoFinal() == null) {
 				msgErro += "Abastecimento Final, ";
 			}
 
@@ -70,18 +70,18 @@ public class RelatoriosConsumoMedio extends Controller {
 		RelatorioConsumoMedio resultado = new RelatorioConsumoMedio();
 
 		Calendar dataInicial = Calendar.getInstance();
-		relatorio.abastecimentoInicial = Abastecimento.AR.findById(relatorio.abastecimentoInicial.getId());
-		dataInicial.setTime(relatorio.abastecimentoInicial.getDataHora().getTime());
+		relatorio.setAbastecimentoInicial(Abastecimento.AR.findById(relatorio.getAbastecimentoInicial().getId()));
+		dataInicial.setTime(relatorio.getAbastecimentoInicial().getDataHora().getTime());
 
 		Calendar dataFinal = Calendar.getInstance();
-		relatorio.abastecimentoFinal = Abastecimento.AR.findById(relatorio.abastecimentoFinal.getId());
-		dataFinal.setTime(relatorio.abastecimentoFinal.getDataHora().getTime());
+		relatorio.setAbastecimentoFinal(Abastecimento.AR.findById(relatorio.getAbastecimentoFinal().getId()));
+		dataFinal.setTime(relatorio.getAbastecimentoFinal().getDataHora().getTime());
 
 		String qrl = "SELECT m.id, m.consumoEmLitros, m.odometroSaidaEmKm, m.odometroRetornoEmKm " + "FROM  Missao m " + "WHERE m.veiculo.getId() = ? " + "AND   m.dataHora BETWEEN ? AND ? "
 				+ "AND   m.cpOrgaoUsuario.idOrgaoUsu = ? " + "AND   m.estadoMissao = ? ";
 
 		Query qry = JPA.em().createQuery(qrl);
-		qry.setParameter(1, relatorio.veiculo.getId());
+		qry.setParameter(1, relatorio.getVeiculo().getId());
 		qry.setParameter(2, dataInicial);
 		qry.setParameter(3, dataFinal);
 		qry.setParameter(4, cpOrgaoUsuario.getIdOrgaoUsu());
@@ -89,9 +89,9 @@ public class RelatoriosConsumoMedio extends Controller {
 
 		lista = (List<Object[]>) qry.getResultList();
 
-		double kmInicial = relatorio.abastecimentoInicial.getOdometroEmKm();
-		double kmFinal = relatorio.abastecimentoFinal.getOdometroEmKm();
-		double quantidadeEmLitros = relatorio.abastecimentoFinal.getQuantidadeEmLitros();
+		double kmInicial = relatorio.getAbastecimentoInicial().getOdometroEmKm();
+		double kmFinal = relatorio.getAbastecimentoFinal().getOdometroEmKm();
+		double quantidadeEmLitros = relatorio.getAbastecimentoFinal().getQuantidadeEmLitros();
 
 		for (int i = 0; i < lista.size(); i++) {
 			if ((Double.parseDouble(lista.get(i)[2].toString()) >= kmInicial) || (Double.parseDouble(lista.get(i)[3].toString()) <= kmFinal)) {
@@ -101,16 +101,16 @@ public class RelatoriosConsumoMedio extends Controller {
 			}
 		}
 
-		resultado.abastecimentoInicial = new Abastecimento();
-		resultado.abastecimentoInicial.setDataHora(dataInicial);
+		resultado.setAbastecimentoInicial(new Abastecimento());
+		resultado.getAbastecimentoInicial().setDataHora(dataInicial);
 
-		resultado.abastecimentoFinal = new Abastecimento();
-		resultado.abastecimentoFinal.setDataHora(dataFinal);
+		resultado.setAbastecimentoFinal(new Abastecimento());
+		resultado.getAbastecimentoFinal().setDataHora(dataFinal);
 
-		resultado.veiculo = Veiculo.AR.findById(relatorio.veiculo.getId());
-		resultado.missoes = new ArrayList<Missao>(setMissao);
-		resultado.kmPercorridos = Double.parseDouble(String.format("%.2f", kmFinal - kmInicial).replace(",", "."));
-		resultado.consumoMedio = Double.parseDouble(String.format("%.2f", quantidadeEmLitros <= 0 ? 0 : (kmFinal - kmInicial) / quantidadeEmLitros).replace(",", "."));
+		resultado.setVeiculo(Veiculo.AR.findById(relatorio.getVeiculo().getId()));
+		resultado.setMissoes(new ArrayList<Missao>(setMissao));
+		resultado.setKmPercorridos(Double.parseDouble(String.format("%.2f", kmFinal - kmInicial).replace(",", ".")));
+		resultado.setConsumoMedio(Double.parseDouble(String.format("%.2f", quantidadeEmLitros <= 0 ? 0 : (kmFinal - kmInicial) / quantidadeEmLitros).replace(",", ".")));
 		setMissao.clear();
 		return resultado;
 	}

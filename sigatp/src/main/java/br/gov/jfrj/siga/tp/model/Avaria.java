@@ -17,16 +17,11 @@ import javax.validation.constraints.NotNull;
 
 import org.hibernate.envers.Audited;
 
-import play.modules.br.jus.jfrj.siga.uteis.validadores.validarAnoData.ValidarAnoData;
+import br.gov.jfrj.siga.feature.converter.entity.vraptor.ConvertableEntity;
 import br.gov.jfrj.siga.model.ActiveRecord;
 import br.gov.jfrj.siga.tp.util.PerguntaSimNao;
-<<<<<<< HEAD
 import br.gov.jfrj.siga.tp.validation.annotation.UpperCase;
-import br.gov.jfrj.siga.vraptor.converter.ConvertableEntity;
-=======
-import br.gov.jfrj.siga.tp.vraptor.ConvertableEntity;
-import br.gov.jfrj.siga.tp.validation.annotation.UpperCase;
->>>>>>> 7ec8f3664954cd31f8f83fafefe1ffc804c17a5b
+import br.gov.jfrj.siga.validation.ValidarAnoData;
 
 import com.google.gson.Gson;
 

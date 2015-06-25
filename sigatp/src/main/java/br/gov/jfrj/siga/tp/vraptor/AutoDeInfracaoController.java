@@ -16,12 +16,15 @@ import br.gov.jfrj.siga.dp.dao.CpDao;
 import br.gov.jfrj.siga.tp.auth.annotation.RoleAdmin;
 import br.gov.jfrj.siga.tp.auth.annotation.RoleAdminMissao;
 import br.gov.jfrj.siga.tp.auth.annotation.RoleAdminMissaoComplexo;
+import br.gov.jfrj.siga.tp.auth.annotation.RoleAgente;
 import br.gov.jfrj.siga.tp.model.AutoDeInfracao;
 import br.gov.jfrj.siga.tp.model.Condutor;
 import br.gov.jfrj.siga.tp.model.ItemMenu;
+import br.gov.jfrj.siga.tp.model.Penalidade;
 import br.gov.jfrj.siga.tp.model.TipoDeNotificacao;
 import br.gov.jfrj.siga.tp.model.TpDao;
 import br.gov.jfrj.siga.tp.model.Veiculo;
+import br.gov.jfrj.siga.tp.util.CustomJavaExtensions;
 import br.gov.jfrj.siga.vraptor.SigaObjects;
 
 @Resource
@@ -78,18 +81,16 @@ public class AutoDeInfracaoController extends TpController{
 	public void editar(Long id, String notificacao) throws Exception {
 		AutoDeInfracao autoDeInfracao;
 		TipoDeNotificacao tipoNotificacao;
-		
 		renderVeiculosCondutoresEPenalidades();
-		
+
 		if(id >0) {
 			autoDeInfracao = AutoDeInfracao.AR.findById(id);
-			tipoNotificacao = autoDeInfracao.getCodigoDaAutuacao() != null ? TipoDeNotificacao.AUTUACAO
-				: TipoDeNotificacao.PENALIDADE;
+			tipoNotificacao = autoDeInfracao.getPenalidade() == null ? TipoDeNotificacao.AUTUACAO : TipoDeNotificacao.PENALIDADE;
 		} else {
 			autoDeInfracao = new AutoDeInfracao();
 			tipoNotificacao = TipoDeNotificacao.valueOf(notificacao);
 		}
-		
+
 		result.include("autoDeInfracao", autoDeInfracao);
 		result.include("tipoNotificacao", tipoNotificacao);
 	}
@@ -99,29 +100,28 @@ public class AutoDeInfracaoController extends TpController{
 	@RoleAdminMissaoComplexo
 	@Path("/salvar")
 	public void salvar(@Valid AutoDeInfracao autoDeInfracao) throws Exception {
-		TipoDeNotificacao tipoNotificacao = autoDeInfracao.getCodigoDaAutuacao() != null ? 
-				TipoDeNotificacao.AUTUACAO : TipoDeNotificacao.PENALIDADE;
+		TipoDeNotificacao tipoNotificacao = autoDeInfracao.getPenalidade() == null ? TipoDeNotificacao.AUTUACAO : TipoDeNotificacao.PENALIDADE;
 
  		error(autoDeInfracao.getDataDePagamento() != null && autoDeInfracao.dataPosteriorDataCorrente(autoDeInfracao.getDataDePagamento())
  				, "dataPagamento", "veiculo.autosDeInfracao.dataDePagamento.validation");
 
 		if (validator.hasErrors()) {
 			renderVeiculosCondutoresEPenalidades();
-			
+
 			result.include("autoDeInfracao", autoDeInfracao);
 			result.include("tipoNotificacao", tipoNotificacao);
-				
+
 			if(autoDeInfracao.getId()  > 0)
 				validator.onErrorUse(Results.page()).of(AutoDeInfracaoController.class).editar(autoDeInfracao.getId(), null);
 			else
 				validator.onErrorUse(Results.page()).of(AutoDeInfracaoController.class).editar(null, null);
-			
+
 		} else {
 			autoDeInfracao.save();
 			result.redirectTo(this).listar();
 		}
 	}
-	
+
 	@RoleAdmin
 	@RoleAdminMissao
 	@RoleAdminMissaoComplexo
@@ -129,13 +129,13 @@ public class AutoDeInfracaoController extends TpController{
 	public void excluir(Long id) throws Exception {
 		AutoDeInfracao autoDeInfracao = AutoDeInfracao.AR.findById(id);
 		autoDeInfracao.delete();
-		
+
 		result.redirectTo(this).listar();
 	}
-	
-	// Incluido após OSI17(1. grupo) antes de enviar para a OSI (2.grupo de Migracao) - João Luis 
+
+	// Incluido após OSI17(1. grupo) antes de enviar para a OSI (2.grupo de Migracao) - João Luis
 	// Incluido metodos abaixo e alterado em métodos acima para chamar o metodo renderVeiculosCondutoresEPenalidades
-	
+
 	private void renderVeiculosCondutoresEPenalidades() throws Exception {
 		List<Veiculo> veiculos = Veiculo.listarTodos(getTitular().getOrgaoUsuario());
 		List<Condutor> condutores = Condutor.listarTodos(getTitular().getOrgaoUsuario());
@@ -144,26 +144,26 @@ public class AutoDeInfracaoController extends TpController{
     	result.include("condutores", condutores);
     	result.include("penalidades", penalidades);
     }
-	
-		/* Método AJAX */
-	@RoleAdmin
-	@RoleAdminMissao
-	@RoleAdminMissaoComplexo
-	@RoleAgente
-	public static void listarValorPenalidade(Long idPenalidade) throws Exception {
-		Penalidade penalidade = Penalidade.AR.findById(idPenalidade);		
-		String formataMoedaBrasileiraSemSimbolo = CustomJavaExtensions.formataMoedaBrasileiraSemSimbolo(penalidade.valor);		
-		renderText(formataMoedaBrasileiraSemSimbolo);
-	}
-	
-	
+
 	/* Método AJAX */
 	@RoleAdmin
 	@RoleAdminMissao
 	@RoleAdminMissaoComplexo
 	@RoleAgente
-	public static void listarClassificacaoPenalidade(Long idPenalidade) throws Exception {
-		Penalidade penalidade = Penalidade.AR.findById(idPenalidade);	
-		renderText(penalidade.classificacao.getDescricao());
+	public void listarValorPenalidade(Long idPenalidade) throws Exception {
+		Penalidade penalidade = Penalidade.AR.findById(idPenalidade);
+		String formataMoedaBrasileiraSemSimbolo = CustomJavaExtensions.formataMoedaBrasileiraSemSimbolo(penalidade.getValor());
+		result.use(Results.http()).body(formataMoedaBrasileiraSemSimbolo);
+	}
+
+
+	/* Método AJAX */
+	@RoleAdmin
+	@RoleAdminMissao
+	@RoleAdminMissaoComplexo
+	@RoleAgente
+	public void listarClassificacaoPenalidade(Long idPenalidade) throws Exception {
+		Penalidade penalidade = Penalidade.AR.findById(idPenalidade);
+		result.use(Results.http()).body(penalidade.getClassificacao().getDescricao());
 	}
 }

@@ -22,25 +22,86 @@ import javax.validation.constraints.NotNull;
 import org.hibernate.envers.Audited;
 import org.hibernate.envers.RelationTargetAuditMode;
 
-import play.data.binding.As;
-import play.data.validation.Required;
-import play.db.jpa.GenericModel;
-import play.db.jpa.JPA;
-import play.i18n.Messages;
-import play.modules.br.jus.jfrj.siga.uteis.validadores.sequence.SequenceMethods;
-import play.modules.br.jus.jfrj.siga.uteis.validadores.validarAnoData.ValidarAnoData;
+import br.com.caelum.vraptor.validator.I18nMessage;
 import br.gov.jfrj.siga.dp.CpOrgaoUsuario;
 import br.gov.jfrj.siga.dp.DpPessoa;
+import br.gov.jfrj.siga.feature.converter.entity.vraptor.ConvertableEntity;
+import br.gov.jfrj.siga.model.ActiveRecord;
 import br.gov.jfrj.siga.tp.util.Reflexao;
-import br.jus.jfrj.siga.uteis.Sequence;
-import br.jus.jfrj.siga.uteis.SiglaDocumentoType;
+import br.gov.jfrj.siga.tp.validation.annotation.Data;
+import br.gov.jfrj.siga.tp.validation.annotation.Sequence;
+import br.gov.jfrj.siga.uteis.SequenceMethods;
+import br.gov.jfrj.siga.uteis.SiglaDocumentoType;
 
 @SuppressWarnings("serial")
 @Entity
-//@Table(name = "VEICULO_2", schema="SIGAOR")
 @Audited
-@Table(schema = "SIGATP")
-public class ServicoVeiculo extends GenericModel implements Comparable<ServicoVeiculo>, SequenceMethods {
+@Table(name = "SERVICOVEICULO", schema = "SIGATP")
+public class ServicoVeiculo extends TpModel implements Comparable<ServicoVeiculo>, SequenceMethods, ConvertableEntity {
+
+	public static final ActiveRecord<ServicoVeiculo> AR = new ActiveRecord<>(ServicoVeiculo.class);
+
+	@Id
+	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "hibernate_sequence_generator")
+	@SequenceGenerator(name = "hibernate_sequence_generator", sequenceName="SIGATP.hibernate_sequence")
+	private Long id;
+
+	@Sequence(propertieOrgao="cpOrgaoUsuario",siglaDocumento=SiglaDocumentoType.STP)
+	@Column(updatable = false)
+	private Long numero;
+
+ 	@Audited(targetAuditMode = RelationTargetAuditMode.NOT_AUDITED)
+	@ManyToOne
+	@JoinColumn(name = "ID_ORGAO_USU")
+ 	private CpOrgaoUsuario cpOrgaoUsuario;
+
+ 	@Audited(targetAuditMode = RelationTargetAuditMode.NOT_AUDITED)
+	@ManyToOne
+	@JoinColumn(name = "ID_PESSOA")
+ 	private DpPessoa executor;
+
+ 	@NotNull
+ 	@Data(descricaoCampo = "dataHora")
+	private Calendar dataHora;
+
+ 	@Data(descricaoCampo = "ultimaAlteracao")
+	private Calendar ultimaAlteracao;
+
+ 	@ManyToOne
+	@NotNull
+	@JoinColumn(name = "VEICULO_ID")
+	private Veiculo veiculo;
+
+ 	@NotNull
+ 	@Data(descricaoCampo = "dataHoraInicioPrevisto")
+	private Calendar dataHoraInicioPrevisto;
+
+ 	@NotNull
+ 	@Data(descricaoCampo = "dataHoraFimPrevisto")
+	private Calendar dataHoraFimPrevisto;
+
+ 	@NotNull
+	private String descricao;
+
+ 	@NotNull
+	@Enumerated(EnumType.STRING)
+	private TiposDeServico tiposDeServico;
+
+ 	@NotNull
+	@Enumerated(EnumType.STRING)
+	private EstadoServico situacaoServico;
+
+	@OneToOne(targetEntity = RequisicaoTransporte.class)
+	private RequisicaoTransporte requisicaoTransporte;
+
+	@Data(descricaoCampo = "dataHoraInicio")
+	private Calendar dataHoraInicio;
+
+	@Data(descricaoCampo = "dataHoraFim")
+	private Calendar dataHoraFim;
+
+	private String motivoCancelamento;
+
 	public ServicoVeiculo() {
 		this.id = new Long(0);
 		this.numero = new Long(0);
@@ -48,7 +109,135 @@ public class ServicoVeiculo extends GenericModel implements Comparable<ServicoVe
 		this.situacaoServico = EstadoServico.AGENDADO;
 		this.tiposDeServico = TiposDeServico.VISTORIA;
 	}
-	
+
+	public Long getId() {
+		return id;
+	}
+
+	public void setId(Long id) {
+		this.id = id;
+	}
+
+	public Long getNumero() {
+		return numero;
+	}
+
+	public void setNumero(Long numero) {
+		this.numero = numero;
+	}
+
+	public CpOrgaoUsuario getCpOrgaoUsuario() {
+		return cpOrgaoUsuario;
+	}
+
+	public void setCpOrgaoUsuario(CpOrgaoUsuario cpOrgaoUsuario) {
+		this.cpOrgaoUsuario = cpOrgaoUsuario;
+	}
+
+	public DpPessoa getExecutor() {
+		return executor;
+	}
+
+	public void setExecutor(DpPessoa executor) {
+		this.executor = executor;
+	}
+
+	public Calendar getDataHora() {
+		return dataHora;
+	}
+
+	public void setDataHora(Calendar dataHora) {
+		this.dataHora = dataHora;
+	}
+
+	public Calendar getUltimaAlteracao() {
+		return ultimaAlteracao;
+	}
+
+	public void setUltimaAlteracao(Calendar ultimaAlteracao) {
+		this.ultimaAlteracao = ultimaAlteracao;
+	}
+
+	public Veiculo getVeiculo() {
+		return veiculo;
+	}
+
+	public void setVeiculo(Veiculo veiculo) {
+		this.veiculo = veiculo;
+	}
+
+	public Calendar getDataHoraInicioPrevisto() {
+		return dataHoraInicioPrevisto;
+	}
+
+	public void setDataHoraInicioPrevisto(Calendar dataHoraInicioPrevisto) {
+		this.dataHoraInicioPrevisto = dataHoraInicioPrevisto;
+	}
+
+	public Calendar getDataHoraFimPrevisto() {
+		return dataHoraFimPrevisto;
+	}
+
+	public void setDataHoraFimPrevisto(Calendar dataHoraFimPrevisto) {
+		this.dataHoraFimPrevisto = dataHoraFimPrevisto;
+	}
+
+	public String getDescricao() {
+		return descricao;
+	}
+
+	public void setDescricao(String descricao) {
+		this.descricao = descricao;
+	}
+
+	public TiposDeServico getTiposDeServico() {
+		return tiposDeServico;
+	}
+
+	public void setTiposDeServico(TiposDeServico tiposDeServico) {
+		this.tiposDeServico = tiposDeServico;
+	}
+
+	public EstadoServico getSituacaoServico() {
+		return situacaoServico;
+	}
+
+	public void setSituacaoServico(EstadoServico situacaoServico) {
+		this.situacaoServico = situacaoServico;
+	}
+
+	public RequisicaoTransporte getRequisicaoTransporte() {
+		return requisicaoTransporte;
+	}
+
+	public void setRequisicaoTransporte(RequisicaoTransporte requisicaoTransporte) {
+		this.requisicaoTransporte = requisicaoTransporte;
+	}
+
+	public Calendar getDataHoraInicio() {
+		return dataHoraInicio;
+	}
+
+	public void setDataHoraInicio(Calendar dataHoraInicio) {
+		this.dataHoraInicio = dataHoraInicio;
+	}
+
+	public Calendar getDataHoraFim() {
+		return dataHoraFim;
+	}
+
+	public void setDataHoraFim(Calendar dataHoraFim) {
+		this.dataHoraFim = dataHoraFim;
+	}
+
+	public String getMotivoCancelamento() {
+		return motivoCancelamento;
+	}
+
+	public void setMotivoCancelamento(String motivoCancelamento) {
+		this.motivoCancelamento = motivoCancelamento;
+	}
+
 	public String getDadosParaExibicao() {
 		return this.numero.toString();
 	}
@@ -57,39 +246,42 @@ public class ServicoVeiculo extends GenericModel implements Comparable<ServicoVe
 	public int compareTo(ServicoVeiculo o) {
 		// ordenação decrescente
 		if (this.dataHoraInicioPrevisto.before(o.dataHoraInicioPrevisto)) {
-            return -1 * -1 ;
-        }
-        if (this.dataHoraInicioPrevisto.after(o.dataHoraInicioPrevisto)) {
-            return 1 * -1;
-        }
-        return 0;		
+	        return -1 * -1 ;
+	    }
+	    if (this.dataHoraInicioPrevisto.after(o.dataHoraInicioPrevisto)) {
+	        return 1 * -1;
+	    }
+	    return 0;
 	}
 
 	@Override
 	public String getSequence() {
 		if (this.numero != 0) {
-			return cpOrgaoUsuario.getAcronimoOrgaoUsu().replace("-","").toString() +  "-" + 
-					   Reflexao.recuperaAnotacaoField(this).substring(1) + "-" + 
-					   String.format("%04d",this.dataHora.get(Calendar.YEAR)) + "/" + 
-					   String.format("%05d", numero) + "-" + 
+			return cpOrgaoUsuario.getAcronimoOrgaoUsu().replace("-","").toString() +  "-" +
+					   Reflexao.recuperaAnotacaoField(this).substring(1) + "-" +
+					   String.format("%04d",this.dataHora.get(Calendar.YEAR)) + "/" +
+					   String.format("%05d", numero) + "-" +
 					   Reflexao.recuperaAnotacaoField(this).substring(0,1);
-		} else 
+		} else
 		{
 			return "";
 		}
 	}
-		
+
 	public void setSequence(Object cpOrgaoUsuarioObject) {
 		CpOrgaoUsuario cpOrgaoUsuario = (CpOrgaoUsuario) cpOrgaoUsuarioObject;
 		int year = Calendar.getInstance().get(Calendar.YEAR);
-		String qrl = "SELECT sv FROM ServicoVeiculo sv where sv.numero = "; 
-		qrl = qrl + "(SELECT MAX(t.numero) FROM ServicoVeiculo t";
-		qrl = qrl + " where cpOrgaoUsuario.id = " + cpOrgaoUsuario.getId();
-		qrl = qrl + " and YEAR(dataHora) = " + year;
-		qrl = qrl + " and sv.cpOrgaoUsuario.id = t.cpOrgaoUsuario.id";
-		qrl = qrl + " and YEAR(sv.dataHora) = YEAR(t.dataHora)";		
-		qrl = qrl + ")";
-		Query qry = JPA.em().createQuery(qrl);
+
+		StringBuilder query = new StringBuilder();
+		query.append("SELECT sv FROM ServicoVeiculo sv WHERE sv.id = ");
+		query.append("(SELECT MAX(sv.id) FROM ServicoVeiculo sv WHERE sv.numero = ");
+		query.append("(SELECT MAX(t.numero) FROM ServicoVeiculo t");
+		query.append(" WHERE cpOrgaoUsuario.id = " + cpOrgaoUsuario.getId());
+		query.append(" AND YEAR(dataHora) = " + year);
+		query.append(" AND sv.cpOrgaoUsuario.id = t.cpOrgaoUsuario.id");
+		query.append(" AND YEAR(sv.dataHora) = YEAR(t.dataHora)))");
+
+		Query qry = AR.em().createQuery(query.toString());
 		try {
 			Object obj = qry.getSingleResult();
 			this.numero = ((ServicoVeiculo) obj).numero + 1;
@@ -97,102 +289,36 @@ public class ServicoVeiculo extends GenericModel implements Comparable<ServicoVe
 			this.numero = new Long(1);
 		}
 	}
-	
-	@Id
-	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "hibernate_sequence_generator") @SequenceGenerator(name = "hibernate_sequence_generator", sequenceName="SIGATP.hibernate_sequence") 
-	public Long id;
-	
-	@Sequence(propertieOrgao="cpOrgaoUsuario",siglaDocumento=SiglaDocumentoType.STP)
-	@Column(updatable = false)
-    private Long numero;
-	
- 	@Audited(targetAuditMode = RelationTargetAuditMode.NOT_AUDITED)
-	@ManyToOne
-	@JoinColumn(name = "ID_ORGAO_USU")
-	public CpOrgaoUsuario cpOrgaoUsuario;  
- 	
- 	@Audited(targetAuditMode = RelationTargetAuditMode.NOT_AUDITED)
-	@ManyToOne
-	@JoinColumn(name = "ID_PESSOA")
-	public DpPessoa executor;
- 	
-	@Required
-	@As(lang={"*"}, value={"dd/MM/yyyy HH:mm"})
-	@ValidarAnoData(descricaoCampo="Data/Hora")
- 	public Calendar dataHora;
- 	
-	@As(lang={"*"}, value={"dd/MM/yyyy HH:mm"})
- 	public Calendar ultimaAlteracao;
-
-	@Required
- 	@ManyToOne
-	@NotNull
-	@JoinColumn(name = "VEICULO_ID")
-	public Veiculo veiculo;
-
-	@Required
-	@As(lang={"*"}, value={"dd/MM/yyyy HH:mm"})
-	@ValidarAnoData(descricaoCampo="Data/Hora Inicio Previsto")
-	public Calendar dataHoraInicioPrevisto;
-
-	@Required
-	@As(lang={"*"}, value={"dd/MM/yyyy HH:mm"})
-	@ValidarAnoData(descricaoCampo="Data/Hora Fim Previsto")
-	public Calendar dataHoraFimPrevisto;
-	
-	@Required
-	public String descricao;
-	
-	@Required
-	@Enumerated(EnumType.STRING)
-	public TiposDeServico tiposDeServico;
-
-	@Required
-	@Enumerated(EnumType.STRING)
-	public EstadoServico situacaoServico;
-	
-	@OneToOne(targetEntity = RequisicaoTransporte.class)
-	public RequisicaoTransporte requisicaoTransporte;
-
-	@As(lang={"*"}, value={"dd/MM/yyyy HH:mm"})
-	@ValidarAnoData(descricaoCampo="Data/Hora Inicio")
-	public Calendar dataHoraInicio;
-	
-	@As(lang={"*"}, value={"dd/MM/yyyy HH:mm"})
-	@ValidarAnoData(descricaoCampo="Data/Hora Fim")
-	public Calendar dataHoraFim;
-
-	public String motivoCancelamento;
-	
 
 	public static List<ServicoVeiculo> buscarEmAndamento() {
-		return ServicoVeiculo.find("trunc(dataHoraFim) = trunc(sysdate)").fetch();
+		return ServicoVeiculo.AR.find("trunc(dataHoraFim) = trunc(sysdate)").fetch();
 	}
-	
+
 	public static ServicoVeiculo buscar(String sequence) throws Exception {
 		String[] partesDoCodigo=null;
 		ServicoVeiculo servico = new ServicoVeiculo();
-		
+
 		try {
-			 partesDoCodigo = sequence.split("[-/]");			
-			
+			 partesDoCodigo = sequence.split("[-/]");
+
 		} catch (Exception e) {
-			throw new Exception(Messages.get("servicoVeiculo.sequence.exception", sequence));
+			throw new Exception(new I18nMessage("sequence", "servicoVeiculo.sequence.exception", sequence).getMessage());
 		}
-		
+
 		CpOrgaoUsuario cpOrgaoUsuario = CpOrgaoUsuario.AR.find("acronimoOrgaoUsu",partesDoCodigo[0]).first();
 		Integer ano = new Integer(Integer.parseInt(partesDoCodigo[2]));
 		Long numero = new Long(Integer.parseInt(partesDoCodigo[3]));
-		
+
 		String siglaDocumento = partesDoCodigo[4] + partesDoCodigo[1];
 		if (! Reflexao.recuperaAnotacaoField(servico).equals(siglaDocumento)) {
-			throw new Exception(Messages.get("servicoVeiculo.siglaDocumento.exception", sequence));
+			throw new Exception(new I18nMessage("siglaDocumento", "servicoVeiculo.siglaDocumento.exception", sequence).getMessage());
 		}
-		
-		List<ServicoVeiculo> servicos =  ServicoVeiculo.find("cpOrgaoUsuario = ? and numero = ? and YEAR(dataHora) = ?" , 
+
+		List<ServicoVeiculo> servicos =  ServicoVeiculo.AR.find("cpOrgaoUsuario = ? and numero = ? and YEAR(dataHora) = ?" ,
 										 cpOrgaoUsuario,numero,ano).fetch();
-		if (servicos.size() > 1) throw new Exception(Messages.get("servicoVeiculo.codigoDuplicado.exception"));
-		if (servicos.size() == 0 ) throw new Exception(Messages.get("servicoVeiculo.codigoInvalido.exception"));
+
+		if (servicos.size() > 1) throw new Exception(new I18nMessage("codigoDuplicado", "servicoVeiculo.codigoDuplicado.exception", sequence).getMessage());
+		if (servicos.size() == 0 ) throw new Exception(new I18nMessage("codigoInvalido", "servicoVeiculo.codigoInvalido.exception", sequence).getMessage());
 	 	return servicos.get(0);
 	}
 
@@ -204,18 +330,18 @@ public class ServicoVeiculo extends GenericModel implements Comparable<ServicoVe
 	public static List<ServicoVeiculo> buscarPorVeiculo(Long idVeiculo, String dataHoraInicio) {
 		String filtroVeiculo = "";
 		if (idVeiculo != null) {
-			filtroVeiculo = "veiculo.id = " + idVeiculo + " AND ";  
+			filtroVeiculo = "veiculo.id = " + idVeiculo + " AND ";
 		}
-		
+
 		String dataFormatadaOracle = "to_date('" + dataHoraInicio + "', 'DD/MM/YYYY')";
 		List<ServicoVeiculo> servicosVeiculo;
-		
+
 		String qrl = 	"SELECT s FROM ServicoVeiculo s WHERE " + filtroVeiculo +
 					    "  situacaoServico NOT IN ('" + EstadoServico.CANCELADO + "','" + EstadoServico.REALIZADO + "')" +
-						" AND trunc(dataHoraInicio) <= trunc(" + dataFormatadaOracle + ")" +  	
+						" AND trunc(dataHoraInicio) <= trunc(" + dataFormatadaOracle + ")" +
 						" AND (dataHoraFim IS NULL OR trunc(dataHoraFim) >= trunc(" + dataFormatadaOracle + "))";
 
-		Query qry = JPA.em().createQuery(qrl);
+		Query qry = AR.em().createQuery(qrl);
 		try {
 			servicosVeiculo = (List<ServicoVeiculo>) qry.getResultList();
 		} catch(NoResultException ex) {

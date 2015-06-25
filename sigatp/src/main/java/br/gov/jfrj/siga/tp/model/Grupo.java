@@ -1,20 +1,3 @@
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 package br.gov.jfrj.siga.tp.model;
 
 import java.util.Collections;
@@ -30,9 +13,9 @@ import javax.persistence.Table;
 import org.hibernate.envers.Audited;
 
 import play.data.validation.Required;
-import play.modules.br.jus.jfrj.siga.uteis.validadores.upperCase.UpperCase;
+import br.gov.jfrj.siga.feature.converter.entity.vraptor.ConvertableEntity;
 import br.gov.jfrj.siga.model.ActiveRecord;
-import br.gov.jfrj.siga.vraptor.converter.ConvertableEntity;
+import br.gov.jfrj.siga.tp.validation.annotation.UpperCase;
 
 @Entity
 @Audited

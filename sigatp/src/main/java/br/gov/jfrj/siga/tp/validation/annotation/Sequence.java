@@ -5,7 +5,7 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
-import br.jus.jfrj.siga.uteis.SiglaDocumentoType;
+import br.gov.jfrj.siga.uteis.SiglaDocumentoType;
 
 /**
  * Tem por finalidade gerar uma sequencia única para o atributo informado.

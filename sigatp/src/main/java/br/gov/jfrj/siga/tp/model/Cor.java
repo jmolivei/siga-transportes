@@ -10,21 +10,18 @@ import javax.persistence.Table;
 import org.hibernate.envers.Audited;
 
 import play.data.validation.Required;
+import br.gov.jfrj.siga.feature.converter.entity.vraptor.ConvertableEntity;
 import br.gov.jfrj.siga.model.ActiveRecord;
-<<<<<<< HEAD
-import br.gov.jfrj.siga.vraptor.converter.ConvertableEntity;
-=======
-import br.gov.jfrj.siga.tp.vraptor.ConvertableEntity;
->>>>>>> 7ec8f3664954cd31f8f83fafefe1ffc804c17a5b
 
 @Entity
-// @Table(name = "COR_2", schema="SIGAOR")
 @Audited
 @Table(schema = "SIGATP")
 public class Cor extends TpModel implements ConvertableEntity {
 
+	private static final long serialVersionUID = 1L;
+
 	public static final ActiveRecord<Cor> AR = new ActiveRecord<>(Cor.class);
-	
+
 	@Id
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "hibernate_sequence_generator")
 	@SequenceGenerator(name = "hibernate_sequence_generator", sequenceName = "SIGATP.hibernate_sequence")
