@@ -87,7 +87,7 @@ public class RequisicaoTransporte extends TpModel implements Comparable<Requisic
     @Enumerated(EnumType.STRING)
     private List<TipoDePassageiro> tiposDePassageiro;
 
-    //@NotNull
+    @NotNull
     @ManyToOne
     @JoinColumn(name = "ID_FINALIDADE")
     private FinalidadeRequisicao tipoFinalidade;
