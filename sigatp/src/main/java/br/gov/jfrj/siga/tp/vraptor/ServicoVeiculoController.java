@@ -19,6 +19,8 @@ import br.com.caelum.vraptor.view.Results;
 import br.gov.jfrj.siga.base.AplicacaoException;
 import br.gov.jfrj.siga.dp.CpOrgaoUsuario;
 import br.gov.jfrj.siga.dp.DpPessoa;
+import br.gov.jfrj.siga.tp.auth.annotation.RoleAdmin;
+import br.gov.jfrj.siga.tp.auth.annotation.RoleAdminFrota;
 import br.gov.jfrj.siga.tp.enums.Template;
 import br.gov.jfrj.siga.tp.model.Andamento;
 import br.gov.jfrj.siga.tp.model.Avaria;
@@ -43,8 +45,8 @@ public class ServicoVeiculoController extends TpController {
         super(request, result, TpDao.getInstance(), validator, so, em);
     }
 
-    // @RoleAdmin
-    // @RoleAdminFrota
+    @RoleAdmin
+    @RoleAdminFrota
     @Path("/incluir")
     public void incluir() {
         ServicoVeiculo servico = new ServicoVeiculo();
@@ -55,8 +57,8 @@ public class ServicoVeiculoController extends TpController {
         result.include("estadoServico", estadoServico);
     }
 
-    // @RoleAdmin
-    // @RoleAdminFrota
+    @RoleAdmin
+    @RoleAdminFrota
     @Path("/cancelar")
     public void cancelar() {
         ServicoVeiculo servico = new ServicoVeiculo();
@@ -67,8 +69,8 @@ public class ServicoVeiculoController extends TpController {
         result.include(estadoServico);
     }
 
-    // @RoleAdmin
-    // @RoleAdminFrota
+    @RoleAdmin
+    @RoleAdminFrota
     @Path("/salvar")
     public void salvar(@Valid ServicoVeiculo servico, List<Avaria> avarias) {
         Template template;
@@ -208,8 +210,8 @@ public class ServicoVeiculoController extends TpController {
         }
     }
 
-    // @RoleAdmin
-    // @RoleAdminFrota
+    @RoleAdmin
+    @RoleAdminFrota
     @Path("/editar/{id}")
     public void editar(Long id) {
         ServicoVeiculo servico = ServicoVeiculo.AR.findById(id);
@@ -251,8 +253,8 @@ public class ServicoVeiculoController extends TpController {
         return requisicaoTransporte;
     }
 
-    // @RoleAdmin
-    // @RoleAdminFrota
+    @RoleAdmin
+    @RoleAdminFrota
     @Path("/excluir/{id}")
     public void excluir(Long id) {
         ServicoVeiculo servico = ServicoVeiculo.AR.findById(id);
