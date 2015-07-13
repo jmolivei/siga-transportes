@@ -15,6 +15,7 @@ import br.com.caelum.vraptor.view.Results;
 import br.gov.jfrj.siga.cp.CpComplexo;
 import br.gov.jfrj.siga.dp.CpOrgaoUsuario;
 import br.gov.jfrj.siga.dp.dao.CpDao;
+import br.gov.jfrj.siga.tp.auth.annotation.RoleAdmin;
 import br.gov.jfrj.siga.tp.model.Parametro;
 import br.gov.jfrj.siga.tp.model.TpDao;
 import br.gov.jfrj.siga.vraptor.SigaObjects;
@@ -33,7 +34,7 @@ public class ParametroController extends TpController {
         result.include("parametros", parametros);
     }
 
-    // @RoleAdmin
+    @RoleAdmin
     @Path("/editar/{id}")
     public void editar(Long id) {
         Parametro parametro = Parametro.buscar(id);
@@ -41,7 +42,7 @@ public class ParametroController extends TpController {
         result.include("parametro", parametro);
     }
 
-    // @RoleAdmin
+    @RoleAdmin
     @Path("/excluir/{id}")
     public void excluir(Long id) {
         Parametro parametro = Parametro.buscar(id);
@@ -49,14 +50,14 @@ public class ParametroController extends TpController {
         result.redirectTo(ParametroController.class).listar();
     }
 
-    // @RoleAdmin
+    @RoleAdmin
     public void incluir() {
         Parametro parametro = new Parametro();
         carregarDadosPerifericos();
         result.include("parametro", parametro);
     }
 
-    // @RoleAdmin
+    @RoleAdmin
     public void salvar(@Valid Parametro parametro) {
         validaCamposNulos(parametro);
         if (validator.hasErrors()) {
