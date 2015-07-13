@@ -100,6 +100,7 @@ public class VeiculoController extends TpController {
 		Veiculo veiculo = obterVeiculoParaEdicao(id);
 		veiculo.configurarOdometroParaMudancaDeLotacao();
 		preencherResultComDadosPadrao(veiculo);
+		result.include("esconderBotoes", true);
 		result.include("veiculo", veiculo);
 	}
 
