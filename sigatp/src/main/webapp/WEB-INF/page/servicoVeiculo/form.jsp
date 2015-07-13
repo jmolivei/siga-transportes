@@ -7,7 +7,7 @@
 <script src="${pageContext.request.contextPath}/public/javascripts/jquery/jquery-ui-1.8.16.custom.min.js"></script>
 <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/public/stylesheets/servicoVeiculo.css">
 <jsp:include page="../tags/calendario.jsp" />
-
+<sigatp:erros />
 
 <script type="text/javascript">
 
@@ -140,7 +140,6 @@
 <input type="hidden" name="servico.dataHora" value="<fmt:formatDate pattern="dd/MM/yyyy HH:mm" value="${servico.dataHora.time}" />" class="dataHora" />
 	<div class="gt-content-box gt-form clearfix" >
 		<div class="coluna margemDireitaG">
-			<sigatp:erros />
 		    <c:if test="${servico.ultimaAlteracao != null}">
 				<label for="servico.ultimaAlteracao">&Uacute;ltima Altera&ccedil;&atilde;o</label>
 				<input  type="text" name="servico.ultimaAlteracao" 
@@ -214,7 +213,7 @@
 			</div>			
 		</div>
 	</div>
-	<span><fmt:message key="views.erro.preenchimentoObrigatorio"></fmt:message></span> 
+	<span class="alerta menor"><fmt:message key="views.erro.preenchimentoObrigatorio"/></span>
 	<div class="gt-table-buttons">	
 		<input id="btnSalvar" type="button" value="<fmt:message key="views.botoes.salvar"/>"class="gt-btn-medium gt-btn-left" />
 		<input id="btnCancelar" type="button" value="<fmt:message key="views.botoes.cancelar"/>" onClick="javascript:location.href='${linkTo[ServicoVeiculoController].listar}'" class="gt-btn-medium gt-btn-left" />
