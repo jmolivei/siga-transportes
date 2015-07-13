@@ -16,6 +16,8 @@ import br.com.caelum.vraptor.validator.I18nMessage;
 import br.com.caelum.vraptor.view.Results;
 import br.gov.jfrj.siga.dp.dao.CpDao;
 import br.gov.jfrj.siga.tp.auth.AutorizacaoGI;
+import br.gov.jfrj.siga.tp.auth.annotation.RoleAdminGabinete;
+import br.gov.jfrj.siga.tp.auth.annotation.RoleGabinete;
 import br.gov.jfrj.siga.tp.exceptions.ControleGabineteControllerException;
 import br.gov.jfrj.siga.tp.model.Condutor;
 import br.gov.jfrj.siga.tp.model.ControleGabinete;
@@ -40,8 +42,8 @@ public class ControleGabineteController extends TpController {
         this.autorizacaoGI = autorizacaoGI;
     }
 
-    // @RoleGabinete
-    // @RoleAdminGabinete
+    @RoleGabinete
+    @RoleAdminGabinete
     @Path("/listar")
     public void listar() {
         List<ControleGabinete> controlesGabinete;
@@ -54,8 +56,8 @@ public class ControleGabineteController extends TpController {
     }
 
     // Verificar se o MenuMontador é realmente utilizado
-    // @RoleGabinete
-    // @RoleAdminGabinete
+    @RoleGabinete
+    @RoleAdminGabinete
     @Path("/listarPorVeiculo/{idVeiculo}")
     public void listarPorVeiculo(Long idVeiculo) throws ControleGabineteControllerException {
         try {
@@ -70,8 +72,8 @@ public class ControleGabineteController extends TpController {
         }
     }
 
-    // @RoleGabinete
-    // @RoleAdminGabinete
+    @RoleGabinete
+    @RoleAdminGabinete
     @Path("/incluir")
     public void incluir() throws ControleGabineteControllerException {
         List<Veiculo> veiculos = recuperarListaDeVeiculos();
@@ -106,8 +108,8 @@ public class ControleGabineteController extends TpController {
         }
     }
 
-    // @RoleGabinete
-    // @RoleAdminGabinete
+    @RoleGabinete
+    @RoleAdminGabinete
     @Path("/editar/{id}")
     public void editar(Long id) throws ControleGabineteControllerException {
         try {
@@ -151,8 +153,8 @@ public class ControleGabineteController extends TpController {
             validator.add(new I18nMessage("odometroEmKmSaida", "controlesGabinete.odometroEmKmSaida.validation"));
     }
 
-    // @RoleGabinete
-    // @RoleAdminGabinete
+    @RoleGabinete
+    @RoleAdminGabinete
     public void salvar(@Valid ControleGabinete controleGabinete) throws ControleGabineteControllerException {
         if (!controleGabinete.getId().equals(0L))
             verificarAcesso(controleGabinete);
@@ -182,8 +184,8 @@ public class ControleGabineteController extends TpController {
         }
     }
 
-    // @RoleGabinete
-    // @RoleAdminGabinete
+    @RoleGabinete
+    @RoleAdminGabinete
     @Path("/excluir/{id}")
     public void excluir(Long id) throws ControleGabineteControllerException {
         try {
