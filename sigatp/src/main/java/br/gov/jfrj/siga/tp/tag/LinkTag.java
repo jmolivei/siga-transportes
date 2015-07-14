@@ -7,6 +7,7 @@ import javax.servlet.jsp.JspWriter;
 import javax.servlet.jsp.tagext.TagSupport;
 
 import br.com.caelum.vraptor.validator.I18nMessage;
+import br.gov.jfrj.siga.tp.vraptor.i18n.MessagesBundle;
 
 public class LinkTag extends TagSupport {
 
@@ -52,7 +53,7 @@ public class LinkTag extends TagSupport {
 
 	private void validarAtributos() throws JspException {
 		if((null == comando || "".equals(comando)) || (null == parteTextoLink || "".equals(parteTextoLink)))
-			throw new JspException(new I18nMessage("tagLib","tpTags.parametrosInvalidos.exception").getMessage());
+			throw new JspException(MessagesBundle.getMessage("tpTags.parametrosInvalidos.exception"));
 	}
 
 	public void setTexto(String texto) {

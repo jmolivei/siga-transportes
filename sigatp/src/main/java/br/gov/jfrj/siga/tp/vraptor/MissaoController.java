@@ -529,6 +529,7 @@ public class MissaoController extends TpController {
 	@Path("/iniciar/{id}")
 	public void iniciar(Long id) throws Exception {
 		Missao missao = Missao.AR.findById(id);
+		montarCombos();
 		montarDadosSeDataHoraSaidaNotNull(missao);
 		checarCondutorPeloUsuarioAutenticado(missao);
 		checarComplexo(missao.getCpComplexo().getIdComplexo());
@@ -716,6 +717,7 @@ public class MissaoController extends TpController {
 	@Path("/editar/{id}")
 	public void editar(Long id) throws Exception {
 		Missao missao = Missao.AR.findById(id);
+		montarCombos();
 		montarDadosSeDataHoraSaidaNotNull(missao);
 		checarCondutorPeloUsuarioAutenticado(missao);
 		checarComplexo(missao.getCpComplexo().getIdComplexo());
@@ -919,7 +921,7 @@ public class MissaoController extends TpController {
 	@RoleAdminMissaoComplexo
 	@Path("/incluirComRequisicoes")
 	public void incluirComRequisicoes(List<Long> req) throws Exception {
-
+	    montarCombos();
 		redirecionarCasoRequisicaoNula(req);
 
 		Missao missao = new Missao();
@@ -932,7 +934,8 @@ public class MissaoController extends TpController {
 		removerRequisicoesDoRenderArgs(missao.getRequisicoesTransporte());
 		result.include(MISSAO_STR, missao);
 
-		result.forwardTo(this).incluir();
+		result.use(Results.page()).of(MissaoController.class).incluir();
+
 	}
 
 	@RoleAdmin
@@ -961,7 +964,6 @@ public class MissaoController extends TpController {
 		if (requisicoes != null)
 			requisicoes.removeAll(requisicoesTransporte);
 
-		result.include(REQUISICOES_TRANSPORTE_STR, requisicoes);
 	}
 
 	protected void recuperarPelaSigla(String sequence, Boolean popUp) throws Exception {
