@@ -22,7 +22,6 @@ import br.gov.jfrj.siga.feature.converter.entity.vraptor.ConvertableEntity;
 import br.gov.jfrj.siga.model.ActiveRecord;
 import br.gov.jfrj.siga.tp.validation.annotation.Unique;
 import br.gov.jfrj.siga.tp.validation.annotation.UpperCase;
-import controllers.AutorizacaoGIAntigo;
 
 @SuppressWarnings("serial")
 @Entity
@@ -112,7 +111,7 @@ public class FinalidadeRequisicao extends TpModel implements ConvertableEntity, 
 			try {
 				throw new Exception(new I18nMessage("finalidadeRequisicao", "finalidadeRequisicao.checarProprietario.exception").getMessage());
 			} catch (Exception e) {
-				AutorizacaoGIAntigo.tratarExcecoes(e);
+			    throw new Exception(e);
 			}
 		}
 	}

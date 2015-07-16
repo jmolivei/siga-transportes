@@ -33,13 +33,14 @@ import br.gov.jfrj.siga.tp.model.Plantao;
 import br.gov.jfrj.siga.tp.model.TpDao;
 import br.gov.jfrj.siga.tp.vraptor.i18n.MessagesBundle;
 import br.gov.jfrj.siga.vraptor.SigaObjects;
-import controllers.PlantoesMensais;
 
 @Resource
 @Path("/app/plantoesMensais")
 public class PlantoesMensaisController extends TpController {
-
+    
     private static final Logger LOGGER = LoggerFactory.getLogger(PlantoesMensaisController.class);
+    
+    private static final String HORARIO_INICIO_PLANTAO_24H = "07:00";
 
     public PlantoesMensaisController(HttpServletRequest request, Result result, Validator validator, SigaObjects so, EntityManager em) {
         super(request, result, TpDao.getInstance(), validator, so, em);
@@ -181,7 +182,7 @@ public class PlantoesMensaisController extends TpController {
         int anoDefault = dataParaTirarMes.get(Calendar.YEAR);
 
         String[] optHora = criarOpcoesDeHora();
-        String horaDefault = PlantoesMensais._HORARIO_INICIO_PLANTAO_24H;
+        String horaDefault = HORARIO_INICIO_PLANTAO_24H;
 
         result.include("optHora", optHora);
         result.include("horaDefault", horaDefault);

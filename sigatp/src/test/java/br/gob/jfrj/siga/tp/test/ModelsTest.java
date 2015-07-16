@@ -327,35 +327,35 @@ public class ModelsTest {
         Assert.assertNotSame(new Long(0), avaria.getId());
     }
 
-    @Test
-    public void incluiCondutor() throws Exception {
-        CpOrgaoUsuario cpOrgaoUsuario = CpOrgaoUsuario.AR.findById(new Long(3));
-        List<DpPessoa> listaPossiveisCondutores = Condutor.getPossiveisCondutores(cpOrgaoUsuario);
-
-        condutor1.setCategoriaCNH(CategoriaCNH.E);
-        condutor1.setDataVencimentoCNH(Calendar.getInstance());
-        condutor1.setDpPessoa(listaPossiveisCondutores.get(1));
-        condutor1.setTelefoneInstitucional("2132618888");
-        condutor1.setCelularInstitucional("2177665544");
-        condutor1.setTelefonePessoal("2122334455");
-        condutor1.setCelularPessoal("2199887766");
-        condutor1.save();
-        condutor1.refresh();
-        Assert.assertNotSame(new Long(0), condutor1.getId());
-
-        condutor2 = new Condutor();
-        condutor2.setCategoriaCNH(CategoriaCNH.D);
-        condutor2.setDataVencimentoCNH(Calendar.getInstance());
-        condutor2.setDpPessoa(listaPossiveisCondutores.get(2));
-        condutor2.setTelefoneInstitucional("2132618888");
-        condutor2.setCelularInstitucional("21776655443");
-        condutor2.setTelefonePessoal("2122334455");
-        condutor2.setCelularPessoal("21998877665");
-        condutor2.save();
-        condutor2.refresh();
-        Assert.assertNotSame(new Long(0), condutor2.getId());
-
-    }
+//    @Test
+//    public void incluiCondutor() throws Exception {
+//        CpOrgaoUsuario cpOrgaoUsuario = CpOrgaoUsuario.AR.findById(new Long(3));
+//        List<DpPessoa> listaPossiveisCondutores = Condutor.getPossiveisCondutores(cpOrgaoUsuario);
+//
+//        condutor1.setCategoriaCNH(CategoriaCNH.E);
+//        condutor1.setDataVencimentoCNH(Calendar.getInstance());
+//        condutor1.setDpPessoa(listaPossiveisCondutores.get(1));
+//        condutor1.setTelefoneInstitucional("2132618888");
+//        condutor1.setCelularInstitucional("2177665544");
+//        condutor1.setTelefonePessoal("2122334455");
+//        condutor1.setCelularPessoal("2199887766");
+//        condutor1.save();
+//        condutor1.refresh();
+//        Assert.assertNotSame(new Long(0), condutor1.getId());
+//
+//        condutor2 = new Condutor();
+//        condutor2.setCategoriaCNH(CategoriaCNH.D);
+//        condutor2.setDataVencimentoCNH(Calendar.getInstance());
+//        condutor2.setDpPessoa(listaPossiveisCondutores.get(2));
+//        condutor2.setTelefoneInstitucional("2132618888");
+//        condutor2.setCelularInstitucional("21776655443");
+//        condutor2.setTelefonePessoal("2122334455");
+//        condutor2.setCelularPessoal("21998877665");
+//        condutor2.save();
+//        condutor2.refresh();
+//        Assert.assertNotSame(new Long(0), condutor2.getId());
+//
+//    }
 
     @Test
     public void incluiAbastecimento() throws Exception {

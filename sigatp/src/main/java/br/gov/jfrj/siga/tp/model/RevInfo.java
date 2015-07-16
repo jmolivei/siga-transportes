@@ -12,16 +12,14 @@ import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 
-import org.hibernate.envers.RevisionEntity;
 import org.hibernate.envers.RevisionNumber;
 import org.hibernate.envers.RevisionTimestamp;
 
-import controllers.RevInfoListener;
 
 @SuppressWarnings("serial")
 @Entity
 @Table(schema = "SIGATP")
-@RevisionEntity(RevInfoListener.class)
+//@RevisionEntity(RevInfoListener.class)
 public class RevInfo implements Serializable {
 	@Id
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "hibernate_sequence_generator") @SequenceGenerator(name = "hibernate_sequence_generator", sequenceName="SIGATP.hibernate_sequence") 

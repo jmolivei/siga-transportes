@@ -23,7 +23,6 @@ import br.gov.jfrj.siga.tp.model.Condutor;
 import br.gov.jfrj.siga.tp.model.ControleGabinete;
 import br.gov.jfrj.siga.tp.model.ItemMenu;
 import br.gov.jfrj.siga.tp.model.Veiculo;
-import br.gov.jfrj.siga.tp.util.MenuMontador;
 import br.gov.jfrj.siga.tp.vraptor.i18n.MessagesBundle;
 import br.gov.jfrj.siga.vraptor.SigaObjects;
 
@@ -63,7 +62,7 @@ public class ControleGabineteController extends TpController {
         try {
             Veiculo veiculo = Veiculo.AR.findById(idVeiculo);
             List<ControleGabinete> controlesGabinete = ControleGabinete.buscarTodosPorVeiculo(veiculo);
-            MenuMontador.instance().recuperarMenuVeiculos(idVeiculo, ItemMenu.DADOSCADASTRAIS);
+            MenuMontador.instance(result).recuperarMenuVeiculos(idVeiculo, ItemMenu.DADOSCADASTRAIS);
 
             result.include(CONTROLES_GABINETE, controlesGabinete);
             result.include("veiculo", veiculo);

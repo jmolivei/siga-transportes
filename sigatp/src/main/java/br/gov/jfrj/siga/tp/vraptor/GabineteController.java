@@ -21,7 +21,6 @@ import br.gov.jfrj.siga.tp.model.Fornecedor;
 import br.gov.jfrj.siga.tp.model.ItemMenu;
 import br.gov.jfrj.siga.tp.model.TipoDeCombustivel;
 import br.gov.jfrj.siga.tp.model.Veiculo;
-import br.gov.jfrj.siga.tp.util.MenuMontador;
 import br.gov.jfrj.siga.vraptor.SigaObjects;
 
 @Resource
@@ -53,7 +52,7 @@ public class GabineteController extends TpController {
         try {
             Veiculo veiculo = Veiculo.AR.findById(idVeiculo);
             List<Abastecimento> abastecimentos = Abastecimento.buscarTodosPorVeiculo(veiculo);
-            MenuMontador.instance().recuperarMenuVeiculos(idVeiculo, ItemMenu.DADOSCADASTRAIS);
+            MenuMontador.instance(result).recuperarMenuVeiculos(idVeiculo, ItemMenu.DADOSCADASTRAIS);
 
             result.include(ABASTECIMENTOS, abastecimentos);
             result.include(VEICULO, veiculo);

@@ -118,16 +118,16 @@ public class Condutor extends TpModel implements ConvertableEntity, Comparable<C
 		return this.dpPessoa.getNomePessoa().compareTo(o.dpPessoa.getNomePessoa());
 	}
 
-	public static List<DpPessoa> getPossiveisCondutores(CpOrgaoUsuario cpOrgaoUsuario) {
-		List<LotacaoAtdRequisicao> lotacoesAtdRequisicao = LotacaoAtdRequisicao.find("cpOrgaoUsuario", cpOrgaoUsuario).fetch();
-		List<DpLotacao> lotacoes = new ArrayList<DpLotacao>();
-		for (LotacaoAtdRequisicao lotacaoAtdRequisicao : lotacoesAtdRequisicao) {
-			lotacoes.add(lotacaoAtdRequisicao.dpLotacao);
-		}
-
-		List<DpPessoa> possiveisCondutores = DpPessoa.AR.find("lotacao in (?)", lotacoes.toArray()).fetch();
-		return possiveisCondutores;
-	}
+//	public static List<DpPessoa> getPossiveisCondutores(CpOrgaoUsuario cpOrgaoUsuario) {
+//		List<LotacaoAtdRequisicao> lotacoesAtdRequisicao = LotacaoAtdRequisicao.find("cpOrgaoUsuario", cpOrgaoUsuario).fetch();
+//		List<DpLotacao> lotacoes = new ArrayList<DpLotacao>();
+//		for (LotacaoAtdRequisicao lotacaoAtdRequisicao : lotacoesAtdRequisicao) {
+//			lotacoes.add(lotacaoAtdRequisicao.dpLotacao);
+//		}
+//
+//		List<DpPessoa> possiveisCondutores = DpPessoa.AR.find("lotacao in (?)", lotacoes.toArray()).fetch();
+//		return possiveisCondutores;
+//	}
 
 	public String getMatricula() {
 		return this.dpPessoa.getMatricula().toString();
