@@ -136,4 +136,5 @@ public class AutorizacaoGI {
 	public Boolean ehAgente() {
 		return getStatusPermissao(Autorizacoes.AGN_AGENTE);
 	}
+	
 }

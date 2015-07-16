@@ -16,13 +16,12 @@ import javax.validation.constraints.NotNull;
 import org.hibernate.envers.Audited;
 import org.hibernate.envers.RelationTargetAuditMode;
 
-import play.i18n.Messages;
+import br.com.caelum.vraptor.validator.I18nMessage;
 import br.gov.jfrj.siga.dp.CpOrgaoUsuario;
 import br.gov.jfrj.siga.feature.converter.entity.vraptor.ConvertableEntity;
 import br.gov.jfrj.siga.model.ActiveRecord;
 import br.gov.jfrj.siga.tp.validation.annotation.Unique;
 import br.gov.jfrj.siga.tp.validation.annotation.UpperCase;
-import controllers.AutorizacaoGIAntigo;
 
 @SuppressWarnings("serial")
 @Entity
@@ -110,9 +109,9 @@ public class FinalidadeRequisicao extends TpModel implements ConvertableEntity, 
 	public void checarProprietario(CpOrgaoUsuario orgaoUsuario) throws Exception {
 		if ((!this.cpOrgaoOrigem.equivale(orgaoUsuario)) || (this.id.equals(_ID_DA_FINALIDADE_OUTRA))) {
 			try {
-				throw new Exception(Messages.get("finalidadeRequisicao.checarProprietario.exception"));
+				throw new Exception(new I18nMessage("finalidadeRequisicao", "finalidadeRequisicao.checarProprietario.exception").getMessage());
 			} catch (Exception e) {
-				AutorizacaoGIAntigo.tratarExcecoes(e);
+			    throw new Exception(e);
 			}
 		}
 	}

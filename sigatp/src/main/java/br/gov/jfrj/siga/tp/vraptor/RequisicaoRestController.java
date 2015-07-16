@@ -30,7 +30,6 @@ import br.gov.jfrj.siga.tp.model.TpDao;
 import br.gov.jfrj.siga.tp.rest.RequisicaoTransporteRest;
 import br.gov.jfrj.siga.tp.vraptor.i18n.MessagesBundle;
 import br.gov.jfrj.siga.vraptor.SigaObjects;
-import controllers.AutorizacaoGIAntigo;
 
 @Resource
 @Path("/app/requisicaoRest")
@@ -136,7 +135,7 @@ public class RequisicaoRestController extends TpController {
 
             req.setSolicitante(dpPessoa);
             req.setCpOrgaoUsuario(dpPessoa.getOrgaoUsuario());
-            req.setCpComplexo(AutorizacaoGIAntigo.recuperarComplexoPadrao(dpPessoa));
+            req.setCpComplexo(recuperarComplexoPadrao(dpPessoa));
 
             checarSolicitante(req, dpPessoa, true);
 
@@ -232,4 +231,5 @@ public class RequisicaoRestController extends TpController {
             throw new RestControllerException(e);
         }
     }
+    
 }

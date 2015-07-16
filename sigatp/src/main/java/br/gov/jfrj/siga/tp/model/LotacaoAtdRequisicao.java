@@ -13,7 +13,6 @@ import javax.validation.constraints.NotNull;
 import org.hibernate.envers.Audited;
 import org.hibernate.envers.RelationTargetAuditMode;
 
-import play.db.jpa.GenericModel;
 import br.gov.jfrj.siga.dp.CpOrgaoUsuario;
 import br.gov.jfrj.siga.dp.DpLotacao;
 
@@ -21,7 +20,7 @@ import br.gov.jfrj.siga.dp.DpLotacao;
 @Entity
 @Audited
 @Table(schema = "SIGATP")
-public class LotacaoAtdRequisicao extends GenericModel {
+public class LotacaoAtdRequisicao/* extends GenericModel*/ {
 
 	/**
 	 * 

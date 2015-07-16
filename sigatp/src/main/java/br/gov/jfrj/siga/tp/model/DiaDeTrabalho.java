@@ -17,7 +17,7 @@ import javax.validation.constraints.NotNull;
 
 import org.hibernate.envers.Audited;
 
-import play.i18n.Messages;
+import br.com.caelum.vraptor.validator.I18nMessage;
 import br.gov.jfrj.siga.model.ActiveRecord;
 
 @Entity
@@ -114,7 +114,8 @@ public class DiaDeTrabalho extends TpModel implements Comparable<DiaDeTrabalho> 
 			this.horaEntrada.setTime(formatar.parse("01/01/1900 11:00"));
 			this.horaSaida.setTime(formatar.parse("01/01/1900 19:00"));
 		} catch (ParseException e) {
-			throw new RuntimeException(Messages.get("diaDeTrabalho.inicializar.exception"), e);
+			throw new RuntimeException(new I18nMessage("diaDeTrabalho", "diaDeTrabalho.inicializar.exception").getMessage());
+			
 		}
 		escalaDeTrabalho = null;
 

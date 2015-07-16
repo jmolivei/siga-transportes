@@ -4,10 +4,8 @@ import java.math.BigDecimal;
 import java.text.NumberFormat;
 import java.util.Locale;
 
-import play.templates.JavaExtensions;
-
 @Deprecated
-public class CustomJavaExtensions extends JavaExtensions {
+public class CustomJavaExtensions {
 	public static String formataMoedaBrasileira(Number number) {
 		Locale defaultLocale = new Locale("pt", "BR", "BRL");
 		NumberFormat nf = NumberFormat.getCurrencyInstance(defaultLocale);
