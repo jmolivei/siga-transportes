@@ -9,10 +9,10 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
+import javax.validation.constraints.NotNull;
 
 import org.hibernate.envers.Audited;
 
-import play.data.validation.Required;
 import br.gov.jfrj.siga.feature.converter.entity.vraptor.ConvertableEntity;
 import br.gov.jfrj.siga.model.ActiveRecord;
 import br.gov.jfrj.siga.tp.validation.annotation.UpperCase;
@@ -31,19 +31,19 @@ public class Grupo extends TpModel implements ConvertableEntity, Comparable<Grup
 	@SequenceGenerator(name = "hibernate_sequence_generator", sequenceName = "SIGATP.hibernate_sequence")
 	private long id;
 
-	@Required
+	@NotNull
 	@UpperCase
 	private String nome;
 
-	@Required
+	@NotNull
 	@UpperCase
 	private String finalidade;
 
-	@Required
+	@NotNull
 	@UpperCase
 	private String caracteristicas;
 
-	@Required
+	@NotNull
 	@UpperCase
 	private String letra;
 

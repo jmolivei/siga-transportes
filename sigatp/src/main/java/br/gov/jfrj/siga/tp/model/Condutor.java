@@ -28,8 +28,7 @@ import javax.validation.constraints.NotNull;
 import org.hibernate.envers.Audited;
 import org.hibernate.envers.RelationTargetAuditMode;
 
-import play.data.validation.Email;
-import play.i18n.Messages;
+import br.com.caelum.vraptor.validator.I18nMessage;
 import br.gov.jfrj.siga.cp.CpComplexo;
 import br.gov.jfrj.siga.dp.CpOrgaoUsuario;
 import br.gov.jfrj.siga.dp.DpLotacao;
@@ -40,6 +39,7 @@ import br.gov.jfrj.siga.tp.util.PerguntaSimNao;
 import br.gov.jfrj.siga.tp.validation.annotation.Cnh;
 import br.gov.jfrj.siga.tp.validation.annotation.Unique;
 import br.gov.jfrj.siga.tp.validation.annotation.UpperCase;
+import br.gov.jfrj.siga.validation.Email;
 
 @SuppressWarnings("serial")
 @Entity
@@ -276,7 +276,7 @@ public class Condutor extends TpModel implements ConvertableEntity, Comparable<C
 		escalaVigente = escalasDeTrabalho.get(0);
 
 		if (escalasDeTrabalho.size() > 1) {
-			throw new Exception(Messages.get("condutor.escalasDeTrabalho.exception", escalasDeTrabalho.get(0).getCondutor().id));
+			throw new Exception(new I18nMessage("condutor", "condutor.escalasDeTrabalho.exception", escalasDeTrabalho.get(0).getCondutor().id).getMessage());
 		}
 
 		return escalaVigente.estaEscaladoNesteDia(dataMissao);
