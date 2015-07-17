@@ -78,7 +78,7 @@
 	       	<label for="fornecedor.uf">UF</label>
 				<siga:select name="fornecedor.uf"
 					list="listaUF" listKey="sigla"
-					id="sigla" headerValue="UF" headerKey="0"
+					id="sigla" headerValue="" headerKey="0"
 					listValue="sigla" theme="simple" value="${fornecedor.uf}" />
 		</div>
 	</div>
