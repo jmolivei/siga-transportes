@@ -188,12 +188,12 @@ public class Veiculo extends TpModel implements ConvertableEntity, Comparable<Ve
 	@UpperCase
 	private String outros;
 
-	@ValidarAnoData(descricaoCampo = "Data de Aquisicao")
+	@ValidarAnoData(descricaoCampo = "Data de Aquisicao", nullable = false)
 	private Calendar dataAquisicao;
 
 	private Double valorAquisicao;
 
-	@ValidarAnoData(descricaoCampo = "Data de Garantia")
+	@ValidarAnoData(descricaoCampo = "Data de Garantia", nullable = false)
 	private Calendar dataGarantia;
 
 	@ManyToOne
@@ -201,15 +201,15 @@ public class Veiculo extends TpModel implements ConvertableEntity, Comparable<Ve
 
 	private String numeroCartaoAbastecimento;
 
-	@ValidarAnoData(descricaoCampo = "Validade do Cartao de Abastecimento")
+	@ValidarAnoData(descricaoCampo = "Validade do Cartao de Abastecimento", nullable = false)
 	private Calendar validadeCartaoAbastecimento;
 
 	private String numeroCartaoSeguro;
 
-	@ValidarAnoData(intervalo = 10, descricaoCampo = "Validade do Cartao de Seguro")
+	@ValidarAnoData(intervalo = 10, descricaoCampo = "Validade do Cartao de Seguro", nullable = false)
 	private Calendar validadeCartaoSeguro;
 
-	@ValidarAnoData(descricaoCampo = "Data de Alienacao")
+	@ValidarAnoData(descricaoCampo = "Data de Alienacao", nullable = false)
 	private Calendar dataAlienacao;
 
 	@UpperCase
