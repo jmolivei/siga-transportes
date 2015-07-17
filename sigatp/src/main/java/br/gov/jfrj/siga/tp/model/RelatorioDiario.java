@@ -35,7 +35,7 @@ public class RelatorioDiario extends TpModel implements ConvertableEntity {
 	private Long id;
 	
 	@NotNull
-	@ValidarAnoData(descricaoCampo="Data")
+	@ValidarAnoData(descricaoCampo="Data", nullable=false)
 	private Calendar data;
 	
 	@ManyToOne

@@ -45,10 +45,10 @@ public class LotacaoVeiculo extends TpModel implements ConvertableEntity {
 	private DpLotacao lotacao;
 
 	@NotNull
-	@ValidarAnoData(descricaoCampo = "Data/Hora Inicio")
+	@ValidarAnoData(descricaoCampo = "Data/Hora Inicio", nullable=false)
 	private Calendar dataHoraInicio;
 
-	@ValidarAnoData(descricaoCampo = "Data/Hora Fim", nullable=false)
+	@ValidarAnoData(descricaoCampo = "Data/Hora Fim")
 	private Calendar dataHoraFim;
 
 	private Double odometroEmKm;

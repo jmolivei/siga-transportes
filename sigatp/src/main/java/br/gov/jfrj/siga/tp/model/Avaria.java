@@ -43,10 +43,10 @@ public class Avaria extends TpModel implements ConvertableEntity, Comparable<Ava
 	private Veiculo veiculo;
 
 	@NotNull(message = "{avaria.data.registro}")
-	@ValidarAnoData(descricaoCampo = "Data de Registro")
+	@ValidarAnoData(descricaoCampo = "Data de Registro", nullable=false)
 	private Calendar dataDeRegistro;
 
-	@ValidarAnoData(descricaoCampo = "Data de Solucao", nullable=false)
+	@ValidarAnoData(descricaoCampo = "Data de Solucao")
 	private Calendar dataDeSolucao;
 
 	@NotNull(message = "{avaria.descricao}")
