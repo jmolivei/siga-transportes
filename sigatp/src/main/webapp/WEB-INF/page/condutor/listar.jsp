@@ -35,15 +35,15 @@
 									<td><c:if
 											test="${not empty item.telefonePessoal or not empty item.celularPessoal}">${item.telefonePessoal}<br />${item.celularPessoal}</c:if></td>
 									<td><c:if test="${not empty item.categoriaCNH.toString()}">
-		    								${item.categoriaCNH.toString()}
+		    								Cat. ${item.categoriaCNH.toString()}
 		  									<br />
 											<c:if test="${item.vencimentoCNHExpirado}">
-												<span style="color: red; font-weight: bolder;"> <fmt:formatDate
+												<span style="color: red; font-weight: bolder;"> </c:if><fmt:formatDate
 														pattern="dd/MM/yyyy"
 														value="${item.dataVencimentoCNH.time}" />
 												</span>
 											</c:if>
-										</c:if></td>
+										</td>
 									<td>
 										<a href="${linkTo[CondutorController].editar[item.id]}">Editar</a>
 									</td>
