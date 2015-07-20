@@ -689,6 +689,7 @@ public class MissaoController extends TpController {
 
 		removerRequisicoesDoRenderArgs(missao.getRequisicoesTransporte());
 
+		result.include(MOSTRAR_BOTOES_EDITAR, true);
 		result.forwardTo(this).inicioRapido(missao);
 	}
 
@@ -934,8 +935,8 @@ public class MissaoController extends TpController {
 		removerRequisicoesDoRenderArgs(missao.getRequisicoesTransporte());
 		result.include(MISSAO_STR, missao);
 
+		result.include(MOSTRAR_BOTOES_EDITAR, true);
 		result.use(Results.page()).of(MissaoController.class).incluir();
-
 	}
 
 	@RoleAdmin
