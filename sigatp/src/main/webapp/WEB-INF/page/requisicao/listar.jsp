@@ -4,6 +4,8 @@
 <%@ taglib prefix="sigatp" tagdir="/WEB-INF/tags/"%>
 <%@ taglib prefix="tptags" uri="/WEB-INF/tpTags.tld"%>
 
+<siga:pagina titulo="SIGA - Transporte">
+
 <script type="text/javascript" src="/sigatp/public/javascripts/jquery-1.6.4.min.js"></script>
 
 <script type="text/javascript">
@@ -80,7 +82,6 @@
 
 </style>
 
-<siga:pagina titulo="SIGA - Transporte">
 	<div class="gt-bd clearfix">
 		<div class="gt-content clearfix">
 			<c:choose>
